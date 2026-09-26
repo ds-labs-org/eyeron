@@ -613,7 +613,25 @@ fn percent_encode(value: &str) -> String {
     out
 }
 
+#[cfg(test)]
+std::thread_local! {
+    static REGEX_COMPILES: std::cell::Cell<usize> = const { std::cell::Cell::new(0) };
+}
+
+/// How many regular expressions this thread has compiled (test-only).
+#[cfg(test)]
+pub(crate) fn regex_compiles() -> usize {
+    REGEX_COMPILES.with(|c| c.get())
+}
+
+#[cfg(test)]
+pub(crate) fn reset_regex_compiles() {
+    REGEX_COMPILES.with(|c| c.set(0));
+}
+
 fn build_regex(pattern: &str, flags: &str) -> Result<regex::Regex, EvalError> {
+    #[cfg(test)]
+    REGEX_COMPILES.with(|c| c.set(c.get() + 1));
     let mut builder = regex::RegexBuilder::new(pattern);
     for ch in flags.chars() {
         match ch {

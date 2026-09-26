@@ -36,6 +36,14 @@ fn test_broad_fact_scans() -> usize {
     TEST_BROAD_FACT_SCANS.with(|count| count.get())
 }
 
+#[cfg(test)]
+std::thread_local! {
+    /// Calls to `FactIndex::estimate`, and premises present at join levels, so a
+    /// test can check the planner asks for each premise's estimate once per level.
+    static TEST_ESTIMATE_CALLS: std::cell::Cell<usize> = const { std::cell::Cell::new(0) };
+    static TEST_JOIN_LEVEL_PREMISES: std::cell::Cell<usize> = const { std::cell::Cell::new(0) };
+}
+
 const DEFAULT_MAX_BACKWARD_DEPTH: usize = 32;
 const DEFAULT_MAX_BACKWARD_SOLUTIONS_PER_GOAL: usize = 1024;
 const DEFAULT_MAX_MATCH_STEPS: usize = 200_000;
@@ -338,6 +346,8 @@ impl FactIndex {
     /// match (so the bucket size is the exact candidate count). `None` when the
     /// lookup shape is not a plain bucket (unbound predicate, open list subject).
     pub(crate) fn estimate(&self, pattern: &Triple, bindings: &Bindings) -> Option<(usize, bool)> {
+        #[cfg(test)]
+        TEST_ESTIMATE_CALLS.with(|c| c.set(c.get() + 1));
         let s = resolve_pattern(&pattern.s, bindings);
         let p = resolve_pattern(&pattern.p, bindings);
         let o = resolve_pattern(&pattern.o, bindings);
@@ -1346,6 +1356,8 @@ fn match_premise_remaining(
         out.push(canonicalize_owned(bindings));
         return;
     }
+    #[cfg(test)]
+    TEST_JOIN_LEVEL_PREMISES.with(|c| c.set(c.get() + premises.len()));
 
     // Rule bodies in the examples often put tests such as log:notEqualTo before
     // the facts that bind their operands.  Select a runnable premise at each
@@ -5458,7 +5470,7 @@ mod reasoner_index_regression_tests {
 }
 
 #[cfg(test)]
-mod regex_cache_tests {
+mod reasoner_hardening_tests {
     use super::*;
 
     fn cache_len() -> usize {
@@ -5519,5 +5531,29 @@ mod regex_cache_tests {
         let ok = Term::Iri("http://example.org/ok".to_string());
         assert_eq!(result.derived.iter().filter(|t| t.p == ok).count(), 1, "only :a matches");
         assert_eq!(cache_len(), 0, "a finished run must not leave compiled patterns behind");
+    }
+
+    #[test]
+    fn the_join_planner_estimates_each_premise_at_most_once_per_level() {
+        // A 3-premise indexed join. Ordering the premises and then deciding
+        // which to skip each need the same estimates; they must be computed
+        // once and shared, not twice per premise.
+        let mut source = String::from("@prefix : <http://e/> .\n");
+        for i in 0..50 {
+            source.push_str(&format!(":x{i} :a :y{i} . :y{i} :b :z{i} . :z{i} :c :w{i} .\n"));
+        }
+        source.push_str("{ ?x :a ?y . ?y :b ?z . ?z :c ?w } => { ?x :d ?w } .\n");
+        let document = parse_n3(&source, None).expect("fixture parses");
+        TEST_ESTIMATE_CALLS.with(|c| c.set(0));
+        TEST_JOIN_LEVEL_PREMISES.with(|c| c.set(0));
+        let result = reason(&document, &ReasonerOptions::default());
+        assert!(result.is_complete());
+        let estimates = TEST_ESTIMATE_CALLS.with(|c| c.get());
+        let premises = TEST_JOIN_LEVEL_PREMISES.with(|c| c.get());
+        assert!(premises > 0, "the join must have been planned");
+        assert!(
+            estimates <= premises,
+            "{estimates} estimates for {premises} premises across all join levels: computed more than once per premise"
+        );
     }
 }

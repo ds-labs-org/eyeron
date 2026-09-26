@@ -583,4 +583,20 @@ mod tests {
         let blanks: std::collections::BTreeSet<&crate::ast::Term> = result.closure.iter().filter(|t| t.p == iri("q")).map(|t| &t.s).collect();
         assert_eq!(blanks.len(), 2, "{:?}", result.closure);
     }
+
+    #[test]
+    fn a_regex_filter_compiles_its_pattern_once_per_run() {
+        // SPARQL REGEX(?n, "literal") is evaluated once per candidate row; the
+        // pattern must be compiled once, not once per row.
+        let mut source = String::from("PREFIX : <http://e/>\nDATA {\n");
+        for i in 0..100 {
+            source.push_str(&format!("  :s{i} :name \"item{i}\" .\n"));
+        }
+        source.push_str("}\nRULE { ?x :ok true } WHERE { ?x :name ?n . FILTER(REGEX(?n, \"^item[0-9]+$\")) }\n");
+        let program = parse_sparql_rl(&source, None).expect("parses");
+        crate::srl::expr::reset_regex_compiles();
+        let result = reason(&program, &[], &ReasonerOptions::default()).unwrap();
+        assert_eq!(result.derived.len(), 100);
+        assert_eq!(crate::srl::expr::regex_compiles(), 1, "one compile for one literal pattern");
+    }
 }
