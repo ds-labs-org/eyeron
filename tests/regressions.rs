@@ -1154,3 +1154,131 @@ fn string_regex_builtins_give_the_same_answers_when_a_pattern_repeats() {
     assert!(output.contains(":b :replaced \"heLp\""), "{output}");
     assert!(output.contains(":c :second \"e\""), "{output}");
 }
+
+#[test]
+fn a_runaway_forward_rule_stops_at_the_iteration_limit() {
+    use eyeron::{CompletionStatus, ReasonerLimit};
+
+    // Each firing feeds the next, so the agenda inside one fixpoint pass
+    // never runs out of work.  The iteration limit has to cover agenda steps
+    // as well as outer passes, or nothing stops this short of the allocator.
+    let doc = parse_n3(
+        r#"
+            @prefix : <http://example.org/> .
+            @prefix math: <http://www.w3.org/2000/10/swap/math#> .
+            { :a :v ?x . (?x 1) math:sum ?z } => { :a :v ?z } .
+            :a :v 0 .
+        "#,
+        None,
+    )
+    .unwrap();
+    let result = reason_document(
+        &doc,
+        &ReasonerOptions {
+            max_iterations: 1_000,
+            ..ReasonerOptions::default()
+        },
+    );
+
+    assert_eq!(result.status, CompletionStatus::Incomplete);
+    assert!(result.limits_reached.contains(&ReasonerLimit::Iterations));
+    assert!(result.statistics.iterations <= 1_000, "{:?}", result.statistics);
+    assert!(result.closure.len() <= 1_001, "closure {}", result.closure.len());
+}
+
+#[test]
+fn a_term_that_doubles_every_firing_stops_at_the_term_size_limit() {
+    use eyeron::{CompletionStatus, ReasonerLimit};
+
+    // Step counting cannot catch this one: thirty firings are enough to
+    // exhaust memory, so the size of a derived fact needs its own bound.
+    let doc = parse_n3(
+        r#"
+            @prefix : <http://example.org/> .
+            @prefix string: <http://www.w3.org/2000/10/swap/string#> .
+            { :a :s ?x . (?x ?x) string:concatenation ?y } => { :a :s ?y } .
+            :a :s "ab" .
+        "#,
+        None,
+    )
+    .unwrap();
+    let result = reason_document(
+        &doc,
+        &ReasonerOptions {
+            max_term_bytes: 4_096,
+            ..ReasonerOptions::default()
+        },
+    );
+
+    assert_eq!(result.status, CompletionStatus::Incomplete);
+    assert!(result.limits_reached.contains(&ReasonerLimit::TermSize));
+    for fact in &result.closure {
+        if let eyeron::Term::Literal(literal) = &fact.o {
+            assert!(literal.value.len() <= 4_096, "kept a {}-byte term", literal.value.len());
+        }
+    }
+}
+
+#[test]
+fn a_term_that_nests_one_level_deeper_every_firing_stops_at_the_nesting_limit() {
+    use eyeron::{CompletionStatus, ReasonerLimit};
+
+    // This one stays tiny in bytes -- it wraps the same short literal over
+    // and over -- so only the nesting bound catches it, and it has to catch
+    // it before any recursive walk of the term runs out of stack.
+    let doc = parse_n3(
+        r#"
+            @prefix : <http://example.org/> .
+            { :a :l ?x } => { :a :l (?x) } .
+            :a :l "seed" .
+        "#,
+        None,
+    )
+    .unwrap();
+    let result = reason_document(&doc, &ReasonerOptions::default());
+
+    assert_eq!(result.status, CompletionStatus::Incomplete);
+    assert!(result.limits_reached.contains(&ReasonerLimit::TermDepth));
+    assert!(result.closure.len() < 100, "closure {}", result.closure.len());
+}
+
+#[test]
+fn an_absurd_string_format_width_produces_no_binding() {
+    // A width is padding, not a request to allocate: a gigabyte-wide field
+    // used to consume a gigabyte, and `usize::MAX` used to panic with
+    // "capacity overflow".  Both now behave like any builtin call that
+    // cannot produce a value.
+    for width in ["1000000000", "18446744073709551615"] {
+        let source = format!(
+            r#"
+                @prefix : <http://example.org/> .
+                @prefix string: <http://www.w3.org/2000/10/swap/string#> .
+                {{ ("%{width}s" "x") string:format ?y }} => {{ :a :out ?y }} .
+            "#
+        );
+        let doc = parse_n3(&source, None).unwrap();
+        let result = reason_document(&doc, &ReasonerOptions::default());
+        assert!(result.derived.is_empty(), "width {width} derived {:?}", result.derived);
+    }
+}
+
+#[test]
+fn absurdly_nested_terms_are_a_parse_error_rather_than_a_stack_overflow() {
+    // Nesting is parsed by recursion and a stack overflow aborts the
+    // process, so the parsers refuse before the stack runs out.
+    let n3 = format!("@prefix : <http://e/> .\n{} :a :b :c {} :p :o .\n", "{".repeat(5_000), "}".repeat(5_000));
+    let err = parse_n3(&n3, None).unwrap_err().to_string();
+    assert!(err.contains("nested more than"), "{err}");
+
+    let collection = format!("PREFIX : <http://e/>\nDATA {{ :a :b {}{} }}\n", "(".repeat(5_000), ")".repeat(5_000));
+    let err = eyeron::srl::parse_sparql_rl(&collection, None).unwrap_err().to_string();
+    assert!(err.contains("nested more than"), "{err}");
+
+    let expression = format!(
+        "PREFIX : <http://e/>\nRULE {{ ?s :p ?o }} WHERE {{ ?s :q ?o . FILTER({}1{} = 1) }}\n",
+        "(".repeat(5_000),
+        ")".repeat(5_000),
+    );
+    let err = eyeron::srl::parse_sparql_rl(&expression, None).unwrap_err().to_string();
+    assert!(err.contains("nested more than"), "{err}");
+}

@@ -3,6 +3,19 @@ use crate::error::{EyeronError, Result};
 use crate::n3::lexer::{lex, Token, TokenKind};
 use crate::n3::rdf_compat::RdfFormat;
 
+/// How deeply terms may nest, both in input and in anything reasoning derives.
+///
+///
+/// Nested terms — `{ }`, `[ ]`, `( )`, `<< >>` — are parsed by recursion, and
+/// running out of stack aborts the whole process instead of raising an error
+/// a caller could handle.  Refusing absurd nesting while it is still an
+/// ordinary parse error keeps a hostile input from taking the process down.
+/// The deepest nesting in the example and conformance corpora is 14 levels,
+/// and 64 stays well inside the 1 MiB stacks that debug and WebAssembly
+/// builds run on.  `crate::n3::reasoner` holds derived terms to the same
+/// bound, so no term anywhere in the system can outgrow the stack.
+pub(crate) const MAX_TERM_NESTING_DEPTH: usize = 64;
+
 pub fn parse_n3(input: &str, base_iri: Option<&str>) -> Result<Document> {
     parse_n3_with_source(input, base_iri, None)
 }
@@ -268,6 +281,8 @@ struct Parser {
     profile: ParserProfile,
     source_label: Option<String>,
     line_starts: Vec<usize>,
+    /// Current term-nesting depth, checked against `MAX_TERM_NESTING_DEPTH`.
+    depth: usize,
 }
 
 impl Parser {
@@ -290,7 +305,7 @@ impl Parser {
         doc.prefixes.insert("math".to_string(), "http://www.w3.org/2000/10/swap/math#".to_string());
         doc.prefixes.insert("string".to_string(), "http://www.w3.org/2000/10/swap/string#".to_string());
         doc.prefixes.insert("time".to_string(), "http://www.w3.org/2000/10/swap/time#".to_string());
-        Self { tokens, pos: 0, doc, blank_counter: 0, profile, source_label: None, line_starts: Vec::new() }
+        Self { tokens, pos: 0, doc, blank_counter: 0, profile, source_label: None, line_starts: Vec::new(), depth: 0 }
     }
 
     fn with_source(mut self, source_label: Option<&str>, line_starts: Vec<usize>) -> Self {
@@ -909,7 +924,23 @@ impl Parser {
         Ok(term)
     }
 
+    /// Every nested term form routes through here, so this is the one place
+    /// the nesting depth has to be counted.
     fn parse_term(&mut self) -> Result<(Term, Vec<Triple>)> {
+        if self.depth >= MAX_TERM_NESTING_DEPTH {
+            let offset = self.peek().offset;
+            return Err(EyeronError::at(
+                format!("terms nested more than {} levels deep", MAX_TERM_NESTING_DEPTH),
+                offset,
+            ));
+        }
+        self.depth += 1;
+        let parsed = self.parse_term_inner();
+        self.depth -= 1;
+        parsed
+    }
+
+    fn parse_term_inner(&mut self) -> Result<(Term, Vec<Triple>)> {
         let tok = self.advance().clone();
         match tok.kind {
             TokenKind::Iri(i) => {

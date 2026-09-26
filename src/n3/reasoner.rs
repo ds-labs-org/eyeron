@@ -3,7 +3,7 @@
 #![allow(clippy::too_many_arguments)]
 
 use crate::ast::*;
-use crate::n3::parser::parse_n3;
+use crate::n3::parser::{parse_n3, MAX_TERM_NESTING_DEPTH};
 use regex::Regex;
 use std::cell::RefCell;
 use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
@@ -39,6 +39,15 @@ fn test_broad_fact_scans() -> usize {
 const DEFAULT_MAX_BACKWARD_DEPTH: usize = 32;
 const DEFAULT_MAX_BACKWARD_SOLUTIONS_PER_GOAL: usize = 1024;
 const DEFAULT_MAX_MATCH_STEPS: usize = 200_000;
+/// Default cap on the term text a single derived fact may carry, in bytes.
+///
+/// A rule such as `{ :a :s ?x . (?x ?x) string:concatenation ?y } => { :a :s ?y }`
+/// doubles a literal on every firing, so it exhausts memory long before any
+/// step counter runs out.  Bounding the size of a derived fact turns that
+/// from an out-of-memory kill into an ordinary incomplete run.  16 MiB is far
+/// larger than any fact real rule sets build and small enough that rejecting
+/// one costs nothing.
+const DEFAULT_MAX_TERM_BYTES: usize = 16 * 1024 * 1024;
 // Multi-premise agenda matching is a win for small state-machine examples,
 // but on generated rule sets such as deep-taxonomy-100000 it makes every
 // broad subject/predicate fact probe unrelated multi-premise checks.  Keep
@@ -53,6 +62,7 @@ struct SearchBudget {
     max_steps: usize,
     max_backward_depth: usize,
     max_backward_solutions_per_goal: usize,
+    max_term_bytes: usize,
     limits_reached: BTreeSet<ReasonerLimit>,
     errors: Vec<ReasonerError>,
     error_seen: HashSet<ReasonerError>,
@@ -72,6 +82,7 @@ impl SearchBudget {
             max_steps: options.max_match_steps,
             max_backward_depth: options.max_backward_depth,
             max_backward_solutions_per_goal: options.max_backward_solutions_per_goal,
+            max_term_bytes: options.max_term_bytes,
             limits_reached: BTreeSet::new(),
             errors: Vec::new(),
             error_seen: HashSet::new(),
@@ -88,6 +99,7 @@ impl SearchBudget {
             max_steps: DEFAULT_MAX_MATCH_STEPS,
             max_backward_depth: max_depth,
             max_backward_solutions_per_goal: DEFAULT_MAX_BACKWARD_SOLUTIONS_PER_GOAL,
+            max_term_bytes: DEFAULT_MAX_TERM_BYTES,
             limits_reached: BTreeSet::new(),
             errors: Vec::new(),
             error_seen: HashSet::new(),
@@ -115,6 +127,7 @@ impl SearchBudget {
             max_match_steps: self.max_steps,
             max_backward_depth: self.max_backward_depth,
             max_backward_solutions_per_goal: self.max_backward_solutions_per_goal,
+            max_term_bytes: self.max_term_bytes,
             trace: false,
             proof: false,
         }
@@ -436,6 +449,8 @@ pub enum ReasonerLimit {
     MatchSteps,
     BackwardDepth,
     BackwardSolutionsPerGoal,
+    TermSize,
+    TermDepth,
 }
 
 impl std::fmt::Display for ReasonerLimit {
@@ -445,6 +460,8 @@ impl std::fmt::Display for ReasonerLimit {
             Self::MatchSteps => "match-step limit",
             Self::BackwardDepth => "backward-depth limit",
             Self::BackwardSolutionsPerGoal => "backward-solution limit",
+            Self::TermSize => "term-size limit",
+            Self::TermDepth => "term-nesting limit",
         };
         write!(f, "{}", label)
     }
@@ -482,7 +499,8 @@ pub enum CompletionStatus {
 /// Counters collected during one reasoning run.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct ReasonerStatistics {
-    /// Number of outer fixpoint iterations attempted.
+    /// Number of fixpoint steps attempted: outer passes plus the agenda
+    /// steps taken inside them.
     pub iterations: usize,
     /// Total matcher steps across forward, query, and nested searches.
     pub match_steps: usize,
@@ -491,7 +509,9 @@ pub struct ReasonerStatistics {
 /// Safety limits and output options for a reasoning run.
 #[derive(Debug, Clone)]
 pub struct ReasonerOptions {
-    /// Maximum number of outer fixpoint iterations.
+    /// Maximum number of fixpoint steps: outer passes plus the agenda steps
+    /// taken inside them, so this bounds the whole forward run and not just
+    /// how many times the outer loop is entered.
     pub max_iterations: usize,
     /// Maximum matcher steps in each individual premise search.
     pub max_match_steps: usize,
@@ -499,6 +519,8 @@ pub struct ReasonerOptions {
     pub max_backward_depth: usize,
     /// Maximum substitutions retained for one backward goal.
     pub max_backward_solutions_per_goal: usize,
+    /// Maximum term text, in bytes, that one derived fact may carry.
+    pub max_term_bytes: usize,
     pub trace: bool,
     pub proof: bool,
 }
@@ -506,19 +528,22 @@ pub struct ReasonerOptions {
 impl Default for ReasonerOptions {
     fn default() -> Self {
         Self {
-            // High enough that `srl::forward::reason`'s pass-per-chain-link
-            // fixpoint (see its module docs) can finish a long
-            // single-premise rule chain such as `deep-taxonomy-100000.srl`
-            // (~100,010 passes) without tripping this safety net; each
-            // pass past the point where nothing new fires is O(1) thanks
-            // to that module's rule-activation tracking, so raising this
-            // only lengthens how long a genuinely non-terminating rule set
-            // is given before being reported incomplete, not how much
-            // work a terminating one does.
-            max_iterations: 200_000,
+            // Counting agenda steps as well as outer passes makes this
+            // roughly "how many facts may be derived": the N3 engine takes
+            // 300,014 steps on `deep-taxonomy-100000.n3` for a closure of
+            // 300,011, and `srl::forward::reason`'s pass-per-chain-link
+            // fixpoint (see its module docs) takes ~100,010 passes on
+            // `deep-taxonomy-100000.srl`.  A million leaves both ample room
+            // while still stopping a non-terminating rule set in seconds.
+            // Each step past the point where nothing new fires is O(1)
+            // thanks to rule-activation tracking, so raising this only
+            // lengthens how long a runaway rule set is given before being
+            // reported incomplete, not how much work a terminating one does.
+            max_iterations: 1_000_000,
             max_match_steps: DEFAULT_MAX_MATCH_STEPS,
             max_backward_depth: DEFAULT_MAX_BACKWARD_DEPTH,
             max_backward_solutions_per_goal: DEFAULT_MAX_BACKWARD_SOLUTIONS_PER_GOAL,
+            max_term_bytes: DEFAULT_MAX_TERM_BYTES,
             trace: false,
             proof: false,
         }
@@ -677,7 +702,7 @@ fn reason_with_plan(
     let mut report = RunReport::default();
     let mut closure_saturated = false;
 
-    loop {
+    'fixpoint: loop {
         if iteration >= options.max_iterations {
             report.hit_limit(ReasonerLimit::Iterations);
             break;
@@ -691,6 +716,18 @@ fn reason_with_plan(
         // taxonomy chains and state-machine examples from "scan every rule for
         // every wave" into "look up the rule premises that can match this fact".
         while agenda_cursor < closure.len() {
+            // Each fact this consumes can derive more facts, which extend the
+            // bound of this very loop.  It is as much a fixpoint step as an
+            // outer pass is, so it has to be counted the same way: otherwise a
+            // non-terminating rule such as
+            // `{ :a :v ?x . (?x 1) math:sum ?z } => { :a :v ?z }` never
+            // reaches the check above and runs until the allocator stops it.
+            if iteration >= options.max_iterations {
+                report.hit_limit(ReasonerLimit::Iterations);
+                break 'fixpoint;
+            }
+            iteration += 1;
+
             let fact = closure[agenda_cursor].clone();
             agenda_cursor += 1;
             let candidates = agenda_index.candidates(&fact);
@@ -723,6 +760,8 @@ fn reason_with_plan(
                         &mut proofs,
                         &mut pending_rules,
                         options.proof,
+                        options.max_term_bytes,
+                        &mut report,
                     );
 
                     if rules_changed {
@@ -771,6 +810,8 @@ fn reason_with_plan(
                         &mut proofs,
                         &mut pending_rules,
                         options.proof,
+                        options.max_term_bytes,
+                        &mut report,
                     );
 
                     if rules_changed {
@@ -822,6 +863,8 @@ fn reason_with_plan(
                     &mut proofs,
                     &mut pending_rules,
                     options.proof,
+                    options.max_term_bytes,
+                    &mut report,
                 );
             }
         }
@@ -931,6 +974,8 @@ fn emit_conclusions(
     proofs: &mut Vec<DerivedFact>,
     pending_rules: &mut Vec<Rule>,
     capture_proof: bool,
+    max_term_bytes: usize,
+    report: &mut RunReport,
 ) -> bool {
     let mut rules_changed = false;
     // One handle per firing, shared by every fact this firing derives. A
@@ -957,6 +1002,8 @@ fn emit_conclusions(
                         proofs,
                         proof,
                         pending_rules,
+                        max_term_bytes,
+                        report,
                     ) {
                         rules_changed = true;
                     }
@@ -977,6 +1024,8 @@ fn emit_conclusions(
             proofs,
             proof,
             pending_rules,
+            max_term_bytes,
+            report,
         ) {
             rules_changed = true;
         }
@@ -1002,6 +1051,84 @@ fn is_unquote_instruction(t: &Triple) -> bool {
     matches!((&t.s, &t.p), (Term::Iri(s), Term::Iri(p)) if s == EYERON_UNQUOTE && p == EYERON_UNQUOTE)
 }
 
+/// A derived fact can outgrow what the process can hold in two independent
+/// ways: by carrying too much text, or by nesting too deeply.  Text grows
+/// geometrically under a rule that doubles a literal; nesting grows one level
+/// per firing under a rule that wraps a term, and deep enough nesting
+/// overflows the stack in any recursive walk of the term, including this one.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum TermOverflow {
+    Bytes,
+    Depth,
+}
+
+impl TermOverflow {
+    fn limit(self) -> ReasonerLimit {
+        match self {
+            Self::Bytes => ReasonerLimit::TermSize,
+            Self::Depth => ReasonerLimit::TermDepth,
+        }
+    }
+}
+
+/// Whether `triple` is too large to keep, measured without ever walking
+/// further than the first breach: both checks short-circuit, so an oversized
+/// term costs no more to reject than a small one costs to accept.
+fn triple_overflow(triple: &Triple, max_bytes: usize) -> Option<TermOverflow> {
+    let mut walk = TermWalk { bytes: 0, max_bytes, overflow: None };
+    walk.triple(triple, 0);
+    walk.overflow
+}
+
+struct TermWalk {
+    bytes: usize,
+    max_bytes: usize,
+    overflow: Option<TermOverflow>,
+}
+
+impl TermWalk {
+    fn triple(&mut self, triple: &Triple, depth: usize) {
+        for term in [&triple.s, &triple.p, &triple.o] {
+            self.term(term, depth);
+            if self.overflow.is_some() { return; }
+        }
+    }
+
+    fn term(&mut self, term: &Term, depth: usize) {
+        if depth > MAX_TERM_NESTING_DEPTH {
+            self.overflow = Some(TermOverflow::Depth);
+            return;
+        }
+        match term {
+            Term::Iri(text) | Term::Var(text) | Term::Blank(text) => self.add(text.len()),
+            Term::Literal(literal) => self.add(
+                literal.value.len()
+                    + literal.datatype.as_deref().map_or(0, str::len)
+                    + literal.language.as_deref().map_or(0, str::len),
+            ),
+            Term::List(items) => {
+                for item in items {
+                    self.term(item, depth + 1);
+                    if self.overflow.is_some() { return; }
+                }
+            }
+            Term::Formula(triples) => {
+                for triple in triples {
+                    self.triple(triple, depth + 1);
+                    if self.overflow.is_some() { return; }
+                }
+            }
+        }
+    }
+
+    fn add(&mut self, bytes: usize) {
+        self.bytes = self.bytes.saturating_add(bytes);
+        if self.bytes > self.max_bytes {
+            self.overflow = Some(TermOverflow::Bytes);
+        }
+    }
+}
+
 fn insert_materialized_triple(
     t: Triple,
     closure: &mut Vec<Triple>,
@@ -1013,8 +1140,16 @@ fn insert_materialized_triple(
     proofs: &mut Vec<DerivedFact>,
     proof: Option<DerivedFact>,
     pending_rules: &mut Vec<Rule>,
+    max_term_bytes: usize,
+    report: &mut RunReport,
 ) -> bool {
     if !admissible_fact(&t) { return false; }
+    // Reject the fact rather than the run: a rule that grows a term without
+    // bound would otherwise be stopped by the allocator, not by a limit.
+    if let Some(overflow) = triple_overflow(&t, max_term_bytes) {
+        report.hit_limit(overflow.limit());
+        return false;
+    }
     if !seen.insert(t.clone()) { return false; }
 
     let mut rules_changed = false;
@@ -4493,7 +4628,12 @@ fn simple_format(fmt: &str, args: &[String]) -> Option<String> {
             }
             _ => return None,
         };
+        // The width comes straight from the input, so a format string can ask
+        // for a gigabyte of padding, or for `usize::MAX` and a capacity
+        // overflow panic.  Treat an absurd width as a call that cannot produce
+        // a value, which is how every other unusable builtin call behaves.
         if let Ok(w) = width.parse::<usize>() {
+            if w > DEFAULT_MAX_TERM_BYTES { return None; }
             if rendered.len() < w {
                 let pad = w - rendered.len();
                 let pad_ch = if zero && !left { '0' } else { ' ' };

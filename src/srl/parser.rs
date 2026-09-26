@@ -145,6 +145,14 @@ struct GraphNode {
     triples: Vec<RawTriple>,
 }
 
+/// How deeply graph nodes and expressions may nest before parsing gives up.
+///
+/// Both are parsed by recursion, and running out of stack aborts the whole
+/// process instead of raising an error a caller could handle.  One bound
+/// serves the whole system; see `crate::n3::parser::MAX_TERM_NESTING_DEPTH`
+/// for why it is 64.
+use crate::n3::parser::MAX_TERM_NESTING_DEPTH as MAX_NESTING_DEPTH;
+
 struct Parser {
     tokens: Vec<Token>,
     pos: usize,
@@ -165,6 +173,8 @@ struct Parser {
     /// (non-`--proof`) parsing pays nothing extra.
     source_label: Option<String>,
     line_starts: Vec<usize>,
+    /// Current nesting depth, checked against `MAX_NESTING_DEPTH`.
+    depth: usize,
 }
 
 impl Parser {
@@ -184,6 +194,7 @@ impl Parser {
             body_blank_labels: None,
             source_label: None,
             line_starts: Vec::new(),
+            depth: 0,
         }
     }
 
@@ -375,7 +386,24 @@ impl Parser {
         Ok(triples)
     }
 
+    fn too_deeply_nested(&self) -> EyeronError {
+        EyeronError::at(
+            format!("terms nested more than {} levels deep", MAX_NESTING_DEPTH),
+            self.peek().offset,
+        )
+    }
+
+    /// Every nested graph-node form routes through here, so this is where
+    /// graph-node nesting depth is counted.
     fn parse_graph_node(&mut self, opts: Opts) -> Result<GraphNode> {
+        if self.depth >= MAX_NESTING_DEPTH { return Err(self.too_deeply_nested()); }
+        self.depth += 1;
+        let parsed = self.parse_graph_node_inner(opts);
+        self.depth -= 1;
+        parsed
+    }
+
+    fn parse_graph_node_inner(&mut self, opts: Opts) -> Result<GraphNode> {
         if self.check_kind(&TokenKind::LBracket) {
             return self.parse_blank_node_property_list(opts);
         }
@@ -822,7 +850,17 @@ impl Parser {
         Ok(())
     }
 
+    /// Every nested expression form routes through here, so this is where
+    /// expression nesting depth is counted.
     fn parse_unary_expression(&mut self) -> Result<Expr> {
+        if self.depth >= MAX_NESTING_DEPTH { return Err(self.too_deeply_nested()); }
+        self.depth += 1;
+        let parsed = self.parse_unary_expression_inner();
+        self.depth -= 1;
+        parsed
+    }
+
+    fn parse_unary_expression_inner(&mut self) -> Result<Expr> {
         let op = match self.peek_kind() {
             TokenKind::Bang => Some(UnaryOp::Not),
             TokenKind::Minus => Some(UnaryOp::Neg),
