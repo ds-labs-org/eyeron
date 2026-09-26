@@ -24,7 +24,7 @@ pub use n3::proof::proof_to_n3;
 pub use srl::proof::proof_to_srl;
 pub use n3::reasoner::{
     reason as reason_document, CompletionStatus, ReasonerError, ReasonerLimit, ReasonerOptions,
-    PreparedReasoner, ReasonerResult, ReasonerStatistics,
+    PreparedReasoner, ReasonerResult, ReasonerStatistics, DEFAULT_MAX_TERM_BYTES, DEFAULT_MAX_TERM_DEPTH,
 };
 
 /// Parse an N3 string, run the forward reasoner, and return the N3 output for

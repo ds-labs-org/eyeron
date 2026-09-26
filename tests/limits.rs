@@ -185,3 +185,160 @@ fn cli_survives_a_hostile_file_instead_of_aborting() {
     // exit 1 (an error message), not 134 (SIGABRT from a stack overflow)
     assert_eq!(output.status.code(), Some(1), "{}", String::from_utf8_lossy(&output.stderr));
 }
+
+// ===========================================================================
+// Resource budgets: ReasonerOptions::{max_facts, max_duration, max_term_bytes,
+// max_term_depth}. The red versions of these tests use bounded programs that
+// finish when unlimited, so they fail safely instead of eating memory.
+// ===========================================================================
+
+use eyeron::{reason_document, ReasonerLimit, ReasonerOptions, DEFAULT_MAX_TERM_BYTES, DEFAULT_MAX_TERM_DEPTH};
+use std::time::Duration;
+
+/// `:n0 :next :n1 ...` and a transitive `:reach`: about n*n/2 derived facts.
+fn reach_chain(n: usize) -> String {
+    let mut source = String::from("@prefix : <http://e/> .\n");
+    for i in 0..n {
+        source.push_str(&format!(":n{i} :next :n{} .\n", i + 1));
+    }
+    source.push_str("{ ?a :next ?b } => { ?a :reach ?b } .\n");
+    source.push_str("{ ?a :reach ?b . ?b :next ?c } => { ?a :reach ?c } .\n");
+    source
+}
+
+fn run(source: &str, options: &ReasonerOptions) -> eyeron::ReasonerResult {
+    let doc = parse_n3(source, None).expect("fixture parses");
+    reason_document(&doc, options)
+}
+
+#[test]
+fn defaults_leave_facts_and_time_unbounded_and_bound_term_size_and_depth() {
+    let d = ReasonerOptions::default();
+    assert_eq!(d.max_facts, None, "unbounded facts is the historical behaviour");
+    assert_eq!(d.max_duration, None);
+    assert_eq!(d.max_term_bytes, DEFAULT_MAX_TERM_BYTES);
+    assert_eq!(d.max_term_depth, DEFAULT_MAX_TERM_DEPTH);
+    assert_eq!(DEFAULT_MAX_TERM_DEPTH, ParserOptions::DEFAULT_MAX_NESTING_DEPTH);
+}
+
+#[test]
+fn a_reasoning_run_within_its_budgets_is_complete_and_unchanged() {
+    let options = ReasonerOptions { max_facts: Some(100_000), max_duration: Some(Duration::from_secs(60)), ..Default::default() };
+    let unlimited = run(&reach_chain(30), &ReasonerOptions::default());
+    let budgeted = run(&reach_chain(30), &options);
+    assert!(budgeted.is_complete(), "{:?}", budgeted.limits_reached);
+    assert_eq!(budgeted.closure.len(), unlimited.closure.len());
+}
+
+#[test]
+fn max_facts_stops_the_closure_and_says_so() {
+    let options = ReasonerOptions { max_facts: Some(500), ..Default::default() };
+    let result = run(&reach_chain(200), &options);
+    assert!(!result.is_complete(), "20,000 derivable facts cannot fit a budget of 500");
+    assert!(result.limits_reached.contains(&ReasonerLimit::Facts), "{:?}", result.limits_reached);
+    assert!(result.closure.len() <= 500, "closure grew to {}", result.closure.len());
+    let summary = result.incomplete_summary().expect("incomplete");
+    assert!(summary.contains("fact limit"), "{summary}");
+}
+
+#[test]
+fn max_duration_stops_a_long_run_and_says_so() {
+    let options = ReasonerOptions { max_duration: Some(Duration::from_millis(1)), ..Default::default() };
+    let started = std::time::Instant::now();
+    let result = run(&reach_chain(400), &options);
+    assert!(!result.is_complete(), "a 1 ms budget cannot finish an 80,000-fact closure");
+    assert!(result.limits_reached.contains(&ReasonerLimit::Time), "{:?}", result.limits_reached);
+    assert!(started.elapsed() < Duration::from_secs(20), "the deadline was not honoured promptly");
+}
+
+#[test]
+fn max_term_bytes_rejects_an_oversized_builtin_result() {
+    // 30 MB of padding requested from string:format; the cap is 1 KB.
+    let source = r#"
+        @prefix : <http://e/> .
+        @prefix string: <http://www.w3.org/2000/10/swap/string#> .
+        :a :fmt "%30000000s" .
+        { :a :fmt ?f . (?f "x") string:format ?s } => { :a :out ?s } .
+    "#;
+    let options = ReasonerOptions { max_term_bytes: 1000, ..Default::default() };
+    let result = run(source, &options);
+    assert!(result.limits_reached.contains(&ReasonerLimit::TermBytes), "{:?}", result.limits_reached);
+    assert!(
+        result.derived.iter().all(|t| !format!("{t:?}").contains("http://e/out")),
+        "the oversized string must not become a fact"
+    );
+}
+
+#[test]
+fn max_term_bytes_also_bounds_concatenation() {
+    let long = "a".repeat(600);
+    let source = format!(
+        r#"@prefix : <http://e/> .
+           @prefix string: <http://www.w3.org/2000/10/swap/string#> .
+           :a :s "{long}" .
+           {{ :a :s ?x . (?x ?x) string:concatenation ?y }} => {{ :a :doubled ?y }} ."#
+    );
+    let options = ReasonerOptions { max_term_bytes: 1000, ..Default::default() };
+    let result = run(&source, &options);
+    assert!(result.limits_reached.contains(&ReasonerLimit::TermBytes), "{:?}", result.limits_reached);
+    assert!(result.derived.iter().all(|t| !format!("{t:?}").contains("doubled")));
+    // a builtin result within the cap is unaffected
+    let roomy = run(&source, &ReasonerOptions { max_term_bytes: 2000, ..Default::default() });
+    assert!(roomy.is_complete());
+    assert!(roomy.derived.iter().any(|t| format!("{t:?}").contains("doubled")));
+}
+
+#[test]
+fn max_term_depth_rejects_a_derived_fact_nested_too_deeply() {
+    let source = format!(
+        "@prefix : <http://e/> .\n:a :p {}:z{} .\n{{ :a :p ?x }} => {{ :b :p ?x }} .\n",
+        "{ :x :y ".repeat(20),
+        " }".repeat(20)
+    );
+    let strict = run(&source, &ReasonerOptions { max_term_depth: 10, ..Default::default() });
+    assert!(strict.limits_reached.contains(&ReasonerLimit::TermDepth), "{:?}", strict.limits_reached);
+    assert!(strict.derived.is_empty(), "the 20-deep copy must be rejected");
+
+    let default = run(&source, &ReasonerOptions::default());
+    assert!(default.is_complete(), "20 levels is within the default of {DEFAULT_MAX_TERM_DEPTH}");
+    assert_eq!(default.derived.len(), 1);
+}
+
+// --- the command line ---
+
+#[test]
+fn cli_budget_flags_stop_a_run_and_name_the_limit() {
+    let chain = reach_chain(200);
+    let ok = run_cli(&[], &chain, "n3");
+    assert!(ok.status.success(), "{}", String::from_utf8_lossy(&ok.stderr));
+    for (flag, value, label) in [("--max-facts", "500", "fact limit"), ("--timeout-ms", "1", "time limit")] {
+        let source = if flag == "--timeout-ms" { reach_chain(400) } else { chain.clone() };
+        let out = run_cli(&[flag, value], &source, "n3");
+        let stderr = String::from_utf8_lossy(&out.stderr);
+        assert!(!stderr.contains("unknown option"), "{flag} must exist: {stderr}");
+        assert_eq!(out.status.code(), Some(1), "{flag}: {stderr}");
+        assert!(stderr.contains(label), "{flag}: {stderr}");
+    }
+}
+
+#[test]
+fn cli_term_flags_reject_oversized_and_too_deep_results() {
+    let format = "@prefix : <http://e/> . @prefix string: <http://www.w3.org/2000/10/swap/string#> .\n\
+                  :a :fmt \"%30000000s\" .\n{ :a :fmt ?f . (?f \"x\") string:format ?s } => { :a :out ?s } .\n";
+    let out = run_cli(&["--max-term-bytes", "1000"], format, "n3");
+    let stderr = String::from_utf8_lossy(&out.stderr);
+    assert!(!stderr.contains("unknown option"), "{stderr}");
+    assert_eq!(out.status.code(), Some(1), "{stderr}");
+    assert!(stderr.contains("term-size limit"), "{stderr}");
+
+    let deep = format!(
+        "@prefix : <http://e/> .\n:a :p {}:z{} .\n{{ :a :p ?x }} => {{ :b :p ?x }} .\n",
+        "{ :x :y ".repeat(20),
+        " }".repeat(20)
+    );
+    let out = run_cli(&["--max-term-depth", "10"], &deep, "n3");
+    let stderr = String::from_utf8_lossy(&out.stderr);
+    assert!(!stderr.contains("unknown option"), "{stderr}");
+    assert_eq!(out.status.code(), Some(1), "{stderr}");
+    assert!(stderr.contains("term-depth limit"), "{stderr}");
+}

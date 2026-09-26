@@ -53,6 +53,10 @@ struct SearchBudget {
     max_steps: usize,
     max_backward_depth: usize,
     max_backward_solutions_per_goal: usize,
+    max_facts: Option<usize>,
+    max_duration: Option<std::time::Duration>,
+    max_term_bytes: usize,
+    max_term_depth: usize,
     limits_reached: BTreeSet<ReasonerLimit>,
     errors: Vec<ReasonerError>,
     error_seen: HashSet<ReasonerError>,
@@ -72,6 +76,10 @@ impl SearchBudget {
             max_steps: options.max_match_steps,
             max_backward_depth: options.max_backward_depth,
             max_backward_solutions_per_goal: options.max_backward_solutions_per_goal,
+            max_facts: options.max_facts,
+            max_duration: options.max_duration,
+            max_term_bytes: options.max_term_bytes,
+            max_term_depth: options.max_term_depth,
             limits_reached: BTreeSet::new(),
             errors: Vec::new(),
             error_seen: HashSet::new(),
@@ -88,6 +96,10 @@ impl SearchBudget {
             max_steps: DEFAULT_MAX_MATCH_STEPS,
             max_backward_depth: max_depth,
             max_backward_solutions_per_goal: DEFAULT_MAX_BACKWARD_SOLUTIONS_PER_GOAL,
+            max_facts: None,
+            max_duration: None,
+            max_term_bytes: DEFAULT_MAX_TERM_BYTES,
+            max_term_depth: DEFAULT_MAX_TERM_DEPTH,
             limits_reached: BTreeSet::new(),
             errors: Vec::new(),
             error_seen: HashSet::new(),
@@ -115,6 +127,10 @@ impl SearchBudget {
             max_match_steps: self.max_steps,
             max_backward_depth: self.max_backward_depth,
             max_backward_solutions_per_goal: self.max_backward_solutions_per_goal,
+            max_facts: self.max_facts,
+            max_duration: self.max_duration,
+            max_term_bytes: self.max_term_bytes,
+            max_term_depth: self.max_term_depth,
             trace: false,
             proof: false,
         }
@@ -436,6 +452,14 @@ pub enum ReasonerLimit {
     MatchSteps,
     BackwardDepth,
     BackwardSolutionsPerGoal,
+    /// `ReasonerOptions::max_facts`: the closure reached the fact budget.
+    Facts,
+    /// `ReasonerOptions::max_duration`: the wall-clock budget ran out.
+    Time,
+    /// `ReasonerOptions::max_term_bytes`: a builtin result was too large.
+    TermBytes,
+    /// `ReasonerOptions::max_term_depth`: a derived term was nested too deeply.
+    TermDepth,
 }
 
 impl std::fmt::Display for ReasonerLimit {
@@ -445,6 +469,10 @@ impl std::fmt::Display for ReasonerLimit {
             Self::MatchSteps => "match-step limit",
             Self::BackwardDepth => "backward-depth limit",
             Self::BackwardSolutionsPerGoal => "backward-solution limit",
+            Self::Facts => "fact limit",
+            Self::Time => "time limit",
+            Self::TermBytes => "term-size limit",
+            Self::TermDepth => "term-depth limit",
         };
         write!(f, "{}", label)
     }
@@ -499,6 +527,17 @@ pub struct ReasonerOptions {
     pub max_backward_depth: usize,
     /// Maximum substitutions retained for one backward goal.
     pub max_backward_solutions_per_goal: usize,
+    /// Resource budget: most facts (explicit plus derived) the closure may
+    /// hold. `None` (the default) means unbounded, which is the historical
+    /// behaviour; an embedder reasoning over untrusted rules should set it.
+    pub max_facts: Option<usize>,
+    /// Resource budget: wall-clock time for one run. `None` means unbounded.
+    pub max_duration: Option<std::time::Duration>,
+    /// Largest string a builtin may produce, in bytes (also caps the width
+    /// `string:format` will pad to).
+    pub max_term_bytes: usize,
+    /// Deepest nesting of `{ }` and `( )` a derived fact may have.
+    pub max_term_depth: usize,
     pub trace: bool,
     pub proof: bool,
 }
@@ -519,11 +558,21 @@ impl Default for ReasonerOptions {
             max_match_steps: DEFAULT_MAX_MATCH_STEPS,
             max_backward_depth: DEFAULT_MAX_BACKWARD_DEPTH,
             max_backward_solutions_per_goal: DEFAULT_MAX_BACKWARD_SOLUTIONS_PER_GOAL,
+            max_facts: None,
+            max_duration: None,
+            max_term_bytes: DEFAULT_MAX_TERM_BYTES,
+            max_term_depth: DEFAULT_MAX_TERM_DEPTH,
             trace: false,
             proof: false,
         }
     }
 }
+
+/// Builtins may not build a string larger than this by default.
+pub const DEFAULT_MAX_TERM_BYTES: usize = 16 * 1024 * 1024;
+/// Derived facts may not nest deeper than this by default (the parser's own
+/// default nesting limit).
+pub const DEFAULT_MAX_TERM_DEPTH: usize = 64;
 
 #[derive(Debug, Clone)]
 pub struct ReasonerResult {
