@@ -36,7 +36,10 @@ fn n3_triple_term(depth: usize) -> String {
     format!("{P}{}:s{} :p :o .", "<< ".repeat(depth), " :p :o >>".repeat(depth))
 }
 
-const N3_SHAPES: [(&str, fn(usize) -> String); 4] = [
+/// A named builder of an input `depth` levels deep.
+type Shape = (&'static str, fn(usize) -> String);
+
+const N3_SHAPES: [Shape; 4] = [
     ("formula", n3_formula),
     ("list", n3_list),
     ("blank node property list", n3_bnode),
@@ -115,7 +118,7 @@ fn srl_bnode(depth: usize) -> String {
     format!("{SRL_HEAD}RULE {{ ?x :p {}:z{} }} WHERE {{ ?x :q ?y }}", "[ :p ".repeat(depth), " ]".repeat(depth))
 }
 
-const SRL_SHAPES: [(&str, fn(usize) -> String); 4] = [
+const SRL_SHAPES: [Shape; 4] = [
     ("parenthesised expression", srl_expr),
     ("unary operator chain", srl_unary),
     ("collection", srl_collection),
