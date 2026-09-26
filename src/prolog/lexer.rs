@@ -243,7 +243,7 @@ impl<'a> Lexer<'a> {
         }
         // `.` ends a clause when layout or end of input follows it;
         // otherwise it is an ordinary graphic character.
-        if c == b'.' && self.at(1).map_or(true, |n| n.is_ascii_whitespace() || n == b'%') {
+        if c == b'.' && self.at(1).is_none_or(|n| n.is_ascii_whitespace() || n == b'%') {
             self.offset += 1;
             return Ok(make(TokenKind::End));
         }
