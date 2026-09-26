@@ -114,6 +114,14 @@ impl SearchBudget {
             return false;
         }
         self.steps += 1;
+        // Every 1024 steps, notice an exhausted run-wide budget (facts, time) so
+        // a search that is deep in a long join stops instead of finishing it.
+        if self.steps & 1023 == 0 {
+            if let Some(limit) = run_stop_limit() {
+                self.hit_limit(limit);
+                return false;
+            }
+        }
         true
     }
 
@@ -700,6 +708,7 @@ fn reason_with_plan(
     mut agenda_index: AgendaIndex,
 ) -> ReasonerResult {
     let _clear_regex_cache = ClearRegexCacheOnDrop;
+    let limits = RunLimitsGuard::enter(options);
     let mut closure = Vec::<Triple>::new();
     let mut fact_index = FactIndex::default();
     let mut seen = HashSet::<Triple>::new();
@@ -726,7 +735,11 @@ fn reason_with_plan(
     let mut report = RunReport::default();
     let mut closure_saturated = false;
 
-    loop {
+    'fixpoint: loop {
+        if let Some(limit) = run_stop_limit() {
+            report.hit_limit(limit);
+            break;
+        }
         if iteration >= options.max_iterations {
             report.hit_limit(ReasonerLimit::Iterations);
             break;
@@ -740,6 +753,10 @@ fn reason_with_plan(
         // taxonomy chains and state-machine examples from "scan every rule for
         // every wave" into "look up the rule premises that can match this fact".
         while agenda_cursor < closure.len() {
+            if let Some(limit) = run_stop_limit() {
+                report.hit_limit(limit);
+                break 'fixpoint;
+            }
             let fact = closure[agenda_cursor].clone();
             agenda_cursor += 1;
             let candidates = agenda_index.candidates(&fact);
@@ -843,6 +860,10 @@ fn reason_with_plan(
         let rule_count_at_start = active_rules.len();
         let mut pending_rules = Vec::<Rule>::new();
         for idx in 0..rule_count_at_start {
+            if let Some(limit) = run_stop_limit() {
+                report.hit_limit(limit);
+                break 'fixpoint;
+            }
             if agenda_index.indexed.contains(&idx) { continue; }
             let rule = active_rules[idx].clone();
             if !rule.is_forward { continue; }
@@ -903,6 +924,7 @@ fn reason_with_plan(
         );
     }
 
+    report.limits_reached.extend(limits.tripped());
     let limits_reached = report.limits_reached.into_iter().collect::<Vec<_>>();
     let status = if limits_reached.is_empty() && report.errors.is_empty() {
         CompletionStatus::Complete
@@ -1064,6 +1086,13 @@ fn insert_materialized_triple(
     pending_rules: &mut Vec<Rule>,
 ) -> bool {
     if !admissible_fact(&t) { return false; }
+    if !run_depth_fits(&t) { return false; }
+    if run_facts_at_capacity(seen.len()) {
+        // Only a genuinely new fact exceeds the budget; re-deriving one already
+        // in the closure changes nothing.
+        if !seen.contains(&t) { run_trip(ReasonerLimit::Facts); }
+        return false;
+    }
     if !seen.insert(t.clone()) { return false; }
 
     let mut rules_changed = false;
@@ -4188,6 +4217,149 @@ fn eval_math_sum(left: &Term, right: &Term, bindings: &Bindings, facts: &[Triple
     }
 }
 
+// ---------------------------------------------------------------------------
+// Per-run resource limits.
+//
+// The budgets in `ReasonerOptions` (facts, wall-clock time, builtin result size,
+// derived-term depth) have to be seen by code far from the option value: the
+// derived-fact funnel, string builtins that build a result, and the step
+// counter of every nested search. Threading them through every signature would
+// touch hundreds of call sites, so a run installs them in a per-thread stack
+// (`RunLimitsGuard`) and the few checkpoints read the top. A nested reasoning
+// run (`log:conclusion` and friends) pushes its own entry and inherits the
+// tighter of the two deadlines.
+// ---------------------------------------------------------------------------
+
+#[derive(Debug)]
+struct RunLimits {
+    max_facts: Option<usize>,
+    deadline_ms: Option<u128>,
+    max_term_bytes: usize,
+    max_term_depth: usize,
+    tripped: BTreeSet<ReasonerLimit>,
+}
+
+thread_local! {
+    static RUN_LIMITS: std::cell::RefCell<Vec<RunLimits>> = const { std::cell::RefCell::new(Vec::new()) };
+}
+
+/// Wall-clock milliseconds. Uses the same clock as the time builtins so it also
+/// works on `wasm32-unknown-unknown`, where `std::time::Instant` panics.
+fn now_millis() -> u128 {
+    current_unix_time().map_or(0, |(secs, millis)| secs.max(0) as u128 * 1000 + u128::from(millis))
+}
+
+/// Installs a run's limits for the current thread and removes them on drop.
+pub(crate) struct RunLimitsGuard;
+
+impl RunLimitsGuard {
+    pub(crate) fn enter(options: &ReasonerOptions) -> Self {
+        let own_deadline = options.max_duration.map(|d| now_millis() + d.as_millis());
+        RUN_LIMITS.with(|stack| {
+            let mut stack = stack.borrow_mut();
+            let outer_deadline = stack.last().and_then(|outer| outer.deadline_ms);
+            let deadline_ms = match (own_deadline, outer_deadline) {
+                (Some(a), Some(b)) => Some(a.min(b)),
+                (a, b) => a.or(b),
+            };
+            stack.push(RunLimits {
+                max_facts: options.max_facts,
+                deadline_ms,
+                max_term_bytes: options.max_term_bytes,
+                max_term_depth: options.max_term_depth,
+                tripped: BTreeSet::new(),
+            });
+        });
+        Self
+    }
+
+    /// The limits this run tripped, for its `ReasonerResult`.
+    pub(crate) fn tripped(&self) -> BTreeSet<ReasonerLimit> {
+        RUN_LIMITS.with(|stack| stack.borrow().last().map(|top| top.tripped.clone()).unwrap_or_default())
+    }
+}
+
+impl Drop for RunLimitsGuard {
+    fn drop(&mut self) {
+        RUN_LIMITS.with(|stack| {
+            stack.borrow_mut().pop();
+        });
+    }
+}
+
+pub(crate) fn run_trip(limit: ReasonerLimit) {
+    RUN_LIMITS.with(|stack| {
+        if let Some(top) = stack.borrow_mut().last_mut() {
+            top.tripped.insert(limit);
+        }
+    });
+}
+
+/// Why the run should stop now, if a budget that ends the whole run has been
+/// exhausted (facts or time). Time is checked against the clock here.
+pub(crate) fn run_stop_limit() -> Option<ReasonerLimit> {
+    RUN_LIMITS.with(|stack| {
+        let mut stack = stack.borrow_mut();
+        let top = stack.last_mut()?;
+        if top.tripped.contains(&ReasonerLimit::Facts) { return Some(ReasonerLimit::Facts); }
+        if top.tripped.contains(&ReasonerLimit::Time) { return Some(ReasonerLimit::Time); }
+        if top.deadline_ms.is_some_and(|deadline| now_millis() >= deadline) {
+            top.tripped.insert(ReasonerLimit::Time);
+            return Some(ReasonerLimit::Time);
+        }
+        None
+    })
+}
+
+/// Whether the fact budget is already spent (the closure holds `max_facts`).
+pub(crate) fn run_facts_at_capacity(current_len: usize) -> bool {
+    RUN_LIMITS.with(|stack| {
+        stack.borrow().last().is_some_and(|top| top.max_facts.is_some_and(|max| current_len >= max))
+    })
+}
+
+/// Whether a derived triple is within the term-depth budget; trips `TermDepth`
+/// when it is not.
+pub(crate) fn run_depth_fits(triple: &Triple) -> bool {
+    let max = RUN_LIMITS.with(|stack| stack.borrow().last().map_or(usize::MAX, |top| top.max_term_depth));
+    if max == usize::MAX { return true; }
+    let deep = [&triple.s, &triple.p, &triple.o].into_iter().any(|t| term_depth_exceeds(t, max));
+    if deep { run_trip(ReasonerLimit::TermDepth); }
+    !deep
+}
+
+/// True when `term` nests `{ }` or `( )` more than `max` levels deep. Stops
+/// descending as soon as the answer is known, so it costs at most `max` frames.
+fn term_depth_exceeds(term: &Term, max: usize) -> bool {
+    fn exceeds(term: &Term, depth: usize, max: usize) -> bool {
+        match term {
+            Term::List(items) => {
+                depth + 1 > max || items.iter().any(|item| exceeds(item, depth + 1, max))
+            }
+            Term::Formula(triples) => {
+                depth + 1 > max
+                    || triples.iter().any(|t| {
+                        exceeds(&t.s, depth + 1, max) || exceeds(&t.p, depth + 1, max) || exceeds(&t.o, depth + 1, max)
+                    })
+            }
+            _ => false,
+        }
+    }
+    exceeds(term, 0, max)
+}
+
+/// The largest string a builtin may produce in the current run.
+fn run_max_term_bytes() -> usize {
+    RUN_LIMITS.with(|stack| stack.borrow().last().map_or(usize::MAX, |top| top.max_term_bytes))
+}
+
+/// Whether a builtin may produce `len` bytes; trips `TermBytes` when not.
+fn run_term_bytes_fit(len: usize) -> bool {
+    let fits = len <= run_max_term_bytes();
+    if !fits { run_trip(ReasonerLimit::TermBytes); }
+    fits
+}
+
 /// Most compiled patterns kept per thread. A compiled `Regex` may hold up to
 /// the regex crate's default size limit (10 MiB), so the worst case is bounded
 /// at `REGEX_CACHE_CAPACITY` times that, not at the number of distinct patterns
@@ -4493,6 +4665,9 @@ fn bind_string_result(right: &Term, text: String, bindings: &Bindings) -> Vec<Bi
     if matches!(resolve(right, bindings), Term::Blank(_)) {
         return vec![bindings.clone()];
     }
+    if !run_term_bytes_fit(text.len()) {
+        return Vec::new();
+    }
     let value = Term::Literal(Literal::plain(text));
     let mut b = bindings.clone();
     if unify_term(right, &value, &mut b) { vec![canonicalize_bindings(&b)] } else { Vec::new() }
@@ -4528,6 +4703,11 @@ fn simple_format(fmt: &str, args: &[String]) -> Option<String> {
                 if c.is_ascii_digit() { p.push(c); chars.next(); } else { break; }
             }
             precision = p.parse::<usize>().ok();
+        }
+        // Refuse before allocating: a width or precision is a requested size.
+        let requested = width.parse::<usize>().unwrap_or(0).max(precision.unwrap_or(0));
+        if !run_term_bytes_fit(requested) {
+            return None;
         }
         let spec = chars.next()?;
         let arg = args.get(arg_index)?.clone();

@@ -342,3 +342,121 @@ fn cli_term_flags_reject_oversized_and_too_deep_results() {
     assert_eq!(out.status.code(), Some(1), "{stderr}");
     assert!(stderr.contains("term-depth limit"), "{stderr}");
 }
+
+// --- rules that never terminate, and edge cases the budgets must get right ---
+// (These could not be red first: without a budget they run until memory or the
+// clock gives out. They pass because the budgets exist.)
+
+const COUNTING_FOREVER: &str = "@prefix : <http://e/> .\n\
+    @prefix math: <http://www.w3.org/2000/10/swap/math#> .\n\
+    :a :v 0 .\n\
+    { :a :v ?x . (?x 1) math:sum ?z } => { :a :v ?z } .\n";
+
+#[test]
+fn a_rule_that_counts_forever_is_stopped_by_max_facts() {
+    let options = ReasonerOptions { max_facts: Some(10_000), ..Default::default() };
+    let result = run(COUNTING_FOREVER, &options);
+    assert!(!result.is_complete());
+    assert!(result.limits_reached.contains(&ReasonerLimit::Facts), "{:?}", result.limits_reached);
+    assert!(result.closure.len() <= 10_000, "closure grew to {}", result.closure.len());
+}
+
+#[test]
+fn a_rule_that_counts_forever_is_stopped_by_max_duration() {
+    let options = ReasonerOptions { max_duration: Some(Duration::from_millis(300)), ..Default::default() };
+    let started = std::time::Instant::now();
+    let result = run(COUNTING_FOREVER, &options);
+    assert!(result.limits_reached.contains(&ReasonerLimit::Time), "{:?}", result.limits_reached);
+    assert!(started.elapsed() < Duration::from_secs(10), "took {:?}", started.elapsed());
+}
+
+#[test]
+fn a_string_that_doubles_forever_is_stopped_by_max_term_bytes() {
+    let source = r#"
+        @prefix : <http://e/> .
+        @prefix string: <http://www.w3.org/2000/10/swap/string#> .
+        :a :s "ab" .
+        { :a :s ?x . (?x ?x) string:concatenation ?y } => { :a :s ?y } .
+    "#;
+    let started = std::time::Instant::now();
+    let result = run(source, &ReasonerOptions { max_term_bytes: 4096, ..Default::default() });
+    assert!(result.limits_reached.contains(&ReasonerLimit::TermBytes), "{:?}", result.limits_reached);
+    assert!(started.elapsed() < Duration::from_secs(10));
+    let longest = result.closure.iter().map(|t| format!("{:?}", t.o).len()).max().unwrap_or(0);
+    assert!(longest < 8192, "a {longest}-byte string got through a 4096-byte cap");
+}
+
+#[test]
+fn a_format_width_beyond_the_address_space_is_refused_not_a_panic() {
+    // `%18446744073709551615s` used to abort with "capacity overflow".
+    let source = r#"
+        @prefix : <http://e/> .
+        @prefix string: <http://www.w3.org/2000/10/swap/string#> .
+        :a :fmt "%18446744073709551615s" .
+        { :a :fmt ?f . (?f "x") string:format ?s } => { :a :out ?s } .
+    "#;
+    let result = std::thread::spawn(move || run(source, &ReasonerOptions::default()))
+        .join()
+        .expect("must not panic");
+    assert!(result.limits_reached.contains(&ReasonerLimit::TermBytes), "{:?}", result.limits_reached);
+}
+
+#[test]
+fn a_budget_of_exactly_the_closure_size_is_complete_and_one_less_is_not() {
+    // Re-deriving a fact already in the closure must not count as exceeding it.
+    let closure = run(&reach_chain(30), &ReasonerOptions::default()).closure.len();
+    let exact = run(&reach_chain(30), &ReasonerOptions { max_facts: Some(closure), ..Default::default() });
+    assert!(exact.is_complete(), "{:?}", exact.limits_reached);
+    let short = run(&reach_chain(30), &ReasonerOptions { max_facts: Some(closure - 1), ..Default::default() });
+    assert!(short.limits_reached.contains(&ReasonerLimit::Facts));
+}
+
+#[test]
+fn every_reasoning_run_leaves_no_limits_behind_on_its_thread() {
+    // Limits live in a per-thread stack; a run must pop what it pushed, or a
+    // later run on the same thread would inherit a stale deadline.
+    let strict = ReasonerOptions { max_duration: Some(Duration::from_millis(1)), ..Default::default() };
+    let _ = run(&reach_chain(400), &strict);
+    let later = run(&reach_chain(30), &ReasonerOptions::default());
+    assert!(later.is_complete(), "a finished strict run must not leak its deadline: {:?}", later.limits_reached);
+}
+
+// --- SPARQL 1.2 RL has its own fixpoint and shares the budgets ---
+
+fn srl_reach_chain(n: usize) -> String {
+    let mut source = String::from("PREFIX : <http://e/>\nDATA {\n");
+    for i in 0..n {
+        source.push_str(&format!("  :n{i} :next :n{} .\n", i + 1));
+    }
+    source.push_str("}\nRULE { ?a :reach ?b } WHERE { ?a :next ?b }\n");
+    source.push_str("RULE { ?a :reach ?c } WHERE { ?a :reach ?b . ?b :next ?c }\n");
+    source
+}
+
+#[test]
+fn srl_honours_max_facts_and_max_duration() {
+    let program = eyeron::srl::parse_sparql_rl(&srl_reach_chain(40), None).expect("parses");
+    let unlimited = eyeron::srl::reason(&program, &[], &ReasonerOptions::default()).expect("runs");
+    assert!(unlimited.is_complete());
+
+    let capped = eyeron::srl::reason(&program, &[], &ReasonerOptions { max_facts: Some(100), ..Default::default() }).expect("runs");
+    assert!(capped.limits_reached.contains(&ReasonerLimit::Facts), "{:?}", capped.limits_reached);
+    assert!(capped.closure.len() <= 100 + 1, "SRL closure grew to {}", capped.closure.len());
+
+    let program = eyeron::srl::parse_sparql_rl(&srl_reach_chain(400), None).expect("parses");
+    let timed = eyeron::srl::reason(
+        &program,
+        &[],
+        &ReasonerOptions { max_duration: Some(Duration::from_millis(1)), ..Default::default() },
+    )
+    .expect("runs");
+    assert!(timed.limits_reached.contains(&ReasonerLimit::Time), "{:?}", timed.limits_reached);
+}
+
+#[test]
+fn cli_max_facts_applies_to_srl_files() {
+    let out = run_cli(&["--max-facts", "100"], &srl_reach_chain(40), "srl");
+    let stderr = String::from_utf8_lossy(&out.stderr);
+    assert_eq!(out.status.code(), Some(1), "{stderr}");
+    assert!(stderr.contains("fact limit"), "{stderr}");
+}

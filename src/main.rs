@@ -27,6 +27,10 @@ struct CliOptions {
     base_iri: Option<String>,
     max_backward_depth: Option<usize>,
     max_nesting_depth: Option<usize>,
+    max_facts: Option<usize>,
+    timeout_ms: Option<u64>,
+    max_term_bytes: Option<usize>,
+    max_term_depth: Option<usize>,
     files: Vec<String>,
     /// `--data FILE` (repeatable): RDF documents forming the immutable base
     /// graph for a SPARQL 1.2 RL run (`WHERE DATA`/`NOT DATA` read this,
@@ -514,6 +518,14 @@ fn cli_reasoner_options(opt: &CliOptions, proof: bool) -> ReasonerOptions {
     if let Some(max_backward_depth) = opt.max_backward_depth {
         options.max_backward_depth = max_backward_depth;
     }
+    options.max_facts = opt.max_facts;
+    options.max_duration = opt.timeout_ms.map(std::time::Duration::from_millis);
+    if let Some(max_term_bytes) = opt.max_term_bytes {
+        options.max_term_bytes = max_term_bytes;
+    }
+    if let Some(max_term_depth) = opt.max_term_depth {
+        options.max_term_depth = max_term_depth;
+    }
     options
 }
 
@@ -546,6 +558,20 @@ fn parse_args(args: Vec<String>) -> Result<CliOptions> {
                         flag, args[i]
                     ))
                 })?);
+            }
+            "--max-facts" | "--timeout-ms" | "--max-term-bytes" | "--max-term-depth" => {
+                let flag = args[i].clone();
+                i += 1;
+                if i >= args.len() {
+                    return Err(EyeronError::new(format!("{} requires a value", flag)));
+                }
+                let bad = || EyeronError::new(format!("{} requires a non-negative integer, got {}", flag, args[i]));
+                match flag.as_str() {
+                    "--max-facts" => opt.max_facts = Some(args[i].parse::<usize>().map_err(|_| bad())?),
+                    "--timeout-ms" => opt.timeout_ms = Some(args[i].parse::<u64>().map_err(|_| bad())?),
+                    "--max-term-bytes" => opt.max_term_bytes = Some(args[i].parse::<usize>().map_err(|_| bad())?),
+                    _ => opt.max_term_depth = Some(args[i].parse::<usize>().map_err(|_| bad())?),
+                }
             }
             "--max-nesting-depth" => {
                 let flag = args[i].clone();
@@ -810,6 +836,16 @@ fn print_help() {
     println!(
         "      --max-nesting-depth N     Maximum nesting of {{ }}, ( ), [ ] and << >> in input (default: {})",
         ParserOptions::default().max_nesting_depth
+    );
+    println!("      --max-facts N             Stop when the closure holds N facts (default: unbounded)");
+    println!("      --timeout-ms N            Stop after N milliseconds of reasoning (default: unbounded)");
+    println!(
+        "      --max-term-bytes N        Largest string a builtin may produce, in bytes (default: {})",
+        ReasonerOptions::default().max_term_bytes
+    );
+    println!(
+        "      --max-term-depth N        Deepest nesting of a derived fact (default: {})",
+        ReasonerOptions::default().max_term_depth
     );
     println!("      --data FILE               RDF base graph for a SPARQL 1.2 RL run (repeatable; .srl input only)");
     println!("      --query TEXT              Raw SPARQL-RL body pattern to query instead of printing derived facts (.srl only)");

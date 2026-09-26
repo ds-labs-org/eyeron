@@ -49,7 +49,8 @@ use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 use crate::ast::{Rule, Term, Triple};
 use crate::error::Result;
 use crate::n3::reasoner::{
-    instantiate_triple, resolve_pattern, Bindings, CompletionStatus, DerivedFact, FactIndex, ReasonerOptions, ReasonerResult, ReasonerStatistics,
+    instantiate_triple, resolve_pattern, run_depth_fits, run_facts_at_capacity, run_stop_limit, run_trip, Bindings,
+    CompletionStatus, DerivedFact, FactIndex, ReasonerLimit, ReasonerOptions, ReasonerResult, ReasonerStatistics, RunLimitsGuard,
 };
 
 use super::ast::{SparqlRlProgram, SparqlRlRule};
@@ -80,6 +81,8 @@ use super::stratify::{rule_positive_patterns, stratify};
 /// (`src/bin/w3c_sparql_rl.rs` compares against it for that reason);
 /// the two coincide there, since those tests supply no base graph.
 pub fn reason(program: &SparqlRlProgram, base_graph: &[Triple], options: &ReasonerOptions) -> Result<ReasonerResult> {
+    // The facts, time and depth budgets apply here as in the N3 reasoner.
+    let limits = RunLimitsGuard::enter(options);
     for (index, rule) in program.rules.iter().enumerate() {
         super::wellformed::check_rule(rule, index)?;
     }
@@ -167,6 +170,10 @@ pub fn reason(program: &SparqlRlProgram, base_graph: &[Triple], options: &Reason
         let mut first_pass = true;
 
         loop {
+            if run_stop_limit().is_some() {
+                status = CompletionStatus::Incomplete;
+                break 'strata;
+            }
             let base = Graph { facts: &base_graph, index: &base_index };
             let inference = Graph { facts: &match_facts, index: &match_index };
             let ctx = BodyCtx::new(inference, base, &eval_ctx);
@@ -217,9 +224,20 @@ pub fn reason(program: &SparqlRlProgram, base_graph: &[Triple], options: &Reason
 
     let derived: Vec<Triple> = inference_facts.iter().filter(|t| !explicit_seen.contains(t)).cloned().collect();
 
+    // Any budget that tripped (even one that only rejected a fact) means the
+    // closure is not known to be complete.
+    let tripped = limits.tripped();
+    let status = if tripped.is_empty() { status } else { CompletionStatus::Incomplete };
     Ok(ReasonerResult {
         status,
-        limits_reached: if status == CompletionStatus::Incomplete { vec![crate::n3::reasoner::ReasonerLimit::Iterations] } else { Vec::new() },
+        limits_reached: {
+            let mut reached = tripped;
+            // Incomplete with no run-wide budget tripped means the iteration cap.
+            if status == CompletionStatus::Incomplete && reached.is_empty() {
+                reached.insert(ReasonerLimit::Iterations);
+            }
+            reached.into_iter().collect()
+        },
         errors: Vec::new(),
         statistics,
         explicit,
@@ -311,6 +329,16 @@ fn fire_rule(rule: &SparqlRlRule, proof_rule: Option<&std::sync::Arc<Rule>>, ctx
         let mut blank_map = BTreeMap::new();
         for head in &rule.head {
             if let Some(t) = instantiate_triple(head, bindings, &mut blank_map) {
+                if !run_depth_fits(&t) {
+                    continue;
+                }
+                if run_facts_at_capacity(seen.len()) {
+                    // Only a genuinely new fact exceeds the budget.
+                    if !seen.contains(&t) {
+                        run_trip(ReasonerLimit::Facts);
+                    }
+                    continue;
+                }
                 if seen.insert(t.clone()) {
                     if let Some(proof_rule) = proof_rule {
                         // A body property path contributes only the
