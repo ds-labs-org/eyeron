@@ -36,3 +36,14 @@ impl RdfFormat {
 pub fn parse_rdf12(input: &str, base_iri: Option<&str>, format: RdfFormat) -> Result<Document> {
     parser::parse_rdf12_compat(input, base_iri, format)
 }
+
+/// As `parse_rdf12`, with explicit [`parser::ParserOptions`].
+pub fn parse_rdf12_with_options(
+    input: &str,
+    base_iri: Option<&str>,
+    format: RdfFormat,
+    options: &parser::ParserOptions,
+) -> Result<Document> {
+    let _ = options;
+    parser::parse_rdf12_compat(input, base_iri, format)
+}

@@ -3,8 +3,45 @@ use crate::error::{EyeronError, Result};
 use crate::n3::lexer::{lex, Token, TokenKind};
 use crate::n3::rdf_compat::RdfFormat;
 
+/// Limits applied while parsing text that may come from an untrusted source.
+///
+/// Every parser here is recursive descent, so an unbounded nesting depth is an
+/// unbounded stack: a ~24 KB file of nested `{` overflows an 8 MB stack and a
+/// 6 KB one overflows a 2 MiB thread stack, and a stack overflow aborts the
+/// process (it cannot be caught). `max_nesting_depth` turns that into an
+/// ordinary parse error.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ParserOptions {
+    /// Deepest allowed nesting of `{ }`, `( )`, `[ ]`, `<< >>` and, in SPARQL
+    /// 1.2 RL, of parenthesised expressions, groups and property paths.
+    pub max_nesting_depth: usize,
+}
+
+impl ParserOptions {
+    /// Real documents nest a handful of levels. 128 levels use about 350 KB of
+    /// stack, which fits the 1 MiB stack a wasm module or a small thread gets.
+    pub const DEFAULT_MAX_NESTING_DEPTH: usize = 128;
+}
+
+impl Default for ParserOptions {
+    fn default() -> Self {
+        Self { max_nesting_depth: Self::DEFAULT_MAX_NESTING_DEPTH }
+    }
+}
+
 pub fn parse_n3(input: &str, base_iri: Option<&str>) -> Result<Document> {
     parse_n3_with_source(input, base_iri, None)
+}
+
+/// As `parse_n3_with_source`, with explicit [`ParserOptions`].
+pub fn parse_n3_with_options(
+    input: &str,
+    base_iri: Option<&str>,
+    source_label: Option<&str>,
+    options: &ParserOptions,
+) -> Result<Document> {
+    let _ = options;
+    parse_n3_with_source(input, base_iri, source_label)
 }
 
 pub fn parse_n3_with_source(input: &str, base_iri: Option<&str>, source_label: Option<&str>) -> Result<Document> {

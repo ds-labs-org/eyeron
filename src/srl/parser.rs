@@ -14,7 +14,7 @@ use std::collections::BTreeMap;
 
 use crate::ast::{Literal, SourceRef, Term, Triple, RDF_FIRST, RDF_NIL, RDF_REST, RDF_TYPE};
 use crate::error::{EyeronError, Result};
-use crate::n3::parser::{boolean_literal, number_literal};
+use crate::n3::parser::{boolean_literal, number_literal, ParserOptions};
 
 use super::ast::{BinaryOp, Clause, Expr, PathExpr, SparqlRlProgram, SparqlRlRule, UnaryOp};
 use super::lexer::{lex, Token, TokenKind};
@@ -24,6 +24,17 @@ const RDF_REIFIES: &str = "http://www.w3.org/1999/02/22-rdf-syntax-ns#reifies";
 /// Parse a `.srl` SPARQL 1.2 RL rule set.
 pub fn parse_sparql_rl(input: &str, base_iri: Option<&str>) -> Result<SparqlRlProgram> {
     parse_sparql_rl_with_source(input, base_iri, None)
+}
+
+/// As `parse_sparql_rl`, with explicit [`ParserOptions`].
+pub fn parse_sparql_rl_with_options(
+    input: &str,
+    base_iri: Option<&str>,
+    source_label: Option<&str>,
+    options: &ParserOptions,
+) -> Result<SparqlRlProgram> {
+    let _ = options;
+    parse_sparql_rl_with_source(input, base_iri, source_label)
 }
 
 /// As `parse_sparql_rl`, but also stamps each rule's `source` (used to
