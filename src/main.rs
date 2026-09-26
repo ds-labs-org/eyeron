@@ -5,7 +5,7 @@ use eyeron::n3::reasoner::{reason, ReasonerOptions};
 use eyeron::srl::{self, SparqlRlProgram};
 use eyeron::Document;
 use eyeron::{
-    is_rdf_message_log, parse_n3, parse_n3_with_source, parse_rdf12, parse_rdf_message_log,
+    is_rdf_message_log, parse_n3_with_options, parse_rdf12_with_options, parse_rdf_message_log, ParserOptions,
     RdfFormat,
 };
 use std::collections::BTreeMap;
@@ -26,6 +26,7 @@ struct CliOptions {
     stream_messages: bool,
     base_iri: Option<String>,
     max_backward_depth: Option<usize>,
+    max_nesting_depth: Option<usize>,
     files: Vec<String>,
     /// `--data FILE` (repeatable): RDF documents forming the immutable base
     /// graph for a SPARQL 1.2 RL run (`WHERE DATA`/`NOT DATA` read this,
@@ -76,7 +77,7 @@ fn run() -> Result<()> {
     let sources = read_sources(&opt.files)?;
 
     if let Some(path) = &opt.check_proof {
-        return run_check_proof(path, &sources);
+        return run_check_proof(path, &sources, &cli_parser_options(&opt));
     }
 
     if sources.iter().any(|(label, text)| is_sparql_rl_source(label, text)) {
@@ -93,14 +94,13 @@ fn run() -> Result<()> {
             path_to_file_iri(label).ok()
         };
         let base = opt.base_iri.as_deref().or(path_base.as_deref());
+        let parser_options = cli_parser_options(&opt);
         let parsed = if is_rdf_message_log(text) {
             parse_rdf_message_log(text, base)
         } else if let Some(format) = rdf_format_for_source(label, opt.rdf)? {
-            parse_rdf12(text, base, format)
-        } else if opt.proof {
-            parse_n3_with_source(text, base, Some(label))
+            parse_rdf12_with_options(text, base, format, &parser_options)
         } else {
-            parse_n3(text, base)
+            parse_n3_with_options(text, base, opt.proof.then_some(label.as_str()), &parser_options)
         };
         match parsed {
             Ok(doc) => merged.merge(doc),
@@ -159,7 +159,7 @@ fn run_stream_messages(opt: &CliOptions) -> Result<()> {
             message_sources.push(source.clone());
         } else {
             let base = opt.base_iri.as_deref().or(None);
-            let parsed = parse_n3_with_source(&text, base, Some(source))
+            let parsed = parse_n3_with_options(&text, base, Some(source), &cli_parser_options(opt))
                 .map_err(|err| EyeronError::new(err.with_source_location(&text, source)))?;
             program.merge(parsed);
         }
@@ -333,15 +333,16 @@ fn run_sparql_rl(opt: &CliOptions, sources: &[(String, String)]) -> Result<()> {
             )));
         }
         let base = source_base_iri(opt, label);
-        let parsed = if opt.proof {
-            srl::parse_sparql_rl_with_source(text, base.as_deref(), Some(label))
-        } else {
-            srl::parse_sparql_rl(text, base.as_deref())
-        }
+        let parsed = srl::parse_sparql_rl_with_options(
+            text,
+            base.as_deref(),
+            opt.proof.then_some(label.as_str()),
+            &cli_parser_options(opt),
+        )
         .map_err(|err| EyeronError::new(err.with_source_location(text, label)))?;
         srl::merge_programs(&mut program, parsed);
     }
-    resolve_sparql_rl_imports(&mut program, opt.proof)?;
+    resolve_sparql_rl_imports(&mut program, opt.proof, &cli_parser_options(opt))?;
 
     if opt.ast {
         println!("{:#?}", program);
@@ -369,7 +370,7 @@ fn run_sparql_rl(opt: &CliOptions, sources: &[(String, String)]) -> Result<()> {
             EyeronError::new(format!("cannot infer RDF format for --data {}; use .ttl, .nt, .nq, or .trig", data_file))
         })?;
         let base = source_base_iri(opt, data_file);
-        let doc = parse_rdf12(&text, base.as_deref(), format)
+        let doc = parse_rdf12_with_options(&text, base.as_deref(), format, &cli_parser_options(opt))
             .map_err(|err| EyeronError::new(err.with_source_location(&text, data_file)))?;
         base_graph.extend(doc.facts);
     }
@@ -438,7 +439,7 @@ fn read_text_source(source: &str) -> Result<String> {
 
 /// `--check-proof`: read the proof document and check it against the
 /// program, reporting the verdict the specification's §9 requires.
-fn run_check_proof(path: &str, sources: &[(String, String)]) -> Result<()> {
+fn run_check_proof(path: &str, sources: &[(String, String)], parser_options: &ParserOptions) -> Result<()> {
     let proof = read_text_source(path)?;
     let source: String = sources.iter().map(|(_, text)| text.as_str()).collect::<Vec<_>>().join("\n");
     let label = sources.first().map(|(label, _)| label.clone()).unwrap_or_else(|| "<input>".to_string());
@@ -446,8 +447,8 @@ fn run_check_proof(path: &str, sources: &[(String, String)]) -> Result<()> {
     let extension = Path::new(path.split(['?', '#']).next().unwrap_or(path)).extension().and_then(|e| e.to_str()).unwrap_or("");
     let report = match extension {
         "srl" => {
-            let mut program = srl::parse_sparql_rl(&source, None)?;
-            resolve_sparql_rl_imports(&mut program, false)?;
+            let mut program = srl::parse_sparql_rl_with_options(&source, None, None, parser_options)?;
+            resolve_sparql_rl_imports(&mut program, false, parser_options)?;
             eyeron::proof::srl::check_proof_program(&program, &proof)?
         }
         _ => eyeron::proof::n3::check_proof(&source, &proof, &label)?,
@@ -497,6 +498,14 @@ fn source_base_iri(opt: &CliOptions, label: &str) -> Option<String> {
     path_to_file_iri(label).ok()
 }
 
+fn cli_parser_options(opt: &CliOptions) -> ParserOptions {
+    let mut options = ParserOptions::default();
+    if let Some(max_nesting_depth) = opt.max_nesting_depth {
+        options.max_nesting_depth = max_nesting_depth;
+    }
+    options
+}
+
 fn cli_reasoner_options(opt: &CliOptions, proof: bool) -> ReasonerOptions {
     let mut options = ReasonerOptions {
         proof,
@@ -532,6 +541,19 @@ fn parse_args(args: Vec<String>) -> Result<CliOptions> {
                     return Err(EyeronError::new(format!("{} requires a value", flag)));
                 }
                 opt.max_backward_depth = Some(args[i].parse::<usize>().map_err(|_| {
+                    EyeronError::new(format!(
+                        "{} requires a non-negative integer, got {}",
+                        flag, args[i]
+                    ))
+                })?);
+            }
+            "--max-nesting-depth" => {
+                let flag = args[i].clone();
+                i += 1;
+                if i >= args.len() {
+                    return Err(EyeronError::new(format!("{} requires a value", flag)));
+                }
+                opt.max_nesting_depth = Some(args[i].parse::<usize>().map_err(|_| {
                     EyeronError::new(format!(
                         "{} requires a non-negative integer, got {}",
                         flag, args[i]
@@ -699,7 +721,7 @@ fn path_to_file_iri(path: &str) -> std::result::Result<String, ()> {
 /// `http(s)://` IRI, per `resolve_iri` in `srl::parser`) by fetching,
 /// parsing, and merging every imported rule set, transitively following
 /// any further `IMPORTS` those bring in. Each IRI is loaded at most once.
-fn resolve_sparql_rl_imports(program: &mut SparqlRlProgram, proof: bool) -> Result<()> {
+fn resolve_sparql_rl_imports(program: &mut SparqlRlProgram, proof: bool, parser_options: &ParserOptions) -> Result<()> {
     let mut loaded: std::collections::HashSet<String> = std::collections::HashSet::new();
     let mut pending: Vec<String> = std::mem::take(&mut program.imports);
     while let Some(target) = pending.pop() {
@@ -719,12 +741,8 @@ fn resolve_sparql_rl_imports(program: &mut SparqlRlProgram, proof: bool) -> Resu
                 .ok_or_else(|| EyeronError::new(format!("cannot resolve imported rule set IRI {target}")))?;
             fs::read_to_string(&path).map_err(|err| EyeronError::new(format!("failed to read imported rule set {}: {err}", path.display())))?
         };
-        let parsed = if proof {
-            srl::parse_sparql_rl_with_source(&text, Some(&target), Some(&target))
-        } else {
-            srl::parse_sparql_rl(&text, Some(&target))
-        }
-        .map_err(|err| EyeronError::new(err.with_source_location(&text, &target)))?;
+        let parsed = srl::parse_sparql_rl_with_options(&text, Some(&target), proof.then_some(target.as_str()), parser_options)
+            .map_err(|err| EyeronError::new(err.with_source_location(&text, &target)))?;
         pending.extend(parsed.imports.clone());
         srl::merge_programs(program, parsed);
     }
@@ -788,6 +806,10 @@ fn print_help() {
     println!(
         "      --max-backward-depth N    Maximum recursive backward-rule depth (default: {})",
         ReasonerOptions::default().max_backward_depth
+    );
+    println!(
+        "      --max-nesting-depth N     Maximum nesting of {{ }}, ( ), [ ] and << >> in input (default: {})",
+        ParserOptions::default().max_nesting_depth
     );
     println!("      --data FILE               RDF base graph for a SPARQL 1.2 RL run (repeatable; .srl input only)");
     println!("      --query TEXT              Raw SPARQL-RL body pattern to query instead of printing derived facts (.srl only)");

@@ -5792,7 +5792,7 @@
   earl:result [
     a earl:TestResult ;
     earl:outcome earl:passed ;
-    earl:info "rejected as expected: expected term, got Semicolon" ;
+    earl:info "rejected as expected: expected term, got Eof" ;
   ] .
 
 [] a earl:Assertion ;
@@ -5802,7 +5802,7 @@
   earl:result [
     a earl:TestResult ;
     earl:outcome earl:passed ;
-    earl:info "rejected as expected: expected Dot, got Eof" ;
+    earl:info "rejected as expected: expected term, got Eof" ;
   ] .
 
 [] a earl:Assertion ;
@@ -5812,7 +5812,7 @@
   earl:result [
     a earl:TestResult ;
     earl:outcome earl:passed ;
-    earl:info "rejected as expected: expected Dot, got Eof" ;
+    earl:info "rejected as expected: expected term, got Eof" ;
   ] .
 
 [] a earl:Assertion ;

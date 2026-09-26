@@ -69,12 +69,18 @@ fn the_default_limit_stops_hostile_nesting_before_the_stack_does() {
 }
 
 #[test]
-fn the_default_limit_admits_real_documents() {
-    // Far deeper than any real N3, still under the default.
+fn the_default_limit_admits_documents_up_to_it_even_on_a_small_debug_stack() {
+    // Real N3 nests a handful of levels; the default is 64. Every construct at
+    // exactly the default must parse on a 1 MiB thread, in a debug build too
+    // (measured: 77 levels of `{ }` is the most a debug build fits), and one
+    // level more must be a clean error, not a crash.
+    let max = ParserOptions::DEFAULT_MAX_NESTING_DEPTH;
     for (name, build) in N3_SHAPES {
-        let source = build(ParserOptions::DEFAULT_MAX_NESTING_DEPTH - 28);
-        let parsed = on_small_stack(move || parse_n3(&source, None).is_ok());
-        assert!(parsed, "{name} nested 100 deep must parse under the default limit");
+        let (ok, over) = (build(max), build(max + 1));
+        let parsed = on_small_stack(move || parse_n3(&ok, None).is_ok());
+        assert!(parsed, "{name} nested {max} deep must parse under the default limit");
+        let rejected = on_small_stack(move || parse_n3(&over, None).is_err());
+        assert!(rejected, "{name} nested {} deep must be rejected", max + 1);
     }
 }
 
@@ -93,11 +99,14 @@ fn turtle_and_trig_share_the_limit() {
 
 const SRL_HEAD: &str = "PREFIX : <http://e/>\n";
 
+// FILTER's own parentheses are a parenthesised expression, so `FILTER` followed
+// by `depth` parentheses is exactly `depth` levels deep.
 fn srl_expr(depth: usize) -> String {
-    format!("{SRL_HEAD}RULE {{ ?x :ok true }} WHERE {{ ?x :p ?v . FILTER({}?v > 1{}) }}", "(".repeat(depth), ")".repeat(depth))
+    format!("{SRL_HEAD}RULE {{ ?x :ok true }} WHERE {{ ?x :p ?v . FILTER{}?v > 1{} }}", "(".repeat(depth), ")".repeat(depth))
 }
+// One level for FILTER's parentheses plus `depth - 1` prefix operators.
 fn srl_unary(depth: usize) -> String {
-    format!("{SRL_HEAD}RULE {{ ?x :ok true }} WHERE {{ ?x :p ?v . FILTER({}?v) }}", "!".repeat(depth))
+    format!("{SRL_HEAD}RULE {{ ?x :ok true }} WHERE {{ ?x :p ?v . FILTER({}?v) }}", "!".repeat(depth - 1))
 }
 fn srl_collection(depth: usize) -> String {
     format!("{SRL_HEAD}RULE {{ ?x :p {}1{} }} WHERE {{ ?x :q ?y }}", "( ".repeat(depth), " )".repeat(depth))
@@ -157,7 +166,13 @@ fn cli_max_nesting_depth_flag_rejects_documents_over_it() {
     assert!(default.status.success(), "10 levels is fine by default: {}", String::from_utf8_lossy(&default.stderr));
     let limited = run_cli(&["--max-nesting-depth", "4"], &doc, "n3");
     assert!(!limited.status.success());
-    assert!(String::from_utf8_lossy(&limited.stderr).contains("nesting"), "{}", String::from_utf8_lossy(&limited.stderr));
+    let stderr = String::from_utf8_lossy(&limited.stderr);
+    assert!(!stderr.contains("unknown"), "the flag must exist: {stderr}");
+    assert!(stderr.contains("deeper than the limit of 4"), "{stderr}");
+
+    // a limit that admits the document changes nothing
+    let roomy = run_cli(&["--max-nesting-depth", "10"], &doc, "n3");
+    assert!(roomy.status.success(), "{}", String::from_utf8_lossy(&roomy.stderr));
 }
 
 #[test]

@@ -44,6 +44,5 @@ pub fn parse_rdf12_with_options(
     format: RdfFormat,
     options: &parser::ParserOptions,
 ) -> Result<Document> {
-    let _ = options;
-    parser::parse_rdf12_compat(input, base_iri, format)
+    parser::parse_rdf12_compat_with_options(input, base_iri, format, options)
 }

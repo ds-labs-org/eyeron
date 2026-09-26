@@ -33,16 +33,6 @@ pub fn parse_sparql_rl_with_options(
     source_label: Option<&str>,
     options: &ParserOptions,
 ) -> Result<SparqlRlProgram> {
-    let _ = options;
-    parse_sparql_rl_with_source(input, base_iri, source_label)
-}
-
-/// As `parse_sparql_rl`, but also stamps each rule's `source` (used to
-/// identify a rule in `--proof` output) with `source_label`
-/// and the rule's own line number. A plain `parse_sparql_rl` call (no
-/// label) leaves every rule's `source` as `None`, matching
-/// `n3::parser::parse_n3`'s own "labels are opt-in" convention.
-pub fn parse_sparql_rl_with_source(input: &str, base_iri: Option<&str>, source_label: Option<&str>) -> Result<SparqlRlProgram> {
     if looks_like_select_query(input) {
         return Err(EyeronError::new(
             "QUERY/SELECT concrete syntax is not part of the SPARQL-RL rule-set grammar; SPARQL 1.2 RL only supports RULE {...} WHERE {...}",
@@ -53,7 +43,19 @@ pub fn parse_sparql_rl_with_source(input: &str, base_iri: Option<&str>, source_l
     for (idx, ch) in input.char_indices() {
         if ch == '\n' { line_starts.push(idx + ch.len_utf8()); }
     }
-    Parser::new(tokens, base_iri).with_source(source_label, line_starts).parse_program()
+    Parser::new(tokens, base_iri)
+        .with_options(options)
+        .with_source(source_label, line_starts)
+        .parse_program()
+}
+
+/// As `parse_sparql_rl`, but also stamps each rule's `source` (used to
+/// identify a rule in `--proof` output) with `source_label`
+/// and the rule's own line number. A plain `parse_sparql_rl` call (no
+/// label) leaves every rule's `source` as `None`, matching
+/// `n3::parser::parse_n3`'s own "labels are opt-in" convention.
+pub fn parse_sparql_rl_with_source(input: &str, base_iri: Option<&str>, source_label: Option<&str>) -> Result<SparqlRlProgram> {
+    parse_sparql_rl_with_options(input, base_iri, source_label, &ParserOptions::default())
 }
 
 /// Parse a raw SRL body pattern (as used by `--query`/`--query-file`, e.g.
@@ -170,6 +172,10 @@ struct Parser {
     /// blank node in a query pattern behaves like a non-distinguished
     /// variable).
     body_blank_labels: Option<BTreeMap<String, Term>>,
+    /// Current and maximum nesting of expressions, collections, blank-node
+    /// property lists, triple terms, function calls and property paths.
+    depth: usize,
+    max_depth: usize,
     /// `--proof` source-location tracking, mirroring `n3::parser::Parser`'s
     /// own `source_label`/`line_starts` fields exactly: both stay empty
     /// unless `parse_sparql_rl_with_source` supplied a label, so ordinary
@@ -195,7 +201,31 @@ impl Parser {
             body_blank_labels: None,
             source_label: None,
             line_starts: Vec::new(),
+            depth: 0,
+            max_depth: ParserOptions::DEFAULT_MAX_NESTING_DEPTH,
         }
+    }
+
+    fn with_options(mut self, options: &ParserOptions) -> Self {
+        self.max_depth = options.max_nesting_depth;
+        self
+    }
+
+    /// Runs `f` one nesting level deeper, or fails past the limit; the
+    /// counter is restored on every exit (see `n3::parser::Parser::nested`).
+    fn nested<T>(&mut self, f: impl FnOnce(&mut Self) -> Result<T>) -> Result<T> {
+        let saved = self.depth;
+        if saved >= self.max_depth {
+            let offset = self.tokens[self.pos.min(self.tokens.len() - 1)].offset;
+            return Err(EyeronError::at(
+                format!("nesting is deeper than the limit of {} levels", self.max_depth),
+                offset,
+            ));
+        }
+        self.depth = saved + 1;
+        let out = f(self);
+        self.depth = saved;
+        out
     }
 
     fn with_source(mut self, source_label: Option<&str>, line_starts: Vec<usize>) -> Self {
@@ -400,6 +430,10 @@ impl Parser {
     }
 
     fn parse_blank_node_property_list(&mut self, opts: Opts) -> Result<GraphNode> {
+        self.nested(|p| p.parse_blank_node_property_list_inner(opts))
+    }
+
+    fn parse_blank_node_property_list_inner(&mut self, opts: Opts) -> Result<GraphNode> {
         self.expect_kind(&TokenKind::LBracket)?;
         let node = self.fresh_graph_node(opts);
         if self.match_kind(&TokenKind::RBracket) {
@@ -411,6 +445,10 @@ impl Parser {
     }
 
     fn parse_collection(&mut self, opts: Opts) -> Result<GraphNode> {
+        self.nested(|p| p.parse_collection_inner(opts))
+    }
+
+    fn parse_collection_inner(&mut self, opts: Opts) -> Result<GraphNode> {
         self.expect_kind(&TokenKind::LParen)?;
         if self.match_kind(&TokenKind::RParen) {
             return Ok(GraphNode { term: Term::iri(RDF_NIL), triples: Vec::new() });
@@ -491,6 +529,10 @@ impl Parser {
     }
 
     fn parse_reified_triple_node(&mut self, opts: Opts) -> Result<GraphNode> {
+        self.nested(|p| p.parse_reified_triple_node_inner(opts))
+    }
+
+    fn parse_reified_triple_node_inner(&mut self, opts: Opts) -> Result<GraphNode> {
         self.expect_kind(&TokenKind::LTriple)?;
         let s = self.parse_reified_triple_component(opts)?;
         let p = self.parse_verb_term(opts)?;
@@ -555,7 +597,7 @@ impl Parser {
 
     fn parse_path_primary(&mut self, opts: Opts) -> Result<PathExpr> {
         if self.match_kind(&TokenKind::LParen) {
-            let path = self.parse_path_sequence(opts)?;
+            let path = self.nested(|p| p.parse_path_sequence(opts))?;
             self.expect_kind(&TokenKind::RParen)?;
             return Ok(path);
         }
@@ -676,6 +718,10 @@ impl Parser {
     }
 
     fn parse_triple_term_after_open(&mut self, opts: Opts) -> Result<Term> {
+        self.nested(|p| p.parse_triple_term_after_open_inner(opts))
+    }
+
+    fn parse_triple_term_after_open_inner(&mut self, opts: Opts) -> Result<Term> {
         let s = self.parse_term(opts)?;
         let p = self.parse_verb_term(opts)?;
         let o = self.parse_term(opts)?;
@@ -842,7 +888,7 @@ impl Parser {
         };
         if let Some(op) = op {
             self.advance();
-            return Ok(Expr::Unary { op, expr: Box::new(self.parse_unary_expression()?) });
+            return Ok(Expr::Unary { op, expr: Box::new(self.nested(|p| p.parse_unary_expression())?) });
         }
         self.parse_primary_expression()
     }
@@ -896,7 +942,7 @@ impl Parser {
                 Err(EyeronError::at(format!("expected expression, got {}", word), tok.offset))
             }
             TokenKind::LParen => {
-                let expr = self.parse_expression(0)?;
+                let expr = self.nested(|p| p.parse_expression(0))?;
                 self.expect_kind(&TokenKind::RParen)?;
                 Ok(expr)
             }
@@ -909,7 +955,7 @@ impl Parser {
         let mut args = Vec::new();
         if !self.check_kind(&TokenKind::RParen) {
             loop {
-                args.push(self.parse_expression(0)?);
+                args.push(self.nested(|p| p.parse_expression(0))?);
                 if !self.match_kind(&TokenKind::Comma) {
                     break;
                 }

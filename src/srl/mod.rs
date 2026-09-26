@@ -29,7 +29,7 @@ pub use ast::{BinaryOp, Clause, Expr, PathExpr, SparqlRlProgram, SparqlRlRule, U
 pub use backward::{solve_query, BackwardOptions};
 pub use eval::query_facts;
 pub use forward::reason;
-pub use parser::{parse_query_body, parse_sparql_rl, parse_sparql_rl_with_source};
+pub use parser::{parse_query_body, parse_sparql_rl, parse_sparql_rl_with_options, parse_sparql_rl_with_source};
 pub use printing::{result_to_srl, triples_to_srl};
 pub use proof::proof_to_srl;
 pub use stratify::stratify;

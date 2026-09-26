@@ -18,9 +18,12 @@ pub struct ParserOptions {
 }
 
 impl ParserOptions {
-    /// Real documents nest a handful of levels. 128 levels use about 350 KB of
-    /// stack, which fits the 1 MiB stack a wasm module or a small thread gets.
-    pub const DEFAULT_MAX_NESTING_DEPTH: usize = 128;
+    /// Real documents nest a handful of levels. Measured on a 1 MiB stack (what
+    /// a wasm module or a small thread gets), the deepest nesting that still
+    /// parses is 77 levels of `{ }` in a debug build and 368 in a release
+    /// build (lists and blank-node property lists fit deeper). 64 fits every
+    /// construct in both, with a wide margin in release.
+    pub const DEFAULT_MAX_NESTING_DEPTH: usize = 64;
 }
 
 impl Default for ParserOptions {
@@ -40,19 +43,30 @@ pub fn parse_n3_with_options(
     source_label: Option<&str>,
     options: &ParserOptions,
 ) -> Result<Document> {
-    let _ = options;
-    parse_n3_with_source(input, base_iri, source_label)
+    let tokens = lex(input)?;
+    let line_starts = line_starts(input);
+    Parser::new(tokens, base_iri)
+        .with_options(options)
+        .with_source(source_label, line_starts)
+        .parse_document()
 }
 
 pub fn parse_n3_with_source(input: &str, base_iri: Option<&str>, source_label: Option<&str>) -> Result<Document> {
-    let tokens = lex(input)?;
-    let line_starts = line_starts(input);
-    Parser::new(tokens, base_iri).with_source(source_label, line_starts).parse_document()
+    parse_n3_with_options(input, base_iri, source_label, &ParserOptions::default())
 }
 
 pub(crate) fn parse_rdf12_compat(input: &str, base_iri: Option<&str>, format: RdfFormat) -> Result<Document> {
+    parse_rdf12_compat_with_options(input, base_iri, format, &ParserOptions::default())
+}
+
+pub(crate) fn parse_rdf12_compat_with_options(
+    input: &str,
+    base_iri: Option<&str>,
+    format: RdfFormat,
+    options: &ParserOptions,
+) -> Result<Document> {
     let tokens = lex(input)?;
-    Parser::with_profile(tokens, base_iri, ParserProfile::rdf12(format)).parse_document()
+    Parser::with_profile(tokens, base_iri, ParserProfile::rdf12(format)).with_options(options).parse_document()
 }
 
 fn line_starts(input: &str) -> Vec<usize> {
@@ -305,6 +319,9 @@ struct Parser {
     profile: ParserProfile,
     source_label: Option<String>,
     line_starts: Vec<usize>,
+    /// Current and maximum nesting of `{ }`, `( )`, `[ ]` and `<< >>`.
+    depth: usize,
+    max_depth: usize,
 }
 
 impl Parser {
@@ -327,7 +344,33 @@ impl Parser {
         doc.prefixes.insert("math".to_string(), "http://www.w3.org/2000/10/swap/math#".to_string());
         doc.prefixes.insert("string".to_string(), "http://www.w3.org/2000/10/swap/string#".to_string());
         doc.prefixes.insert("time".to_string(), "http://www.w3.org/2000/10/swap/time#".to_string());
-        Self { tokens, pos: 0, doc, blank_counter: 0, profile, source_label: None, line_starts: Vec::new() }
+        Self {
+            tokens, pos: 0, doc, blank_counter: 0, profile, source_label: None, line_starts: Vec::new(),
+            depth: 0, max_depth: ParserOptions::DEFAULT_MAX_NESTING_DEPTH,
+        }
+    }
+
+    fn with_options(mut self, options: &ParserOptions) -> Self {
+        self.max_depth = options.max_nesting_depth;
+        self
+    }
+
+    /// Runs `f` one nesting level deeper, or fails when that would pass the
+    /// limit. The counter is restored on every exit, so a caller that
+    /// backtracks after an error still sees the depth it started with.
+    fn nested<T>(&mut self, f: impl FnOnce(&mut Self) -> Result<T>) -> Result<T> {
+        let saved = self.depth;
+        if saved >= self.max_depth {
+            let offset = self.tokens[self.pos.min(self.tokens.len() - 1)].offset;
+            return Err(EyeronError::at(
+                format!("nesting is deeper than the limit of {} levels", self.max_depth),
+                offset,
+            ));
+        }
+        self.depth = saved + 1;
+        let out = f(self);
+        self.depth = saved;
+        out
     }
 
     fn with_source(mut self, source_label: Option<&str>, line_starts: Vec<usize>) -> Self {
@@ -695,6 +738,10 @@ impl Parser {
     }
 
     fn parse_formula(&mut self) -> Result<Vec<Triple>> {
+        self.nested(|p| p.parse_formula_inner())
+    }
+
+    fn parse_formula_inner(&mut self) -> Result<Vec<Triple>> {
         self.expect(TokenKind::LBrace)?;
         let mut triples = Vec::new();
         while !self.check(&TokenKind::RBrace) && !self.check(&TokenKind::Eof) {
@@ -999,6 +1046,10 @@ impl Parser {
     }
 
     fn parse_triple_term(&mut self) -> Result<(Term, Vec<Triple>)> {
+        self.nested(|p| p.parse_triple_term_inner())
+    }
+
+    fn parse_triple_term_inner(&mut self) -> Result<(Term, Vec<Triple>)> {
         let parenthesized = self.check(&TokenKind::LParen);
         if parenthesized { self.advance(); }
 
@@ -1073,6 +1124,10 @@ impl Parser {
     }
 
     fn parse_blank_node_property_list(&mut self) -> Result<(Term, Vec<Triple>)> {
+        self.nested(|p| p.parse_blank_node_property_list_inner())
+    }
+
+    fn parse_blank_node_property_list_inner(&mut self) -> Result<(Term, Vec<Triple>)> {
         let blank = self.fresh_blank("b");
         if self.check(&TokenKind::RBracket) {
             self.advance();
@@ -1097,6 +1152,10 @@ impl Parser {
     }
 
     fn parse_list(&mut self) -> Result<(Term, Vec<Triple>)> {
+        self.nested(|p| p.parse_list_inner())
+    }
+
+    fn parse_list_inner(&mut self) -> Result<(Term, Vec<Triple>)> {
         let mut items = Vec::new();
         let mut triples = Vec::new();
         while !self.check(&TokenKind::RParen) && !self.check(&TokenKind::Eof) {
