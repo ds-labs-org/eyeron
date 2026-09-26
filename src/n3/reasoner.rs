@@ -1404,11 +1404,17 @@ fn match_premise_remaining(
     // variables needed by later tests.
     // Visit ordinary indexed fact premises cheapest-bucket-first (builtins keep
     // their slots), so the estimate-based skip below prunes the big buckets.
+    // One estimate per eligible premise per level, shared by the visit order and
+    // the skip decision below (the bindings do not change within a level).
+    let mut estimates: Vec<Option<(usize, bool)>> = vec![None; premises.len()];
     let visit_order: Vec<usize> = {
         let mut order: Vec<usize> = (0..premises.len()).collect();
         if let Some(index) = fact_index {
             let slots: Vec<usize> = order.iter().copied().filter(|&i| !is_builtin_premise(&premises[i]) && !may_match_rule_fact(&premises[i], &bindings)).collect();
-            let mut keyed: Vec<(usize, usize)> = slots.iter().map(|&i| (index.estimate(&premises[i], &bindings).map_or(usize::MAX, |e| e.0), i)).collect();
+            for &i in &slots {
+                estimates[i] = index.estimate(&premises[i], &bindings);
+            }
+            let mut keyed: Vec<(usize, usize)> = slots.iter().map(|&i| (estimates[i].map_or(usize::MAX, |e| e.0), i)).collect();
             keyed.sort_by_key(|k| k.0);
             for (slot, (_, i)) in slots.iter().zip(keyed) { order[*slot] = i; }
         }
@@ -1431,12 +1437,8 @@ fn match_premise_remaining(
             // cannot beat the current choice under the (count, source index)
             // order the unoptimised matcher uses, so the selected premise, and
             // with it the solution order, is unchanged.
-            if let (Some(index), Some(best)) = (fact_index, best_index) {
-                if !is_builtin_premise(premise) && !may_match_rule_fact(premise, &bindings) {
-                    if let Some((est, exact)) = index.estimate(premise, &bindings) {
-                        if exact && (est, idx) > (best_candidates.len(), best) { continue; }
-                    }
-                }
+            if let (Some((est, exact)), Some(best)) = (estimates[idx], best_index) {
+                if exact && (est, idx) > (best_candidates.len(), best) { continue; }
             }
             let candidates = match_one_premise(
                 premise,

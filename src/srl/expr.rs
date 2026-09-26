@@ -530,12 +530,12 @@ fn call_builtin(name: &str, args: &[Term], ctx: &EvalCtx) -> EvalResult {
         "ENCODE_FOR_URI" => Ok(str_literal(percent_encode(&string_value(&args[0])))),
         "REGEX" => {
             let flags = args.get(2).map(string_value).unwrap_or_default();
-            let re = build_regex(&string_value(&args[1]), &flags)?;
+            let re = cached_regex(&string_value(&args[1]), &flags)?;
             Ok(boolean_literal(re.is_match(&string_value(&args[0]))))
         }
         "REPLACE" => {
             let flags = args.get(3).map(string_value).unwrap_or_default();
-            let re = build_regex(&string_value(&args[1]), &flags)?;
+            let re = cached_regex(&string_value(&args[1]), &flags)?;
             let replacement = translate_regex_replacement(&string_value(&args[2]));
             Ok(str_literal(re.replace_all(&string_value(&args[0]), replacement.as_str()).into_owned()))
         }
@@ -627,6 +627,45 @@ pub(crate) fn regex_compiles() -> usize {
 #[cfg(test)]
 pub(crate) fn reset_regex_compiles() {
     REGEX_COMPILES.with(|c| c.set(0));
+}
+
+/// Most compiled patterns kept per thread (a compiled `Regex` can hold up to the
+/// regex crate's default 10 MiB size limit).
+const REGEX_CACHE_CAPACITY: usize = 16;
+
+type RegexCacheKey = (String, String);
+
+thread_local! {
+    static REGEX_CACHE: std::cell::RefCell<std::collections::HashMap<RegexCacheKey, Result<regex::Regex, String>>> =
+        std::cell::RefCell::new(std::collections::HashMap::new());
+}
+
+/// Empties this thread's SRL regex cache; called when a run ends so a
+/// long-lived thread retains nothing between runs.
+pub(crate) fn clear_regex_cache() {
+    REGEX_CACHE.with(|cache| cache.borrow_mut().clear());
+}
+
+/// `REGEX(?v, "literal")` is evaluated once per candidate row; compile each
+/// distinct (pattern, flags) once per run. Invalid patterns are remembered too.
+fn cached_regex(pattern: &str, flags: &str) -> Result<regex::Regex, EvalError> {
+    let key = (pattern.to_string(), flags.to_string());
+    let hit = REGEX_CACHE.with(|cache| cache.borrow().get(&key).cloned());
+    let compiled = match hit {
+        Some(compiled) => compiled,
+        None => {
+            let compiled = build_regex(pattern, flags).map_err(|e| e.to_string());
+            REGEX_CACHE.with(|cache| {
+                let mut cache = cache.borrow_mut();
+                if cache.len() >= REGEX_CACHE_CAPACITY {
+                    cache.clear();
+                }
+                cache.insert(key, compiled.clone());
+            });
+            compiled
+        }
+    };
+    compiled.map_err(err)
 }
 
 fn build_regex(pattern: &str, flags: &str) -> Result<regex::Regex, EvalError> {

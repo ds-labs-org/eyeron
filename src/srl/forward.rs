@@ -80,9 +80,19 @@ use super::stratify::{rule_positive_patterns, stratify};
 /// the W3C SPARQL-RL suite's `mf:result` corresponds to
 /// (`src/bin/w3c_sparql_rl.rs` compares against it for that reason);
 /// the two coincide there, since those tests supply no base graph.
+/// Empties the SRL regex cache when a run returns, on every exit path.
+struct ClearRegexCacheOnDrop;
+
+impl Drop for ClearRegexCacheOnDrop {
+    fn drop(&mut self) {
+        super::expr::clear_regex_cache();
+    }
+}
+
 pub fn reason(program: &SparqlRlProgram, base_graph: &[Triple], options: &ReasonerOptions) -> Result<ReasonerResult> {
     // The facts, time and depth budgets apply here as in the N3 reasoner.
     let limits = RunLimitsGuard::enter(options);
+    let _clear_regex_cache = ClearRegexCacheOnDrop;
     for (index, rule) in program.rules.iter().enumerate() {
         super::wellformed::check_rule(rule, index)?;
     }
