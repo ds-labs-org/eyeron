@@ -1191,3 +1191,79 @@ fn proof_mode_derives_exactly_what_plain_mode_derives() {
         assert_eq!(plain.status, with_proof.status, "{name} reported a different completion status under --proof");
     }
 }
+
+// --- An RDF list written as explicit rdf:first/rdf:rest triples (ordinary
+// Turtle, not a hostile shape) walks the whole fact list once per cell, which
+// is quadratic in the list length and, independently, recurses once per cell
+// with no depth bound -- unlike a parsed `( ... )` list, which is bounded by
+// the parser's own MAX_TERM_NESTING_DEPTH. See the filed issue for the
+// stack-overflow numbers; this test only checks the safe-to-run timing claim. ---
+
+fn rdf_first_rest_chain(n: usize) -> String {
+    let mut source = String::from(
+        "@prefix : <http://e/> .\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n\
+         @prefix list: <http://www.w3.org/2000/10/swap/list#> .\n",
+    );
+    for i in 0..n {
+        let next = if i + 1 < n { format!(":n{}", i + 1) } else { "rdf:nil".to_string() };
+        source.push_str(&format!(":n{i} rdf:first {i} ; rdf:rest {next} .\n"));
+    }
+    source.push_str("{ :n0 list:length ?n } => { :result :len ?n } .\n");
+    source
+}
+
+#[test]
+fn list_length_over_an_explicit_rdf_first_rest_chain_is_not_quadratic() {
+    // Measured on the unfixed lookup (a linear scan of every fact per list
+    // cell): 8,000 cells take 1.9 s, 16,000 take 6.5 s -- one doubling costs
+    // 3.4x, not the ~2x a linear walk would cost. 20,000 cells extrapolates to
+    // about 10 s quadratic; a bound of 5 s is well clear of a linear
+    // implementation (sub-second) and well under a quadratic one.
+    //
+    // The unfixed walk also recurses once per cell with no depth bound (a
+    // chain of only ~3,000 cells overflows a 1 MiB stack, ~27,000 the 8 MB
+    // default main-thread stack). A default test-harness thread stack is
+    // smaller than that, so this timing check runs on an explicit, generous
+    // stack -- large enough to measure the quadratic-time claim without also
+    // tripping the separate stack-depth bug (see the test below).
+    std::thread::Builder::new()
+        .stack_size(64 * 1024 * 1024)
+        .spawn(|| {
+            let source = rdf_first_rest_chain(20_000);
+            let started = std::time::Instant::now();
+            let output = reason(&source).unwrap();
+            let elapsed = started.elapsed();
+            assert!(output.contains(":result :len 20000"), "{output}");
+            assert!(
+                elapsed.as_secs() < 5,
+                "list:length over a 20,000-cell rdf:first/rdf:rest chain took {elapsed:?}: \
+                 rdf_list_object is scanning the whole fact list per cell again"
+            );
+        })
+        .unwrap()
+        .join()
+        .unwrap();
+}
+
+#[test]
+fn list_length_over_a_very_long_explicit_rdf_first_rest_chain_does_not_overflow_the_stack() {
+    // The stack-depth half of the same bug, isolated from the timing bound
+    // above. Measured: the unfixed recursive walk (one stack frame per list
+    // cell, no depth bound) overflows a 1 MiB stack at ~3,000 cells, the 8 MB
+    // default main-thread stack at ~27,000. A 200,000-cell chain on an 8 MiB
+    // stack -- comfortably realistic, both sizes are ordinary defaults, not
+    // extreme -- must not crash the process. It cannot be made to pass by
+    // giving the test itself more stack: any fixed size still has some N that
+    // overflows it, which is the bug; only removing the per-cell recursion
+    // fixes it for every N.
+    let ok = std::thread::Builder::new()
+        .stack_size(8 * 1024 * 1024)
+        .spawn(|| {
+            let source = rdf_first_rest_chain(200_000);
+            let output = reason(&source).unwrap();
+            output.contains(":result :len 200000")
+        })
+        .unwrap()
+        .join();
+    assert!(ok.is_ok() && ok.unwrap(), "the walk must not recurse one stack frame per list cell");
+}
