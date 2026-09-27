@@ -4,6 +4,7 @@
 
 use crate::ast::*;
 use crate::n3::parser::{parse_n3, MAX_TERM_NESTING_DEPTH};
+use num_bigint::BigInt;
 use regex::Regex;
 use std::borrow::Cow;
 use std::cell::RefCell;
@@ -4271,7 +4272,10 @@ fn eval_math_difference(left: &Term, right: &Term, bindings: &Bindings, facts: &
     }
     let Some(a) = numeric_value(&first) else { return Vec::new(); };
     let Some(b) = numeric_value(&second) else { return Vec::new(); };
-    let result = numeric_literal(a.value - b.value, a.integer && b.integer);
+    let result = match (a.exact.as_ref(), b.exact.as_ref()) {
+        (Some(x), Some(y)) => integer_literal(x - y),
+        _ => numeric_literal(a.value - b.value, a.integer && b.integer),
+    };
     if matches!(resolve(right, bindings), Term::Blank(_)) { return vec![bindings.clone()]; }
     let mut out = bindings.clone();
     if unify_term_loose_numeric(right, &result, &mut out) { vec![canonicalize_bindings(&out)] } else { Vec::new() }
@@ -4289,6 +4293,9 @@ fn is_math_operator(iri: &str) -> bool {
 fn eval_math_operator(pred: &str, left: &Term, right: &Term, bindings: &Bindings, facts: &[Triple]) -> Vec<Bindings> {
     match pred {
         MATH_PRODUCT => eval_numeric_list(left, right, bindings, facts, |items| {
+            if let Some(exact) = all_exact(&items) {
+                return Some(integer_literal(exact.into_iter().fold(BigInt::from(1), |product, n| product * n)));
+            }
             let all_integer = items.iter().all(|n| n.integer);
             let value = items.iter().fold(1.0, |acc, n| acc * n.value);
             Some(numeric_literal(value, all_integer))
@@ -4298,17 +4305,30 @@ fn eval_math_operator(pred: &str, left: &Term, right: &Term, bindings: &Bindings
             Some(numeric_literal(items[0].value / items[1].value, items[0].integer && items[1].integer))
         }),
         MATH_INTEGER_QUOTIENT => eval_numeric_list(left, right, bindings, facts, |items| {
-            if items.len() != 2 || items[1].value == 0.0 { return None; }
+            if items.len() != 2 { return None; }
+            // Both `BigInt` division and `f64::trunc` round toward zero.
+            if let Some(exact) = all_exact(&items) {
+                if *exact[1] == BigInt::from(0) { return None; }
+                return Some(integer_literal(exact[0] / exact[1]));
+            }
+            if items[1].value == 0.0 { return None; }
             Some(numeric_literal((items[0].value / items[1].value).trunc(), true))
         }),
         MATH_REMAINDER => eval_numeric_list(left, right, bindings, facts, |items| {
-            if items.len() != 2 || items[1].value == 0.0 { return None; }
+            if items.len() != 2 { return None; }
+            // Both `BigInt` and `f64` remainders take the sign of the dividend.
+            if let Some(exact) = all_exact(&items) {
+                if *exact[1] == BigInt::from(0) { return None; }
+                return Some(integer_literal(exact[0] % exact[1]));
+            }
+            if items[1].value == 0.0 { return None; }
             Some(numeric_literal(items[0].value % items[1].value, true))
         }),
         MATH_EXPONENTIATION => eval_exponentiation(left, right, bindings, facts),
-        MATH_NEGATION => eval_unary_numeric(left, right, bindings, |x| -x, true, true),
-        MATH_ABSOLUTE_VALUE => eval_unary_numeric(left, right, bindings, |x| x.abs(), true, false),
-        MATH_ROUNDED => eval_unary_numeric(left, right, bindings, |x| (x + 0.5).floor(), true, false),
+        MATH_NEGATION => eval_unary_numeric(left, right, bindings, |x| -x, |x| -x, true, true),
+        MATH_ABSOLUTE_VALUE => eval_unary_numeric(left, right, bindings, |x| x.abs(), num_traits::Signed::abs, true, false),
+        // An integer is already rounded.
+        MATH_ROUNDED => eval_unary_numeric(left, right, bindings, |x| (x + 0.5).floor(), BigInt::clone, true, false),
         MATH_SIN => eval_unary_numeric_with_inverse(left, right, bindings, f64::sin, f64::asin, false),
         MATH_COS => eval_unary_numeric_with_inverse(left, right, bindings, f64::cos, f64::acos, false),
         MATH_TAN => eval_unary_numeric_with_inverse(left, right, bindings, f64::tan, f64::atan, false),
@@ -4351,17 +4371,25 @@ where
     if unify_term_loose_numeric(right, &value, &mut out) { vec![canonicalize_bindings(&out)] } else { Vec::new() }
 }
 
-fn eval_unary_numeric<F>(left: &Term, right: &Term, bindings: &Bindings, op: F, integer_if_integral: bool, allow_inverse: bool) -> Vec<Bindings>
+/// `op` is the floating-point operation; `exact_op` is the same operation on
+/// an integer, which is where it has to stay exact -- negating 10^16 - 1
+/// twice has to give 10^16 - 1 back, and through an `f64` it does not.
+fn eval_unary_numeric<F, G>(left: &Term, right: &Term, bindings: &Bindings, op: F, exact_op: G, integer_if_integral: bool, allow_inverse: bool) -> Vec<Bindings>
 where
     F: Fn(f64) -> f64,
+    G: Fn(&BigInt) -> BigInt,
 {
+    let apply = |n: &Numeric| match n.exact.as_ref() {
+        Some(exact) => integer_literal(exact_op(exact)),
+        None => numeric_literal(op(n.value), integer_if_integral),
+    };
     let l = resolve(left, bindings);
     let r = resolve(right, bindings);
     match (&l, &r) {
         (Term::Var(_), Term::Var(_)) if allow_inverse => vec![bindings.clone()],
         (Term::Var(name), _) if allow_inverse => {
             let Some(n) = numeric_value(&r) else { return Vec::new(); };
-            let value = numeric_literal(op(n.value), integer_if_integral);
+            let value = apply(&n);
             bind_one(bindings, name, value).into_iter().map(|b| canonicalize_bindings(&b)).collect()
         }
         (Term::Blank(_), _) if allow_inverse => {
@@ -4370,7 +4398,7 @@ where
         (Term::Var(_), _) => Vec::new(),
         (_, Term::Var(name)) => {
             let Some(n) = numeric_value(&l) else { return Vec::new(); };
-            let value = numeric_literal(op(n.value), integer_if_integral);
+            let value = apply(&n);
             bind_one(bindings, name, value).into_iter().map(|b| canonicalize_bindings(&b)).collect()
         }
         (_, Term::Blank(_)) => {
@@ -4378,7 +4406,7 @@ where
         }
         (_, _) => {
             let Some(n) = numeric_value(&l) else { return Vec::new(); };
-            let value = numeric_literal(op(n.value), integer_if_integral);
+            let value = apply(&n);
             let mut out = bindings.clone();
             if unify_term_loose_numeric(right, &value, &mut out) { vec![canonicalize_bindings(&out)] } else { Vec::new() }
         }
@@ -4449,7 +4477,8 @@ fn eval_exponentiation(left: &Term, right: &Term, bindings: &Bindings, facts: &[
         _ => {
             let Some(b) = numeric_value(&base) else { return Vec::new(); };
             let Some(e) = numeric_value(&exp) else { return Vec::new(); };
-            let value = numeric_literal(b.value.powf(e.value), b.integer && e.integer);
+            let value = exact_power(&b, &e)
+                .unwrap_or_else(|| numeric_literal(b.value.powf(e.value), b.integer && e.integer));
             if matches!(resolve(right, bindings), Term::Blank(_)) { return vec![bindings.clone()]; }
             let mut out = bindings.clone();
             if unify_term_loose_numeric(right, &value, &mut out) { vec![canonicalize_bindings(&out)] } else { Vec::new() }
@@ -4469,15 +4498,19 @@ fn is_math_comparison(iri: &str) -> bool {
 fn eval_math_sum(left: &Term, right: &Term, bindings: &Bindings, facts: &[Triple]) -> Vec<Bindings> {
     let Some(items) = rdf_or_native_list(left, bindings, facts) else { return Vec::new(); };
 
-    let mut sum = 0.0f64;
-    let mut all_integer = true;
+    let mut nums = Vec::new();
     for item in items {
         let Some(n) = numeric_value(&resolve(&item, bindings)) else { return Vec::new(); };
-        sum += n.value;
-        all_integer &= n.integer;
+        nums.push(n);
     }
 
-    let value = numeric_literal(sum, all_integer);
+    let value = match all_exact(&nums) {
+        Some(exact) => integer_literal(exact.into_iter().fold(BigInt::from(0), |sum, n| sum + n)),
+        None => numeric_literal(
+            nums.iter().map(|n| n.value).sum(),
+            nums.iter().all(|n| n.integer),
+        ),
+    };
     match resolve(right, bindings) {
         Term::Var(name) => bind_one(bindings, &name, value).into_iter().collect(),
         Term::Blank(_) => vec![bindings.clone()],
@@ -4961,18 +4994,25 @@ fn eval_math_compare(pred: &str, left: &Term, right: &Term, bindings: &Bindings)
     }
     let Some(l) = comparable_number(&lterm) else { return Vec::new(); };
     let Some(r) = comparable_number(&rterm) else { return Vec::new(); };
+    // Two integers compare exactly.  Anything else compares through the f64
+    // view, where equality has to allow for rounding.
+    use std::cmp::Ordering;
+    let exact = match (l.exact.as_ref(), r.exact.as_ref()) {
+        (Some(x), Some(y)) => Some(x.cmp(y)),
+        _ => None,
+    };
     let ok = if pred == MATH_GREATER_THAN {
-        l.value > r.value
+        exact.map_or(l.value > r.value, Ordering::is_gt)
     } else if pred == MATH_LESS_THAN {
-        l.value < r.value
+        exact.map_or(l.value < r.value, Ordering::is_lt)
     } else if pred == MATH_NOT_GREATER_THAN {
-        l.value <= r.value
+        exact.map_or(l.value <= r.value, Ordering::is_le)
     } else if pred == MATH_NOT_LESS_THAN {
-        l.value >= r.value
+        exact.map_or(l.value >= r.value, Ordering::is_ge)
     } else if pred == MATH_EQUAL_TO {
-        (l.value - r.value).abs() <= f64::EPSILON
+        exact.map_or((l.value - r.value).abs() <= f64::EPSILON, Ordering::is_eq)
     } else if pred == MATH_NOT_EQUAL_TO {
-        (l.value - r.value).abs() > f64::EPSILON
+        exact.map_or((l.value - r.value).abs() > f64::EPSILON, Ordering::is_ne)
     } else {
         false
     };
@@ -5010,7 +5050,7 @@ fn typed_literal(value: String, datatype: &str) -> Term {
 }
 
 fn comparable_number(term: &Term) -> Option<Numeric> {
-    numeric_value(term).or_else(|| duration_seconds(term).map(|value| Numeric { value, integer: false }))
+    numeric_value(term).or_else(|| duration_seconds(term).map(|value| Numeric { value, integer: false, exact: None }))
 }
 
 fn duration_seconds(term: &Term) -> Option<f64> {
@@ -5102,10 +5142,16 @@ fn format_duration_seconds(seconds: f64) -> String {
     format!("{sign}PT{}S", trim_float(seconds.abs()))
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone)]
 pub(crate) struct Numeric {
     pub(crate) value: f64,
     pub(crate) integer: bool,
+    /// The exact value, for an `xsd:integer` whose lexical form really is
+    /// one.  An integer literal already carries its value exactly; rounding
+    /// it into `value` is a loss past 2^53, and formatting that `f64` back
+    /// out is a guess.  Operations closed over the integers use this, and
+    /// everything else uses `value`.
+    pub(crate) exact: Option<BigInt>,
 }
 
 pub(crate) fn numeric_value(term: &Term) -> Option<Numeric> {
@@ -5121,10 +5167,40 @@ pub(crate) fn numeric_value(term: &Term) -> Option<Numeric> {
                     | Some("http://www.w3.org/2001/XMLSchema#float")
             );
             if !is_numeric { return None; }
-            parse_numeric_lexical(&lit.value).map(|value| Numeric { value, integer: is_integer })
+            let exact = if is_integer { lit.value.parse::<BigInt>().ok() } else { None };
+            parse_numeric_lexical(&lit.value).map(|value| Numeric { value, integer: is_integer, exact })
         }
         _ => None,
     }
+}
+
+/// Largest exact power this will materialise, in bits.  Eyeling caps the
+/// same operation at two million; Ackermann(4, 2) needs about 65,536.
+const MAX_EXACT_POWER_BITS: u64 = 2_000_000;
+
+pub(crate) fn integer_literal(value: BigInt) -> Term {
+    Term::Literal(Literal {
+        value: value.to_string(),
+        datatype: Some("http://www.w3.org/2001/XMLSchema#integer".to_string()),
+        language: None,
+    })
+}
+
+/// The exact values of `items`, when every one of them has one.
+fn all_exact(items: &[Numeric]) -> Option<Vec<&BigInt>> {
+    items.iter().map(|item| item.exact.as_ref()).collect()
+}
+
+/// `base ** exponent` exactly, when both are integers, the exponent is not
+/// negative, and the result is small enough to be worth materialising.
+fn exact_power(base: &Numeric, exponent: &Numeric) -> Option<Term> {
+    use num_traits::ToPrimitive;
+    let base = base.exact.as_ref()?;
+    let exponent = exponent.exact.as_ref()?.to_u32()?;
+    // |base|^exponent has at most bits(base) * exponent bits.
+    let bits = base.bits().checked_mul(u64::from(exponent))?;
+    if bits > MAX_EXACT_POWER_BITS { return None; }
+    Some(integer_literal(base.pow(exponent)))
 }
 
 pub(crate) fn numeric_literal(value: f64, prefer_integer: bool) -> Term {
@@ -5146,7 +5222,9 @@ pub(crate) fn numeric_literal(value: f64, prefer_integer: bool) -> Term {
 fn numeric_terms_equal(a: &Term, b: &Term) -> bool {
     match (numeric_value(a), numeric_value(b)) {
         (Some(x), Some(y)) => {
-            if x.value.is_nan() || y.value.is_nan() {
+            if let (Some(p), Some(q)) = (x.exact.as_ref(), y.exact.as_ref()) {
+                p == q
+            } else if x.value.is_nan() || y.value.is_nan() {
                 x.value.is_nan() && y.value.is_nan()
             } else if x.value.is_infinite() || y.value.is_infinite() {
                 x.value == y.value
