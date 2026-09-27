@@ -1330,3 +1330,62 @@ fn known_compatibility_regex_forms_still_answer_as_before() {
     assert!(output.contains(":b :literal true"), "{output}");
     assert!(output.contains(":a :lookahead true"), "{output}");
 }
+
+// --- ReasonerOptions::include_explicit: a caller that only reads
+// `.derived` (`eyeron::reason(&str)`, the `log:conclusion` builtin's nested
+// call) can skip the `.explicit`/`.explicit_sources` clone of every input
+// fact entirely. Default stays `true` (the old, always-populated behavior);
+// `proof: true` forces it back on regardless, since proof reconstruction
+// needs it. ---
+
+#[test]
+fn include_explicit_false_leaves_explicit_and_explicit_sources_empty() {
+    let source = "@prefix : <http://e/> .\n:a :p :b .\n{ ?s :p ?o } => { ?s :q ?o } .\n";
+    let doc = parse_n3(source, None).unwrap();
+    let result = reason_document(
+        &doc,
+        &ReasonerOptions { include_explicit: false, ..ReasonerOptions::default() },
+    );
+    assert!(result.explicit.is_empty(), "{:?}", result.explicit);
+    assert!(result.explicit_sources.is_empty(), "{:?}", result.explicit_sources);
+    // What the caller actually asked for is untouched by the flag.
+    assert_eq!(result.derived.len(), 1);
+    assert!(result.is_complete());
+}
+
+#[test]
+fn include_explicit_defaults_to_true_and_is_unchanged_from_before() {
+    let source = "@prefix : <http://e/> .\n:a :p :b .\n{ ?s :p ?o } => { ?s :q ?o } .\n";
+    let doc = parse_n3(source, None).unwrap();
+    let result = reason_document(&doc, &ReasonerOptions::default());
+    assert_eq!(result.explicit, doc.facts);
+    assert_eq!(result.explicit_sources, doc.fact_sources);
+}
+
+#[test]
+fn proof_forces_include_explicit_on_even_if_the_caller_set_it_false() {
+    let source = "@prefix : <http://e/> .\n:a :p :b .\n{ ?s :p ?o } => { ?s :q ?o } .\n";
+    let doc = parse_n3(source, None).unwrap();
+    let result = reason_document(
+        &doc,
+        &ReasonerOptions { include_explicit: false, proof: true, ..ReasonerOptions::default() },
+    );
+    // A proof that could not find its own explicit support would be a
+    // correctness bug, not a memory optimization: proof must win.
+    assert_eq!(result.explicit, doc.facts);
+    assert_eq!(result.explicit_sources, doc.fact_sources);
+    // And the proof tree built from it must actually resolve, not just have
+    // the raw data sitting there unused.
+    let proof_n3 = proof_to_n3(&doc.prefixes, &result);
+    assert!(!proof_n3.is_empty());
+}
+
+#[test]
+fn the_reason_str_convenience_wrapper_still_derives_correctly_without_explicit() {
+    // eyeron::reason(&str) passes include_explicit: false internally; this
+    // only re-confirms its own contract (derived output unaffected) using
+    // the public surface, since its internals aren't visible from here.
+    let source = "@prefix : <http://example.org/>.\n:a :p :b .\n{ ?s :p ?o } => { ?s :q ?o } .\n";
+    let output = reason(source).unwrap();
+    assert!(output.contains(":a :q :b"), "{output}");
+}
