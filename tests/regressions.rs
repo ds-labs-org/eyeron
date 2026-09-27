@@ -458,6 +458,7 @@ fn proof_output_marks_missing_support_as_unproven() {
         derived: vec![derived.clone()],
         closure: vec![derived],
         proofs: vec![proof],
+        fuse: None,
         rules: vec![rule],
     };
 
@@ -534,6 +535,7 @@ fn proof_output_recognizes_compatible_lookaround_builtin() {
         derived: vec![derived.clone()],
         closure: vec![derived],
         proofs: vec![proof],
+        fuse: None,
         rules: vec![rule],
     };
 
@@ -1448,4 +1450,79 @@ fn an_exponential_literal_keeps_the_lexical_form_it_was_written_with() {
 
     let output = reason(source).unwrap();
     assert!(output.contains(":b :value 6.123233995736766e-17"), "{output}");
+}
+
+#[test]
+fn a_rule_concluding_false_stops_the_run_and_names_itself() {
+    // `{ .. } => false` is an inference fuse: its premise becoming provable
+    // is the thing the rule forbids. Eyeron used to refuse to parse it.
+    let source = r#"
+        @prefix : <http://example.org/>.
+        :stone :color :black.
+        :stone :color :white.
+        { ?X :color :black. ?X :color :white. } => false.
+    "#;
+
+    let doc = parse_n3(source, None).unwrap();
+    let result = reason_document(&doc, &ReasonerOptions::default());
+    let fuse = result.fuse.as_ref().expect("the fuse should have fired");
+    // Nothing is asserted: the rules forbade this situation.
+    assert!(result.derived.is_empty(), "{:?}", result.derived);
+
+    let report = eyeron::fuse_report(&doc.prefixes, fuse);
+    assert_eq!(
+        report,
+        "# Inference fuse triggered.\n\
+         # Fired rule:\n\
+         #   {\n\
+         #     ?X :color :black .\n\
+         #     ?X :color :white .\n\
+         #   } => false .\n\
+         # Matched instance:\n\
+         #   {\n\
+         #     :stone :color :black .\n\
+         #     :stone :color :white .\n\
+         #   } => false .\n",
+        "{report}"
+    );
+}
+
+#[test]
+fn a_fuse_that_cannot_fire_leaves_the_rest_of_the_run_alone() {
+    // Most uses of `=> false` are guards that never fire. They must parse,
+    // be checked, and otherwise cost the run nothing.
+    let source = r#"
+        @prefix : <http://example.org/>.
+        @prefix math: <http://www.w3.org/2000/10/swap/math#>.
+        :tank :level 30.
+        { :tank :level ?L. ?L math:greaterThan 100 } => false.
+        { :tank :level ?L. ?L math:lessThan 50 } => { :tank :status :low }.
+    "#;
+
+    let doc = parse_n3(source, None).unwrap();
+    let result = reason_document(&doc, &ReasonerOptions::default());
+    assert!(result.fuse.is_none());
+    let output = result_to_string(&doc.prefixes, &result.derived);
+    assert!(output.contains(":tank :status :low"), "{output}");
+}
+
+#[test]
+fn a_fuse_is_visible_as_data_to_another_fuse() {
+    // The liar example: the outer rule forbids the inner rule's existence,
+    // and rules are matchable as quoted implication triples. A fuse has to
+    // show up as one concluding `false`, not as one concluding `true`.
+    let source = r#"
+        @prefix : <http://example.org/>.
+        { :Alice a :Liar } => false .
+        { { :Alice a :Liar } => false } => false .
+    "#;
+
+    let doc = parse_n3(source, None).unwrap();
+    let result = reason_document(&doc, &ReasonerOptions::default());
+    let fuse = result.fuse.as_ref().expect("the outer fuse should have fired");
+    let report = eyeron::fuse_report(&doc.prefixes, fuse);
+    assert!(report.contains("} => false ."), "{report}");
+    // The fired rule is the outer one, whose premise is the inner rule.
+    assert!(report.contains(":Alice a :Liar"), "{report}");
+    assert!(!report.contains("log:implies"), "{report}");
 }

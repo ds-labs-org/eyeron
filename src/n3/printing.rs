@@ -1,3 +1,4 @@
+use crate::n3::reasoner::FiredFuse;
 use crate::ast::*;
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -173,11 +174,19 @@ fn term_to_n3(term: &Term, prefixes: &BTreeMap<String, String>, pos: Position) -
 }
 
 fn is_implication_triple(t: &Triple) -> bool {
-    matches!((&t.s, &t.p, &t.o), (Term::Formula(_), Term::Iri(p), Term::Formula(_)) if p == LOG_IMPLIES || p == LOG_IMPLIED_BY)
+    match (&t.s, &t.p, &t.o) {
+        (Term::Formula(_), Term::Iri(p), Term::Formula(_)) => p == LOG_IMPLIES || p == LOG_IMPLIED_BY,
+        // An inference fuse concludes `false`, and reads back as one.
+        (Term::Formula(_), Term::Iri(p), o) => p == LOG_IMPLIES && crate::n3::reasoner::is_boolean_false(o),
+        _ => false,
+    }
 }
 
 fn implication_to_n3(t: &Triple, prefixes: &BTreeMap<String, String>) -> String {
     match (&t.s, &t.o) {
+        (Term::Formula(lhs), o) if crate::n3::reasoner::is_boolean_false(o) => {
+            format!("{} => false .\n", formula_to_n3(lhs, prefixes, 0))
+        }
         (Term::Formula(lhs), Term::Formula(rhs)) => {
             let op = match &t.p {
                 Term::Iri(p) if p == LOG_IMPLIED_BY => "<=",
@@ -192,6 +201,43 @@ fn implication_to_n3(t: &Triple, prefixes: &BTreeMap<String, String>) -> String 
             term_to_n3(&t.o, prefixes, Position::Object),
         ),
     }
+}
+
+/// What an inference fuse prints when it fires: the rule that forbade the
+/// situation, and, when the match made it concrete, the situation itself.
+/// Every line is a comment, so the report can be read back as the empty
+/// graph it describes -- nothing was derived, the run stopped.
+pub fn fuse_report(prefixes: &BTreeMap<String, String>, fuse: &FiredFuse) -> String {
+    let mut out = String::from("# Inference fuse triggered.\n");
+    let schematic = fuse_rule_to_n3(&fuse.rule.premise, prefixes);
+    out.push_str("# Fired rule:\n");
+    for line in schematic.lines() {
+        out.push_str("#   ");
+        out.push_str(line);
+        out.push('\n');
+    }
+    let instance = fuse_rule_to_n3(&fuse.instance, prefixes);
+    if instance != schematic {
+        out.push_str("# Matched instance:\n");
+        for line in instance.lines() {
+            out.push_str("#   ");
+            out.push_str(line);
+            out.push('\n');
+        }
+    }
+    out
+}
+
+fn fuse_rule_to_n3(premise: &[Triple], prefixes: &BTreeMap<String, String>) -> String {
+    if premise.is_empty() {
+        return "true => false .".to_string();
+    }
+    let body = premise
+        .iter()
+        .map(|t| format!("  {}", triple_to_n3(prefixes, t)))
+        .collect::<Vec<_>>()
+        .join("\n");
+    format!("{{\n{body}\n}} => false .")
 }
 
 fn formula_to_n3(triples: &[Triple], prefixes: &BTreeMap<String, String>, indent: usize) -> String {

@@ -1,0 +1,680 @@
+@prefix : <https://example.org/complex-matrix-stability#> .
+@prefix log: <http://www.w3.org/2000/10/swap/log#> .
+@prefix math: <http://www.w3.org/2000/10/swap/math#> .
+@prefix pe: <https://eyereasoner.github.io/pe#> .
+@prefix string: <http://www.w3.org/2000/10/swap/string#> .
+
+:Case :scenarioOk true .
+:Check :c1 "OK - A_unstable has eigenvalues (1,1) and (2,0) with spectral radius 2, so it is unstable." .
+:Check :c2 "OK - A_stable has eigenvalues (1,0) and (-1,0) with spectral radius 1, so it is marginally stable." .
+:Check :c3 "OK - A_damped has eigenvalues (0,0) and (0,0) with spectral radius 0, so every mode decays to zero." .
+:Check :c4 "OK - for z = (1,2) and w = (0,1), the squared modulus of z*w equals the product of the squared moduli." .
+:Check :c5 "OK - the spectral-radius-squared of 2*A_unstable is four times that of A_unstable." .
+:report log:outputString "Complex Matrix Stability — ARC-style\n\n## Answer\nWe compare three diagonal 2x2 complex matrices for discrete-time stability: A_unstable = [[(1,1),(0,0)],[(0,0),(2,0)]], A_stable = [[(1,0),(0,0)],[(0,0),(-1,0)]], and A_damped = [[(0,0),(0,0)],[(0,0),(0,0)]]. Their spectral radii are ρ(A_unstable) = 2, ρ(A_stable) = 1, and ρ(A_damped) = 0. So A_unstable is unstable, A_stable is marginally stable, and A_damped is damped.\n\n## Reason Why\nFor a discrete-time linear system x_{k+1} = A x_k, the eigenvalues of A govern the behaviour of the modes. Because these matrices are diagonal, the eigenvalues are just the diagonal entries. The spectral radius is the maximum modulus of the eigenvalues: if it is greater than 1 a mode grows, if it equals 1 the modes remain bounded without decaying, and if it is less than 1 all modes decay to zero. Here the diagonal entries give radii 2, 1, and 0 respectively, which explains the three classifications.\n\n## Check\nC1 OK - A_unstable has eigenvalues (1,1) and (2,0) with spectral radius 2, so it is unstable.\nC2 OK - A_stable has eigenvalues (1,0) and (-1,0) with spectral radius 1, so it is marginally stable.\nC3 OK - A_damped has eigenvalues (0,0) and (0,0) with spectral radius 0, so every mode decays to zero.\nC4 OK - for z = (1,2) and w = (0,1), the squared modulus of z*w equals the product of the squared moduli.\nC5 OK - the spectral-radius-squared of 2*A_unstable is four times that of A_unstable.\n" .
+
+{ :Case :scenarioOk true . }
+  pe:rule 16;
+  pe:binding
+    [ pe:var "Md"; pe:value :A_damped ],
+    [ pe:var "Ms"; pe:value :A_stable ],
+    [ pe:var "Mu"; pe:value :A_unstable ];
+  pe:uses
+    { :Case :unstableMatrix :A_unstable . },
+    { :Case :stableMatrix :A_stable . },
+    { :Case :dampedMatrix :A_damped . },
+    { :A_unstable :classification :unstable . },
+    { :A_unstable :spectralRadius 2 . },
+    { :A_stable :classification :stable . },
+    { :A_stable :spectralRadius 1 . },
+    { :A_damped :classification :damped . },
+    { :A_damped :spectralRadius 0 . }.
+
+{ :Case :unstableMatrix :A_unstable . }
+  pe:fact "complex-matrix-stability.n3".
+
+{ :Case :stableMatrix :A_stable . }
+  pe:fact "complex-matrix-stability.n3".
+
+{ :Case :dampedMatrix :A_damped . }
+  pe:fact "complex-matrix-stability.n3".
+
+{ :A_unstable :classification :unstable . }
+  pe:rule 10;
+  pe:binding
+    [ pe:var "M"; pe:value :A_unstable ],
+    [ pe:var "R2"; pe:value 4 ];
+  pe:uses
+    { :A_unstable :spectralRadiusSq 4 . },
+    { 4 math:greaterThan 1 . }.
+
+{ :A_unstable :spectralRadiusSq 4 . }
+  pe:rule 6;
+  pe:binding
+    [ pe:var "A1"; pe:value 2 ],
+    [ pe:var "A2"; pe:value 4 ],
+    [ pe:var "L1"; pe:value :c_1_1 ],
+    [ pe:var "L2"; pe:value :c_2_0 ],
+    [ pe:var "M"; pe:value :A_unstable ];
+  pe:uses
+    { :A_unstable :eigenvalue1 :c_1_1 . },
+    { :A_unstable :eigenvalue2 :c_2_0 . },
+    { :c_1_1 :abs2 2 . },
+    { :c_2_0 :abs2 4 . },
+    { 4 math:greaterThan 2 . }.
+
+{ :A_unstable :eigenvalue1 :c_1_1 . }
+  pe:rule 3;
+  pe:binding
+    [ pe:var "L1"; pe:value :c_1_1 ],
+    [ pe:var "L2"; pe:value :c_2_0 ],
+    [ pe:var "M"; pe:value :A_unstable ],
+    [ pe:var "Z1"; pe:value :c_0_0 ],
+    [ pe:var "Z2"; pe:value :c_0_0 ];
+  pe:uses
+    { :A_unstable :a11 :c_1_1 . },
+    { :A_unstable :a12 :c_0_0 . },
+    { :A_unstable :a21 :c_0_0 . },
+    { :A_unstable :a22 :c_2_0 . },
+    { :c_0_0 :isZero true . },
+    { :c_0_0 :isZero true . }.
+
+{ :A_unstable :a11 :c_1_1 . }
+  pe:fact "complex-matrix-stability.n3".
+
+{ :A_unstable :a12 :c_0_0 . }
+  pe:fact "complex-matrix-stability.n3".
+
+{ :A_unstable :a21 :c_0_0 . }
+  pe:fact "complex-matrix-stability.n3".
+
+{ :A_unstable :a22 :c_2_0 . }
+  pe:fact "complex-matrix-stability.n3".
+
+{ :c_0_0 :isZero true . }
+  pe:rule 2;
+  pe:binding [ pe:var "Z"; pe:value :c_0_0 ];
+  pe:uses
+    { :c_0_0 :re 0 . },
+    { :c_0_0 :im 0 . }.
+
+{ :c_0_0 :re 0 . }
+  pe:fact "complex-matrix-stability.n3".
+
+{ :c_0_0 :im 0 . }
+  pe:fact "complex-matrix-stability.n3".
+
+{ :A_unstable :eigenvalue2 :c_2_0 . }
+  pe:rule 4;
+  pe:binding
+    [ pe:var "L1"; pe:value :c_1_1 ],
+    [ pe:var "L2"; pe:value :c_2_0 ],
+    [ pe:var "M"; pe:value :A_unstable ],
+    [ pe:var "Z1"; pe:value :c_0_0 ],
+    [ pe:var "Z2"; pe:value :c_0_0 ];
+  pe:uses
+    { :A_unstable :a11 :c_1_1 . },
+    { :A_unstable :a12 :c_0_0 . },
+    { :A_unstable :a21 :c_0_0 . },
+    { :A_unstable :a22 :c_2_0 . },
+    { :c_0_0 :isZero true . },
+    { :c_0_0 :isZero true . }.
+
+{ :c_1_1 :abs2 2 . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "A2"; pe:value 2 ],
+    [ pe:var "I"; pe:value 1 ],
+    [ pe:var "I2"; pe:value 1 ],
+    [ pe:var "R"; pe:value 1 ],
+    [ pe:var "R2"; pe:value 1 ],
+    [ pe:var "Z"; pe:value :c_1_1 ];
+  pe:uses
+    { :c_1_1 :re 1 . },
+    { :c_1_1 :im 1 . },
+    { (1 1) math:product 1 . },
+    { (1 1) math:product 1 . },
+    { (1 1) math:sum 2 . }.
+
+{ :c_1_1 :re 1 . }
+  pe:fact "complex-matrix-stability.n3".
+
+{ :c_1_1 :im 1 . }
+  pe:fact "complex-matrix-stability.n3".
+
+{ (1 1) math:product 1 . }
+  pe:builtin math:product.
+
+{ (1 1) math:sum 2 . }
+  pe:builtin math:sum.
+
+{ :c_2_0 :abs2 4 . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "A2"; pe:value 4 ],
+    [ pe:var "I"; pe:value 0 ],
+    [ pe:var "I2"; pe:value 0 ],
+    [ pe:var "R"; pe:value 2 ],
+    [ pe:var "R2"; pe:value 4 ],
+    [ pe:var "Z"; pe:value :c_2_0 ];
+  pe:uses
+    { :c_2_0 :re 2 . },
+    { :c_2_0 :im 0 . },
+    { (2 2) math:product 4 . },
+    { (0 0) math:product 0 . },
+    { (4 0) math:sum 4 . }.
+
+{ :c_2_0 :re 2 . }
+  pe:fact "complex-matrix-stability.n3".
+
+{ :c_2_0 :im 0 . }
+  pe:fact "complex-matrix-stability.n3".
+
+{ (2 2) math:product 4 . }
+  pe:builtin math:product.
+
+{ (0 0) math:product 0 . }
+  pe:builtin math:product.
+
+{ (4 0) math:sum 4 . }
+  pe:builtin math:sum.
+
+{ 4 math:greaterThan 2 . }
+  pe:builtin math:greaterThan.
+
+{ 4 math:greaterThan 1 . }
+  pe:builtin math:greaterThan.
+
+{ :A_unstable :spectralRadius 2 . }
+  pe:rule 7;
+  pe:binding [ pe:var "M"; pe:value :A_unstable ];
+  pe:uses { :A_unstable :spectralRadiusSq 4 . }.
+
+{ :A_stable :classification :stable . }
+  pe:rule 11;
+  pe:binding [ pe:var "M"; pe:value :A_stable ];
+  pe:uses { :A_stable :spectralRadiusSq 1 . }.
+
+{ :A_stable :spectralRadiusSq 1 . }
+  pe:rule 5;
+  pe:binding
+    [ pe:var "A1"; pe:value 1 ],
+    [ pe:var "A2"; pe:value 1 ],
+    [ pe:var "L1"; pe:value :c_1_0 ],
+    [ pe:var "L2"; pe:value :c_m1_0 ],
+    [ pe:var "M"; pe:value :A_stable ];
+  pe:uses
+    { :A_stable :eigenvalue1 :c_1_0 . },
+    { :A_stable :eigenvalue2 :c_m1_0 . },
+    { :c_1_0 :abs2 1 . },
+    { :c_m1_0 :abs2 1 . },
+    { 1 math:notLessThan 1 . }.
+
+{ :A_stable :eigenvalue1 :c_1_0 . }
+  pe:rule 3;
+  pe:binding
+    [ pe:var "L1"; pe:value :c_1_0 ],
+    [ pe:var "L2"; pe:value :c_m1_0 ],
+    [ pe:var "M"; pe:value :A_stable ],
+    [ pe:var "Z1"; pe:value :c_0_0 ],
+    [ pe:var "Z2"; pe:value :c_0_0 ];
+  pe:uses
+    { :A_stable :a11 :c_1_0 . },
+    { :A_stable :a12 :c_0_0 . },
+    { :A_stable :a21 :c_0_0 . },
+    { :A_stable :a22 :c_m1_0 . },
+    { :c_0_0 :isZero true . },
+    { :c_0_0 :isZero true . }.
+
+{ :A_stable :a11 :c_1_0 . }
+  pe:fact "complex-matrix-stability.n3".
+
+{ :A_stable :a12 :c_0_0 . }
+  pe:fact "complex-matrix-stability.n3".
+
+{ :A_stable :a21 :c_0_0 . }
+  pe:fact "complex-matrix-stability.n3".
+
+{ :A_stable :a22 :c_m1_0 . }
+  pe:fact "complex-matrix-stability.n3".
+
+{ :A_stable :eigenvalue2 :c_m1_0 . }
+  pe:rule 4;
+  pe:binding
+    [ pe:var "L1"; pe:value :c_1_0 ],
+    [ pe:var "L2"; pe:value :c_m1_0 ],
+    [ pe:var "M"; pe:value :A_stable ],
+    [ pe:var "Z1"; pe:value :c_0_0 ],
+    [ pe:var "Z2"; pe:value :c_0_0 ];
+  pe:uses
+    { :A_stable :a11 :c_1_0 . },
+    { :A_stable :a12 :c_0_0 . },
+    { :A_stable :a21 :c_0_0 . },
+    { :A_stable :a22 :c_m1_0 . },
+    { :c_0_0 :isZero true . },
+    { :c_0_0 :isZero true . }.
+
+{ :c_1_0 :abs2 1 . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "A2"; pe:value 1 ],
+    [ pe:var "I"; pe:value 0 ],
+    [ pe:var "I2"; pe:value 0 ],
+    [ pe:var "R"; pe:value 1 ],
+    [ pe:var "R2"; pe:value 1 ],
+    [ pe:var "Z"; pe:value :c_1_0 ];
+  pe:uses
+    { :c_1_0 :re 1 . },
+    { :c_1_0 :im 0 . },
+    { (1 1) math:product 1 . },
+    { (0 0) math:product 0 . },
+    { (1 0) math:sum 1 . }.
+
+{ :c_1_0 :re 1 . }
+  pe:fact "complex-matrix-stability.n3".
+
+{ :c_1_0 :im 0 . }
+  pe:fact "complex-matrix-stability.n3".
+
+{ (1 0) math:sum 1 . }
+  pe:builtin math:sum.
+
+{ :c_m1_0 :abs2 1 . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "A2"; pe:value 1 ],
+    [ pe:var "I"; pe:value 0 ],
+    [ pe:var "I2"; pe:value 0 ],
+    [ pe:var "R"; pe:value -1 ],
+    [ pe:var "R2"; pe:value 1 ],
+    [ pe:var "Z"; pe:value :c_m1_0 ];
+  pe:uses
+    { :c_m1_0 :re -1 . },
+    { :c_m1_0 :im 0 . },
+    { (-1 -1) math:product 1 . },
+    { (0 0) math:product 0 . },
+    { (1 0) math:sum 1 . }.
+
+{ :c_m1_0 :re -1 . }
+  pe:fact "complex-matrix-stability.n3".
+
+{ :c_m1_0 :im 0 . }
+  pe:fact "complex-matrix-stability.n3".
+
+{ (-1 -1) math:product 1 . }
+  pe:builtin math:product.
+
+{ 1 math:notLessThan 1 . }
+  pe:builtin math:notLessThan.
+
+{ :A_stable :spectralRadius 1 . }
+  pe:rule 8;
+  pe:binding [ pe:var "M"; pe:value :A_stable ];
+  pe:uses { :A_stable :spectralRadiusSq 1 . }.
+
+{ :A_damped :classification :damped . }
+  pe:rule 12;
+  pe:binding
+    [ pe:var "M"; pe:value :A_damped ],
+    [ pe:var "R2"; pe:value 0 ];
+  pe:uses
+    { :A_damped :spectralRadiusSq 0 . },
+    { 0 math:lessThan 1 . }.
+
+{ :A_damped :spectralRadiusSq 0 . }
+  pe:rule 5;
+  pe:binding
+    [ pe:var "A1"; pe:value 0 ],
+    [ pe:var "A2"; pe:value 0 ],
+    [ pe:var "L1"; pe:value :c_0_0 ],
+    [ pe:var "L2"; pe:value :c_0_0 ],
+    [ pe:var "M"; pe:value :A_damped ];
+  pe:uses
+    { :A_damped :eigenvalue1 :c_0_0 . },
+    { :A_damped :eigenvalue2 :c_0_0 . },
+    { :c_0_0 :abs2 0 . },
+    { :c_0_0 :abs2 0 . },
+    { 0 math:notLessThan 0 . }.
+
+{ :A_damped :eigenvalue1 :c_0_0 . }
+  pe:rule 3;
+  pe:binding
+    [ pe:var "L1"; pe:value :c_0_0 ],
+    [ pe:var "L2"; pe:value :c_0_0 ],
+    [ pe:var "M"; pe:value :A_damped ],
+    [ pe:var "Z1"; pe:value :c_0_0 ],
+    [ pe:var "Z2"; pe:value :c_0_0 ];
+  pe:uses
+    { :A_damped :a11 :c_0_0 . },
+    { :A_damped :a12 :c_0_0 . },
+    { :A_damped :a21 :c_0_0 . },
+    { :A_damped :a22 :c_0_0 . },
+    { :c_0_0 :isZero true . },
+    { :c_0_0 :isZero true . }.
+
+{ :A_damped :a11 :c_0_0 . }
+  pe:fact "complex-matrix-stability.n3".
+
+{ :A_damped :a12 :c_0_0 . }
+  pe:fact "complex-matrix-stability.n3".
+
+{ :A_damped :a21 :c_0_0 . }
+  pe:fact "complex-matrix-stability.n3".
+
+{ :A_damped :a22 :c_0_0 . }
+  pe:fact "complex-matrix-stability.n3".
+
+{ :A_damped :eigenvalue2 :c_0_0 . }
+  pe:rule 4;
+  pe:binding
+    [ pe:var "L1"; pe:value :c_0_0 ],
+    [ pe:var "L2"; pe:value :c_0_0 ],
+    [ pe:var "M"; pe:value :A_damped ],
+    [ pe:var "Z1"; pe:value :c_0_0 ],
+    [ pe:var "Z2"; pe:value :c_0_0 ];
+  pe:uses
+    { :A_damped :a11 :c_0_0 . },
+    { :A_damped :a12 :c_0_0 . },
+    { :A_damped :a21 :c_0_0 . },
+    { :A_damped :a22 :c_0_0 . },
+    { :c_0_0 :isZero true . },
+    { :c_0_0 :isZero true . }.
+
+{ :c_0_0 :abs2 0 . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "A2"; pe:value 0 ],
+    [ pe:var "I"; pe:value 0 ],
+    [ pe:var "I2"; pe:value 0 ],
+    [ pe:var "R"; pe:value 0 ],
+    [ pe:var "R2"; pe:value 0 ],
+    [ pe:var "Z"; pe:value :c_0_0 ];
+  pe:uses
+    { :c_0_0 :re 0 . },
+    { :c_0_0 :im 0 . },
+    { (0 0) math:product 0 . },
+    { (0 0) math:product 0 . },
+    { (0 0) math:sum 0 . }.
+
+{ (0 0) math:sum 0 . }
+  pe:builtin math:sum.
+
+{ 0 math:notLessThan 0 . }
+  pe:builtin math:notLessThan.
+
+{ 0 math:lessThan 1 . }
+  pe:builtin math:lessThan.
+
+{ :A_damped :spectralRadius 0 . }
+  pe:rule 9;
+  pe:binding [ pe:var "M"; pe:value :A_damped ];
+  pe:uses { :A_damped :spectralRadiusSq 0 . }.
+
+{ :Check :c1 "OK - A_unstable has eigenvalues (1,1) and (2,0) with spectral radius 2, so it is unstable." . }
+  pe:rule 17;
+  pe:uses
+    { :A_unstable :eigenvalue1 :c_1_1 . },
+    { :A_unstable :eigenvalue2 :c_2_0 . },
+    { :A_unstable :spectralRadiusSq 4 . },
+    { :A_unstable :spectralRadius 2 . },
+    { :A_unstable :classification :unstable . }.
+
+{ :Check :c2 "OK - A_stable has eigenvalues (1,0) and (-1,0) with spectral radius 1, so it is marginally stable." . }
+  pe:rule 18;
+  pe:uses
+    { :A_stable :eigenvalue1 :c_1_0 . },
+    { :A_stable :eigenvalue2 :c_m1_0 . },
+    { :A_stable :spectralRadiusSq 1 . },
+    { :A_stable :spectralRadius 1 . },
+    { :A_stable :classification :stable . }.
+
+{ :Check :c3 "OK - A_damped has eigenvalues (0,0) and (0,0) with spectral radius 0, so every mode decays to zero." . }
+  pe:rule 19;
+  pe:uses
+    { :A_damped :eigenvalue1 :c_0_0 . },
+    { :A_damped :eigenvalue2 :c_0_0 . },
+    { :A_damped :spectralRadiusSq 0 . },
+    { :A_damped :spectralRadius 0 . },
+    { :A_damped :classification :damped . }.
+
+{ :Check :c4 "OK - for z = (1,2) and w = (0,1), the squared modulus of z*w equals the product of the squared moduli." . }
+  pe:rule 20;
+  pe:binding
+    [ pe:var "AW2"; pe:value 1 ],
+    [ pe:var "AZ2"; pe:value 5 ],
+    [ pe:var "AZW2"; pe:value 5 ],
+    [ pe:var "Target"; pe:value 5 ];
+  pe:uses
+    { :c_1_2 :abs2 5 . },
+    { :c_0_1 :abs2 1 . },
+    { :sampleProduct :abs2 5 . },
+    { (5 1) math:product 5 . },
+    { 5 math:equalTo 5 . }.
+
+{ :c_1_2 :abs2 5 . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "A2"; pe:value 5 ],
+    [ pe:var "I"; pe:value 2 ],
+    [ pe:var "I2"; pe:value 4 ],
+    [ pe:var "R"; pe:value 1 ],
+    [ pe:var "R2"; pe:value 1 ],
+    [ pe:var "Z"; pe:value :c_1_2 ];
+  pe:uses
+    { :c_1_2 :re 1 . },
+    { :c_1_2 :im 2 . },
+    { (1 1) math:product 1 . },
+    { (2 2) math:product 4 . },
+    { (1 4) math:sum 5 . }.
+
+{ :c_1_2 :re 1 . }
+  pe:fact "complex-matrix-stability.n3".
+
+{ :c_1_2 :im 2 . }
+  pe:fact "complex-matrix-stability.n3".
+
+{ (1 4) math:sum 5 . }
+  pe:builtin math:sum.
+
+{ :c_0_1 :abs2 1 . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "A2"; pe:value 1 ],
+    [ pe:var "I"; pe:value 1 ],
+    [ pe:var "I2"; pe:value 1 ],
+    [ pe:var "R"; pe:value 0 ],
+    [ pe:var "R2"; pe:value 0 ],
+    [ pe:var "Z"; pe:value :c_0_1 ];
+  pe:uses
+    { :c_0_1 :re 0 . },
+    { :c_0_1 :im 1 . },
+    { (0 0) math:product 0 . },
+    { (1 1) math:product 1 . },
+    { (0 1) math:sum 1 . }.
+
+{ :c_0_1 :re 0 . }
+  pe:fact "complex-matrix-stability.n3".
+
+{ :c_0_1 :im 1 . }
+  pe:fact "complex-matrix-stability.n3".
+
+{ (0 1) math:sum 1 . }
+  pe:builtin math:sum.
+
+{ :sampleProduct :abs2 5 . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "A2"; pe:value 5 ],
+    [ pe:var "I"; pe:value 1 ],
+    [ pe:var "I2"; pe:value 1 ],
+    [ pe:var "R"; pe:value -2 ],
+    [ pe:var "R2"; pe:value 4 ],
+    [ pe:var "Z"; pe:value :sampleProduct ];
+  pe:uses
+    { :sampleProduct :re -2 . },
+    { :sampleProduct :im 1 . },
+    { (-2 -2) math:product 4 . },
+    { (1 1) math:product 1 . },
+    { (4 1) math:sum 5 . }.
+
+{ :sampleProduct :re -2 . }
+  pe:rule 13;
+  pe:binding
+    [ pe:var "Ai"; pe:value 2 ],
+    [ pe:var "Ar"; pe:value 1 ],
+    [ pe:var "Bi"; pe:value 1 ],
+    [ pe:var "Br"; pe:value 0 ],
+    [ pe:var "Ci"; pe:value 1 ],
+    [ pe:var "Cr"; pe:value -2 ],
+    [ pe:var "P1"; pe:value 0 ],
+    [ pe:var "P2"; pe:value 2 ],
+    [ pe:var "P3"; pe:value 1 ],
+    [ pe:var "P4"; pe:value 0 ];
+  pe:uses
+    { :c_1_2 :re 1 . },
+    { :c_1_2 :im 2 . },
+    { :c_0_1 :re 0 . },
+    { :c_0_1 :im 1 . },
+    { (1 0) math:product 0 . },
+    { (2 1) math:product 2 . },
+    { (0 2) math:difference -2 . },
+    { (1 1) math:product 1 . },
+    { (2 0) math:product 0 . },
+    { (1 0) math:sum 1 . }.
+
+{ (1 0) math:product 0 . }
+  pe:builtin math:product.
+
+{ (2 1) math:product 2 . }
+  pe:builtin math:product.
+
+{ (0 2) math:difference -2 . }
+  pe:builtin math:difference.
+
+{ (2 0) math:product 0 . }
+  pe:builtin math:product.
+
+{ :sampleProduct :im 1 . }
+  pe:rule 14;
+  pe:binding
+    [ pe:var "Ai"; pe:value 2 ],
+    [ pe:var "Ar"; pe:value 1 ],
+    [ pe:var "Bi"; pe:value 1 ],
+    [ pe:var "Br"; pe:value 0 ],
+    [ pe:var "Ci"; pe:value 1 ],
+    [ pe:var "Cr"; pe:value -2 ],
+    [ pe:var "P1"; pe:value 0 ],
+    [ pe:var "P2"; pe:value 2 ],
+    [ pe:var "P3"; pe:value 1 ],
+    [ pe:var "P4"; pe:value 0 ];
+  pe:uses
+    { :c_1_2 :re 1 . },
+    { :c_1_2 :im 2 . },
+    { :c_0_1 :re 0 . },
+    { :c_0_1 :im 1 . },
+    { (1 0) math:product 0 . },
+    { (2 1) math:product 2 . },
+    { (0 2) math:difference -2 . },
+    { (1 1) math:product 1 . },
+    { (2 0) math:product 0 . },
+    { (1 0) math:sum 1 . }.
+
+{ (-2 -2) math:product 4 . }
+  pe:builtin math:product.
+
+{ (4 1) math:sum 5 . }
+  pe:builtin math:sum.
+
+{ (5 1) math:product 5 . }
+  pe:builtin math:product.
+
+{ 5 math:equalTo 5 . }
+  pe:builtin math:equalTo.
+
+{ :Check :c5 "OK - the spectral-radius-squared of 2*A_unstable is four times that of A_unstable." . }
+  pe:rule 21;
+  pe:binding
+    [ pe:var "Ru2"; pe:value 4 ],
+    [ pe:var "Ru2Scaled"; pe:value 16 ],
+    [ pe:var "Target"; pe:value 16 ];
+  pe:uses
+    { :A_unstable :spectralRadiusSq 4 . },
+    { :A_unstable :scaledRadiusSq 16 . },
+    { (4 4) math:product 16 . },
+    { 16 math:equalTo 16 . }.
+
+{ :A_unstable :scaledRadiusSq 16 . }
+  pe:rule 15;
+  pe:binding
+    [ pe:var "K"; pe:value 2 ],
+    [ pe:var "K2"; pe:value 4 ],
+    [ pe:var "S1"; pe:value 8 ],
+    [ pe:var "S2"; pe:value 16 ];
+  pe:uses
+    { :Scale2 :k 2 . },
+    { (2 2) math:product 4 . },
+    { (4 2) math:product 8 . },
+    { (4 4) math:product 16 . },
+    { 16 math:greaterThan 8 . }.
+
+{ :Scale2 :k 2 . }
+  pe:fact "complex-matrix-stability.n3".
+
+{ (4 2) math:product 8 . }
+  pe:builtin math:product.
+
+{ (4 4) math:product 16 . }
+  pe:builtin math:product.
+
+{ 16 math:greaterThan 8 . }
+  pe:builtin math:greaterThan.
+
+{ 16 math:equalTo 16 . }
+  pe:builtin math:equalTo.
+
+{ :report log:outputString "Complex Matrix Stability — ARC-style\n\n## Answer\nWe compare three diagonal 2x2 complex matrices for discrete-time stability: A_unstable = [[(1,1),(0,0)],[(0,0),(2,0)]], A_stable = [[(1,0),(0,0)],[(0,0),(-1,0)]], and A_damped = [[(0,0),(0,0)],[(0,0),(0,0)]]. Their spectral radii are ρ(A_unstable) = 2, ρ(A_stable) = 1, and ρ(A_damped) = 0. So A_unstable is unstable, A_stable is marginally stable, and A_damped is damped.\n\n## Reason Why\nFor a discrete-time linear system x_{k+1} = A x_k, the eigenvalues of A govern the behaviour of the modes. Because these matrices are diagonal, the eigenvalues are just the diagonal entries. The spectral radius is the maximum modulus of the eigenvalues: if it is greater than 1 a mode grows, if it equals 1 the modes remain bounded without decaying, and if it is less than 1 all modes decay to zero. Here the diagonal entries give radii 2, 1, and 0 respectively, which explains the three classifications.\n\n## Check\nC1 OK - A_unstable has eigenvalues (1,1) and (2,0) with spectral radius 2, so it is unstable.\nC2 OK - A_stable has eigenvalues (1,0) and (-1,0) with spectral radius 1, so it is marginally stable.\nC3 OK - A_damped has eigenvalues (0,0) and (0,0) with spectral radius 0, so every mode decays to zero.\nC4 OK - for z = (1,2) and w = (0,1), the squared modulus of z*w equals the product of the squared moduli.\nC5 OK - the spectral-radius-squared of 2*A_unstable is four times that of A_unstable.\n" . }
+  pe:rule 28;
+  pe:binding
+    [ pe:var "Block"; pe:value "Complex Matrix Stability — ARC-style\n\n## Answer\nWe compare three diagonal 2x2 complex matrices for discrete-time stability: A_unstable = [[(1,1),(0,0)],[(0,0),(2,0)]], A_stable = [[(1,0),(0,0)],[(0,0),(-1,0)]], and A_damped = [[(0,0),(0,0)],[(0,0),(0,0)]]. Their spectral radii are ρ(A_unstable) = 2, ρ(A_stable) = 1, and ρ(A_damped) = 0. So A_unstable is unstable, A_stable is marginally stable, and A_damped is damped.\n\n## Reason Why\nFor a discrete-time linear system x_{k+1} = A x_k, the eigenvalues of A govern the behaviour of the modes. Because these matrices are diagonal, the eigenvalues are just the diagonal entries. The spectral radius is the maximum modulus of the eigenvalues: if it is greater than 1 a mode grows, if it equals 1 the modes remain bounded without decaying, and if it is less than 1 all modes decay to zero. Here the diagonal entries give radii 2, 1, and 0 respectively, which explains the three classifications.\n\n## Check\nC1 OK - A_unstable has eigenvalues (1,1) and (2,0) with spectral radius 2, so it is unstable.\nC2 OK - A_stable has eigenvalues (1,0) and (-1,0) with spectral radius 1, so it is marginally stable.\nC3 OK - A_damped has eigenvalues (0,0) and (0,0) with spectral radius 0, so every mode decays to zero.\nC4 OK - for z = (1,2) and w = (0,1), the squared modulus of z*w equals the product of the squared moduli.\nC5 OK - the spectral-radius-squared of 2*A_unstable is four times that of A_unstable.\n" ],
+    [ pe:var "C1"; pe:value "OK - A_unstable has eigenvalues (1,1) and (2,0) with spectral radius 2, so it is unstable." ],
+    [ pe:var "C2"; pe:value "OK - A_stable has eigenvalues (1,0) and (-1,0) with spectral radius 1, so it is marginally stable." ],
+    [ pe:var "C3"; pe:value "OK - A_damped has eigenvalues (0,0) and (0,0) with spectral radius 0, so every mode decays to zero." ],
+    [ pe:var "C4"; pe:value "OK - for z = (1,2) and w = (0,1), the squared modulus of z*w equals the product of the squared moduli." ],
+    [ pe:var "C5"; pe:value "OK - the spectral-radius-squared of 2*A_unstable is four times that of A_unstable." ],
+    [ pe:var "Md"; pe:value :A_damped ],
+    [ pe:var "MdS"; pe:value "[[(0,0),(0,0)],[(0,0),(0,0)]]" ],
+    [ pe:var "Ms"; pe:value :A_stable ],
+    [ pe:var "MsS"; pe:value "[[(1,0),(0,0)],[(0,0),(-1,0)]]" ],
+    [ pe:var "Mu"; pe:value :A_unstable ],
+    [ pe:var "MuS"; pe:value "[[(1,1),(0,0)],[(0,0),(2,0)]]" ],
+    [ pe:var "Rd"; pe:value 0 ],
+    [ pe:var "Rs"; pe:value 1 ],
+    [ pe:var "Ru"; pe:value 2 ];
+  pe:uses
+    { :Case :scenarioOk true . },
+    { :Case :unstableMatrix :A_unstable . },
+    { :Case :stableMatrix :A_stable . },
+    { :Case :dampedMatrix :A_damped . },
+    { :A_unstable :pretty "[[(1,1),(0,0)],[(0,0),(2,0)]]" . },
+    { :A_unstable :spectralRadius 2 . },
+    { :A_stable :pretty "[[(1,0),(0,0)],[(0,0),(-1,0)]]" . },
+    { :A_stable :spectralRadius 1 . },
+    { :A_damped :pretty "[[(0,0),(0,0)],[(0,0),(0,0)]]" . },
+    { :A_damped :spectralRadius 0 . },
+    { :Check :c1 "OK - A_unstable has eigenvalues (1,1) and (2,0) with spectral radius 2, so it is unstable." . },
+    { :Check :c2 "OK - A_stable has eigenvalues (1,0) and (-1,0) with spectral radius 1, so it is marginally stable." . },
+    { :Check :c3 "OK - A_damped has eigenvalues (0,0) and (0,0) with spectral radius 0, so every mode decays to zero." . },
+    { :Check :c4 "OK - for z = (1,2) and w = (0,1), the squared modulus of z*w equals the product of the squared moduli." . },
+    { :Check :c5 "OK - the spectral-radius-squared of 2*A_unstable is four times that of A_unstable." . },
+    { ("Complex Matrix Stability — ARC-style\n\n" "## Answer\n" "We compare three diagonal 2x2 complex matrices for discrete-time stability: " "A_unstable = " "[[(1,1),(0,0)],[(0,0),(2,0)]]" ", A_stable = " "[[(1,0),(0,0)],[(0,0),(-1,0)]]" ", and A_damped = " "[[(0,0),(0,0)],[(0,0),(0,0)]]" ". " "Their spectral radii are ρ(A_unstable) = " 2 ", ρ(A_stable) = " 1 ", and ρ(A_damped) = " 0 ". " "So A_unstable is unstable, A_stable is marginally stable, and A_damped is damped.\n\n" "## Reason Why\n" "For a discrete-time linear system x_{k+1} = A x_k, the eigenvalues of A govern the behaviour of the modes. " "Because these matrices are diagonal, the eigenvalues are just the diagonal entries. " "The spectral radius is the maximum modulus of the eigenvalues: if it is greater than 1 a mode grows, " "if it equals 1 the modes remain bounded without decaying, and if it is less than 1 all modes decay to zero. " "Here the diagonal entries give radii 2, 1, and 0 respectively, which explains the three classifications.\n\n" "## Check\n" "C1 " "OK - A_unstable has eigenvalues (1,1) and (2,0) with spectral radius 2, so it is unstable." "\n" "C2 " "OK - A_stable has eigenvalues (1,0) and (-1,0) with spectral radius 1, so it is marginally stable." "\n" "C3 " "OK - A_damped has eigenvalues (0,0) and (0,0) with spectral radius 0, so every mode decays to zero." "\n" "C4 " "OK - for z = (1,2) and w = (0,1), the squared modulus of z*w equals the product of the squared moduli." "\n" "C5 " "OK - the spectral-radius-squared of 2*A_unstable is four times that of A_unstable." "\n") string:concatenation "Complex Matrix Stability — ARC-style\n\n## Answer\nWe compare three diagonal 2x2 complex matrices for discrete-time stability: A_unstable = [[(1,1),(0,0)],[(0,0),(2,0)]], A_stable = [[(1,0),(0,0)],[(0,0),(-1,0)]], and A_damped = [[(0,0),(0,0)],[(0,0),(0,0)]]. Their spectral radii are ρ(A_unstable) = 2, ρ(A_stable) = 1, and ρ(A_damped) = 0. So A_unstable is unstable, A_stable is marginally stable, and A_damped is damped.\n\n## Reason Why\nFor a discrete-time linear system x_{k+1} = A x_k, the eigenvalues of A govern the behaviour of the modes. Because these matrices are diagonal, the eigenvalues are just the diagonal entries. The spectral radius is the maximum modulus of the eigenvalues: if it is greater than 1 a mode grows, if it equals 1 the modes remain bounded without decaying, and if it is less than 1 all modes decay to zero. Here the diagonal entries give radii 2, 1, and 0 respectively, which explains the three classifications.\n\n## Check\nC1 OK - A_unstable has eigenvalues (1,1) and (2,0) with spectral radius 2, so it is unstable.\nC2 OK - A_stable has eigenvalues (1,0) and (-1,0) with spectral radius 1, so it is marginally stable.\nC3 OK - A_damped has eigenvalues (0,0) and (0,0) with spectral radius 0, so every mode decays to zero.\nC4 OK - for z = (1,2) and w = (0,1), the squared modulus of z*w equals the product of the squared moduli.\nC5 OK - the spectral-radius-squared of 2*A_unstable is four times that of A_unstable.\n" . }.
+
+{ :A_unstable :pretty "[[(1,1),(0,0)],[(0,0),(2,0)]]" . }
+  pe:fact "complex-matrix-stability.n3".
+
+{ :A_stable :pretty "[[(1,0),(0,0)],[(0,0),(-1,0)]]" . }
+  pe:fact "complex-matrix-stability.n3".
+
+{ :A_damped :pretty "[[(0,0),(0,0)],[(0,0),(0,0)]]" . }
+  pe:fact "complex-matrix-stability.n3".
+
+{ ("Complex Matrix Stability — ARC-style\n\n" "## Answer\n" "We compare three diagonal 2x2 complex matrices for discrete-time stability: " "A_unstable = " "[[(1,1),(0,0)],[(0,0),(2,0)]]" ", A_stable = " "[[(1,0),(0,0)],[(0,0),(-1,0)]]" ", and A_damped = " "[[(0,0),(0,0)],[(0,0),(0,0)]]" ". " "Their spectral radii are ρ(A_unstable) = " 2 ", ρ(A_stable) = " 1 ", and ρ(A_damped) = " 0 ". " "So A_unstable is unstable, A_stable is marginally stable, and A_damped is damped.\n\n" "## Reason Why\n" "For a discrete-time linear system x_{k+1} = A x_k, the eigenvalues of A govern the behaviour of the modes. " "Because these matrices are diagonal, the eigenvalues are just the diagonal entries. " "The spectral radius is the maximum modulus of the eigenvalues: if it is greater than 1 a mode grows, " "if it equals 1 the modes remain bounded without decaying, and if it is less than 1 all modes decay to zero. " "Here the diagonal entries give radii 2, 1, and 0 respectively, which explains the three classifications.\n\n" "## Check\n" "C1 " "OK - A_unstable has eigenvalues (1,1) and (2,0) with spectral radius 2, so it is unstable." "\n" "C2 " "OK - A_stable has eigenvalues (1,0) and (-1,0) with spectral radius 1, so it is marginally stable." "\n" "C3 " "OK - A_damped has eigenvalues (0,0) and (0,0) with spectral radius 0, so every mode decays to zero." "\n" "C4 " "OK - for z = (1,2) and w = (0,1), the squared modulus of z*w equals the product of the squared moduli." "\n" "C5 " "OK - the spectral-radius-squared of 2*A_unstable is four times that of A_unstable." "\n") string:concatenation "Complex Matrix Stability — ARC-style\n\n## Answer\nWe compare three diagonal 2x2 complex matrices for discrete-time stability: A_unstable = [[(1,1),(0,0)],[(0,0),(2,0)]], A_stable = [[(1,0),(0,0)],[(0,0),(-1,0)]], and A_damped = [[(0,0),(0,0)],[(0,0),(0,0)]]. Their spectral radii are ρ(A_unstable) = 2, ρ(A_stable) = 1, and ρ(A_damped) = 0. So A_unstable is unstable, A_stable is marginally stable, and A_damped is damped.\n\n## Reason Why\nFor a discrete-time linear system x_{k+1} = A x_k, the eigenvalues of A govern the behaviour of the modes. Because these matrices are diagonal, the eigenvalues are just the diagonal entries. The spectral radius is the maximum modulus of the eigenvalues: if it is greater than 1 a mode grows, if it equals 1 the modes remain bounded without decaying, and if it is less than 1 all modes decay to zero. Here the diagonal entries give radii 2, 1, and 0 respectively, which explains the three classifications.\n\n## Check\nC1 OK - A_unstable has eigenvalues (1,1) and (2,0) with spectral radius 2, so it is unstable.\nC2 OK - A_stable has eigenvalues (1,0) and (-1,0) with spectral radius 1, so it is marginally stable.\nC3 OK - A_damped has eigenvalues (0,0) and (0,0) with spectral radius 0, so every mode decays to zero.\nC4 OK - for z = (1,2) and w = (0,1), the squared modulus of z*w equals the product of the squared moduli.\nC5 OK - the spectral-radius-squared of 2*A_unstable is four times that of A_unstable.\n" . }
+  pe:builtin string:concatenation.

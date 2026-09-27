@@ -1,0 +1,625 @@
+@prefix : <http://example.org/resto#> .
+@prefix con: <http://www.w3.org/2000/10/swap/pim/contact#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix http: <http://www.w3.org/2011/http#> .
+@prefix log: <http://www.w3.org/2000/10/swap/log#> .
+@prefix meteo: <http://purl.org/ns/meteo#> .
+@prefix pe: <https://eyereasoner.github.io/pe#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix resto: <http://example.org/restaurant#> .
+@prefix string: <http://www.w3.org/2000/10/swap/string#> .
+
+:reqPreferences http:methodName "GET" .
+:reqPreferences http:requestURI :preferencesEndpoint .
+:reqPreferences http:resp :respPreferences .
+:respPreferences http:body :GentAddress .
+:Ruben foaf:based_near :GentAddress .
+:GentAddress a con:Address .
+:GentAddress resto:label "Gent" .
+:Check :c1 "OK - the preferences service resolved the person's address." .
+:reqLocation http:methodName "GET" .
+:reqLocation http:requestURI :locationEndpoint .
+:reqLocation http:resp :respLocation .
+:respLocation http:body :GentPoint .
+:GentPoint a geo:Point .
+:GentPoint geo:lat "51.05" .
+:GentPoint geo:long "3.72" .
+:reqTemperature http:methodName "GET" .
+:reqTemperature http:requestURI :temperatureEndpoint .
+:reqTemperature http:resp :respTemperature .
+:respTemperature http:body :Temp22 .
+:GentPoint meteo:temperature :Temp22 .
+:Temp22 meteo:celsius "22" .
+:reqPressure http:methodName "GET" .
+:reqPressure http:requestURI :pressureEndpoint .
+:reqPressure http:resp :respPressure .
+:respPressure http:body :Pressure1016 .
+:GentPoint meteo:pressure :Pressure1016 .
+:Pressure1016 meteo:millibar "1016" .
+:Check :c2 "OK - the location service turned the address into map coordinates." .
+:TodayWeather resto:mildTemperature true .
+:TodayWeather resto:stableWeather true .
+:TodayWeather resto:goodForOutsideSeating true .
+:DesiredPlace resto:isOutside true .
+:DesiredPlace resto:label "outside terrace" .
+:Check :c3 "OK - the weather services supplied temperature and pressure for that location." .
+:Check :c4 "OK - the weather interpretation justified outdoor seating." .
+:reqRecommendation http:methodName "POST" .
+:reqRecommendation http:requestURI :appointmentList .
+:reqRecommendation http:body :DinnerPlan .
+:reqRecommendation http:resp :respRecommendation .
+:respRecommendation http:body :DinnerPlan .
+:DinnerPlan resto:isAt :Maximiliaan .
+:Maximiliaan a resto:Restaurant .
+:Maximiliaan resto:name "Maximiliaan" .
+:Maximiliaan resto:reservationList :MaximiliaanReservations .
+:reqReservation http:methodName "POST" .
+:reqReservation http:requestURI :MaximiliaanReservations .
+:reqReservation http:body :DinnerPlan .
+:reqReservation http:resp :respReservation .
+:respReservation http:body :Reservation42 .
+:Maximiliaan resto:hasReservation :Reservation42 .
+:Reservation42 resto:onDate "2026-04-08" .
+:Reservation42 resto:place :TableArea42 .
+:TableArea42 resto:isOutside true .
+:Check :c7 "OK - the reservation preserved the outdoor seating preference." .
+:Check :c5 "OK - the recommendation step selected a restaurant that can accept reservations." .
+:Goal resto:restaurant :Maximiliaan .
+:Goal resto:reservation :Reservation42 .
+:Goal resto:onDate "2026-04-08" .
+:Goal resto:isOutside true .
+:Check :c6 "OK - the reservation preserved the requested dinner date." .
+:Decision :outcome "A restaurant was found and reserved." .
+:Decision :restaurantName "Maximiliaan" .
+:Decision :reservationDate "2026-04-08" .
+:Decision :seating "outside terrace" .
+:Check :c8 "OK - the final goal pattern from the original RESTdesc query is satisfied." .
+:Report log:outputString "RESTdesc — Restaurant finder\n\n## Answer\nA restaurant was found and reserved.\nRestaurant: Maximiliaan\nDate: 2026-04-08\nSeating: outside terrace\n\n## Reason Why\nThe plan resolved the person's address, turned it into a map point, checked the local weather, selected a suitable restaurant, and then created a reservation. Because the weather came back mild and stable (22 C and 1016 mbar), the chosen seating stayed outdoors.\n\n## Check\nC1 OK - the preferences service resolved the person's address.\nC2 OK - the location service turned the address into map coordinates.\nC3 OK - the weather services supplied temperature and pressure for that location.\nC4 OK - the weather interpretation justified outdoor seating.\nC5 OK - the recommendation step selected a restaurant that can accept reservations.\nC6 OK - the reservation preserved the requested dinner date.\nC7 OK - the reservation preserved the outdoor seating preference.\nC8 OK - the final goal pattern from the original RESTdesc query is satisfied.\n" .
+
+{ :reqPreferences http:methodName "GET" . }
+  pe:rule 1;
+  pe:uses
+    { :Ruben a foaf:Person . },
+    { :PlanningDocument a foaf:Document . }.
+
+{ :Ruben a foaf:Person . }
+  pe:fact "resto.n3".
+
+{ :PlanningDocument a foaf:Document . }
+  pe:fact "resto.n3".
+
+{ :reqPreferences http:requestURI :preferencesEndpoint . }
+  pe:rule 1;
+  pe:uses
+    { :Ruben a foaf:Person . },
+    { :PlanningDocument a foaf:Document . }.
+
+{ :reqPreferences http:resp :respPreferences . }
+  pe:rule 1;
+  pe:uses
+    { :Ruben a foaf:Person . },
+    { :PlanningDocument a foaf:Document . }.
+
+{ :respPreferences http:body :GentAddress . }
+  pe:rule 1;
+  pe:uses
+    { :Ruben a foaf:Person . },
+    { :PlanningDocument a foaf:Document . }.
+
+{ :Ruben foaf:based_near :GentAddress . }
+  pe:rule 1;
+  pe:uses
+    { :Ruben a foaf:Person . },
+    { :PlanningDocument a foaf:Document . }.
+
+{ :GentAddress a con:Address . }
+  pe:rule 1;
+  pe:uses
+    { :Ruben a foaf:Person . },
+    { :PlanningDocument a foaf:Document . }.
+
+{ :GentAddress resto:label "Gent" . }
+  pe:rule 1;
+  pe:uses
+    { :Ruben a foaf:Person . },
+    { :PlanningDocument a foaf:Document . }.
+
+{ :Check :c1 "OK - the preferences service resolved the person's address." . }
+  pe:rule 10;
+  pe:uses
+    { :Ruben foaf:based_near :GentAddress . },
+    { :GentAddress a con:Address . }.
+
+{ :reqLocation http:methodName "GET" . }
+  pe:rule 2;
+  pe:uses { :GentAddress a con:Address . }.
+
+{ :reqLocation http:requestURI :locationEndpoint . }
+  pe:rule 2;
+  pe:uses { :GentAddress a con:Address . }.
+
+{ :reqLocation http:resp :respLocation . }
+  pe:rule 2;
+  pe:uses { :GentAddress a con:Address . }.
+
+{ :respLocation http:body :GentPoint . }
+  pe:rule 2;
+  pe:uses { :GentAddress a con:Address . }.
+
+{ :GentPoint a geo:Point . }
+  pe:rule 2;
+  pe:uses { :GentAddress a con:Address . }.
+
+{ :GentPoint geo:lat "51.05" . }
+  pe:rule 2;
+  pe:uses { :GentAddress a con:Address . }.
+
+{ :GentPoint geo:long "3.72" . }
+  pe:rule 2;
+  pe:uses { :GentAddress a con:Address . }.
+
+{ :reqTemperature http:methodName "GET" . }
+  pe:rule 3;
+  pe:uses { :GentPoint a geo:Point . }.
+
+{ :reqTemperature http:requestURI :temperatureEndpoint . }
+  pe:rule 3;
+  pe:uses { :GentPoint a geo:Point . }.
+
+{ :reqTemperature http:resp :respTemperature . }
+  pe:rule 3;
+  pe:uses { :GentPoint a geo:Point . }.
+
+{ :respTemperature http:body :Temp22 . }
+  pe:rule 3;
+  pe:uses { :GentPoint a geo:Point . }.
+
+{ :GentPoint meteo:temperature :Temp22 . }
+  pe:rule 3;
+  pe:uses { :GentPoint a geo:Point . }.
+
+{ :Temp22 meteo:celsius "22" . }
+  pe:rule 3;
+  pe:uses { :GentPoint a geo:Point . }.
+
+{ :reqPressure http:methodName "GET" . }
+  pe:rule 4;
+  pe:uses { :GentPoint a geo:Point . }.
+
+{ :reqPressure http:requestURI :pressureEndpoint . }
+  pe:rule 4;
+  pe:uses { :GentPoint a geo:Point . }.
+
+{ :reqPressure http:resp :respPressure . }
+  pe:rule 4;
+  pe:uses { :GentPoint a geo:Point . }.
+
+{ :respPressure http:body :Pressure1016 . }
+  pe:rule 4;
+  pe:uses { :GentPoint a geo:Point . }.
+
+{ :GentPoint meteo:pressure :Pressure1016 . }
+  pe:rule 4;
+  pe:uses { :GentPoint a geo:Point . }.
+
+{ :Pressure1016 meteo:millibar "1016" . }
+  pe:rule 4;
+  pe:uses { :GentPoint a geo:Point . }.
+
+{ :Check :c2 "OK - the location service turned the address into map coordinates." . }
+  pe:rule 11;
+  pe:uses
+    { :GentPoint a geo:Point . },
+    { :GentPoint geo:lat "51.05" . },
+    { :GentPoint geo:long "3.72" . }.
+
+{ :TodayWeather resto:mildTemperature true . }
+  pe:rule 5;
+  pe:uses
+    { :GentPoint meteo:temperature :Temp22 . },
+    { :GentPoint meteo:pressure :Pressure1016 . },
+    { :Temp22 meteo:celsius "22" . },
+    { :Pressure1016 meteo:millibar "1016" . }.
+
+{ :TodayWeather resto:stableWeather true . }
+  pe:rule 5;
+  pe:uses
+    { :GentPoint meteo:temperature :Temp22 . },
+    { :GentPoint meteo:pressure :Pressure1016 . },
+    { :Temp22 meteo:celsius "22" . },
+    { :Pressure1016 meteo:millibar "1016" . }.
+
+{ :TodayWeather resto:goodForOutsideSeating true . }
+  pe:rule 5;
+  pe:uses
+    { :GentPoint meteo:temperature :Temp22 . },
+    { :GentPoint meteo:pressure :Pressure1016 . },
+    { :Temp22 meteo:celsius "22" . },
+    { :Pressure1016 meteo:millibar "1016" . }.
+
+{ :DesiredPlace resto:isOutside true . }
+  pe:rule 5;
+  pe:uses
+    { :GentPoint meteo:temperature :Temp22 . },
+    { :GentPoint meteo:pressure :Pressure1016 . },
+    { :Temp22 meteo:celsius "22" . },
+    { :Pressure1016 meteo:millibar "1016" . }.
+
+{ :DesiredPlace resto:label "outside terrace" . }
+  pe:rule 5;
+  pe:uses
+    { :GentPoint meteo:temperature :Temp22 . },
+    { :GentPoint meteo:pressure :Pressure1016 . },
+    { :Temp22 meteo:celsius "22" . },
+    { :Pressure1016 meteo:millibar "1016" . }.
+
+{ :Check :c3 "OK - the weather services supplied temperature and pressure for that location." . }
+  pe:rule 12;
+  pe:uses
+    { :GentPoint meteo:temperature :Temp22 . },
+    { :GentPoint meteo:pressure :Pressure1016 . },
+    { :Temp22 meteo:celsius "22" . },
+    { :Pressure1016 meteo:millibar "1016" . }.
+
+{ :Check :c4 "OK - the weather interpretation justified outdoor seating." . }
+  pe:rule 13;
+  pe:uses
+    { :TodayWeather resto:mildTemperature true . },
+    { :TodayWeather resto:stableWeather true . },
+    { :TodayWeather resto:goodForOutsideSeating true . }.
+
+{ :reqRecommendation http:methodName "POST" . }
+  pe:rule 6;
+  pe:binding [ pe:var "Date"; pe:value "2026-04-08" ];
+  pe:uses
+    { :GentPoint a geo:Point . },
+    { :TodayWeather resto:goodForOutsideSeating true . },
+    { :DinnerPlan resto:isOn :appointmentList . },
+    { :DinnerPlan resto:hasDate "2026-04-08" . }.
+
+{ :DinnerPlan resto:isOn :appointmentList . }
+  pe:fact "resto.n3".
+
+{ :DinnerPlan resto:hasDate "2026-04-08" . }
+  pe:fact "resto.n3".
+
+{ :reqRecommendation http:requestURI :appointmentList . }
+  pe:rule 6;
+  pe:binding [ pe:var "Date"; pe:value "2026-04-08" ];
+  pe:uses
+    { :GentPoint a geo:Point . },
+    { :TodayWeather resto:goodForOutsideSeating true . },
+    { :DinnerPlan resto:isOn :appointmentList . },
+    { :DinnerPlan resto:hasDate "2026-04-08" . }.
+
+{ :reqRecommendation http:body :DinnerPlan . }
+  pe:rule 6;
+  pe:binding [ pe:var "Date"; pe:value "2026-04-08" ];
+  pe:uses
+    { :GentPoint a geo:Point . },
+    { :TodayWeather resto:goodForOutsideSeating true . },
+    { :DinnerPlan resto:isOn :appointmentList . },
+    { :DinnerPlan resto:hasDate "2026-04-08" . }.
+
+{ :reqRecommendation http:resp :respRecommendation . }
+  pe:rule 6;
+  pe:binding [ pe:var "Date"; pe:value "2026-04-08" ];
+  pe:uses
+    { :GentPoint a geo:Point . },
+    { :TodayWeather resto:goodForOutsideSeating true . },
+    { :DinnerPlan resto:isOn :appointmentList . },
+    { :DinnerPlan resto:hasDate "2026-04-08" . }.
+
+{ :respRecommendation http:body :DinnerPlan . }
+  pe:rule 6;
+  pe:binding [ pe:var "Date"; pe:value "2026-04-08" ];
+  pe:uses
+    { :GentPoint a geo:Point . },
+    { :TodayWeather resto:goodForOutsideSeating true . },
+    { :DinnerPlan resto:isOn :appointmentList . },
+    { :DinnerPlan resto:hasDate "2026-04-08" . }.
+
+{ :DinnerPlan resto:isAt :Maximiliaan . }
+  pe:rule 6;
+  pe:binding [ pe:var "Date"; pe:value "2026-04-08" ];
+  pe:uses
+    { :GentPoint a geo:Point . },
+    { :TodayWeather resto:goodForOutsideSeating true . },
+    { :DinnerPlan resto:isOn :appointmentList . },
+    { :DinnerPlan resto:hasDate "2026-04-08" . }.
+
+{ :Maximiliaan a resto:Restaurant . }
+  pe:rule 6;
+  pe:binding [ pe:var "Date"; pe:value "2026-04-08" ];
+  pe:uses
+    { :GentPoint a geo:Point . },
+    { :TodayWeather resto:goodForOutsideSeating true . },
+    { :DinnerPlan resto:isOn :appointmentList . },
+    { :DinnerPlan resto:hasDate "2026-04-08" . }.
+
+{ :Maximiliaan resto:name "Maximiliaan" . }
+  pe:rule 6;
+  pe:binding [ pe:var "Date"; pe:value "2026-04-08" ];
+  pe:uses
+    { :GentPoint a geo:Point . },
+    { :TodayWeather resto:goodForOutsideSeating true . },
+    { :DinnerPlan resto:isOn :appointmentList . },
+    { :DinnerPlan resto:hasDate "2026-04-08" . }.
+
+{ :Maximiliaan resto:reservationList :MaximiliaanReservations . }
+  pe:rule 6;
+  pe:binding [ pe:var "Date"; pe:value "2026-04-08" ];
+  pe:uses
+    { :GentPoint a geo:Point . },
+    { :TodayWeather resto:goodForOutsideSeating true . },
+    { :DinnerPlan resto:isOn :appointmentList . },
+    { :DinnerPlan resto:hasDate "2026-04-08" . }.
+
+{ :reqReservation http:methodName "POST" . }
+  pe:rule 7;
+  pe:binding
+    [ pe:var "Date"; pe:value "2026-04-08" ],
+    [ pe:var "Outside"; pe:value true ];
+  pe:uses
+    { :Maximiliaan resto:reservationList :MaximiliaanReservations . },
+    { :DesiredPlace resto:isOutside true . },
+    { :DinnerPlan resto:hasDate "2026-04-08" . }.
+
+{ :reqReservation http:requestURI :MaximiliaanReservations . }
+  pe:rule 7;
+  pe:binding
+    [ pe:var "Date"; pe:value "2026-04-08" ],
+    [ pe:var "Outside"; pe:value true ];
+  pe:uses
+    { :Maximiliaan resto:reservationList :MaximiliaanReservations . },
+    { :DesiredPlace resto:isOutside true . },
+    { :DinnerPlan resto:hasDate "2026-04-08" . }.
+
+{ :reqReservation http:body :DinnerPlan . }
+  pe:rule 7;
+  pe:binding
+    [ pe:var "Date"; pe:value "2026-04-08" ],
+    [ pe:var "Outside"; pe:value true ];
+  pe:uses
+    { :Maximiliaan resto:reservationList :MaximiliaanReservations . },
+    { :DesiredPlace resto:isOutside true . },
+    { :DinnerPlan resto:hasDate "2026-04-08" . }.
+
+{ :reqReservation http:resp :respReservation . }
+  pe:rule 7;
+  pe:binding
+    [ pe:var "Date"; pe:value "2026-04-08" ],
+    [ pe:var "Outside"; pe:value true ];
+  pe:uses
+    { :Maximiliaan resto:reservationList :MaximiliaanReservations . },
+    { :DesiredPlace resto:isOutside true . },
+    { :DinnerPlan resto:hasDate "2026-04-08" . }.
+
+{ :respReservation http:body :Reservation42 . }
+  pe:rule 7;
+  pe:binding
+    [ pe:var "Date"; pe:value "2026-04-08" ],
+    [ pe:var "Outside"; pe:value true ];
+  pe:uses
+    { :Maximiliaan resto:reservationList :MaximiliaanReservations . },
+    { :DesiredPlace resto:isOutside true . },
+    { :DinnerPlan resto:hasDate "2026-04-08" . }.
+
+{ :Maximiliaan resto:hasReservation :Reservation42 . }
+  pe:rule 7;
+  pe:binding
+    [ pe:var "Date"; pe:value "2026-04-08" ],
+    [ pe:var "Outside"; pe:value true ];
+  pe:uses
+    { :Maximiliaan resto:reservationList :MaximiliaanReservations . },
+    { :DesiredPlace resto:isOutside true . },
+    { :DinnerPlan resto:hasDate "2026-04-08" . }.
+
+{ :Reservation42 resto:onDate "2026-04-08" . }
+  pe:rule 7;
+  pe:binding
+    [ pe:var "Date"; pe:value "2026-04-08" ],
+    [ pe:var "Outside"; pe:value true ];
+  pe:uses
+    { :Maximiliaan resto:reservationList :MaximiliaanReservations . },
+    { :DesiredPlace resto:isOutside true . },
+    { :DinnerPlan resto:hasDate "2026-04-08" . }.
+
+{ :Reservation42 resto:place :TableArea42 . }
+  pe:rule 7;
+  pe:binding
+    [ pe:var "Date"; pe:value "2026-04-08" ],
+    [ pe:var "Outside"; pe:value true ];
+  pe:uses
+    { :Maximiliaan resto:reservationList :MaximiliaanReservations . },
+    { :DesiredPlace resto:isOutside true . },
+    { :DinnerPlan resto:hasDate "2026-04-08" . }.
+
+{ :TableArea42 resto:isOutside true . }
+  pe:rule 7;
+  pe:binding
+    [ pe:var "Date"; pe:value "2026-04-08" ],
+    [ pe:var "Outside"; pe:value true ];
+  pe:uses
+    { :Maximiliaan resto:reservationList :MaximiliaanReservations . },
+    { :DesiredPlace resto:isOutside true . },
+    { :DinnerPlan resto:hasDate "2026-04-08" . }.
+
+{ :Check :c7 "OK - the reservation preserved the outdoor seating preference." . }
+  pe:rule 16;
+  pe:binding
+    [ pe:var "Actual"; pe:value true ],
+    [ pe:var "Wanted"; pe:value true ];
+  pe:uses
+    { :DesiredPlace resto:isOutside true . },
+    { :TableArea42 resto:isOutside true . },
+    { true log:equalTo true . }.
+
+{ true log:equalTo true . }
+  pe:builtin log:equalTo.
+
+{ :Check :c5 "OK - the recommendation step selected a restaurant that can accept reservations." . }
+  pe:rule 14;
+  pe:uses
+    { :DinnerPlan resto:isAt :Maximiliaan . },
+    { :Maximiliaan a resto:Restaurant . },
+    { :Maximiliaan resto:reservationList :MaximiliaanReservations . }.
+
+{ :Goal resto:restaurant :Maximiliaan . }
+  pe:rule 8;
+  pe:binding
+    [ pe:var "Date"; pe:value "2026-04-08" ],
+    [ pe:var "Outside"; pe:value true ],
+    [ pe:var "Place"; pe:value :TableArea42 ],
+    [ pe:var "Reservation"; pe:value :Reservation42 ],
+    [ pe:var "Restaurant"; pe:value :Maximiliaan ];
+  pe:uses
+    { :Maximiliaan resto:hasReservation :Reservation42 . },
+    { :Reservation42 resto:onDate "2026-04-08" . },
+    { :Reservation42 resto:place :TableArea42 . },
+    { :TableArea42 resto:isOutside true . }.
+
+{ :Goal resto:reservation :Reservation42 . }
+  pe:rule 8;
+  pe:binding
+    [ pe:var "Date"; pe:value "2026-04-08" ],
+    [ pe:var "Outside"; pe:value true ],
+    [ pe:var "Place"; pe:value :TableArea42 ],
+    [ pe:var "Reservation"; pe:value :Reservation42 ],
+    [ pe:var "Restaurant"; pe:value :Maximiliaan ];
+  pe:uses
+    { :Maximiliaan resto:hasReservation :Reservation42 . },
+    { :Reservation42 resto:onDate "2026-04-08" . },
+    { :Reservation42 resto:place :TableArea42 . },
+    { :TableArea42 resto:isOutside true . }.
+
+{ :Goal resto:onDate "2026-04-08" . }
+  pe:rule 8;
+  pe:binding
+    [ pe:var "Date"; pe:value "2026-04-08" ],
+    [ pe:var "Outside"; pe:value true ],
+    [ pe:var "Place"; pe:value :TableArea42 ],
+    [ pe:var "Reservation"; pe:value :Reservation42 ],
+    [ pe:var "Restaurant"; pe:value :Maximiliaan ];
+  pe:uses
+    { :Maximiliaan resto:hasReservation :Reservation42 . },
+    { :Reservation42 resto:onDate "2026-04-08" . },
+    { :Reservation42 resto:place :TableArea42 . },
+    { :TableArea42 resto:isOutside true . }.
+
+{ :Goal resto:isOutside true . }
+  pe:rule 8;
+  pe:binding
+    [ pe:var "Date"; pe:value "2026-04-08" ],
+    [ pe:var "Outside"; pe:value true ],
+    [ pe:var "Place"; pe:value :TableArea42 ],
+    [ pe:var "Reservation"; pe:value :Reservation42 ],
+    [ pe:var "Restaurant"; pe:value :Maximiliaan ];
+  pe:uses
+    { :Maximiliaan resto:hasReservation :Reservation42 . },
+    { :Reservation42 resto:onDate "2026-04-08" . },
+    { :Reservation42 resto:place :TableArea42 . },
+    { :TableArea42 resto:isOutside true . }.
+
+{ :Check :c6 "OK - the reservation preserved the requested dinner date." . }
+  pe:rule 15;
+  pe:binding
+    [ pe:var "Actual"; pe:value "2026-04-08" ],
+    [ pe:var "Requested"; pe:value "2026-04-08" ];
+  pe:uses
+    { :DinnerPlan resto:hasDate "2026-04-08" . },
+    { :Reservation42 resto:onDate "2026-04-08" . },
+    { "2026-04-08" log:equalTo "2026-04-08" . }.
+
+{ "2026-04-08" log:equalTo "2026-04-08" . }
+  pe:builtin log:equalTo.
+
+{ :Decision :outcome "A restaurant was found and reserved." . }
+  pe:rule 9;
+  pe:binding
+    [ pe:var "Date"; pe:value "2026-04-08" ],
+    [ pe:var "Name"; pe:value "Maximiliaan" ],
+    [ pe:var "Restaurant"; pe:value :Maximiliaan ];
+  pe:uses
+    { :Goal resto:restaurant :Maximiliaan . },
+    { :Goal resto:onDate "2026-04-08" . },
+    { :Goal resto:isOutside true . },
+    { :Maximiliaan resto:name "Maximiliaan" . }.
+
+{ :Decision :restaurantName "Maximiliaan" . }
+  pe:rule 9;
+  pe:binding
+    [ pe:var "Date"; pe:value "2026-04-08" ],
+    [ pe:var "Name"; pe:value "Maximiliaan" ],
+    [ pe:var "Restaurant"; pe:value :Maximiliaan ];
+  pe:uses
+    { :Goal resto:restaurant :Maximiliaan . },
+    { :Goal resto:onDate "2026-04-08" . },
+    { :Goal resto:isOutside true . },
+    { :Maximiliaan resto:name "Maximiliaan" . }.
+
+{ :Decision :reservationDate "2026-04-08" . }
+  pe:rule 9;
+  pe:binding
+    [ pe:var "Date"; pe:value "2026-04-08" ],
+    [ pe:var "Name"; pe:value "Maximiliaan" ],
+    [ pe:var "Restaurant"; pe:value :Maximiliaan ];
+  pe:uses
+    { :Goal resto:restaurant :Maximiliaan . },
+    { :Goal resto:onDate "2026-04-08" . },
+    { :Goal resto:isOutside true . },
+    { :Maximiliaan resto:name "Maximiliaan" . }.
+
+{ :Decision :seating "outside terrace" . }
+  pe:rule 9;
+  pe:binding
+    [ pe:var "Date"; pe:value "2026-04-08" ],
+    [ pe:var "Name"; pe:value "Maximiliaan" ],
+    [ pe:var "Restaurant"; pe:value :Maximiliaan ];
+  pe:uses
+    { :Goal resto:restaurant :Maximiliaan . },
+    { :Goal resto:onDate "2026-04-08" . },
+    { :Goal resto:isOutside true . },
+    { :Maximiliaan resto:name "Maximiliaan" . }.
+
+{ :Check :c8 "OK - the final goal pattern from the original RESTdesc query is satisfied." . }
+  pe:rule 17;
+  pe:uses
+    { :Goal resto:restaurant :Maximiliaan . },
+    { :Goal resto:reservation :Reservation42 . },
+    { :Goal resto:isOutside true . }.
+
+{ :Report log:outputString "RESTdesc — Restaurant finder\n\n## Answer\nA restaurant was found and reserved.\nRestaurant: Maximiliaan\nDate: 2026-04-08\nSeating: outside terrace\n\n## Reason Why\nThe plan resolved the person's address, turned it into a map point, checked the local weather, selected a suitable restaurant, and then created a reservation. Because the weather came back mild and stable (22 C and 1016 mbar), the chosen seating stayed outdoors.\n\n## Check\nC1 OK - the preferences service resolved the person's address.\nC2 OK - the location service turned the address into map coordinates.\nC3 OK - the weather services supplied temperature and pressure for that location.\nC4 OK - the weather interpretation justified outdoor seating.\nC5 OK - the recommendation step selected a restaurant that can accept reservations.\nC6 OK - the reservation preserved the requested dinner date.\nC7 OK - the reservation preserved the outdoor seating preference.\nC8 OK - the final goal pattern from the original RESTdesc query is satisfied.\n" . }
+  pe:rule 28;
+  pe:binding
+    [ pe:var "Block"; pe:value "RESTdesc — Restaurant finder\n\n## Answer\nA restaurant was found and reserved.\nRestaurant: Maximiliaan\nDate: 2026-04-08\nSeating: outside terrace\n\n## Reason Why\nThe plan resolved the person's address, turned it into a map point, checked the local weather, selected a suitable restaurant, and then created a reservation. Because the weather came back mild and stable (22 C and 1016 mbar), the chosen seating stayed outdoors.\n\n## Check\nC1 OK - the preferences service resolved the person's address.\nC2 OK - the location service turned the address into map coordinates.\nC3 OK - the weather services supplied temperature and pressure for that location.\nC4 OK - the weather interpretation justified outdoor seating.\nC5 OK - the recommendation step selected a restaurant that can accept reservations.\nC6 OK - the reservation preserved the requested dinner date.\nC7 OK - the reservation preserved the outdoor seating preference.\nC8 OK - the final goal pattern from the original RESTdesc query is satisfied.\n" ],
+    [ pe:var "C1"; pe:value "OK - the preferences service resolved the person's address." ],
+    [ pe:var "C2"; pe:value "OK - the location service turned the address into map coordinates." ],
+    [ pe:var "C3"; pe:value "OK - the weather services supplied temperature and pressure for that location." ],
+    [ pe:var "C4"; pe:value "OK - the weather interpretation justified outdoor seating." ],
+    [ pe:var "C5"; pe:value "OK - the recommendation step selected a restaurant that can accept reservations." ],
+    [ pe:var "C6"; pe:value "OK - the reservation preserved the requested dinner date." ],
+    [ pe:var "C7"; pe:value "OK - the reservation preserved the outdoor seating preference." ],
+    [ pe:var "C8"; pe:value "OK - the final goal pattern from the original RESTdesc query is satisfied." ],
+    [ pe:var "Date"; pe:value "2026-04-08" ],
+    [ pe:var "Outcome"; pe:value "A restaurant was found and reserved." ],
+    [ pe:var "RestaurantName"; pe:value "Maximiliaan" ],
+    [ pe:var "Seating"; pe:value "outside terrace" ];
+  pe:uses
+    { :Decision :outcome "A restaurant was found and reserved." . },
+    { :Decision :restaurantName "Maximiliaan" . },
+    { :Decision :reservationDate "2026-04-08" . },
+    { :Decision :seating "outside terrace" . },
+    { :Check :c1 "OK - the preferences service resolved the person's address." . },
+    { :Check :c2 "OK - the location service turned the address into map coordinates." . },
+    { :Check :c3 "OK - the weather services supplied temperature and pressure for that location." . },
+    { :Check :c4 "OK - the weather interpretation justified outdoor seating." . },
+    { :Check :c5 "OK - the recommendation step selected a restaurant that can accept reservations." . },
+    { :Check :c6 "OK - the reservation preserved the requested dinner date." . },
+    { :Check :c7 "OK - the reservation preserved the outdoor seating preference." . },
+    { :Check :c8 "OK - the final goal pattern from the original RESTdesc query is satisfied." . },
+    { ("RESTdesc — Restaurant finder\n\n" "## Answer\n" "A restaurant was found and reserved." "\n" "Restaurant: " "Maximiliaan" "\n" "Date: " "2026-04-08" "\n" "Seating: " "outside terrace" "\n\n" "## Reason Why\n" "The plan resolved the person's address, turned it into a map point, checked the local weather, selected a suitable restaurant, and then created a reservation. " "Because the weather came back mild and stable (22 C and 1016 mbar), the chosen seating stayed outdoors.\n\n" "## Check\n" "C1 " "OK - the preferences service resolved the person's address." "\n" "C2 " "OK - the location service turned the address into map coordinates." "\n" "C3 " "OK - the weather services supplied temperature and pressure for that location." "\n" "C4 " "OK - the weather interpretation justified outdoor seating." "\n" "C5 " "OK - the recommendation step selected a restaurant that can accept reservations." "\n" "C6 " "OK - the reservation preserved the requested dinner date." "\n" "C7 " "OK - the reservation preserved the outdoor seating preference." "\n" "C8 " "OK - the final goal pattern from the original RESTdesc query is satisfied." "\n") string:concatenation "RESTdesc — Restaurant finder\n\n## Answer\nA restaurant was found and reserved.\nRestaurant: Maximiliaan\nDate: 2026-04-08\nSeating: outside terrace\n\n## Reason Why\nThe plan resolved the person's address, turned it into a map point, checked the local weather, selected a suitable restaurant, and then created a reservation. Because the weather came back mild and stable (22 C and 1016 mbar), the chosen seating stayed outdoors.\n\n## Check\nC1 OK - the preferences service resolved the person's address.\nC2 OK - the location service turned the address into map coordinates.\nC3 OK - the weather services supplied temperature and pressure for that location.\nC4 OK - the weather interpretation justified outdoor seating.\nC5 OK - the recommendation step selected a restaurant that can accept reservations.\nC6 OK - the reservation preserved the requested dinner date.\nC7 OK - the reservation preserved the outdoor seating preference.\nC8 OK - the final goal pattern from the original RESTdesc query is satisfied.\n" . }.
+
+{ ("RESTdesc — Restaurant finder\n\n" "## Answer\n" "A restaurant was found and reserved." "\n" "Restaurant: " "Maximiliaan" "\n" "Date: " "2026-04-08" "\n" "Seating: " "outside terrace" "\n\n" "## Reason Why\n" "The plan resolved the person's address, turned it into a map point, checked the local weather, selected a suitable restaurant, and then created a reservation. " "Because the weather came back mild and stable (22 C and 1016 mbar), the chosen seating stayed outdoors.\n\n" "## Check\n" "C1 " "OK - the preferences service resolved the person's address." "\n" "C2 " "OK - the location service turned the address into map coordinates." "\n" "C3 " "OK - the weather services supplied temperature and pressure for that location." "\n" "C4 " "OK - the weather interpretation justified outdoor seating." "\n" "C5 " "OK - the recommendation step selected a restaurant that can accept reservations." "\n" "C6 " "OK - the reservation preserved the requested dinner date." "\n" "C7 " "OK - the reservation preserved the outdoor seating preference." "\n" "C8 " "OK - the final goal pattern from the original RESTdesc query is satisfied." "\n") string:concatenation "RESTdesc — Restaurant finder\n\n## Answer\nA restaurant was found and reserved.\nRestaurant: Maximiliaan\nDate: 2026-04-08\nSeating: outside terrace\n\n## Reason Why\nThe plan resolved the person's address, turned it into a map point, checked the local weather, selected a suitable restaurant, and then created a reservation. Because the weather came back mild and stable (22 C and 1016 mbar), the chosen seating stayed outdoors.\n\n## Check\nC1 OK - the preferences service resolved the person's address.\nC2 OK - the location service turned the address into map coordinates.\nC3 OK - the weather services supplied temperature and pressure for that location.\nC4 OK - the weather interpretation justified outdoor seating.\nC5 OK - the recommendation step selected a restaurant that can accept reservations.\nC6 OK - the reservation preserved the requested dinner date.\nC7 OK - the reservation preserved the outdoor seating preference.\nC8 OK - the final goal pattern from the original RESTdesc query is satisfied.\n" . }
+  pe:builtin string:concatenation.

@@ -17,7 +17,7 @@ mod golden_n3;
 #[path = "support/report.rs"]
 mod report;
 
-use eyeron::{parse_n3_with_source, proof_to_n3, reason_document, result_to_string, Document, ReasonerOptions};
+use eyeron::{fuse_report, parse_n3_with_source, proof_to_n3, reason_document, result_to_string, Document, ReasonerOptions};
 use golden_n3::compare_output_golden;
 use report::{green, progress_line, red};
 use std::collections::BTreeMap;
@@ -44,9 +44,11 @@ const NO_PROOF_EXAMPLES: &[(&str, &str)] = &[
     ("builtin-coverage", "its printed result comes from a log:query goal, not a forward-derived fact --proof tracks"),
     ("check-unsafe", "deliberately derives nothing: its head variable is unsafe/unbound by design"),
     ("fft32-numeric", "its printed result comes from a log:query goal, not a forward-derived fact --proof tracks"),
+    ("fuse", "it trips an inference fuse, so the run stops with nothing derived and nothing to prove"),
     ("fft8-numeric", "its printed result comes from a log:query goal, not a forward-derived fact --proof tracks"),
     ("fft8-symbolic", "its printed result comes from a log:query goal, not a forward-derived fact --proof tracks"),
     ("kaprekar-6174", "its printed result comes from a log:query goal, not a forward-derived fact --proof tracks"),
+    ("liar", "it trips an inference fuse, so the run stops with nothing derived and nothing to prove"),
     ("monoid-identity-uniqueness", "its printed result comes from a log:query goal, not a forward-derived fact --proof tracks"),
     ("relational-cube-lookup", "its printed result comes from a log:query goal, not a forward-derived fact --proof tracks"),
     (
@@ -240,8 +242,25 @@ fn run_case(case: &Case) {
                 &doc,
                 &ReasonerOptions { proof: proof_golden.is_some(), ..ReasonerOptions::default() },
             );
-            let output = result_to_string(&doc.prefixes, &result.derived);
-            let mut outcome = compare_output_golden(&thread_name, &output, &output_golden, output_is_n3);
+            // An example that trips an inference fuse has no derived output:
+            // what it produces, and what its golden records, is the report of
+            // which rule fired. Every line of that report is a comment, which
+            // both graph and report-line comparison would read as nothing at
+            // all, so it is compared as the text it is.
+            let mut outcome = match &result.fuse {
+                Some(fuse) => {
+                    let report = fuse_report(&doc.prefixes, fuse);
+                    if report.trim() == output_golden.trim() {
+                        Ok(())
+                    } else {
+                        Err(format!("{thread_name} fuse report does not match its golden\nactual:\n{report}"))
+                    }
+                }
+                None => {
+                    let output = result_to_string(&doc.prefixes, &result.derived);
+                    compare_output_golden(&thread_name, &output, &output_golden, output_is_n3)
+                }
+            };
             if outcome.is_ok() {
                 if let Some(expected) = &proof_golden {
                     let proof = proof_to_n3(&doc.prefixes, &result);

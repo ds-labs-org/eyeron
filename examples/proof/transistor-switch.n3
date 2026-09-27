@@ -1,0 +1,1408 @@
+@prefix : <http://example.org/transistor-switch#> .
+@prefix list: <http://www.w3.org/2000/10/swap/list#> .
+@prefix log: <http://www.w3.org/2000/10/swap/log#> .
+@prefix math: <http://www.w3.org/2000/10/swap/math#> .
+@prefix pe: <https://eyereasoner.github.io/pe#> .
+@prefix string: <http://www.w3.org/2000/10/swap/string#> .
+
+:low :baseCurrentUa 0 .
+:low :collectorGainLimitUa 0 .
+:low :collectorLoadLimitUa 0 .
+:low :collectorCurrentUa 0 .
+:low :loadVoltageMv 0 .
+:low :collectorEmitterVoltageMv 5000 .
+:low :cutoff true .
+:low :saturation false .
+:low :stateLabel "cutoff / OFF" .
+:high :baseCurrentUa 430 .
+:high :collectorGainLimitUa 43000 .
+:high :collectorLoadLimitUa 4800 .
+:high :cutoff false .
+:low :summaryLine "Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" .
+:case :lowInputStaysInCutoff true .
+:high :collectorCurrentUa 4800 .
+:high :loadVoltageMv 4800 .
+:high :collectorEmitterVoltageMv 200 .
+:high :saturation true .
+:high :stateLabel "saturation / ON" .
+:case :onStateIsLoadLimited true .
+:case :loadVoltageMatchesResistorDrop true .
+:01-answer-1 log:outputString "# transistor-switch\n\n## Source files\n\n- [N3 rules](../transistor-switch.n3)\n\n## Answer\n" .
+:01-answer-2 log:outputString "In this toy transistor-switch model, a low input leaves the transistor in cutoff (OFF) and a high input drives it into saturation (ON), so the load behaves like an on/off branch rather than a linear amplifier.\n" .
+:01-answer-3 log:outputString "case                             : transistor-switch\n" .
+:01-answer-4 log:outputString "low input state                  : cutoff / OFF\n" .
+:01-answer-5 log:outputString "high input state                 : saturation / ON\n" .
+:01-answer-6 log:outputString "on-state load current            : 4.80 mA\n\n" .
+:case :highInputReachesSaturation true .
+:case :switchesCleanly true .
+:03-check-1 log:outputString "## Check\n" .
+:03-check-2 log:outputString "low input stays in cutoff        : yes\n" .
+:03-check-3 log:outputString "high input reaches saturation    : yes\n" .
+:03-check-4 log:outputString "switching states differ          : yes\n" .
+:03-check-5 log:outputString "on-state current is load-limited : yes\n" .
+:03-check-6 log:outputString "load voltage matches resistor drop : yes\n" .
+:high :summaryLine "Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" .
+:02-why-01 log:outputString "## Reason Why\n" .
+:02-why-02 log:outputString "We model an NPN low-side switch with exact millivolt and microamp arithmetic. The base current comes from (Vin - Vbe,on)/Rb when the base-emitter junction is forward biased, and the collector current is the smaller of beta * Ib and the load-limited current (Vcc - Vce,sat)/Rl.\n" .
+:02-why-03 log:outputString "supply voltage                   : 5.00 V\n" .
+:02-why-04 log:outputString "base resistor                    : 10000 ohms\n" .
+:02-why-05 log:outputString "load resistor                    : 1000 ohms\n" .
+:02-why-06 log:outputString "transistor beta proxy            : 100\n" .
+:02-why-07 log:outputString "low input                        : Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" .
+:02-why-08 log:outputString "high input                       : Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" .
+:02-why-09 log:outputString "high-input gain limit            : 43.00 mA\n" .
+:02-why-10 log:outputString "high-input load limit            : 4.80 mA\n" .
+:02-why-99 log:outputString "\n" .
+
+{ :low :baseCurrentUa 0 . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "state"; pe:value :low ],
+    [ pe:var "vbe"; pe:value 700 ],
+    [ pe:var "vcc"; pe:value 5000 ],
+    [ pe:var "vin"; pe:value 0 ];
+  pe:uses
+    { :low list:in (:low :high) . },
+    { :low :inputMv 0 . },
+    { :case :vbeOnMv 700 . },
+    { 0 math:notGreaterThan 700 . },
+    { :case :supplyMv 5000 . }.
+
+{ :low list:in (:low :high) . }
+  pe:builtin list:in.
+
+{ :low :inputMv 0 . }
+  pe:fact "transistor-switch.n3".
+
+{ :case :vbeOnMv 700 . }
+  pe:fact "transistor-switch.n3".
+
+{ 0 math:notGreaterThan 700 . }
+  pe:builtin math:notGreaterThan.
+
+{ :case :supplyMv 5000 . }
+  pe:fact "transistor-switch.n3".
+
+{ :low :collectorGainLimitUa 0 . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "state"; pe:value :low ],
+    [ pe:var "vbe"; pe:value 700 ],
+    [ pe:var "vcc"; pe:value 5000 ],
+    [ pe:var "vin"; pe:value 0 ];
+  pe:uses
+    { :low list:in (:low :high) . },
+    { :low :inputMv 0 . },
+    { :case :vbeOnMv 700 . },
+    { 0 math:notGreaterThan 700 . },
+    { :case :supplyMv 5000 . }.
+
+{ :low :collectorLoadLimitUa 0 . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "state"; pe:value :low ],
+    [ pe:var "vbe"; pe:value 700 ],
+    [ pe:var "vcc"; pe:value 5000 ],
+    [ pe:var "vin"; pe:value 0 ];
+  pe:uses
+    { :low list:in (:low :high) . },
+    { :low :inputMv 0 . },
+    { :case :vbeOnMv 700 . },
+    { 0 math:notGreaterThan 700 . },
+    { :case :supplyMv 5000 . }.
+
+{ :low :collectorCurrentUa 0 . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "state"; pe:value :low ],
+    [ pe:var "vbe"; pe:value 700 ],
+    [ pe:var "vcc"; pe:value 5000 ],
+    [ pe:var "vin"; pe:value 0 ];
+  pe:uses
+    { :low list:in (:low :high) . },
+    { :low :inputMv 0 . },
+    { :case :vbeOnMv 700 . },
+    { 0 math:notGreaterThan 700 . },
+    { :case :supplyMv 5000 . }.
+
+{ :low :loadVoltageMv 0 . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "state"; pe:value :low ],
+    [ pe:var "vbe"; pe:value 700 ],
+    [ pe:var "vcc"; pe:value 5000 ],
+    [ pe:var "vin"; pe:value 0 ];
+  pe:uses
+    { :low list:in (:low :high) . },
+    { :low :inputMv 0 . },
+    { :case :vbeOnMv 700 . },
+    { 0 math:notGreaterThan 700 . },
+    { :case :supplyMv 5000 . }.
+
+{ :low :collectorEmitterVoltageMv 5000 . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "state"; pe:value :low ],
+    [ pe:var "vbe"; pe:value 700 ],
+    [ pe:var "vcc"; pe:value 5000 ],
+    [ pe:var "vin"; pe:value 0 ];
+  pe:uses
+    { :low list:in (:low :high) . },
+    { :low :inputMv 0 . },
+    { :case :vbeOnMv 700 . },
+    { 0 math:notGreaterThan 700 . },
+    { :case :supplyMv 5000 . }.
+
+{ :low :cutoff true . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "state"; pe:value :low ],
+    [ pe:var "vbe"; pe:value 700 ],
+    [ pe:var "vcc"; pe:value 5000 ],
+    [ pe:var "vin"; pe:value 0 ];
+  pe:uses
+    { :low list:in (:low :high) . },
+    { :low :inputMv 0 . },
+    { :case :vbeOnMv 700 . },
+    { 0 math:notGreaterThan 700 . },
+    { :case :supplyMv 5000 . }.
+
+{ :low :saturation false . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "state"; pe:value :low ],
+    [ pe:var "vbe"; pe:value 700 ],
+    [ pe:var "vcc"; pe:value 5000 ],
+    [ pe:var "vin"; pe:value 0 ];
+  pe:uses
+    { :low list:in (:low :high) . },
+    { :low :inputMv 0 . },
+    { :case :vbeOnMv 700 . },
+    { 0 math:notGreaterThan 700 . },
+    { :case :supplyMv 5000 . }.
+
+{ :low :stateLabel "cutoff / OFF" . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "state"; pe:value :low ],
+    [ pe:var "vbe"; pe:value 700 ],
+    [ pe:var "vcc"; pe:value 5000 ],
+    [ pe:var "vin"; pe:value 0 ];
+  pe:uses
+    { :low list:in (:low :high) . },
+    { :low :inputMv 0 . },
+    { :case :vbeOnMv 700 . },
+    { 0 math:notGreaterThan 700 . },
+    { :case :supplyMv 5000 . }.
+
+{ :high :baseCurrentUa 430 . }
+  pe:rule 2;
+  pe:binding
+    [ pe:var "baseCurrentUa"; pe:value 430 ],
+    [ pe:var "baseNumerator"; pe:value 4300000 ],
+    [ pe:var "beta"; pe:value 100 ],
+    [ pe:var "collectorGainLimitUa"; pe:value 43000 ],
+    [ pe:var "collectorLoadLimitUa"; pe:value 4800 ],
+    [ pe:var "loadNumerator"; pe:value 4800000 ],
+    [ pe:var "loadSpanMv"; pe:value 4800 ],
+    [ pe:var "overdriveMv"; pe:value 4300 ],
+    [ pe:var "rb"; pe:value 10000 ],
+    [ pe:var "rl"; pe:value 1000 ],
+    [ pe:var "state"; pe:value :high ],
+    [ pe:var "vbe"; pe:value 700 ],
+    [ pe:var "vcc"; pe:value 5000 ],
+    [ pe:var "vceSat"; pe:value 200 ],
+    [ pe:var "vin"; pe:value 5000 ];
+  pe:uses
+    { :high list:in (:low :high) . },
+    { :high :inputMv 5000 . },
+    { :case :vbeOnMv 700 . },
+    { 5000 math:greaterThan 700 . },
+    { :case :baseResistanceOhms 10000 . },
+    { (5000 700) math:difference 4300 . },
+    { (4300 1000) math:product 4300000 . },
+    { (4300000 10000) math:integerQuotient 430 . },
+    { :case :beta 100 . },
+    { (430 100) math:product 43000 . },
+    { :case :supplyMv 5000 . },
+    { :case :vceSatMv 200 . },
+    { :case :loadResistanceOhms 1000 . },
+    { (5000 200) math:difference 4800 . },
+    { (4800 1000) math:product 4800000 . },
+    { (4800000 1000) math:integerQuotient 4800 . }.
+
+{ :high list:in (:low :high) . }
+  pe:builtin list:in.
+
+{ :high :inputMv 5000 . }
+  pe:fact "transistor-switch.n3".
+
+{ 5000 math:greaterThan 700 . }
+  pe:builtin math:greaterThan.
+
+{ :case :baseResistanceOhms 10000 . }
+  pe:fact "transistor-switch.n3".
+
+{ (5000 700) math:difference 4300 . }
+  pe:builtin math:difference.
+
+{ (4300 1000) math:product 4300000 . }
+  pe:builtin math:product.
+
+{ (4300000 10000) math:integerQuotient 430 . }
+  pe:builtin math:integerQuotient.
+
+{ :case :beta 100 . }
+  pe:fact "transistor-switch.n3".
+
+{ (430 100) math:product 43000 . }
+  pe:builtin math:product.
+
+{ :case :vceSatMv 200 . }
+  pe:fact "transistor-switch.n3".
+
+{ :case :loadResistanceOhms 1000 . }
+  pe:fact "transistor-switch.n3".
+
+{ (5000 200) math:difference 4800 . }
+  pe:builtin math:difference.
+
+{ (4800 1000) math:product 4800000 . }
+  pe:builtin math:product.
+
+{ (4800000 1000) math:integerQuotient 4800 . }
+  pe:builtin math:integerQuotient.
+
+{ :high :collectorGainLimitUa 43000 . }
+  pe:rule 2;
+  pe:binding
+    [ pe:var "baseCurrentUa"; pe:value 430 ],
+    [ pe:var "baseNumerator"; pe:value 4300000 ],
+    [ pe:var "beta"; pe:value 100 ],
+    [ pe:var "collectorGainLimitUa"; pe:value 43000 ],
+    [ pe:var "collectorLoadLimitUa"; pe:value 4800 ],
+    [ pe:var "loadNumerator"; pe:value 4800000 ],
+    [ pe:var "loadSpanMv"; pe:value 4800 ],
+    [ pe:var "overdriveMv"; pe:value 4300 ],
+    [ pe:var "rb"; pe:value 10000 ],
+    [ pe:var "rl"; pe:value 1000 ],
+    [ pe:var "state"; pe:value :high ],
+    [ pe:var "vbe"; pe:value 700 ],
+    [ pe:var "vcc"; pe:value 5000 ],
+    [ pe:var "vceSat"; pe:value 200 ],
+    [ pe:var "vin"; pe:value 5000 ];
+  pe:uses
+    { :high list:in (:low :high) . },
+    { :high :inputMv 5000 . },
+    { :case :vbeOnMv 700 . },
+    { 5000 math:greaterThan 700 . },
+    { :case :baseResistanceOhms 10000 . },
+    { (5000 700) math:difference 4300 . },
+    { (4300 1000) math:product 4300000 . },
+    { (4300000 10000) math:integerQuotient 430 . },
+    { :case :beta 100 . },
+    { (430 100) math:product 43000 . },
+    { :case :supplyMv 5000 . },
+    { :case :vceSatMv 200 . },
+    { :case :loadResistanceOhms 1000 . },
+    { (5000 200) math:difference 4800 . },
+    { (4800 1000) math:product 4800000 . },
+    { (4800000 1000) math:integerQuotient 4800 . }.
+
+{ :high :collectorLoadLimitUa 4800 . }
+  pe:rule 2;
+  pe:binding
+    [ pe:var "baseCurrentUa"; pe:value 430 ],
+    [ pe:var "baseNumerator"; pe:value 4300000 ],
+    [ pe:var "beta"; pe:value 100 ],
+    [ pe:var "collectorGainLimitUa"; pe:value 43000 ],
+    [ pe:var "collectorLoadLimitUa"; pe:value 4800 ],
+    [ pe:var "loadNumerator"; pe:value 4800000 ],
+    [ pe:var "loadSpanMv"; pe:value 4800 ],
+    [ pe:var "overdriveMv"; pe:value 4300 ],
+    [ pe:var "rb"; pe:value 10000 ],
+    [ pe:var "rl"; pe:value 1000 ],
+    [ pe:var "state"; pe:value :high ],
+    [ pe:var "vbe"; pe:value 700 ],
+    [ pe:var "vcc"; pe:value 5000 ],
+    [ pe:var "vceSat"; pe:value 200 ],
+    [ pe:var "vin"; pe:value 5000 ];
+  pe:uses
+    { :high list:in (:low :high) . },
+    { :high :inputMv 5000 . },
+    { :case :vbeOnMv 700 . },
+    { 5000 math:greaterThan 700 . },
+    { :case :baseResistanceOhms 10000 . },
+    { (5000 700) math:difference 4300 . },
+    { (4300 1000) math:product 4300000 . },
+    { (4300000 10000) math:integerQuotient 430 . },
+    { :case :beta 100 . },
+    { (430 100) math:product 43000 . },
+    { :case :supplyMv 5000 . },
+    { :case :vceSatMv 200 . },
+    { :case :loadResistanceOhms 1000 . },
+    { (5000 200) math:difference 4800 . },
+    { (4800 1000) math:product 4800000 . },
+    { (4800000 1000) math:integerQuotient 4800 . }.
+
+{ :high :cutoff false . }
+  pe:rule 2;
+  pe:binding
+    [ pe:var "baseCurrentUa"; pe:value 430 ],
+    [ pe:var "baseNumerator"; pe:value 4300000 ],
+    [ pe:var "beta"; pe:value 100 ],
+    [ pe:var "collectorGainLimitUa"; pe:value 43000 ],
+    [ pe:var "collectorLoadLimitUa"; pe:value 4800 ],
+    [ pe:var "loadNumerator"; pe:value 4800000 ],
+    [ pe:var "loadSpanMv"; pe:value 4800 ],
+    [ pe:var "overdriveMv"; pe:value 4300 ],
+    [ pe:var "rb"; pe:value 10000 ],
+    [ pe:var "rl"; pe:value 1000 ],
+    [ pe:var "state"; pe:value :high ],
+    [ pe:var "vbe"; pe:value 700 ],
+    [ pe:var "vcc"; pe:value 5000 ],
+    [ pe:var "vceSat"; pe:value 200 ],
+    [ pe:var "vin"; pe:value 5000 ];
+  pe:uses
+    { :high list:in (:low :high) . },
+    { :high :inputMv 5000 . },
+    { :case :vbeOnMv 700 . },
+    { 5000 math:greaterThan 700 . },
+    { :case :baseResistanceOhms 10000 . },
+    { (5000 700) math:difference 4300 . },
+    { (4300 1000) math:product 4300000 . },
+    { (4300000 10000) math:integerQuotient 430 . },
+    { :case :beta 100 . },
+    { (430 100) math:product 43000 . },
+    { :case :supplyMv 5000 . },
+    { :case :vceSatMv 200 . },
+    { :case :loadResistanceOhms 1000 . },
+    { (5000 200) math:difference 4800 . },
+    { (4800 1000) math:product 4800000 . },
+    { (4800000 1000) math:integerQuotient 4800 . }.
+
+{ :low :summaryLine "Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" . }
+  pe:rule 10;
+  pe:binding
+    [ pe:var "ib"; pe:value 0 ],
+    [ pe:var "ibText"; pe:value "0.00 mA" ],
+    [ pe:var "ic"; pe:value 0 ],
+    [ pe:var "icText"; pe:value "0.00 mA" ],
+    [ pe:var "label"; pe:value "cutoff / OFF" ],
+    [ pe:var "mvVce"; pe:value :mvfmt-5000 ],
+    [ pe:var "mvVin"; pe:value :mvfmt-0 ],
+    [ pe:var "state"; pe:value :low ],
+    [ pe:var "summary"; pe:value "Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" ],
+    [ pe:var "uaIb"; pe:value :uafmt-0 ],
+    [ pe:var "uaIc"; pe:value :uafmt-0 ],
+    [ pe:var "vce"; pe:value 5000 ],
+    [ pe:var "vceText"; pe:value "5.00 V" ],
+    [ pe:var "vin"; pe:value 0 ],
+    [ pe:var "vinText"; pe:value "0.00 V" ];
+  pe:uses
+    { :low list:in (:low :high) . },
+    { :low :inputMv 0 . },
+    { :mvfmt-0 :mvValue 0 . },
+    { :mvfmt-0 :text "0.00 V" . },
+    { :low :baseCurrentUa 0 . },
+    { :uafmt-0 :uaValue 0 . },
+    { :uafmt-0 :text "0.00 mA" . },
+    { :low :collectorCurrentUa 0 . },
+    { :uafmt-0 :uaValue 0 . },
+    { :uafmt-0 :text "0.00 mA" . },
+    { :low :collectorEmitterVoltageMv 5000 . },
+    { :mvfmt-5000 :mvValue 5000 . },
+    { :mvfmt-5000 :text "5.00 V" . },
+    { :low :stateLabel "cutoff / OFF" . },
+    { ("Vin=%s -> Ib=%s, Ic=%s, Vce=%s, state=%s\n" "0.00 V" "0.00 mA" "0.00 mA" "5.00 V" "cutoff / OFF") string:format "Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" . }.
+
+{ :mvfmt-0 :mvValue 0 . }
+  pe:fact "transistor-switch.n3".
+
+{ :mvfmt-0 :text "0.00 V" . }
+  pe:fact "transistor-switch.n3".
+
+{ :uafmt-0 :uaValue 0 . }
+  pe:fact "transistor-switch.n3".
+
+{ :uafmt-0 :text "0.00 mA" . }
+  pe:fact "transistor-switch.n3".
+
+{ :mvfmt-5000 :mvValue 5000 . }
+  pe:fact "transistor-switch.n3".
+
+{ :mvfmt-5000 :text "5.00 V" . }
+  pe:fact "transistor-switch.n3".
+
+{ ("Vin=%s -> Ib=%s, Ic=%s, Vce=%s, state=%s\n" "0.00 V" "0.00 mA" "0.00 mA" "5.00 V" "cutoff / OFF") string:format "Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" . }
+  pe:builtin string:format.
+
+{ :case :lowInputStaysInCutoff true . }
+  pe:rule 5;
+  pe:binding [ pe:var "vcc"; pe:value 5000 ];
+  pe:uses
+    { :low :cutoff true . },
+    { :low :baseCurrentUa 0 . },
+    { :low :collectorCurrentUa 0 . },
+    { :low :loadVoltageMv 0 . },
+    { :case :supplyMv 5000 . },
+    { :low :collectorEmitterVoltageMv 5000 . }.
+
+{ :high :collectorCurrentUa 4800 . }
+  pe:rule 3;
+  pe:binding
+    [ pe:var "gainLimit"; pe:value 43000 ],
+    [ pe:var "loadLimit"; pe:value 4800 ],
+    [ pe:var "loadVoltageMv"; pe:value 4800 ],
+    [ pe:var "loadVoltageNumerator"; pe:value 4800000 ],
+    [ pe:var "rl"; pe:value 1000 ],
+    [ pe:var "state"; pe:value :high ],
+    [ pe:var "vceSat"; pe:value 200 ];
+  pe:uses
+    { :high :cutoff false . },
+    { :high :collectorGainLimitUa 43000 . },
+    { :high :collectorLoadLimitUa 4800 . },
+    { 43000 math:notLessThan 4800 . },
+    { :case :loadResistanceOhms 1000 . },
+    { (4800 1000) math:product 4800000 . },
+    { (4800000 1000) math:integerQuotient 4800 . },
+    { :case :vceSatMv 200 . }.
+
+{ 43000 math:notLessThan 4800 . }
+  pe:builtin math:notLessThan.
+
+{ :high :loadVoltageMv 4800 . }
+  pe:rule 3;
+  pe:binding
+    [ pe:var "gainLimit"; pe:value 43000 ],
+    [ pe:var "loadLimit"; pe:value 4800 ],
+    [ pe:var "loadVoltageMv"; pe:value 4800 ],
+    [ pe:var "loadVoltageNumerator"; pe:value 4800000 ],
+    [ pe:var "rl"; pe:value 1000 ],
+    [ pe:var "state"; pe:value :high ],
+    [ pe:var "vceSat"; pe:value 200 ];
+  pe:uses
+    { :high :cutoff false . },
+    { :high :collectorGainLimitUa 43000 . },
+    { :high :collectorLoadLimitUa 4800 . },
+    { 43000 math:notLessThan 4800 . },
+    { :case :loadResistanceOhms 1000 . },
+    { (4800 1000) math:product 4800000 . },
+    { (4800000 1000) math:integerQuotient 4800 . },
+    { :case :vceSatMv 200 . }.
+
+{ :high :collectorEmitterVoltageMv 200 . }
+  pe:rule 3;
+  pe:binding
+    [ pe:var "gainLimit"; pe:value 43000 ],
+    [ pe:var "loadLimit"; pe:value 4800 ],
+    [ pe:var "loadVoltageMv"; pe:value 4800 ],
+    [ pe:var "loadVoltageNumerator"; pe:value 4800000 ],
+    [ pe:var "rl"; pe:value 1000 ],
+    [ pe:var "state"; pe:value :high ],
+    [ pe:var "vceSat"; pe:value 200 ];
+  pe:uses
+    { :high :cutoff false . },
+    { :high :collectorGainLimitUa 43000 . },
+    { :high :collectorLoadLimitUa 4800 . },
+    { 43000 math:notLessThan 4800 . },
+    { :case :loadResistanceOhms 1000 . },
+    { (4800 1000) math:product 4800000 . },
+    { (4800000 1000) math:integerQuotient 4800 . },
+    { :case :vceSatMv 200 . }.
+
+{ :high :saturation true . }
+  pe:rule 3;
+  pe:binding
+    [ pe:var "gainLimit"; pe:value 43000 ],
+    [ pe:var "loadLimit"; pe:value 4800 ],
+    [ pe:var "loadVoltageMv"; pe:value 4800 ],
+    [ pe:var "loadVoltageNumerator"; pe:value 4800000 ],
+    [ pe:var "rl"; pe:value 1000 ],
+    [ pe:var "state"; pe:value :high ],
+    [ pe:var "vceSat"; pe:value 200 ];
+  pe:uses
+    { :high :cutoff false . },
+    { :high :collectorGainLimitUa 43000 . },
+    { :high :collectorLoadLimitUa 4800 . },
+    { 43000 math:notLessThan 4800 . },
+    { :case :loadResistanceOhms 1000 . },
+    { (4800 1000) math:product 4800000 . },
+    { (4800000 1000) math:integerQuotient 4800 . },
+    { :case :vceSatMv 200 . }.
+
+{ :high :stateLabel "saturation / ON" . }
+  pe:rule 3;
+  pe:binding
+    [ pe:var "gainLimit"; pe:value 43000 ],
+    [ pe:var "loadLimit"; pe:value 4800 ],
+    [ pe:var "loadVoltageMv"; pe:value 4800 ],
+    [ pe:var "loadVoltageNumerator"; pe:value 4800000 ],
+    [ pe:var "rl"; pe:value 1000 ],
+    [ pe:var "state"; pe:value :high ],
+    [ pe:var "vceSat"; pe:value 200 ];
+  pe:uses
+    { :high :cutoff false . },
+    { :high :collectorGainLimitUa 43000 . },
+    { :high :collectorLoadLimitUa 4800 . },
+    { 43000 math:notLessThan 4800 . },
+    { :case :loadResistanceOhms 1000 . },
+    { (4800 1000) math:product 4800000 . },
+    { (4800000 1000) math:integerQuotient 4800 . },
+    { :case :vceSatMv 200 . }.
+
+{ :case :onStateIsLoadLimited true . }
+  pe:rule 8;
+  pe:binding
+    [ pe:var "gain"; pe:value 43000 ],
+    [ pe:var "ic"; pe:value 4800 ];
+  pe:uses
+    { :high :collectorCurrentUa 4800 . },
+    { :high :collectorLoadLimitUa 4800 . },
+    { :high :collectorGainLimitUa 43000 . },
+    { 43000 math:greaterThan 4800 . }.
+
+{ 43000 math:greaterThan 4800 . }
+  pe:builtin math:greaterThan.
+
+{ :case :loadVoltageMatchesResistorDrop true . }
+  pe:rule 9;
+  pe:binding
+    [ pe:var "expectedLoadVoltageMv"; pe:value 4800 ],
+    [ pe:var "ic"; pe:value 4800 ],
+    [ pe:var "loadVoltageNumerator"; pe:value 4800000 ],
+    [ pe:var "rl"; pe:value 1000 ];
+  pe:uses
+    { :high :collectorCurrentUa 4800 . },
+    { :case :loadResistanceOhms 1000 . },
+    { (4800 1000) math:product 4800000 . },
+    { (4800000 1000) math:integerQuotient 4800 . },
+    { :high :loadVoltageMv 4800 . }.
+
+{ :01-answer-1 log:outputString "# transistor-switch\n\n## Source files\n\n- [N3 rules](../transistor-switch.n3)\n\n## Answer\n" . }
+  pe:rule 11;
+  pe:binding
+    [ pe:var "highLabel"; pe:value "saturation / ON" ],
+    [ pe:var "highStateLine"; pe:value "high input state                 : saturation / ON\n" ],
+    [ pe:var "lowLabel"; pe:value "cutoff / OFF" ],
+    [ pe:var "lowStateLine"; pe:value "low input state                  : cutoff / OFF\n" ],
+    [ pe:var "onCurrentLine"; pe:value "on-state load current            : 4.80 mA\n\n" ],
+    [ pe:var "onCurrentText"; pe:value "4.80 mA" ],
+    [ pe:var "onCurrentUa"; pe:value 4800 ],
+    [ pe:var "uaOn"; pe:value :uafmt-4800 ];
+  pe:uses
+    { :low :stateLabel "cutoff / OFF" . },
+    { :high :stateLabel "saturation / ON" . },
+    { :high :collectorCurrentUa 4800 . },
+    { :uafmt-4800 :uaValue 4800 . },
+    { :uafmt-4800 :text "4.80 mA" . },
+    { ("low input state                  : %s\n" "cutoff / OFF") string:format "low input state                  : cutoff / OFF\n" . },
+    { ("high input state                 : %s\n" "saturation / ON") string:format "high input state                 : saturation / ON\n" . },
+    { ("on-state load current            : %s\n\n" "4.80 mA") string:format "on-state load current            : 4.80 mA\n\n" . }.
+
+{ :uafmt-4800 :uaValue 4800 . }
+  pe:fact "transistor-switch.n3".
+
+{ :uafmt-4800 :text "4.80 mA" . }
+  pe:fact "transistor-switch.n3".
+
+{ ("low input state                  : %s\n" "cutoff / OFF") string:format "low input state                  : cutoff / OFF\n" . }
+  pe:builtin string:format.
+
+{ ("high input state                 : %s\n" "saturation / ON") string:format "high input state                 : saturation / ON\n" . }
+  pe:builtin string:format.
+
+{ ("on-state load current            : %s\n\n" "4.80 mA") string:format "on-state load current            : 4.80 mA\n\n" . }
+  pe:builtin string:format.
+
+{ :01-answer-2 log:outputString "In this toy transistor-switch model, a low input leaves the transistor in cutoff (OFF) and a high input drives it into saturation (ON), so the load behaves like an on/off branch rather than a linear amplifier.\n" . }
+  pe:rule 11;
+  pe:binding
+    [ pe:var "highLabel"; pe:value "saturation / ON" ],
+    [ pe:var "highStateLine"; pe:value "high input state                 : saturation / ON\n" ],
+    [ pe:var "lowLabel"; pe:value "cutoff / OFF" ],
+    [ pe:var "lowStateLine"; pe:value "low input state                  : cutoff / OFF\n" ],
+    [ pe:var "onCurrentLine"; pe:value "on-state load current            : 4.80 mA\n\n" ],
+    [ pe:var "onCurrentText"; pe:value "4.80 mA" ],
+    [ pe:var "onCurrentUa"; pe:value 4800 ],
+    [ pe:var "uaOn"; pe:value :uafmt-4800 ];
+  pe:uses
+    { :low :stateLabel "cutoff / OFF" . },
+    { :high :stateLabel "saturation / ON" . },
+    { :high :collectorCurrentUa 4800 . },
+    { :uafmt-4800 :uaValue 4800 . },
+    { :uafmt-4800 :text "4.80 mA" . },
+    { ("low input state                  : %s\n" "cutoff / OFF") string:format "low input state                  : cutoff / OFF\n" . },
+    { ("high input state                 : %s\n" "saturation / ON") string:format "high input state                 : saturation / ON\n" . },
+    { ("on-state load current            : %s\n\n" "4.80 mA") string:format "on-state load current            : 4.80 mA\n\n" . }.
+
+{ :01-answer-3 log:outputString "case                             : transistor-switch\n" . }
+  pe:rule 11;
+  pe:binding
+    [ pe:var "highLabel"; pe:value "saturation / ON" ],
+    [ pe:var "highStateLine"; pe:value "high input state                 : saturation / ON\n" ],
+    [ pe:var "lowLabel"; pe:value "cutoff / OFF" ],
+    [ pe:var "lowStateLine"; pe:value "low input state                  : cutoff / OFF\n" ],
+    [ pe:var "onCurrentLine"; pe:value "on-state load current            : 4.80 mA\n\n" ],
+    [ pe:var "onCurrentText"; pe:value "4.80 mA" ],
+    [ pe:var "onCurrentUa"; pe:value 4800 ],
+    [ pe:var "uaOn"; pe:value :uafmt-4800 ];
+  pe:uses
+    { :low :stateLabel "cutoff / OFF" . },
+    { :high :stateLabel "saturation / ON" . },
+    { :high :collectorCurrentUa 4800 . },
+    { :uafmt-4800 :uaValue 4800 . },
+    { :uafmt-4800 :text "4.80 mA" . },
+    { ("low input state                  : %s\n" "cutoff / OFF") string:format "low input state                  : cutoff / OFF\n" . },
+    { ("high input state                 : %s\n" "saturation / ON") string:format "high input state                 : saturation / ON\n" . },
+    { ("on-state load current            : %s\n\n" "4.80 mA") string:format "on-state load current            : 4.80 mA\n\n" . }.
+
+{ :01-answer-4 log:outputString "low input state                  : cutoff / OFF\n" . }
+  pe:rule 11;
+  pe:binding
+    [ pe:var "highLabel"; pe:value "saturation / ON" ],
+    [ pe:var "highStateLine"; pe:value "high input state                 : saturation / ON\n" ],
+    [ pe:var "lowLabel"; pe:value "cutoff / OFF" ],
+    [ pe:var "lowStateLine"; pe:value "low input state                  : cutoff / OFF\n" ],
+    [ pe:var "onCurrentLine"; pe:value "on-state load current            : 4.80 mA\n\n" ],
+    [ pe:var "onCurrentText"; pe:value "4.80 mA" ],
+    [ pe:var "onCurrentUa"; pe:value 4800 ],
+    [ pe:var "uaOn"; pe:value :uafmt-4800 ];
+  pe:uses
+    { :low :stateLabel "cutoff / OFF" . },
+    { :high :stateLabel "saturation / ON" . },
+    { :high :collectorCurrentUa 4800 . },
+    { :uafmt-4800 :uaValue 4800 . },
+    { :uafmt-4800 :text "4.80 mA" . },
+    { ("low input state                  : %s\n" "cutoff / OFF") string:format "low input state                  : cutoff / OFF\n" . },
+    { ("high input state                 : %s\n" "saturation / ON") string:format "high input state                 : saturation / ON\n" . },
+    { ("on-state load current            : %s\n\n" "4.80 mA") string:format "on-state load current            : 4.80 mA\n\n" . }.
+
+{ :01-answer-5 log:outputString "high input state                 : saturation / ON\n" . }
+  pe:rule 11;
+  pe:binding
+    [ pe:var "highLabel"; pe:value "saturation / ON" ],
+    [ pe:var "highStateLine"; pe:value "high input state                 : saturation / ON\n" ],
+    [ pe:var "lowLabel"; pe:value "cutoff / OFF" ],
+    [ pe:var "lowStateLine"; pe:value "low input state                  : cutoff / OFF\n" ],
+    [ pe:var "onCurrentLine"; pe:value "on-state load current            : 4.80 mA\n\n" ],
+    [ pe:var "onCurrentText"; pe:value "4.80 mA" ],
+    [ pe:var "onCurrentUa"; pe:value 4800 ],
+    [ pe:var "uaOn"; pe:value :uafmt-4800 ];
+  pe:uses
+    { :low :stateLabel "cutoff / OFF" . },
+    { :high :stateLabel "saturation / ON" . },
+    { :high :collectorCurrentUa 4800 . },
+    { :uafmt-4800 :uaValue 4800 . },
+    { :uafmt-4800 :text "4.80 mA" . },
+    { ("low input state                  : %s\n" "cutoff / OFF") string:format "low input state                  : cutoff / OFF\n" . },
+    { ("high input state                 : %s\n" "saturation / ON") string:format "high input state                 : saturation / ON\n" . },
+    { ("on-state load current            : %s\n\n" "4.80 mA") string:format "on-state load current            : 4.80 mA\n\n" . }.
+
+{ :01-answer-6 log:outputString "on-state load current            : 4.80 mA\n\n" . }
+  pe:rule 11;
+  pe:binding
+    [ pe:var "highLabel"; pe:value "saturation / ON" ],
+    [ pe:var "highStateLine"; pe:value "high input state                 : saturation / ON\n" ],
+    [ pe:var "lowLabel"; pe:value "cutoff / OFF" ],
+    [ pe:var "lowStateLine"; pe:value "low input state                  : cutoff / OFF\n" ],
+    [ pe:var "onCurrentLine"; pe:value "on-state load current            : 4.80 mA\n\n" ],
+    [ pe:var "onCurrentText"; pe:value "4.80 mA" ],
+    [ pe:var "onCurrentUa"; pe:value 4800 ],
+    [ pe:var "uaOn"; pe:value :uafmt-4800 ];
+  pe:uses
+    { :low :stateLabel "cutoff / OFF" . },
+    { :high :stateLabel "saturation / ON" . },
+    { :high :collectorCurrentUa 4800 . },
+    { :uafmt-4800 :uaValue 4800 . },
+    { :uafmt-4800 :text "4.80 mA" . },
+    { ("low input state                  : %s\n" "cutoff / OFF") string:format "low input state                  : cutoff / OFF\n" . },
+    { ("high input state                 : %s\n" "saturation / ON") string:format "high input state                 : saturation / ON\n" . },
+    { ("on-state load current            : %s\n\n" "4.80 mA") string:format "on-state load current            : 4.80 mA\n\n" . }.
+
+{ :case :highInputReachesSaturation true . }
+  pe:rule 6;
+  pe:binding [ pe:var "vceSat"; pe:value 200 ];
+  pe:uses
+    { :high :saturation true . },
+    { :case :vceSatMv 200 . },
+    { :high :collectorEmitterVoltageMv 200 . }.
+
+{ :case :switchesCleanly true . }
+  pe:rule 7;
+  pe:uses
+    { :low :cutoff true . },
+    { :high :saturation true . }.
+
+{ :03-check-1 log:outputString "## Check\n" . }
+  pe:rule 13;
+  pe:uses
+    { :case :lowInputStaysInCutoff true . },
+    { :case :highInputReachesSaturation true . },
+    { :case :switchesCleanly true . },
+    { :case :onStateIsLoadLimited true . },
+    { :case :loadVoltageMatchesResistorDrop true . }.
+
+{ :03-check-2 log:outputString "low input stays in cutoff        : yes\n" . }
+  pe:rule 13;
+  pe:uses
+    { :case :lowInputStaysInCutoff true . },
+    { :case :highInputReachesSaturation true . },
+    { :case :switchesCleanly true . },
+    { :case :onStateIsLoadLimited true . },
+    { :case :loadVoltageMatchesResistorDrop true . }.
+
+{ :03-check-3 log:outputString "high input reaches saturation    : yes\n" . }
+  pe:rule 13;
+  pe:uses
+    { :case :lowInputStaysInCutoff true . },
+    { :case :highInputReachesSaturation true . },
+    { :case :switchesCleanly true . },
+    { :case :onStateIsLoadLimited true . },
+    { :case :loadVoltageMatchesResistorDrop true . }.
+
+{ :03-check-4 log:outputString "switching states differ          : yes\n" . }
+  pe:rule 13;
+  pe:uses
+    { :case :lowInputStaysInCutoff true . },
+    { :case :highInputReachesSaturation true . },
+    { :case :switchesCleanly true . },
+    { :case :onStateIsLoadLimited true . },
+    { :case :loadVoltageMatchesResistorDrop true . }.
+
+{ :03-check-5 log:outputString "on-state current is load-limited : yes\n" . }
+  pe:rule 13;
+  pe:uses
+    { :case :lowInputStaysInCutoff true . },
+    { :case :highInputReachesSaturation true . },
+    { :case :switchesCleanly true . },
+    { :case :onStateIsLoadLimited true . },
+    { :case :loadVoltageMatchesResistorDrop true . }.
+
+{ :03-check-6 log:outputString "load voltage matches resistor drop : yes\n" . }
+  pe:rule 13;
+  pe:uses
+    { :case :lowInputStaysInCutoff true . },
+    { :case :highInputReachesSaturation true . },
+    { :case :switchesCleanly true . },
+    { :case :onStateIsLoadLimited true . },
+    { :case :loadVoltageMatchesResistorDrop true . }.
+
+{ :high :summaryLine "Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" . }
+  pe:rule 10;
+  pe:binding
+    [ pe:var "ib"; pe:value 430 ],
+    [ pe:var "ibText"; pe:value "0.43 mA" ],
+    [ pe:var "ic"; pe:value 4800 ],
+    [ pe:var "icText"; pe:value "4.80 mA" ],
+    [ pe:var "label"; pe:value "saturation / ON" ],
+    [ pe:var "mvVce"; pe:value :mvfmt-200 ],
+    [ pe:var "mvVin"; pe:value :mvfmt-5000 ],
+    [ pe:var "state"; pe:value :high ],
+    [ pe:var "summary"; pe:value "Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" ],
+    [ pe:var "uaIb"; pe:value :uafmt-430 ],
+    [ pe:var "uaIc"; pe:value :uafmt-4800 ],
+    [ pe:var "vce"; pe:value 200 ],
+    [ pe:var "vceText"; pe:value "0.20 V" ],
+    [ pe:var "vin"; pe:value 5000 ],
+    [ pe:var "vinText"; pe:value "5.00 V" ];
+  pe:uses
+    { :high list:in (:low :high) . },
+    { :high :inputMv 5000 . },
+    { :mvfmt-5000 :mvValue 5000 . },
+    { :mvfmt-5000 :text "5.00 V" . },
+    { :high :baseCurrentUa 430 . },
+    { :uafmt-430 :uaValue 430 . },
+    { :uafmt-430 :text "0.43 mA" . },
+    { :high :collectorCurrentUa 4800 . },
+    { :uafmt-4800 :uaValue 4800 . },
+    { :uafmt-4800 :text "4.80 mA" . },
+    { :high :collectorEmitterVoltageMv 200 . },
+    { :mvfmt-200 :mvValue 200 . },
+    { :mvfmt-200 :text "0.20 V" . },
+    { :high :stateLabel "saturation / ON" . },
+    { ("Vin=%s -> Ib=%s, Ic=%s, Vce=%s, state=%s\n" "5.00 V" "0.43 mA" "4.80 mA" "0.20 V" "saturation / ON") string:format "Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" . }.
+
+{ :uafmt-430 :uaValue 430 . }
+  pe:fact "transistor-switch.n3".
+
+{ :uafmt-430 :text "0.43 mA" . }
+  pe:fact "transistor-switch.n3".
+
+{ :mvfmt-200 :mvValue 200 . }
+  pe:fact "transistor-switch.n3".
+
+{ :mvfmt-200 :text "0.20 V" . }
+  pe:fact "transistor-switch.n3".
+
+{ ("Vin=%s -> Ib=%s, Ic=%s, Vce=%s, state=%s\n" "5.00 V" "0.43 mA" "4.80 mA" "0.20 V" "saturation / ON") string:format "Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" . }
+  pe:builtin string:format.
+
+{ :02-why-01 log:outputString "## Reason Why\n" . }
+  pe:rule 12;
+  pe:binding
+    [ pe:var "beta"; pe:value 100 ],
+    [ pe:var "betaLine"; pe:value "transistor beta proxy            : 100\n" ],
+    [ pe:var "gainLimitText"; pe:value "43.00 mA" ],
+    [ pe:var "gainLimitUa"; pe:value 43000 ],
+    [ pe:var "gainLine"; pe:value "high-input gain limit            : 43.00 mA\n" ],
+    [ pe:var "highLine"; pe:value "high input                       : Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" ],
+    [ pe:var "highSummary"; pe:value "Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" ],
+    [ pe:var "loadLimitText"; pe:value "4.80 mA" ],
+    [ pe:var "loadLimitUa"; pe:value 4800 ],
+    [ pe:var "loadLine"; pe:value "high-input load limit            : 4.80 mA\n" ],
+    [ pe:var "lowLine"; pe:value "low input                        : Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" ],
+    [ pe:var "lowSummary"; pe:value "Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" ],
+    [ pe:var "mvSupply"; pe:value :mvfmt-5000 ],
+    [ pe:var "rb"; pe:value 10000 ],
+    [ pe:var "rbLine"; pe:value "base resistor                    : 10000 ohms\n" ],
+    [ pe:var "rl"; pe:value 1000 ],
+    [ pe:var "rlLine"; pe:value "load resistor                    : 1000 ohms\n" ],
+    [ pe:var "supplyLine"; pe:value "supply voltage                   : 5.00 V\n" ],
+    [ pe:var "supplyMv"; pe:value 5000 ],
+    [ pe:var "supplyText"; pe:value "5.00 V" ],
+    [ pe:var "uaGain"; pe:value :uafmt-43000 ],
+    [ pe:var "uaLoad"; pe:value :uafmt-4800 ];
+  pe:uses
+    { :case :supplyMv 5000 . },
+    { :mvfmt-5000 :mvValue 5000 . },
+    { :mvfmt-5000 :text "5.00 V" . },
+    { :case :baseResistanceOhms 10000 . },
+    { :case :loadResistanceOhms 1000 . },
+    { :case :beta 100 . },
+    { :low :summaryLine "Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" . },
+    { :high :summaryLine "Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" . },
+    { :high :collectorGainLimitUa 43000 . },
+    { :uafmt-43000 :uaValue 43000 . },
+    { :uafmt-43000 :text "43.00 mA" . },
+    { :high :collectorLoadLimitUa 4800 . },
+    { :uafmt-4800 :uaValue 4800 . },
+    { :uafmt-4800 :text "4.80 mA" . },
+    { ("supply voltage                   : %s\n" "5.00 V") string:format "supply voltage                   : 5.00 V\n" . },
+    { ("base resistor                    : %s ohms\n" 10000) string:format "base resistor                    : 10000 ohms\n" . },
+    { ("load resistor                    : %s ohms\n" 1000) string:format "load resistor                    : 1000 ohms\n" . },
+    { ("transistor beta proxy            : %s\n" 100) string:format "transistor beta proxy            : 100\n" . },
+    { ("low input                        : %s" "Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n") string:format "low input                        : Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" . },
+    { ("high input                       : %s" "Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n") string:format "high input                       : Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" . },
+    { ("high-input gain limit            : %s\n" "43.00 mA") string:format "high-input gain limit            : 43.00 mA\n" . },
+    { ("high-input load limit            : %s\n" "4.80 mA") string:format "high-input load limit            : 4.80 mA\n" . }.
+
+{ :uafmt-43000 :uaValue 43000 . }
+  pe:fact "transistor-switch.n3".
+
+{ :uafmt-43000 :text "43.00 mA" . }
+  pe:fact "transistor-switch.n3".
+
+{ ("supply voltage                   : %s\n" "5.00 V") string:format "supply voltage                   : 5.00 V\n" . }
+  pe:builtin string:format.
+
+{ ("base resistor                    : %s ohms\n" 10000) string:format "base resistor                    : 10000 ohms\n" . }
+  pe:builtin string:format.
+
+{ ("load resistor                    : %s ohms\n" 1000) string:format "load resistor                    : 1000 ohms\n" . }
+  pe:builtin string:format.
+
+{ ("transistor beta proxy            : %s\n" 100) string:format "transistor beta proxy            : 100\n" . }
+  pe:builtin string:format.
+
+{ ("low input                        : %s" "Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n") string:format "low input                        : Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" . }
+  pe:builtin string:format.
+
+{ ("high input                       : %s" "Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n") string:format "high input                       : Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" . }
+  pe:builtin string:format.
+
+{ ("high-input gain limit            : %s\n" "43.00 mA") string:format "high-input gain limit            : 43.00 mA\n" . }
+  pe:builtin string:format.
+
+{ ("high-input load limit            : %s\n" "4.80 mA") string:format "high-input load limit            : 4.80 mA\n" . }
+  pe:builtin string:format.
+
+{ :02-why-02 log:outputString "We model an NPN low-side switch with exact millivolt and microamp arithmetic. The base current comes from (Vin - Vbe,on)/Rb when the base-emitter junction is forward biased, and the collector current is the smaller of beta * Ib and the load-limited current (Vcc - Vce,sat)/Rl.\n" . }
+  pe:rule 12;
+  pe:binding
+    [ pe:var "beta"; pe:value 100 ],
+    [ pe:var "betaLine"; pe:value "transistor beta proxy            : 100\n" ],
+    [ pe:var "gainLimitText"; pe:value "43.00 mA" ],
+    [ pe:var "gainLimitUa"; pe:value 43000 ],
+    [ pe:var "gainLine"; pe:value "high-input gain limit            : 43.00 mA\n" ],
+    [ pe:var "highLine"; pe:value "high input                       : Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" ],
+    [ pe:var "highSummary"; pe:value "Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" ],
+    [ pe:var "loadLimitText"; pe:value "4.80 mA" ],
+    [ pe:var "loadLimitUa"; pe:value 4800 ],
+    [ pe:var "loadLine"; pe:value "high-input load limit            : 4.80 mA\n" ],
+    [ pe:var "lowLine"; pe:value "low input                        : Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" ],
+    [ pe:var "lowSummary"; pe:value "Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" ],
+    [ pe:var "mvSupply"; pe:value :mvfmt-5000 ],
+    [ pe:var "rb"; pe:value 10000 ],
+    [ pe:var "rbLine"; pe:value "base resistor                    : 10000 ohms\n" ],
+    [ pe:var "rl"; pe:value 1000 ],
+    [ pe:var "rlLine"; pe:value "load resistor                    : 1000 ohms\n" ],
+    [ pe:var "supplyLine"; pe:value "supply voltage                   : 5.00 V\n" ],
+    [ pe:var "supplyMv"; pe:value 5000 ],
+    [ pe:var "supplyText"; pe:value "5.00 V" ],
+    [ pe:var "uaGain"; pe:value :uafmt-43000 ],
+    [ pe:var "uaLoad"; pe:value :uafmt-4800 ];
+  pe:uses
+    { :case :supplyMv 5000 . },
+    { :mvfmt-5000 :mvValue 5000 . },
+    { :mvfmt-5000 :text "5.00 V" . },
+    { :case :baseResistanceOhms 10000 . },
+    { :case :loadResistanceOhms 1000 . },
+    { :case :beta 100 . },
+    { :low :summaryLine "Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" . },
+    { :high :summaryLine "Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" . },
+    { :high :collectorGainLimitUa 43000 . },
+    { :uafmt-43000 :uaValue 43000 . },
+    { :uafmt-43000 :text "43.00 mA" . },
+    { :high :collectorLoadLimitUa 4800 . },
+    { :uafmt-4800 :uaValue 4800 . },
+    { :uafmt-4800 :text "4.80 mA" . },
+    { ("supply voltage                   : %s\n" "5.00 V") string:format "supply voltage                   : 5.00 V\n" . },
+    { ("base resistor                    : %s ohms\n" 10000) string:format "base resistor                    : 10000 ohms\n" . },
+    { ("load resistor                    : %s ohms\n" 1000) string:format "load resistor                    : 1000 ohms\n" . },
+    { ("transistor beta proxy            : %s\n" 100) string:format "transistor beta proxy            : 100\n" . },
+    { ("low input                        : %s" "Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n") string:format "low input                        : Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" . },
+    { ("high input                       : %s" "Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n") string:format "high input                       : Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" . },
+    { ("high-input gain limit            : %s\n" "43.00 mA") string:format "high-input gain limit            : 43.00 mA\n" . },
+    { ("high-input load limit            : %s\n" "4.80 mA") string:format "high-input load limit            : 4.80 mA\n" . }.
+
+{ :02-why-03 log:outputString "supply voltage                   : 5.00 V\n" . }
+  pe:rule 12;
+  pe:binding
+    [ pe:var "beta"; pe:value 100 ],
+    [ pe:var "betaLine"; pe:value "transistor beta proxy            : 100\n" ],
+    [ pe:var "gainLimitText"; pe:value "43.00 mA" ],
+    [ pe:var "gainLimitUa"; pe:value 43000 ],
+    [ pe:var "gainLine"; pe:value "high-input gain limit            : 43.00 mA\n" ],
+    [ pe:var "highLine"; pe:value "high input                       : Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" ],
+    [ pe:var "highSummary"; pe:value "Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" ],
+    [ pe:var "loadLimitText"; pe:value "4.80 mA" ],
+    [ pe:var "loadLimitUa"; pe:value 4800 ],
+    [ pe:var "loadLine"; pe:value "high-input load limit            : 4.80 mA\n" ],
+    [ pe:var "lowLine"; pe:value "low input                        : Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" ],
+    [ pe:var "lowSummary"; pe:value "Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" ],
+    [ pe:var "mvSupply"; pe:value :mvfmt-5000 ],
+    [ pe:var "rb"; pe:value 10000 ],
+    [ pe:var "rbLine"; pe:value "base resistor                    : 10000 ohms\n" ],
+    [ pe:var "rl"; pe:value 1000 ],
+    [ pe:var "rlLine"; pe:value "load resistor                    : 1000 ohms\n" ],
+    [ pe:var "supplyLine"; pe:value "supply voltage                   : 5.00 V\n" ],
+    [ pe:var "supplyMv"; pe:value 5000 ],
+    [ pe:var "supplyText"; pe:value "5.00 V" ],
+    [ pe:var "uaGain"; pe:value :uafmt-43000 ],
+    [ pe:var "uaLoad"; pe:value :uafmt-4800 ];
+  pe:uses
+    { :case :supplyMv 5000 . },
+    { :mvfmt-5000 :mvValue 5000 . },
+    { :mvfmt-5000 :text "5.00 V" . },
+    { :case :baseResistanceOhms 10000 . },
+    { :case :loadResistanceOhms 1000 . },
+    { :case :beta 100 . },
+    { :low :summaryLine "Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" . },
+    { :high :summaryLine "Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" . },
+    { :high :collectorGainLimitUa 43000 . },
+    { :uafmt-43000 :uaValue 43000 . },
+    { :uafmt-43000 :text "43.00 mA" . },
+    { :high :collectorLoadLimitUa 4800 . },
+    { :uafmt-4800 :uaValue 4800 . },
+    { :uafmt-4800 :text "4.80 mA" . },
+    { ("supply voltage                   : %s\n" "5.00 V") string:format "supply voltage                   : 5.00 V\n" . },
+    { ("base resistor                    : %s ohms\n" 10000) string:format "base resistor                    : 10000 ohms\n" . },
+    { ("load resistor                    : %s ohms\n" 1000) string:format "load resistor                    : 1000 ohms\n" . },
+    { ("transistor beta proxy            : %s\n" 100) string:format "transistor beta proxy            : 100\n" . },
+    { ("low input                        : %s" "Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n") string:format "low input                        : Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" . },
+    { ("high input                       : %s" "Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n") string:format "high input                       : Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" . },
+    { ("high-input gain limit            : %s\n" "43.00 mA") string:format "high-input gain limit            : 43.00 mA\n" . },
+    { ("high-input load limit            : %s\n" "4.80 mA") string:format "high-input load limit            : 4.80 mA\n" . }.
+
+{ :02-why-04 log:outputString "base resistor                    : 10000 ohms\n" . }
+  pe:rule 12;
+  pe:binding
+    [ pe:var "beta"; pe:value 100 ],
+    [ pe:var "betaLine"; pe:value "transistor beta proxy            : 100\n" ],
+    [ pe:var "gainLimitText"; pe:value "43.00 mA" ],
+    [ pe:var "gainLimitUa"; pe:value 43000 ],
+    [ pe:var "gainLine"; pe:value "high-input gain limit            : 43.00 mA\n" ],
+    [ pe:var "highLine"; pe:value "high input                       : Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" ],
+    [ pe:var "highSummary"; pe:value "Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" ],
+    [ pe:var "loadLimitText"; pe:value "4.80 mA" ],
+    [ pe:var "loadLimitUa"; pe:value 4800 ],
+    [ pe:var "loadLine"; pe:value "high-input load limit            : 4.80 mA\n" ],
+    [ pe:var "lowLine"; pe:value "low input                        : Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" ],
+    [ pe:var "lowSummary"; pe:value "Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" ],
+    [ pe:var "mvSupply"; pe:value :mvfmt-5000 ],
+    [ pe:var "rb"; pe:value 10000 ],
+    [ pe:var "rbLine"; pe:value "base resistor                    : 10000 ohms\n" ],
+    [ pe:var "rl"; pe:value 1000 ],
+    [ pe:var "rlLine"; pe:value "load resistor                    : 1000 ohms\n" ],
+    [ pe:var "supplyLine"; pe:value "supply voltage                   : 5.00 V\n" ],
+    [ pe:var "supplyMv"; pe:value 5000 ],
+    [ pe:var "supplyText"; pe:value "5.00 V" ],
+    [ pe:var "uaGain"; pe:value :uafmt-43000 ],
+    [ pe:var "uaLoad"; pe:value :uafmt-4800 ];
+  pe:uses
+    { :case :supplyMv 5000 . },
+    { :mvfmt-5000 :mvValue 5000 . },
+    { :mvfmt-5000 :text "5.00 V" . },
+    { :case :baseResistanceOhms 10000 . },
+    { :case :loadResistanceOhms 1000 . },
+    { :case :beta 100 . },
+    { :low :summaryLine "Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" . },
+    { :high :summaryLine "Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" . },
+    { :high :collectorGainLimitUa 43000 . },
+    { :uafmt-43000 :uaValue 43000 . },
+    { :uafmt-43000 :text "43.00 mA" . },
+    { :high :collectorLoadLimitUa 4800 . },
+    { :uafmt-4800 :uaValue 4800 . },
+    { :uafmt-4800 :text "4.80 mA" . },
+    { ("supply voltage                   : %s\n" "5.00 V") string:format "supply voltage                   : 5.00 V\n" . },
+    { ("base resistor                    : %s ohms\n" 10000) string:format "base resistor                    : 10000 ohms\n" . },
+    { ("load resistor                    : %s ohms\n" 1000) string:format "load resistor                    : 1000 ohms\n" . },
+    { ("transistor beta proxy            : %s\n" 100) string:format "transistor beta proxy            : 100\n" . },
+    { ("low input                        : %s" "Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n") string:format "low input                        : Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" . },
+    { ("high input                       : %s" "Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n") string:format "high input                       : Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" . },
+    { ("high-input gain limit            : %s\n" "43.00 mA") string:format "high-input gain limit            : 43.00 mA\n" . },
+    { ("high-input load limit            : %s\n" "4.80 mA") string:format "high-input load limit            : 4.80 mA\n" . }.
+
+{ :02-why-05 log:outputString "load resistor                    : 1000 ohms\n" . }
+  pe:rule 12;
+  pe:binding
+    [ pe:var "beta"; pe:value 100 ],
+    [ pe:var "betaLine"; pe:value "transistor beta proxy            : 100\n" ],
+    [ pe:var "gainLimitText"; pe:value "43.00 mA" ],
+    [ pe:var "gainLimitUa"; pe:value 43000 ],
+    [ pe:var "gainLine"; pe:value "high-input gain limit            : 43.00 mA\n" ],
+    [ pe:var "highLine"; pe:value "high input                       : Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" ],
+    [ pe:var "highSummary"; pe:value "Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" ],
+    [ pe:var "loadLimitText"; pe:value "4.80 mA" ],
+    [ pe:var "loadLimitUa"; pe:value 4800 ],
+    [ pe:var "loadLine"; pe:value "high-input load limit            : 4.80 mA\n" ],
+    [ pe:var "lowLine"; pe:value "low input                        : Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" ],
+    [ pe:var "lowSummary"; pe:value "Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" ],
+    [ pe:var "mvSupply"; pe:value :mvfmt-5000 ],
+    [ pe:var "rb"; pe:value 10000 ],
+    [ pe:var "rbLine"; pe:value "base resistor                    : 10000 ohms\n" ],
+    [ pe:var "rl"; pe:value 1000 ],
+    [ pe:var "rlLine"; pe:value "load resistor                    : 1000 ohms\n" ],
+    [ pe:var "supplyLine"; pe:value "supply voltage                   : 5.00 V\n" ],
+    [ pe:var "supplyMv"; pe:value 5000 ],
+    [ pe:var "supplyText"; pe:value "5.00 V" ],
+    [ pe:var "uaGain"; pe:value :uafmt-43000 ],
+    [ pe:var "uaLoad"; pe:value :uafmt-4800 ];
+  pe:uses
+    { :case :supplyMv 5000 . },
+    { :mvfmt-5000 :mvValue 5000 . },
+    { :mvfmt-5000 :text "5.00 V" . },
+    { :case :baseResistanceOhms 10000 . },
+    { :case :loadResistanceOhms 1000 . },
+    { :case :beta 100 . },
+    { :low :summaryLine "Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" . },
+    { :high :summaryLine "Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" . },
+    { :high :collectorGainLimitUa 43000 . },
+    { :uafmt-43000 :uaValue 43000 . },
+    { :uafmt-43000 :text "43.00 mA" . },
+    { :high :collectorLoadLimitUa 4800 . },
+    { :uafmt-4800 :uaValue 4800 . },
+    { :uafmt-4800 :text "4.80 mA" . },
+    { ("supply voltage                   : %s\n" "5.00 V") string:format "supply voltage                   : 5.00 V\n" . },
+    { ("base resistor                    : %s ohms\n" 10000) string:format "base resistor                    : 10000 ohms\n" . },
+    { ("load resistor                    : %s ohms\n" 1000) string:format "load resistor                    : 1000 ohms\n" . },
+    { ("transistor beta proxy            : %s\n" 100) string:format "transistor beta proxy            : 100\n" . },
+    { ("low input                        : %s" "Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n") string:format "low input                        : Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" . },
+    { ("high input                       : %s" "Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n") string:format "high input                       : Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" . },
+    { ("high-input gain limit            : %s\n" "43.00 mA") string:format "high-input gain limit            : 43.00 mA\n" . },
+    { ("high-input load limit            : %s\n" "4.80 mA") string:format "high-input load limit            : 4.80 mA\n" . }.
+
+{ :02-why-06 log:outputString "transistor beta proxy            : 100\n" . }
+  pe:rule 12;
+  pe:binding
+    [ pe:var "beta"; pe:value 100 ],
+    [ pe:var "betaLine"; pe:value "transistor beta proxy            : 100\n" ],
+    [ pe:var "gainLimitText"; pe:value "43.00 mA" ],
+    [ pe:var "gainLimitUa"; pe:value 43000 ],
+    [ pe:var "gainLine"; pe:value "high-input gain limit            : 43.00 mA\n" ],
+    [ pe:var "highLine"; pe:value "high input                       : Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" ],
+    [ pe:var "highSummary"; pe:value "Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" ],
+    [ pe:var "loadLimitText"; pe:value "4.80 mA" ],
+    [ pe:var "loadLimitUa"; pe:value 4800 ],
+    [ pe:var "loadLine"; pe:value "high-input load limit            : 4.80 mA\n" ],
+    [ pe:var "lowLine"; pe:value "low input                        : Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" ],
+    [ pe:var "lowSummary"; pe:value "Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" ],
+    [ pe:var "mvSupply"; pe:value :mvfmt-5000 ],
+    [ pe:var "rb"; pe:value 10000 ],
+    [ pe:var "rbLine"; pe:value "base resistor                    : 10000 ohms\n" ],
+    [ pe:var "rl"; pe:value 1000 ],
+    [ pe:var "rlLine"; pe:value "load resistor                    : 1000 ohms\n" ],
+    [ pe:var "supplyLine"; pe:value "supply voltage                   : 5.00 V\n" ],
+    [ pe:var "supplyMv"; pe:value 5000 ],
+    [ pe:var "supplyText"; pe:value "5.00 V" ],
+    [ pe:var "uaGain"; pe:value :uafmt-43000 ],
+    [ pe:var "uaLoad"; pe:value :uafmt-4800 ];
+  pe:uses
+    { :case :supplyMv 5000 . },
+    { :mvfmt-5000 :mvValue 5000 . },
+    { :mvfmt-5000 :text "5.00 V" . },
+    { :case :baseResistanceOhms 10000 . },
+    { :case :loadResistanceOhms 1000 . },
+    { :case :beta 100 . },
+    { :low :summaryLine "Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" . },
+    { :high :summaryLine "Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" . },
+    { :high :collectorGainLimitUa 43000 . },
+    { :uafmt-43000 :uaValue 43000 . },
+    { :uafmt-43000 :text "43.00 mA" . },
+    { :high :collectorLoadLimitUa 4800 . },
+    { :uafmt-4800 :uaValue 4800 . },
+    { :uafmt-4800 :text "4.80 mA" . },
+    { ("supply voltage                   : %s\n" "5.00 V") string:format "supply voltage                   : 5.00 V\n" . },
+    { ("base resistor                    : %s ohms\n" 10000) string:format "base resistor                    : 10000 ohms\n" . },
+    { ("load resistor                    : %s ohms\n" 1000) string:format "load resistor                    : 1000 ohms\n" . },
+    { ("transistor beta proxy            : %s\n" 100) string:format "transistor beta proxy            : 100\n" . },
+    { ("low input                        : %s" "Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n") string:format "low input                        : Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" . },
+    { ("high input                       : %s" "Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n") string:format "high input                       : Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" . },
+    { ("high-input gain limit            : %s\n" "43.00 mA") string:format "high-input gain limit            : 43.00 mA\n" . },
+    { ("high-input load limit            : %s\n" "4.80 mA") string:format "high-input load limit            : 4.80 mA\n" . }.
+
+{ :02-why-07 log:outputString "low input                        : Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" . }
+  pe:rule 12;
+  pe:binding
+    [ pe:var "beta"; pe:value 100 ],
+    [ pe:var "betaLine"; pe:value "transistor beta proxy            : 100\n" ],
+    [ pe:var "gainLimitText"; pe:value "43.00 mA" ],
+    [ pe:var "gainLimitUa"; pe:value 43000 ],
+    [ pe:var "gainLine"; pe:value "high-input gain limit            : 43.00 mA\n" ],
+    [ pe:var "highLine"; pe:value "high input                       : Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" ],
+    [ pe:var "highSummary"; pe:value "Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" ],
+    [ pe:var "loadLimitText"; pe:value "4.80 mA" ],
+    [ pe:var "loadLimitUa"; pe:value 4800 ],
+    [ pe:var "loadLine"; pe:value "high-input load limit            : 4.80 mA\n" ],
+    [ pe:var "lowLine"; pe:value "low input                        : Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" ],
+    [ pe:var "lowSummary"; pe:value "Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" ],
+    [ pe:var "mvSupply"; pe:value :mvfmt-5000 ],
+    [ pe:var "rb"; pe:value 10000 ],
+    [ pe:var "rbLine"; pe:value "base resistor                    : 10000 ohms\n" ],
+    [ pe:var "rl"; pe:value 1000 ],
+    [ pe:var "rlLine"; pe:value "load resistor                    : 1000 ohms\n" ],
+    [ pe:var "supplyLine"; pe:value "supply voltage                   : 5.00 V\n" ],
+    [ pe:var "supplyMv"; pe:value 5000 ],
+    [ pe:var "supplyText"; pe:value "5.00 V" ],
+    [ pe:var "uaGain"; pe:value :uafmt-43000 ],
+    [ pe:var "uaLoad"; pe:value :uafmt-4800 ];
+  pe:uses
+    { :case :supplyMv 5000 . },
+    { :mvfmt-5000 :mvValue 5000 . },
+    { :mvfmt-5000 :text "5.00 V" . },
+    { :case :baseResistanceOhms 10000 . },
+    { :case :loadResistanceOhms 1000 . },
+    { :case :beta 100 . },
+    { :low :summaryLine "Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" . },
+    { :high :summaryLine "Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" . },
+    { :high :collectorGainLimitUa 43000 . },
+    { :uafmt-43000 :uaValue 43000 . },
+    { :uafmt-43000 :text "43.00 mA" . },
+    { :high :collectorLoadLimitUa 4800 . },
+    { :uafmt-4800 :uaValue 4800 . },
+    { :uafmt-4800 :text "4.80 mA" . },
+    { ("supply voltage                   : %s\n" "5.00 V") string:format "supply voltage                   : 5.00 V\n" . },
+    { ("base resistor                    : %s ohms\n" 10000) string:format "base resistor                    : 10000 ohms\n" . },
+    { ("load resistor                    : %s ohms\n" 1000) string:format "load resistor                    : 1000 ohms\n" . },
+    { ("transistor beta proxy            : %s\n" 100) string:format "transistor beta proxy            : 100\n" . },
+    { ("low input                        : %s" "Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n") string:format "low input                        : Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" . },
+    { ("high input                       : %s" "Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n") string:format "high input                       : Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" . },
+    { ("high-input gain limit            : %s\n" "43.00 mA") string:format "high-input gain limit            : 43.00 mA\n" . },
+    { ("high-input load limit            : %s\n" "4.80 mA") string:format "high-input load limit            : 4.80 mA\n" . }.
+
+{ :02-why-08 log:outputString "high input                       : Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" . }
+  pe:rule 12;
+  pe:binding
+    [ pe:var "beta"; pe:value 100 ],
+    [ pe:var "betaLine"; pe:value "transistor beta proxy            : 100\n" ],
+    [ pe:var "gainLimitText"; pe:value "43.00 mA" ],
+    [ pe:var "gainLimitUa"; pe:value 43000 ],
+    [ pe:var "gainLine"; pe:value "high-input gain limit            : 43.00 mA\n" ],
+    [ pe:var "highLine"; pe:value "high input                       : Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" ],
+    [ pe:var "highSummary"; pe:value "Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" ],
+    [ pe:var "loadLimitText"; pe:value "4.80 mA" ],
+    [ pe:var "loadLimitUa"; pe:value 4800 ],
+    [ pe:var "loadLine"; pe:value "high-input load limit            : 4.80 mA\n" ],
+    [ pe:var "lowLine"; pe:value "low input                        : Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" ],
+    [ pe:var "lowSummary"; pe:value "Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" ],
+    [ pe:var "mvSupply"; pe:value :mvfmt-5000 ],
+    [ pe:var "rb"; pe:value 10000 ],
+    [ pe:var "rbLine"; pe:value "base resistor                    : 10000 ohms\n" ],
+    [ pe:var "rl"; pe:value 1000 ],
+    [ pe:var "rlLine"; pe:value "load resistor                    : 1000 ohms\n" ],
+    [ pe:var "supplyLine"; pe:value "supply voltage                   : 5.00 V\n" ],
+    [ pe:var "supplyMv"; pe:value 5000 ],
+    [ pe:var "supplyText"; pe:value "5.00 V" ],
+    [ pe:var "uaGain"; pe:value :uafmt-43000 ],
+    [ pe:var "uaLoad"; pe:value :uafmt-4800 ];
+  pe:uses
+    { :case :supplyMv 5000 . },
+    { :mvfmt-5000 :mvValue 5000 . },
+    { :mvfmt-5000 :text "5.00 V" . },
+    { :case :baseResistanceOhms 10000 . },
+    { :case :loadResistanceOhms 1000 . },
+    { :case :beta 100 . },
+    { :low :summaryLine "Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" . },
+    { :high :summaryLine "Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" . },
+    { :high :collectorGainLimitUa 43000 . },
+    { :uafmt-43000 :uaValue 43000 . },
+    { :uafmt-43000 :text "43.00 mA" . },
+    { :high :collectorLoadLimitUa 4800 . },
+    { :uafmt-4800 :uaValue 4800 . },
+    { :uafmt-4800 :text "4.80 mA" . },
+    { ("supply voltage                   : %s\n" "5.00 V") string:format "supply voltage                   : 5.00 V\n" . },
+    { ("base resistor                    : %s ohms\n" 10000) string:format "base resistor                    : 10000 ohms\n" . },
+    { ("load resistor                    : %s ohms\n" 1000) string:format "load resistor                    : 1000 ohms\n" . },
+    { ("transistor beta proxy            : %s\n" 100) string:format "transistor beta proxy            : 100\n" . },
+    { ("low input                        : %s" "Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n") string:format "low input                        : Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" . },
+    { ("high input                       : %s" "Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n") string:format "high input                       : Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" . },
+    { ("high-input gain limit            : %s\n" "43.00 mA") string:format "high-input gain limit            : 43.00 mA\n" . },
+    { ("high-input load limit            : %s\n" "4.80 mA") string:format "high-input load limit            : 4.80 mA\n" . }.
+
+{ :02-why-09 log:outputString "high-input gain limit            : 43.00 mA\n" . }
+  pe:rule 12;
+  pe:binding
+    [ pe:var "beta"; pe:value 100 ],
+    [ pe:var "betaLine"; pe:value "transistor beta proxy            : 100\n" ],
+    [ pe:var "gainLimitText"; pe:value "43.00 mA" ],
+    [ pe:var "gainLimitUa"; pe:value 43000 ],
+    [ pe:var "gainLine"; pe:value "high-input gain limit            : 43.00 mA\n" ],
+    [ pe:var "highLine"; pe:value "high input                       : Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" ],
+    [ pe:var "highSummary"; pe:value "Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" ],
+    [ pe:var "loadLimitText"; pe:value "4.80 mA" ],
+    [ pe:var "loadLimitUa"; pe:value 4800 ],
+    [ pe:var "loadLine"; pe:value "high-input load limit            : 4.80 mA\n" ],
+    [ pe:var "lowLine"; pe:value "low input                        : Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" ],
+    [ pe:var "lowSummary"; pe:value "Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" ],
+    [ pe:var "mvSupply"; pe:value :mvfmt-5000 ],
+    [ pe:var "rb"; pe:value 10000 ],
+    [ pe:var "rbLine"; pe:value "base resistor                    : 10000 ohms\n" ],
+    [ pe:var "rl"; pe:value 1000 ],
+    [ pe:var "rlLine"; pe:value "load resistor                    : 1000 ohms\n" ],
+    [ pe:var "supplyLine"; pe:value "supply voltage                   : 5.00 V\n" ],
+    [ pe:var "supplyMv"; pe:value 5000 ],
+    [ pe:var "supplyText"; pe:value "5.00 V" ],
+    [ pe:var "uaGain"; pe:value :uafmt-43000 ],
+    [ pe:var "uaLoad"; pe:value :uafmt-4800 ];
+  pe:uses
+    { :case :supplyMv 5000 . },
+    { :mvfmt-5000 :mvValue 5000 . },
+    { :mvfmt-5000 :text "5.00 V" . },
+    { :case :baseResistanceOhms 10000 . },
+    { :case :loadResistanceOhms 1000 . },
+    { :case :beta 100 . },
+    { :low :summaryLine "Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" . },
+    { :high :summaryLine "Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" . },
+    { :high :collectorGainLimitUa 43000 . },
+    { :uafmt-43000 :uaValue 43000 . },
+    { :uafmt-43000 :text "43.00 mA" . },
+    { :high :collectorLoadLimitUa 4800 . },
+    { :uafmt-4800 :uaValue 4800 . },
+    { :uafmt-4800 :text "4.80 mA" . },
+    { ("supply voltage                   : %s\n" "5.00 V") string:format "supply voltage                   : 5.00 V\n" . },
+    { ("base resistor                    : %s ohms\n" 10000) string:format "base resistor                    : 10000 ohms\n" . },
+    { ("load resistor                    : %s ohms\n" 1000) string:format "load resistor                    : 1000 ohms\n" . },
+    { ("transistor beta proxy            : %s\n" 100) string:format "transistor beta proxy            : 100\n" . },
+    { ("low input                        : %s" "Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n") string:format "low input                        : Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" . },
+    { ("high input                       : %s" "Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n") string:format "high input                       : Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" . },
+    { ("high-input gain limit            : %s\n" "43.00 mA") string:format "high-input gain limit            : 43.00 mA\n" . },
+    { ("high-input load limit            : %s\n" "4.80 mA") string:format "high-input load limit            : 4.80 mA\n" . }.
+
+{ :02-why-10 log:outputString "high-input load limit            : 4.80 mA\n" . }
+  pe:rule 12;
+  pe:binding
+    [ pe:var "beta"; pe:value 100 ],
+    [ pe:var "betaLine"; pe:value "transistor beta proxy            : 100\n" ],
+    [ pe:var "gainLimitText"; pe:value "43.00 mA" ],
+    [ pe:var "gainLimitUa"; pe:value 43000 ],
+    [ pe:var "gainLine"; pe:value "high-input gain limit            : 43.00 mA\n" ],
+    [ pe:var "highLine"; pe:value "high input                       : Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" ],
+    [ pe:var "highSummary"; pe:value "Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" ],
+    [ pe:var "loadLimitText"; pe:value "4.80 mA" ],
+    [ pe:var "loadLimitUa"; pe:value 4800 ],
+    [ pe:var "loadLine"; pe:value "high-input load limit            : 4.80 mA\n" ],
+    [ pe:var "lowLine"; pe:value "low input                        : Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" ],
+    [ pe:var "lowSummary"; pe:value "Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" ],
+    [ pe:var "mvSupply"; pe:value :mvfmt-5000 ],
+    [ pe:var "rb"; pe:value 10000 ],
+    [ pe:var "rbLine"; pe:value "base resistor                    : 10000 ohms\n" ],
+    [ pe:var "rl"; pe:value 1000 ],
+    [ pe:var "rlLine"; pe:value "load resistor                    : 1000 ohms\n" ],
+    [ pe:var "supplyLine"; pe:value "supply voltage                   : 5.00 V\n" ],
+    [ pe:var "supplyMv"; pe:value 5000 ],
+    [ pe:var "supplyText"; pe:value "5.00 V" ],
+    [ pe:var "uaGain"; pe:value :uafmt-43000 ],
+    [ pe:var "uaLoad"; pe:value :uafmt-4800 ];
+  pe:uses
+    { :case :supplyMv 5000 . },
+    { :mvfmt-5000 :mvValue 5000 . },
+    { :mvfmt-5000 :text "5.00 V" . },
+    { :case :baseResistanceOhms 10000 . },
+    { :case :loadResistanceOhms 1000 . },
+    { :case :beta 100 . },
+    { :low :summaryLine "Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" . },
+    { :high :summaryLine "Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" . },
+    { :high :collectorGainLimitUa 43000 . },
+    { :uafmt-43000 :uaValue 43000 . },
+    { :uafmt-43000 :text "43.00 mA" . },
+    { :high :collectorLoadLimitUa 4800 . },
+    { :uafmt-4800 :uaValue 4800 . },
+    { :uafmt-4800 :text "4.80 mA" . },
+    { ("supply voltage                   : %s\n" "5.00 V") string:format "supply voltage                   : 5.00 V\n" . },
+    { ("base resistor                    : %s ohms\n" 10000) string:format "base resistor                    : 10000 ohms\n" . },
+    { ("load resistor                    : %s ohms\n" 1000) string:format "load resistor                    : 1000 ohms\n" . },
+    { ("transistor beta proxy            : %s\n" 100) string:format "transistor beta proxy            : 100\n" . },
+    { ("low input                        : %s" "Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n") string:format "low input                        : Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" . },
+    { ("high input                       : %s" "Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n") string:format "high input                       : Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" . },
+    { ("high-input gain limit            : %s\n" "43.00 mA") string:format "high-input gain limit            : 43.00 mA\n" . },
+    { ("high-input load limit            : %s\n" "4.80 mA") string:format "high-input load limit            : 4.80 mA\n" . }.
+
+{ :02-why-99 log:outputString "\n" . }
+  pe:rule 12;
+  pe:binding
+    [ pe:var "beta"; pe:value 100 ],
+    [ pe:var "betaLine"; pe:value "transistor beta proxy            : 100\n" ],
+    [ pe:var "gainLimitText"; pe:value "43.00 mA" ],
+    [ pe:var "gainLimitUa"; pe:value 43000 ],
+    [ pe:var "gainLine"; pe:value "high-input gain limit            : 43.00 mA\n" ],
+    [ pe:var "highLine"; pe:value "high input                       : Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" ],
+    [ pe:var "highSummary"; pe:value "Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" ],
+    [ pe:var "loadLimitText"; pe:value "4.80 mA" ],
+    [ pe:var "loadLimitUa"; pe:value 4800 ],
+    [ pe:var "loadLine"; pe:value "high-input load limit            : 4.80 mA\n" ],
+    [ pe:var "lowLine"; pe:value "low input                        : Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" ],
+    [ pe:var "lowSummary"; pe:value "Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" ],
+    [ pe:var "mvSupply"; pe:value :mvfmt-5000 ],
+    [ pe:var "rb"; pe:value 10000 ],
+    [ pe:var "rbLine"; pe:value "base resistor                    : 10000 ohms\n" ],
+    [ pe:var "rl"; pe:value 1000 ],
+    [ pe:var "rlLine"; pe:value "load resistor                    : 1000 ohms\n" ],
+    [ pe:var "supplyLine"; pe:value "supply voltage                   : 5.00 V\n" ],
+    [ pe:var "supplyMv"; pe:value 5000 ],
+    [ pe:var "supplyText"; pe:value "5.00 V" ],
+    [ pe:var "uaGain"; pe:value :uafmt-43000 ],
+    [ pe:var "uaLoad"; pe:value :uafmt-4800 ];
+  pe:uses
+    { :case :supplyMv 5000 . },
+    { :mvfmt-5000 :mvValue 5000 . },
+    { :mvfmt-5000 :text "5.00 V" . },
+    { :case :baseResistanceOhms 10000 . },
+    { :case :loadResistanceOhms 1000 . },
+    { :case :beta 100 . },
+    { :low :summaryLine "Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" . },
+    { :high :summaryLine "Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" . },
+    { :high :collectorGainLimitUa 43000 . },
+    { :uafmt-43000 :uaValue 43000 . },
+    { :uafmt-43000 :text "43.00 mA" . },
+    { :high :collectorLoadLimitUa 4800 . },
+    { :uafmt-4800 :uaValue 4800 . },
+    { :uafmt-4800 :text "4.80 mA" . },
+    { ("supply voltage                   : %s\n" "5.00 V") string:format "supply voltage                   : 5.00 V\n" . },
+    { ("base resistor                    : %s ohms\n" 10000) string:format "base resistor                    : 10000 ohms\n" . },
+    { ("load resistor                    : %s ohms\n" 1000) string:format "load resistor                    : 1000 ohms\n" . },
+    { ("transistor beta proxy            : %s\n" 100) string:format "transistor beta proxy            : 100\n" . },
+    { ("low input                        : %s" "Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n") string:format "low input                        : Vin=0.00 V -> Ib=0.00 mA, Ic=0.00 mA, Vce=5.00 V, state=cutoff / OFF\n" . },
+    { ("high input                       : %s" "Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n") string:format "high input                       : Vin=5.00 V -> Ib=0.43 mA, Ic=4.80 mA, Vce=0.20 V, state=saturation / ON\n" . },
+    { ("high-input gain limit            : %s\n" "43.00 mA") string:format "high-input gain limit            : 43.00 mA\n" . },
+    { ("high-input load limit            : %s\n" "4.80 mA") string:format "high-input load limit            : 4.80 mA\n" . }.

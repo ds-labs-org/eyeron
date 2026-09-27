@@ -1,0 +1,543 @@
+@prefix : <https://example.org/control-system#> .
+@prefix log: <http://www.w3.org/2000/10/swap/log#> .
+@prefix math: <http://www.w3.org/2000/10/swap/math#> .
+@prefix pe: <https://eyereasoner.github.io/pe#> .
+@prefix string: <http://www.w3.org/2000/10/swap/string#> .
+
+:why :sensorTrend "rising" .
+:why :sensorLow 6 .
+:why :sensorHigh 11 .
+:why :sensorGap 5 .
+:why :normalizedMeasurement 2.23606797749979 .
+:actuator2 :control1 26.08 .
+:why :feedforwardProportional 43.82693235899588 .
+:why :disturbanceMagnitude 35766 .
+:why :disturbanceCompensation 4.553470372213121 .
+:why :feedforwardCommand 39.27346198678276 .
+:why :observedState 22 .
+:why :measuredOutput 24 .
+:why :targetOutput 29 .
+:why :trackingError 5 .
+:why :differentialError -2 .
+:why :feedbackProportional "29"^^xsd:decimal .
+:why :feedbackFactor 1.46 .
+:why :feedbackDifferential -2.92 .
+:why :feedbackCommand 26.08 .
+:actuator1 :control1 39.27346198678276 .
+:decision :answer "Send both actuator commands now." .
+:decision :actuator1Command 39.27346198678276 .
+:decision :actuator2Command 26.08 .
+:report log:outputString "Control System — ARC explanation of two control signals\n\n## Answer\nSend both actuator commands now.\nActuator 1 command: 39.27346198678276\nActuator 2 command: 26.08\n\n## Reason Why\nThe first sensor pair is 6 and 11, so the reading is rising and the controller normalizes the gap 5 into 2.23606797749979. That normalized value creates a feedforward term of 43.82693235899588, while the known disturbance 35766 contributes a compensation term of 4.553470372213121. Subtracting that compensation gives actuator 1 the command 39.27346198678276. For actuator 2, the target is 5 units above the measured output, so the tracking error is positive. The observed state is -2 relative units below the measured output, so the differential correction is negative. That yields a proportional feedback part of 29, a nonlinear factor of 1.46, and a differential contribution of -2.92. Together they produce actuator 2 command 26.08.\n\n## Check\nC1 OK - the first sensor pair is rising, so the normalization uses the rising-branch rule.\nC2 OK - the normalized measurement is positive and smaller than the raw gap, which is consistent with a square-root normalization.\nC3 OK - actuator 1 is lower than its proportional feedforward term because disturbance compensation is subtracted.\nC4 OK - the target is above the measured output, so the tracking error is positive.\nC5 OK - the observed state is below the measured output, so the differential error is negative.\nC6 OK - actuator 2 is lower than its pure proportional term because the differential part reduces it.\nC7 OK - actuator 1 matches an independently reconstructed feedforward calculation.\nC8 OK - actuator 2 matches an independently reconstructed feedback calculation.\nC9 OK - both actuator commands stay positive.\n" .
+
+{ :why :sensorTrend "rising" . }
+  pe:rule 5;
+  pe:binding
+    [ pe:var "Gap"; pe:value 5 ],
+    [ pe:var "High"; pe:value 11 ],
+    [ pe:var "Low"; pe:value 6 ],
+    [ pe:var "Norm"; pe:value 2.23606797749979 ];
+  pe:uses
+    { :input1 :measurement1 (6 11) . },
+    { 6 math:lessThan 11 . },
+    { (11 6) math:difference 5 . },
+    { (5 0.5) math:exponentiation 2.23606797749979 . }.
+
+{ :input1 :measurement1 (6 11) . }
+  pe:fact "control-system.n3".
+
+{ 6 math:lessThan 11 . }
+  pe:builtin math:lessThan.
+
+{ (11 6) math:difference 5 . }
+  pe:builtin math:difference.
+
+{ (5 0.5) math:exponentiation 2.23606797749979 . }
+  pe:builtin math:exponentiation.
+
+{ :why :sensorLow 6 . }
+  pe:rule 5;
+  pe:binding
+    [ pe:var "Gap"; pe:value 5 ],
+    [ pe:var "High"; pe:value 11 ],
+    [ pe:var "Low"; pe:value 6 ],
+    [ pe:var "Norm"; pe:value 2.23606797749979 ];
+  pe:uses
+    { :input1 :measurement1 (6 11) . },
+    { 6 math:lessThan 11 . },
+    { (11 6) math:difference 5 . },
+    { (5 0.5) math:exponentiation 2.23606797749979 . }.
+
+{ :why :sensorHigh 11 . }
+  pe:rule 5;
+  pe:binding
+    [ pe:var "Gap"; pe:value 5 ],
+    [ pe:var "High"; pe:value 11 ],
+    [ pe:var "Low"; pe:value 6 ],
+    [ pe:var "Norm"; pe:value 2.23606797749979 ];
+  pe:uses
+    { :input1 :measurement1 (6 11) . },
+    { 6 math:lessThan 11 . },
+    { (11 6) math:difference 5 . },
+    { (5 0.5) math:exponentiation 2.23606797749979 . }.
+
+{ :why :sensorGap 5 . }
+  pe:rule 5;
+  pe:binding
+    [ pe:var "Gap"; pe:value 5 ],
+    [ pe:var "High"; pe:value 11 ],
+    [ pe:var "Low"; pe:value 6 ],
+    [ pe:var "Norm"; pe:value 2.23606797749979 ];
+  pe:uses
+    { :input1 :measurement1 (6 11) . },
+    { 6 math:lessThan 11 . },
+    { (11 6) math:difference 5 . },
+    { (5 0.5) math:exponentiation 2.23606797749979 . }.
+
+{ :why :normalizedMeasurement 2.23606797749979 . }
+  pe:rule 5;
+  pe:binding
+    [ pe:var "Gap"; pe:value 5 ],
+    [ pe:var "High"; pe:value 11 ],
+    [ pe:var "Low"; pe:value 6 ],
+    [ pe:var "Norm"; pe:value 2.23606797749979 ];
+  pe:uses
+    { :input1 :measurement1 (6 11) . },
+    { 6 math:lessThan 11 . },
+    { (11 6) math:difference 5 . },
+    { (5 0.5) math:exponentiation 2.23606797749979 . }.
+
+{ :actuator2 :control1 26.08 . }
+  pe:rule 2;
+  pe:binding
+    [ pe:var "C"; pe:value 26.08 ],
+    [ pe:var "C1"; pe:value "29"^^xsd:decimal ],
+    [ pe:var "C2"; pe:value -2.92 ],
+    [ pe:var "D"; pe:value -2 ],
+    [ pe:var "E"; pe:value 5 ],
+    [ pe:var "M3"; pe:value 56967 ],
+    [ pe:var "M4"; pe:value 24 ],
+    [ pe:var "N"; pe:value 1.46 ],
+    [ pe:var "P3"; pe:value 22 ],
+    [ pe:var "T2"; pe:value 29 ];
+  pe:uses
+    { :input3 :measurement3 56967 . },
+    { :state3 :observation3 22 . },
+    { :output2 :measurement4 24 . },
+    { :output2 :target2 29 . },
+    { (29 24) math:difference 5 . },
+    { (22 24) math:difference -2 . },
+    { (5.8 5) math:product "29"^^xsd:decimal . },
+    { (7.3 5) math:quotient 1.46 . },
+    { (1.46 -2) math:product -2.92 . },
+    { ("29"^^xsd:decimal -2.92) math:sum 26.08 . }.
+
+{ :input3 :measurement3 56967 . }
+  pe:fact "control-system.n3".
+
+{ :state3 :observation3 22 . }
+  pe:fact "control-system.n3".
+
+{ :output2 :measurement4 24 . }
+  pe:fact "control-system.n3".
+
+{ :output2 :target2 29 . }
+  pe:fact "control-system.n3".
+
+{ (29 24) math:difference 5 . }
+  pe:builtin math:difference.
+
+{ (22 24) math:difference -2 . }
+  pe:builtin math:difference.
+
+{ (5.8 5) math:product "29"^^xsd:decimal . }
+  pe:builtin math:product.
+
+{ (7.3 5) math:quotient 1.46 . }
+  pe:builtin math:quotient.
+
+{ (1.46 -2) math:product -2.92 . }
+  pe:builtin math:product.
+
+{ ("29"^^xsd:decimal -2.92) math:sum 26.08 . }
+  pe:builtin math:sum.
+
+{ :why :feedforwardProportional 43.82693235899588 . }
+  pe:rule 6;
+  pe:binding
+    [ pe:var "Cmd"; pe:value 39.27346198678276 ],
+    [ pe:var "Comp"; pe:value 4.553470372213121 ],
+    [ pe:var "Dist"; pe:value 35766 ],
+    [ pe:var "Norm"; pe:value 2.23606797749979 ],
+    [ pe:var "Prop"; pe:value 43.82693235899588 ];
+  pe:uses
+    { :why :normalizedMeasurement 2.23606797749979 . },
+    { (2.23606797749979 19.6) math:product 43.82693235899588 . },
+    { :disturbance1 :measurement3 35766 . },
+    { (10 4.553470372213121) math:exponentiation 35766 . },
+    { (43.82693235899588 4.553470372213121) math:difference 39.27346198678276 . }.
+
+{ (2.23606797749979 19.6) math:product 43.82693235899588 . }
+  pe:builtin math:product.
+
+{ :disturbance1 :measurement3 35766 . }
+  pe:fact "control-system.n3".
+
+{ (10 4.553470372213121) math:exponentiation 35766 . }
+  pe:unproven "builtin evaluation did not verify this premise".
+
+{ (43.82693235899588 4.553470372213121) math:difference 39.27346198678276 . }
+  pe:builtin math:difference.
+
+{ :why :disturbanceMagnitude 35766 . }
+  pe:rule 6;
+  pe:binding
+    [ pe:var "Cmd"; pe:value 39.27346198678276 ],
+    [ pe:var "Comp"; pe:value 4.553470372213121 ],
+    [ pe:var "Dist"; pe:value 35766 ],
+    [ pe:var "Norm"; pe:value 2.23606797749979 ],
+    [ pe:var "Prop"; pe:value 43.82693235899588 ];
+  pe:uses
+    { :why :normalizedMeasurement 2.23606797749979 . },
+    { (2.23606797749979 19.6) math:product 43.82693235899588 . },
+    { :disturbance1 :measurement3 35766 . },
+    { (10 4.553470372213121) math:exponentiation 35766 . },
+    { (43.82693235899588 4.553470372213121) math:difference 39.27346198678276 . }.
+
+{ :why :disturbanceCompensation 4.553470372213121 . }
+  pe:rule 6;
+  pe:binding
+    [ pe:var "Cmd"; pe:value 39.27346198678276 ],
+    [ pe:var "Comp"; pe:value 4.553470372213121 ],
+    [ pe:var "Dist"; pe:value 35766 ],
+    [ pe:var "Norm"; pe:value 2.23606797749979 ],
+    [ pe:var "Prop"; pe:value 43.82693235899588 ];
+  pe:uses
+    { :why :normalizedMeasurement 2.23606797749979 . },
+    { (2.23606797749979 19.6) math:product 43.82693235899588 . },
+    { :disturbance1 :measurement3 35766 . },
+    { (10 4.553470372213121) math:exponentiation 35766 . },
+    { (43.82693235899588 4.553470372213121) math:difference 39.27346198678276 . }.
+
+{ :why :feedforwardCommand 39.27346198678276 . }
+  pe:rule 6;
+  pe:binding
+    [ pe:var "Cmd"; pe:value 39.27346198678276 ],
+    [ pe:var "Comp"; pe:value 4.553470372213121 ],
+    [ pe:var "Dist"; pe:value 35766 ],
+    [ pe:var "Norm"; pe:value 2.23606797749979 ],
+    [ pe:var "Prop"; pe:value 43.82693235899588 ];
+  pe:uses
+    { :why :normalizedMeasurement 2.23606797749979 . },
+    { (2.23606797749979 19.6) math:product 43.82693235899588 . },
+    { :disturbance1 :measurement3 35766 . },
+    { (10 4.553470372213121) math:exponentiation 35766 . },
+    { (43.82693235899588 4.553470372213121) math:difference 39.27346198678276 . }.
+
+{ :why :observedState 22 . }
+  pe:rule 7;
+  pe:binding
+    [ pe:var "Cmd"; pe:value 26.08 ],
+    [ pe:var "DiffErr"; pe:value -2 ],
+    [ pe:var "DiffPart"; pe:value -2.92 ],
+    [ pe:var "Err"; pe:value 5 ],
+    [ pe:var "Factor"; pe:value 1.46 ],
+    [ pe:var "Measured"; pe:value 24 ],
+    [ pe:var "Observed"; pe:value 22 ],
+    [ pe:var "Prop"; pe:value "29"^^xsd:decimal ],
+    [ pe:var "Target"; pe:value 29 ];
+  pe:uses
+    { :state3 :observation3 22 . },
+    { :output2 :measurement4 24 . },
+    { :output2 :target2 29 . },
+    { (29 24) math:difference 5 . },
+    { (22 24) math:difference -2 . },
+    { (5.8 5) math:product "29"^^xsd:decimal . },
+    { (7.3 5) math:quotient 1.46 . },
+    { (1.46 -2) math:product -2.92 . },
+    { ("29"^^xsd:decimal -2.92) math:sum 26.08 . }.
+
+{ :why :measuredOutput 24 . }
+  pe:rule 7;
+  pe:binding
+    [ pe:var "Cmd"; pe:value 26.08 ],
+    [ pe:var "DiffErr"; pe:value -2 ],
+    [ pe:var "DiffPart"; pe:value -2.92 ],
+    [ pe:var "Err"; pe:value 5 ],
+    [ pe:var "Factor"; pe:value 1.46 ],
+    [ pe:var "Measured"; pe:value 24 ],
+    [ pe:var "Observed"; pe:value 22 ],
+    [ pe:var "Prop"; pe:value "29"^^xsd:decimal ],
+    [ pe:var "Target"; pe:value 29 ];
+  pe:uses
+    { :state3 :observation3 22 . },
+    { :output2 :measurement4 24 . },
+    { :output2 :target2 29 . },
+    { (29 24) math:difference 5 . },
+    { (22 24) math:difference -2 . },
+    { (5.8 5) math:product "29"^^xsd:decimal . },
+    { (7.3 5) math:quotient 1.46 . },
+    { (1.46 -2) math:product -2.92 . },
+    { ("29"^^xsd:decimal -2.92) math:sum 26.08 . }.
+
+{ :why :targetOutput 29 . }
+  pe:rule 7;
+  pe:binding
+    [ pe:var "Cmd"; pe:value 26.08 ],
+    [ pe:var "DiffErr"; pe:value -2 ],
+    [ pe:var "DiffPart"; pe:value -2.92 ],
+    [ pe:var "Err"; pe:value 5 ],
+    [ pe:var "Factor"; pe:value 1.46 ],
+    [ pe:var "Measured"; pe:value 24 ],
+    [ pe:var "Observed"; pe:value 22 ],
+    [ pe:var "Prop"; pe:value "29"^^xsd:decimal ],
+    [ pe:var "Target"; pe:value 29 ];
+  pe:uses
+    { :state3 :observation3 22 . },
+    { :output2 :measurement4 24 . },
+    { :output2 :target2 29 . },
+    { (29 24) math:difference 5 . },
+    { (22 24) math:difference -2 . },
+    { (5.8 5) math:product "29"^^xsd:decimal . },
+    { (7.3 5) math:quotient 1.46 . },
+    { (1.46 -2) math:product -2.92 . },
+    { ("29"^^xsd:decimal -2.92) math:sum 26.08 . }.
+
+{ :why :trackingError 5 . }
+  pe:rule 7;
+  pe:binding
+    [ pe:var "Cmd"; pe:value 26.08 ],
+    [ pe:var "DiffErr"; pe:value -2 ],
+    [ pe:var "DiffPart"; pe:value -2.92 ],
+    [ pe:var "Err"; pe:value 5 ],
+    [ pe:var "Factor"; pe:value 1.46 ],
+    [ pe:var "Measured"; pe:value 24 ],
+    [ pe:var "Observed"; pe:value 22 ],
+    [ pe:var "Prop"; pe:value "29"^^xsd:decimal ],
+    [ pe:var "Target"; pe:value 29 ];
+  pe:uses
+    { :state3 :observation3 22 . },
+    { :output2 :measurement4 24 . },
+    { :output2 :target2 29 . },
+    { (29 24) math:difference 5 . },
+    { (22 24) math:difference -2 . },
+    { (5.8 5) math:product "29"^^xsd:decimal . },
+    { (7.3 5) math:quotient 1.46 . },
+    { (1.46 -2) math:product -2.92 . },
+    { ("29"^^xsd:decimal -2.92) math:sum 26.08 . }.
+
+{ :why :differentialError -2 . }
+  pe:rule 7;
+  pe:binding
+    [ pe:var "Cmd"; pe:value 26.08 ],
+    [ pe:var "DiffErr"; pe:value -2 ],
+    [ pe:var "DiffPart"; pe:value -2.92 ],
+    [ pe:var "Err"; pe:value 5 ],
+    [ pe:var "Factor"; pe:value 1.46 ],
+    [ pe:var "Measured"; pe:value 24 ],
+    [ pe:var "Observed"; pe:value 22 ],
+    [ pe:var "Prop"; pe:value "29"^^xsd:decimal ],
+    [ pe:var "Target"; pe:value 29 ];
+  pe:uses
+    { :state3 :observation3 22 . },
+    { :output2 :measurement4 24 . },
+    { :output2 :target2 29 . },
+    { (29 24) math:difference 5 . },
+    { (22 24) math:difference -2 . },
+    { (5.8 5) math:product "29"^^xsd:decimal . },
+    { (7.3 5) math:quotient 1.46 . },
+    { (1.46 -2) math:product -2.92 . },
+    { ("29"^^xsd:decimal -2.92) math:sum 26.08 . }.
+
+{ :why :feedbackProportional "29"^^xsd:decimal . }
+  pe:rule 7;
+  pe:binding
+    [ pe:var "Cmd"; pe:value 26.08 ],
+    [ pe:var "DiffErr"; pe:value -2 ],
+    [ pe:var "DiffPart"; pe:value -2.92 ],
+    [ pe:var "Err"; pe:value 5 ],
+    [ pe:var "Factor"; pe:value 1.46 ],
+    [ pe:var "Measured"; pe:value 24 ],
+    [ pe:var "Observed"; pe:value 22 ],
+    [ pe:var "Prop"; pe:value "29"^^xsd:decimal ],
+    [ pe:var "Target"; pe:value 29 ];
+  pe:uses
+    { :state3 :observation3 22 . },
+    { :output2 :measurement4 24 . },
+    { :output2 :target2 29 . },
+    { (29 24) math:difference 5 . },
+    { (22 24) math:difference -2 . },
+    { (5.8 5) math:product "29"^^xsd:decimal . },
+    { (7.3 5) math:quotient 1.46 . },
+    { (1.46 -2) math:product -2.92 . },
+    { ("29"^^xsd:decimal -2.92) math:sum 26.08 . }.
+
+{ :why :feedbackFactor 1.46 . }
+  pe:rule 7;
+  pe:binding
+    [ pe:var "Cmd"; pe:value 26.08 ],
+    [ pe:var "DiffErr"; pe:value -2 ],
+    [ pe:var "DiffPart"; pe:value -2.92 ],
+    [ pe:var "Err"; pe:value 5 ],
+    [ pe:var "Factor"; pe:value 1.46 ],
+    [ pe:var "Measured"; pe:value 24 ],
+    [ pe:var "Observed"; pe:value 22 ],
+    [ pe:var "Prop"; pe:value "29"^^xsd:decimal ],
+    [ pe:var "Target"; pe:value 29 ];
+  pe:uses
+    { :state3 :observation3 22 . },
+    { :output2 :measurement4 24 . },
+    { :output2 :target2 29 . },
+    { (29 24) math:difference 5 . },
+    { (22 24) math:difference -2 . },
+    { (5.8 5) math:product "29"^^xsd:decimal . },
+    { (7.3 5) math:quotient 1.46 . },
+    { (1.46 -2) math:product -2.92 . },
+    { ("29"^^xsd:decimal -2.92) math:sum 26.08 . }.
+
+{ :why :feedbackDifferential -2.92 . }
+  pe:rule 7;
+  pe:binding
+    [ pe:var "Cmd"; pe:value 26.08 ],
+    [ pe:var "DiffErr"; pe:value -2 ],
+    [ pe:var "DiffPart"; pe:value -2.92 ],
+    [ pe:var "Err"; pe:value 5 ],
+    [ pe:var "Factor"; pe:value 1.46 ],
+    [ pe:var "Measured"; pe:value 24 ],
+    [ pe:var "Observed"; pe:value 22 ],
+    [ pe:var "Prop"; pe:value "29"^^xsd:decimal ],
+    [ pe:var "Target"; pe:value 29 ];
+  pe:uses
+    { :state3 :observation3 22 . },
+    { :output2 :measurement4 24 . },
+    { :output2 :target2 29 . },
+    { (29 24) math:difference 5 . },
+    { (22 24) math:difference -2 . },
+    { (5.8 5) math:product "29"^^xsd:decimal . },
+    { (7.3 5) math:quotient 1.46 . },
+    { (1.46 -2) math:product -2.92 . },
+    { ("29"^^xsd:decimal -2.92) math:sum 26.08 . }.
+
+{ :why :feedbackCommand 26.08 . }
+  pe:rule 7;
+  pe:binding
+    [ pe:var "Cmd"; pe:value 26.08 ],
+    [ pe:var "DiffErr"; pe:value -2 ],
+    [ pe:var "DiffPart"; pe:value -2.92 ],
+    [ pe:var "Err"; pe:value 5 ],
+    [ pe:var "Factor"; pe:value 1.46 ],
+    [ pe:var "Measured"; pe:value 24 ],
+    [ pe:var "Observed"; pe:value 22 ],
+    [ pe:var "Prop"; pe:value "29"^^xsd:decimal ],
+    [ pe:var "Target"; pe:value 29 ];
+  pe:uses
+    { :state3 :observation3 22 . },
+    { :output2 :measurement4 24 . },
+    { :output2 :target2 29 . },
+    { (29 24) math:difference 5 . },
+    { (22 24) math:difference -2 . },
+    { (5.8 5) math:product "29"^^xsd:decimal . },
+    { (7.3 5) math:quotient 1.46 . },
+    { (1.46 -2) math:product -2.92 . },
+    { ("29"^^xsd:decimal -2.92) math:sum 26.08 . }.
+
+{ :actuator1 :control1 39.27346198678276 . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "C"; pe:value 39.27346198678276 ],
+    [ pe:var "C1"; pe:value 43.82693235899588 ],
+    [ pe:var "C2"; pe:value 4.553470372213121 ],
+    [ pe:var "D1"; pe:value 35766 ],
+    [ pe:var "M1"; pe:value 2.23606797749979 ];
+  pe:uses
+    { :input1 :measurement10 2.23606797749979 . },
+    { :input2 :measurement2 true . },
+    { :disturbance1 :measurement3 35766 . },
+    { (2.23606797749979 19.6) math:product 43.82693235899588 . },
+    { (10 4.553470372213121) math:exponentiation 35766 . },
+    { (43.82693235899588 4.553470372213121) math:difference 39.27346198678276 . }.
+
+{ :input1 :measurement10 2.23606797749979 . }
+  pe:rule 3;
+  pe:binding
+    [ pe:var "I"; pe:value :input1 ],
+    [ pe:var "M"; pe:value 2.23606797749979 ],
+    [ pe:var "M1"; pe:value 6 ],
+    [ pe:var "M2"; pe:value 11 ],
+    [ pe:var "M3"; pe:value 5 ];
+  pe:uses
+    { :input1 :measurement1 (6 11) . },
+    { 6 math:lessThan 11 . },
+    { (11 6) math:difference 5 . },
+    { (5 0.5) math:exponentiation 2.23606797749979 . }.
+
+{ :input2 :measurement2 true . }
+  pe:fact "control-system.n3".
+
+{ :decision :answer "Send both actuator commands now." . }
+  pe:rule 8;
+  pe:binding
+    [ pe:var "A1"; pe:value 39.27346198678276 ],
+    [ pe:var "A2"; pe:value 26.08 ];
+  pe:uses
+    { :actuator1 :control1 39.27346198678276 . },
+    { :actuator2 :control1 26.08 . }.
+
+{ :decision :actuator1Command 39.27346198678276 . }
+  pe:rule 8;
+  pe:binding
+    [ pe:var "A1"; pe:value 39.27346198678276 ],
+    [ pe:var "A2"; pe:value 26.08 ];
+  pe:uses
+    { :actuator1 :control1 39.27346198678276 . },
+    { :actuator2 :control1 26.08 . }.
+
+{ :decision :actuator2Command 26.08 . }
+  pe:rule 8;
+  pe:binding
+    [ pe:var "A1"; pe:value 39.27346198678276 ],
+    [ pe:var "A2"; pe:value 26.08 ];
+  pe:uses
+    { :actuator1 :control1 39.27346198678276 . },
+    { :actuator2 :control1 26.08 . }.
+
+{ :report log:outputString "Control System — ARC explanation of two control signals\n\n## Answer\nSend both actuator commands now.\nActuator 1 command: 39.27346198678276\nActuator 2 command: 26.08\n\n## Reason Why\nThe first sensor pair is 6 and 11, so the reading is rising and the controller normalizes the gap 5 into 2.23606797749979. That normalized value creates a feedforward term of 43.82693235899588, while the known disturbance 35766 contributes a compensation term of 4.553470372213121. Subtracting that compensation gives actuator 1 the command 39.27346198678276. For actuator 2, the target is 5 units above the measured output, so the tracking error is positive. The observed state is -2 relative units below the measured output, so the differential correction is negative. That yields a proportional feedback part of 29, a nonlinear factor of 1.46, and a differential contribution of -2.92. Together they produce actuator 2 command 26.08.\n\n## Check\nC1 OK - the first sensor pair is rising, so the normalization uses the rising-branch rule.\nC2 OK - the normalized measurement is positive and smaller than the raw gap, which is consistent with a square-root normalization.\nC3 OK - actuator 1 is lower than its proportional feedforward term because disturbance compensation is subtracted.\nC4 OK - the target is above the measured output, so the tracking error is positive.\nC5 OK - the observed state is below the measured output, so the differential error is negative.\nC6 OK - actuator 2 is lower than its pure proportional term because the differential part reduces it.\nC7 OK - actuator 1 matches an independently reconstructed feedforward calculation.\nC8 OK - actuator 2 matches an independently reconstructed feedback calculation.\nC9 OK - both actuator commands stay positive.\n" . }
+  pe:rule 9;
+  pe:binding
+    [ pe:var "A1"; pe:value 39.27346198678276 ],
+    [ pe:var "A2"; pe:value 26.08 ],
+    [ pe:var "Answer"; pe:value "Send both actuator commands now." ],
+    [ pe:var "Block"; pe:value "Control System — ARC explanation of two control signals\n\n## Answer\nSend both actuator commands now.\nActuator 1 command: 39.27346198678276\nActuator 2 command: 26.08\n\n## Reason Why\nThe first sensor pair is 6 and 11, so the reading is rising and the controller normalizes the gap 5 into 2.23606797749979. That normalized value creates a feedforward term of 43.82693235899588, while the known disturbance 35766 contributes a compensation term of 4.553470372213121. Subtracting that compensation gives actuator 1 the command 39.27346198678276. For actuator 2, the target is 5 units above the measured output, so the tracking error is positive. The observed state is -2 relative units below the measured output, so the differential correction is negative. That yields a proportional feedback part of 29, a nonlinear factor of 1.46, and a differential contribution of -2.92. Together they produce actuator 2 command 26.08.\n\n## Check\nC1 OK - the first sensor pair is rising, so the normalization uses the rising-branch rule.\nC2 OK - the normalized measurement is positive and smaller than the raw gap, which is consistent with a square-root normalization.\nC3 OK - actuator 1 is lower than its proportional feedforward term because disturbance compensation is subtracted.\nC4 OK - the target is above the measured output, so the tracking error is positive.\nC5 OK - the observed state is below the measured output, so the differential error is negative.\nC6 OK - actuator 2 is lower than its pure proportional term because the differential part reduces it.\nC7 OK - actuator 1 matches an independently reconstructed feedforward calculation.\nC8 OK - actuator 2 matches an independently reconstructed feedback calculation.\nC9 OK - both actuator commands stay positive.\n" ],
+    [ pe:var "DiffErr"; pe:value -2 ],
+    [ pe:var "Dist"; pe:value 35766 ],
+    [ pe:var "Err"; pe:value 5 ],
+    [ pe:var "FBDiff"; pe:value -2.92 ],
+    [ pe:var "FBFactor"; pe:value 1.46 ],
+    [ pe:var "FBProp"; pe:value "29"^^xsd:decimal ],
+    [ pe:var "FFComp"; pe:value 4.553470372213121 ],
+    [ pe:var "FFProp"; pe:value 43.82693235899588 ],
+    [ pe:var "Gap"; pe:value 5 ],
+    [ pe:var "High"; pe:value 11 ],
+    [ pe:var "Low"; pe:value 6 ],
+    [ pe:var "Norm"; pe:value 2.23606797749979 ],
+    [ pe:var "Trend"; pe:value "rising" ];
+  pe:uses
+    { :decision :answer "Send both actuator commands now." . },
+    { :decision :actuator1Command 39.27346198678276 . },
+    { :decision :actuator2Command 26.08 . },
+    { :why :sensorTrend "rising" . },
+    { :why :sensorLow 6 . },
+    { :why :sensorHigh 11 . },
+    { :why :sensorGap 5 . },
+    { :why :normalizedMeasurement 2.23606797749979 . },
+    { :why :feedforwardProportional 43.82693235899588 . },
+    { :why :disturbanceMagnitude 35766 . },
+    { :why :disturbanceCompensation 4.553470372213121 . },
+    { :why :trackingError 5 . },
+    { :why :differentialError -2 . },
+    { :why :feedbackProportional "29"^^xsd:decimal . },
+    { :why :feedbackFactor 1.46 . },
+    { :why :feedbackDifferential -2.92 . },
+    { ("Control System — ARC explanation of two control signals\n\n" "## Answer\n" "Send both actuator commands now." "\n" "Actuator 1 command: " 39.27346198678276 "\n" "Actuator 2 command: " 26.08 "\n\n" "## Reason Why\n" "The first sensor pair is " 6 " and " 11 ", so the reading is " "rising" " and the controller normalizes the gap " 5 " into " 2.23606797749979 ". " "That normalized value creates a feedforward term of " 43.82693235899588 ", while the known disturbance " 35766 " contributes a compensation term of " 4.553470372213121 ". Subtracting that compensation gives actuator 1 the command " 39.27346198678276 ". " "For actuator 2, the target is " 5 " units above the measured output, so the tracking error is positive. " "The observed state is " -2 " relative units below the measured output, so the differential correction is negative. " "That yields a proportional feedback part of " "29"^^xsd:decimal ", a nonlinear factor of " 1.46 ", and a differential contribution of " -2.92 ". Together they produce actuator 2 command " 26.08 ".\n\n" "## Check\n" "C1 OK - the first sensor pair is rising, so the normalization uses the rising-branch rule.\n" "C2 OK - the normalized measurement is positive and smaller than the raw gap, which is consistent with a square-root normalization.\n" "C3 OK - actuator 1 is lower than its proportional feedforward term because disturbance compensation is subtracted.\n" "C4 OK - the target is above the measured output, so the tracking error is positive.\n" "C5 OK - the observed state is below the measured output, so the differential error is negative.\n" "C6 OK - actuator 2 is lower than its pure proportional term because the differential part reduces it.\n" "C7 OK - actuator 1 matches an independently reconstructed feedforward calculation.\n" "C8 OK - actuator 2 matches an independently reconstructed feedback calculation.\n" "C9 OK - both actuator commands stay positive.\n") string:concatenation "Control System — ARC explanation of two control signals\n\n## Answer\nSend both actuator commands now.\nActuator 1 command: 39.27346198678276\nActuator 2 command: 26.08\n\n## Reason Why\nThe first sensor pair is 6 and 11, so the reading is rising and the controller normalizes the gap 5 into 2.23606797749979. That normalized value creates a feedforward term of 43.82693235899588, while the known disturbance 35766 contributes a compensation term of 4.553470372213121. Subtracting that compensation gives actuator 1 the command 39.27346198678276. For actuator 2, the target is 5 units above the measured output, so the tracking error is positive. The observed state is -2 relative units below the measured output, so the differential correction is negative. That yields a proportional feedback part of 29, a nonlinear factor of 1.46, and a differential contribution of -2.92. Together they produce actuator 2 command 26.08.\n\n## Check\nC1 OK - the first sensor pair is rising, so the normalization uses the rising-branch rule.\nC2 OK - the normalized measurement is positive and smaller than the raw gap, which is consistent with a square-root normalization.\nC3 OK - actuator 1 is lower than its proportional feedforward term because disturbance compensation is subtracted.\nC4 OK - the target is above the measured output, so the tracking error is positive.\nC5 OK - the observed state is below the measured output, so the differential error is negative.\nC6 OK - actuator 2 is lower than its pure proportional term because the differential part reduces it.\nC7 OK - actuator 1 matches an independently reconstructed feedforward calculation.\nC8 OK - actuator 2 matches an independently reconstructed feedback calculation.\nC9 OK - both actuator commands stay positive.\n" . }.
+
+{ ("Control System — ARC explanation of two control signals\n\n" "## Answer\n" "Send both actuator commands now." "\n" "Actuator 1 command: " 39.27346198678276 "\n" "Actuator 2 command: " 26.08 "\n\n" "## Reason Why\n" "The first sensor pair is " 6 " and " 11 ", so the reading is " "rising" " and the controller normalizes the gap " 5 " into " 2.23606797749979 ". " "That normalized value creates a feedforward term of " 43.82693235899588 ", while the known disturbance " 35766 " contributes a compensation term of " 4.553470372213121 ". Subtracting that compensation gives actuator 1 the command " 39.27346198678276 ". " "For actuator 2, the target is " 5 " units above the measured output, so the tracking error is positive. " "The observed state is " -2 " relative units below the measured output, so the differential correction is negative. " "That yields a proportional feedback part of " "29"^^xsd:decimal ", a nonlinear factor of " 1.46 ", and a differential contribution of " -2.92 ". Together they produce actuator 2 command " 26.08 ".\n\n" "## Check\n" "C1 OK - the first sensor pair is rising, so the normalization uses the rising-branch rule.\n" "C2 OK - the normalized measurement is positive and smaller than the raw gap, which is consistent with a square-root normalization.\n" "C3 OK - actuator 1 is lower than its proportional feedforward term because disturbance compensation is subtracted.\n" "C4 OK - the target is above the measured output, so the tracking error is positive.\n" "C5 OK - the observed state is below the measured output, so the differential error is negative.\n" "C6 OK - actuator 2 is lower than its pure proportional term because the differential part reduces it.\n" "C7 OK - actuator 1 matches an independently reconstructed feedforward calculation.\n" "C8 OK - actuator 2 matches an independently reconstructed feedback calculation.\n" "C9 OK - both actuator commands stay positive.\n") string:concatenation "Control System — ARC explanation of two control signals\n\n## Answer\nSend both actuator commands now.\nActuator 1 command: 39.27346198678276\nActuator 2 command: 26.08\n\n## Reason Why\nThe first sensor pair is 6 and 11, so the reading is rising and the controller normalizes the gap 5 into 2.23606797749979. That normalized value creates a feedforward term of 43.82693235899588, while the known disturbance 35766 contributes a compensation term of 4.553470372213121. Subtracting that compensation gives actuator 1 the command 39.27346198678276. For actuator 2, the target is 5 units above the measured output, so the tracking error is positive. The observed state is -2 relative units below the measured output, so the differential correction is negative. That yields a proportional feedback part of 29, a nonlinear factor of 1.46, and a differential contribution of -2.92. Together they produce actuator 2 command 26.08.\n\n## Check\nC1 OK - the first sensor pair is rising, so the normalization uses the rising-branch rule.\nC2 OK - the normalized measurement is positive and smaller than the raw gap, which is consistent with a square-root normalization.\nC3 OK - actuator 1 is lower than its proportional feedforward term because disturbance compensation is subtracted.\nC4 OK - the target is above the measured output, so the tracking error is positive.\nC5 OK - the observed state is below the measured output, so the differential error is negative.\nC6 OK - actuator 2 is lower than its pure proportional term because the differential part reduces it.\nC7 OK - actuator 1 matches an independently reconstructed feedforward calculation.\nC8 OK - actuator 2 matches an independently reconstructed feedback calculation.\nC9 OK - both actuator commands stay positive.\n" . }
+  pe:builtin string:concatenation.

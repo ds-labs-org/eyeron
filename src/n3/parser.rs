@@ -568,8 +568,8 @@ impl Parser {
         match self.peek_kind() {
             TokenKind::Arrow => {
                 self.advance();
-                let rhs = self.parse_forward_rule_rhs()?;
-                self.doc.rules.push(Rule::new(Vec::new(), rhs, true).with_source(source.clone()));
+                let (rhs, fuse) = self.parse_forward_rule_rhs()?;
+                self.doc.rules.push(Rule::new(Vec::new(), rhs, true).with_fuse(fuse).with_source(source.clone()));
             }
             TokenKind::BackArrow => {
                 self.advance();
@@ -592,8 +592,8 @@ impl Parser {
         match self.peek_kind() {
             TokenKind::Arrow => {
                 self.advance();
-                let rhs = self.parse_forward_rule_rhs()?;
-                self.doc.rules.push(Rule::new(lhs, rhs, true).with_source(source.clone()));
+                let (rhs, fuse) = self.parse_forward_rule_rhs()?;
+                self.doc.rules.push(Rule::new(lhs, rhs, true).with_fuse(fuse).with_source(source.clone()));
             }
             TokenKind::BackArrow => {
                 self.advance();
@@ -649,16 +649,19 @@ impl Parser {
         self.parse_formula()
     }
 
-    fn parse_forward_rule_rhs(&mut self) -> Result<Vec<Triple>> {
+    /// The right-hand side of `=>`, and whether it was `false` -- an
+    /// inference fuse rather than something to conclude.
+    fn parse_forward_rule_rhs(&mut self) -> Result<(Vec<Triple>, bool)> {
         if matches!(self.peek_kind(), TokenKind::Boolean(true)) {
             self.advance();
-            return Ok(Vec::new());
+            return Ok((Vec::new(), false));
         }
         if matches!(self.peek_kind(), TokenKind::Boolean(false)) {
-            return Err(EyeronError::at("false rule conclusions are not supported", self.peek().offset));
+            self.advance();
+            return Ok((Vec::new(), true));
         }
         if matches!(self.peek_kind(), TokenKind::LBrace) {
-            return self.parse_formula();
+            return Ok((self.parse_formula()?, false));
         }
 
         // N3 allows a forward-rule RHS to be a term that resolves to a quoted
@@ -669,7 +672,7 @@ impl Parser {
         if !generated.is_empty() {
             return Err(EyeronError::new("generated triples cannot appear around an unquoted RHS term"));
         }
-        Ok(vec![Triple::new(Term::iri(EYERON_UNQUOTE), Term::iri(EYERON_UNQUOTE), term)])
+        Ok((vec![Triple::new(Term::iri(EYERON_UNQUOTE), Term::iri(EYERON_UNQUOTE), term)], false))
     }
 
     fn parse_formula(&mut self) -> Result<Vec<Triple>> {
@@ -719,9 +722,6 @@ impl Parser {
             let backward = self.check(&TokenKind::BackArrow);
             self.advance();
             let (object, mut object_generated) = self.parse_term()?;
-            if is_boolean_false_term(&object) {
-                return Err(EyeronError::at("false rule conclusions are not supported", self.peek().offset));
-            }
             if matches!((&subject, &object), (Term::Formula(_), Term::Var(_))) {
                 return Err(EyeronError::at("formula-to-variable implication is not supported", self.peek().offset));
             }
@@ -1322,16 +1322,6 @@ fn is_boolean_true_term(term: &Term) -> bool {
     }
 }
 
-fn is_boolean_false_term(term: &Term) -> bool {
-    match term {
-        Term::Literal(lit) => {
-            lit.value == "false"
-                && lit.language.is_none()
-                && lit.datatype.as_deref() == Some("http://www.w3.org/2001/XMLSchema#boolean")
-        }
-        _ => false,
-    }
-}
 
 
 fn has_uri_scheme(s: &str) -> bool {

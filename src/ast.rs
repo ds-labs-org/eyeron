@@ -178,17 +178,30 @@ pub struct Rule {
     pub conclusion: Vec<Triple>,
     pub is_forward: bool,
     pub is_query: bool,
+    /// `{ .. } => false`: an inference fuse. Its premise becoming provable is
+    /// the thing the rule forbids, so there is nothing to conclude -- the run
+    /// stops and reports which rule fired.
+    pub is_fuse: bool,
     pub source: Option<SourceRef>,
     pub proof_var_source_names: BTreeMap<String, String>,
 }
 
 impl Rule {
     pub fn new(premise: Vec<Triple>, conclusion: Vec<Triple>, is_forward: bool) -> Self {
-        Self { premise, conclusion, is_forward, is_query: false, source: None, proof_var_source_names: BTreeMap::new() }
+        Self { premise, conclusion, is_forward, is_query: false, is_fuse: false, source: None, proof_var_source_names: BTreeMap::new() }
+    }
+
+    pub fn fuse(premise: Vec<Triple>) -> Self {
+        Self { is_fuse: true, ..Self::new(premise, Vec::new(), true) }
     }
 
     pub fn with_source(mut self, source: Option<SourceRef>) -> Self {
         self.source = source;
+        self
+    }
+
+    pub fn with_fuse(mut self, is_fuse: bool) -> Self {
+        self.is_fuse = is_fuse;
         self
     }
 

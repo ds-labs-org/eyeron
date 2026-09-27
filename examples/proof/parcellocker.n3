@@ -1,0 +1,134 @@
+@prefix : <https://example.org/parcellocker#> .
+@prefix log: <http://www.w3.org/2000/10/swap/log#> .
+@prefix pe: <https://eyereasoner.github.io/pe#> .
+
+:case :checkC8 :Passed .
+:case :checkC1 :Passed .
+:case :checkC2 :Passed .
+:case :checkC3 :Passed .
+:case :checkC4 :Passed .
+:case :checkC5 :Passed .
+:case :checkC6 :Passed .
+:case :checkC7 :Passed .
+:case :checkC9 :Passed .
+:case :checkC10 :Passed .
+:case :decision :Permit .
+:out log:outputString "ParcelLocker — One-time parcel pickup by a friend\n\n## Answer\nPERMIT\nNoah may collect Maya's parcel from locker B17.\n\n## Reason Why\nMaya created a one-time authorization for Noah only, for this parcel only, at this locker only, and for pickup only. The token is active, the parcel is ready, and the same authorization does not reveal billing details or allow redirection.\n\n## Check\nC1  OK - requester matches the named delegate\nC2  OK - requested parcel matches the authorized parcel\nC3  OK - requested locker matches the authorized locker\nC4  OK - requested action is parcel collection\nC5  OK - requested purpose is pickup only\nC6  OK - authorization is active\nC7  OK - authorization is single-use\nC8  OK - parcel is ready for pickup\nC9  OK - billing details stay hidden\nC10 OK - parcel redirection is not allowed\n" .
+
+{ :case :checkC8 :Passed . }
+  pe:rule 8;
+  pe:uses { :parcel123 :status :ReadyForPickup . }.
+
+{ :parcel123 :status :ReadyForPickup . }
+  pe:fact "parcellocker.n3".
+
+{ :case :checkC1 :Passed . }
+  pe:rule 1;
+  pe:binding [ pe:var "who"; pe:value :noah ];
+  pe:uses
+    { :pickupToken :delegate :noah . },
+    { :pickupRequest :requester :noah . }.
+
+{ :pickupToken :delegate :noah . }
+  pe:fact "parcellocker.n3".
+
+{ :pickupRequest :requester :noah . }
+  pe:fact "parcellocker.n3".
+
+{ :case :checkC2 :Passed . }
+  pe:rule 2;
+  pe:binding [ pe:var "parcel"; pe:value :parcel123 ];
+  pe:uses
+    { :pickupToken :parcel :parcel123 . },
+    { :pickupRequest :parcel :parcel123 . }.
+
+{ :pickupToken :parcel :parcel123 . }
+  pe:fact "parcellocker.n3".
+
+{ :pickupRequest :parcel :parcel123 . }
+  pe:fact "parcellocker.n3".
+
+{ :case :checkC3 :Passed . }
+  pe:rule 3;
+  pe:binding [ pe:var "locker"; pe:value :lockerB17 ];
+  pe:uses
+    { :pickupToken :locker :lockerB17 . },
+    { :pickupRequest :locker :lockerB17 . }.
+
+{ :pickupToken :locker :lockerB17 . }
+  pe:fact "parcellocker.n3".
+
+{ :pickupRequest :locker :lockerB17 . }
+  pe:fact "parcellocker.n3".
+
+{ :case :checkC4 :Passed . }
+  pe:rule 4;
+  pe:binding [ pe:var "action"; pe:value :CollectParcel ];
+  pe:uses
+    { :pickupToken :action :CollectParcel . },
+    { :pickupRequest :action :CollectParcel . }.
+
+{ :pickupToken :action :CollectParcel . }
+  pe:fact "parcellocker.n3".
+
+{ :pickupRequest :action :CollectParcel . }
+  pe:fact "parcellocker.n3".
+
+{ :case :checkC5 :Passed . }
+  pe:rule 5;
+  pe:binding [ pe:var "purpose"; pe:value :PickupOnly ];
+  pe:uses
+    { :pickupToken :purpose :PickupOnly . },
+    { :pickupRequest :purpose :PickupOnly . }.
+
+{ :pickupToken :purpose :PickupOnly . }
+  pe:fact "parcellocker.n3".
+
+{ :pickupRequest :purpose :PickupOnly . }
+  pe:fact "parcellocker.n3".
+
+{ :case :checkC6 :Passed . }
+  pe:rule 6;
+  pe:uses { :pickupToken :state :Active . }.
+
+{ :pickupToken :state :Active . }
+  pe:fact "parcellocker.n3".
+
+{ :case :checkC7 :Passed . }
+  pe:rule 7;
+  pe:uses { :pickupToken :reuse :SingleUse . }.
+
+{ :pickupToken :reuse :SingleUse . }
+  pe:fact "parcellocker.n3".
+
+{ :case :checkC9 :Passed . }
+  pe:rule 9;
+  pe:uses { :pickupToken :billingAccess :None . }.
+
+{ :pickupToken :billingAccess :None . }
+  pe:fact "parcellocker.n3".
+
+{ :case :checkC10 :Passed . }
+  pe:rule 10;
+  pe:uses { :pickupToken :redirectAllowed :No . }.
+
+{ :pickupToken :redirectAllowed :No . }
+  pe:fact "parcellocker.n3".
+
+{ :case :decision :Permit . }
+  pe:rule 11;
+  pe:uses
+    { :case :checkC1 :Passed . },
+    { :case :checkC2 :Passed . },
+    { :case :checkC3 :Passed . },
+    { :case :checkC4 :Passed . },
+    { :case :checkC5 :Passed . },
+    { :case :checkC6 :Passed . },
+    { :case :checkC7 :Passed . },
+    { :case :checkC8 :Passed . },
+    { :case :checkC9 :Passed . },
+    { :case :checkC10 :Passed . }.
+
+{ :out log:outputString "ParcelLocker — One-time parcel pickup by a friend\n\n## Answer\nPERMIT\nNoah may collect Maya's parcel from locker B17.\n\n## Reason Why\nMaya created a one-time authorization for Noah only, for this parcel only, at this locker only, and for pickup only. The token is active, the parcel is ready, and the same authorization does not reveal billing details or allow redirection.\n\n## Check\nC1  OK - requester matches the named delegate\nC2  OK - requested parcel matches the authorized parcel\nC3  OK - requested locker matches the authorized locker\nC4  OK - requested action is parcel collection\nC5  OK - requested purpose is pickup only\nC6  OK - authorization is active\nC7  OK - authorization is single-use\nC8  OK - parcel is ready for pickup\nC9  OK - billing details stay hidden\nC10 OK - parcel redirection is not allowed\n" . }
+  pe:rule 12;
+  pe:uses { :case :decision :Permit . }.

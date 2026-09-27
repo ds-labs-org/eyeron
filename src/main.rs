@@ -4,7 +4,7 @@ use eyeron::n3::proof::proof_to_n3;
 use eyeron::n3::reasoner::{reason, PreparedReasoner, ReasonerOptions};
 use eyeron::Document;
 use eyeron::{
-    is_rdf_message_log, parse_n3, parse_n3_with_source, parse_rdf12, parse_rdf_message_log,
+    fuse_report, is_rdf_message_log, parse_n3, parse_n3_with_source, parse_rdf12, parse_rdf_message_log,
     RdfFormat,
 };
 use std::collections::BTreeMap;
@@ -30,6 +30,10 @@ struct CliOptions {
     /// given as the positional arguments (`docs/proof-checking.md`).
     check_proof: Option<String>,
 }
+
+/// sysexits.h EX_DATAERR: the input and the rules together made a forbidden
+/// situation provable, rather than anything going wrong with the run.
+const INFERENCE_FUSE_EXIT_CODE: i32 = 65;
 
 fn main() {
     if let Err(err) = run() {
@@ -92,6 +96,13 @@ fn run() -> Result<()> {
 
     let reasoner_options = cli_reasoner_options(&opt, opt.proof);
     let result = reason(&merged, &reasoner_options);
+    // A fired fuse is the answer: the rules forbade a situation and the data
+    // made it provable. Report which rule, and leave with sysexits' EX_DATAERR
+    // (65) so a caller can tell it from an ordinary failure.
+    if let Some(fuse) = &result.fuse {
+        print!("{}", fuse_report(&merged.prefixes, fuse));
+        std::process::exit(INFERENCE_FUSE_EXIT_CODE);
+    }
     if let Some(summary) = result.incomplete_summary() {
         return Err(EyeronError::new(summary));
     }

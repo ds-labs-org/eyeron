@@ -689,6 +689,15 @@ impl Default for ReasonerOptions {
     }
 }
 
+/// A `{ .. } => false` rule whose premise became provable.
+#[derive(Debug, Clone)]
+pub struct FiredFuse {
+    pub rule: Rule,
+    /// The rule's premise with the matching bindings applied, which is the
+    /// actual forbidden situation rather than the shape of one.
+    pub instance: Vec<Triple>,
+}
+
 #[derive(Debug, Clone)]
 pub struct ReasonerResult {
     pub status: CompletionStatus,
@@ -701,6 +710,8 @@ pub struct ReasonerResult {
     pub closure: Vec<Triple>,
     pub proofs: Vec<DerivedFact>,
     pub rules: Vec<Rule>,
+    /// Set when reasoning stopped because an inference fuse fired.
+    pub fuse: Option<FiredFuse>,
 }
 
 impl ReasonerResult {
@@ -895,6 +906,7 @@ fn reason_with_plan(
     let mut iteration = 0usize;
     let mut report = RunReport::default();
     let mut closure_saturated = false;
+    let mut fuse = None;
 
     'fixpoint: loop {
         if iteration >= options.max_iterations {
@@ -1029,7 +1041,7 @@ fn reason_with_plan(
         for idx in 0..rule_count_at_start {
             if agenda_index.indexed.contains(&idx) { continue; }
             let rule = active_rules[idx].clone();
-            if !rule.is_forward { continue; }
+            if !rule.is_forward || rule.is_fuse { continue; }
             if !closure_saturated && rule.premise.iter().any(is_deferred_scoped_premise) {
                 continue;
             }
@@ -1066,6 +1078,11 @@ fn reason_with_plan(
             agenda_cursor = 0;
         }
 
+        if let Some(fired) = fired_fuse(&active_rules, &closure, &fact_index, options, &mut report) {
+            fuse = Some(fired);
+            break;
+        }
+
         if closure.len() == before {
             if agenda_cursor < closure.len() { continue; }
             if !closure_saturated {
@@ -1075,6 +1092,27 @@ fn reason_with_plan(
             break;
         }
         closure_saturated = false;
+    }
+
+    // A fired fuse is not an answer with a caveat: the rules forbade this
+    // situation, so the run has nothing to assert. The closure stays as the
+    // record of how far it got before stopping.
+    if fuse.is_some() {
+        derived.clear();
+        proofs.clear();
+        return ReasonerResult {
+            status: CompletionStatus::Complete,
+            limits_reached: report.limits_reached.iter().copied().collect(),
+            errors: report.errors,
+            statistics: ReasonerStatistics { iterations: iteration, match_steps: report.match_steps },
+            explicit: doc.facts.clone(),
+            explicit_sources: doc.fact_sources.clone(),
+            derived,
+            closure,
+            proofs,
+            rules: active_rules.into_owned(),
+            fuse,
+        };
     }
 
     if !query_rules.is_empty() {
@@ -1105,6 +1143,7 @@ fn reason_with_plan(
         closure,
         proofs,
         rules: active_rules.into_owned(),
+        fuse,
     }
 }
 
@@ -1391,7 +1430,7 @@ fn agenda_entries_for_rule(
     has_wild_backward_head: bool,
     allow_multi_premise_agenda: bool,
 ) -> Vec<AgendaEntry> {
-    if !rule.is_forward { return Vec::new(); }
+    if !rule.is_forward || rule.is_fuse { return Vec::new(); }
     if rule.premise.is_empty() { return Vec::new(); }
     if rule.premise.len() != 1 && !allow_multi_premise_agenda { return Vec::new(); }
     if rule.premise.len() == 1 && rule.conclusion.iter().any(triple_contains_blank) { return Vec::new(); }
@@ -1504,7 +1543,15 @@ fn rule_to_triple(rule: &Rule, prefix: &str) -> Triple {
     // otherwise a rule that matches itself can create cyclic bindings such as
     // `?A = { ?A => ?B }`.
     let quoted = standardize_apart(rule, prefix);
-    if quoted.is_forward {
+    if quoted.is_fuse {
+        // A fuse concludes `false`, so that is what it is visible as: the
+        // liar example matches one fuse rule from inside another.
+        Triple::new(
+            Term::Formula(quoted.premise),
+            Term::iri(LOG_IMPLIES),
+            boolean_false(),
+        )
+    } else if quoted.is_forward {
         Triple::new(
             Term::Formula(quoted.premise),
             Term::iri(LOG_IMPLIES),
@@ -1519,10 +1566,50 @@ fn rule_to_triple(rule: &Rule, prefix: &str) -> Triple {
     }
 }
 
+pub(crate) fn boolean_false() -> Term {
+    Term::Literal(Literal {
+        value: "false".to_string(),
+        datatype: Some("http://www.w3.org/2001/XMLSchema#boolean".to_string()),
+        language: None,
+    })
+}
+
+pub(crate) fn is_boolean_false(term: &Term) -> bool {
+    matches!(term, Term::Literal(lit)
+        if lit.value == "false"
+            && lit.language.is_none()
+            && lit.datatype.as_deref() == Some("http://www.w3.org/2001/XMLSchema#boolean"))
+}
+
+/// The first fuse whose premise is provable against the closure so far.
+fn fired_fuse(
+    rules: &[Rule],
+    closure: &[Triple],
+    fact_index: &FactIndex,
+    options: &ReasonerOptions,
+    report: &mut RunReport,
+) -> Option<FiredFuse> {
+    for rule in rules.iter().filter(|rule| rule.is_fuse) {
+        let matches = match_premises(&rule.premise, closure, Some(fact_index), rules, options, report);
+        let Some(bindings) = matches.into_iter().next() else { continue; };
+        let mut blank_map = BTreeMap::<String, Term>::new();
+        let instance = rule
+            .premise
+            .iter()
+            .map(|triple| instantiate_triple(triple, &bindings, &mut blank_map).unwrap_or_else(|| triple.clone()))
+            .collect();
+        return Some(FiredFuse { rule: rule.clone(), instance });
+    }
+    None
+}
+
 fn rule_from_triple(t: &Triple) -> Option<Rule> {
     match (&t.s, &t.p, &t.o) {
         (Term::Formula(premise), Term::Iri(p), Term::Formula(conclusion)) if p == LOG_IMPLIES => {
             Some(Rule::new(premise.clone(), conclusion.clone(), true))
+        }
+        (Term::Formula(premise), Term::Iri(p), o) if p == LOG_IMPLIES && is_boolean_false(o) => {
+            Some(Rule::fuse(premise.clone()))
         }
         (Term::Formula(head), Term::Iri(p), Term::Formula(body)) if p == LOG_IMPLIED_BY => {
             Some(Rule::new(body.clone(), head.clone(), false))
@@ -2761,7 +2848,8 @@ fn standardize_apart(rule: &Rule, prefix: &str) -> Rule {
         rule.is_forward,
     )
     .with_source(rule.source.clone())
-    .with_query(rule.is_query);
+    .with_query(rule.is_query)
+    .with_fuse(rule.is_fuse);
     out.proof_var_source_names = standardized_var_source_names(rule, prefix);
     out
 }

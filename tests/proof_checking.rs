@@ -36,6 +36,10 @@ const KNOWN_GAPS: &[(&str, &str)] = &[
         "two steps are emitted with no justification: 'recorded as unproven: the engine could not justify it'",
     ),
     (
+        "n3/control-system",
+        "one step is emitted with no justification: 'recorded as unproven: the engine could not justify it'",
+    ),
+    (
         "n3/odrl-dpv-campaign-audit",
         "one step is emitted with no justification: 'recorded as unproven: the engine could not justify it'",
     ),
