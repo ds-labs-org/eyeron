@@ -150,10 +150,24 @@ fn run_stream_messages(opt: &CliOptions) -> Result<()> {
     let reasoner_options = cli_reasoner_options(opt, false);
     // Built once for the whole stream: PreparedReasoner keeps the agenda index
     // it builds from `program`'s rules and reuses it for every message,
-    // instead of `reason()` recomputing that index from scratch per message
-    // (measured: with 1,615 static rules, 1,000 messages went from 8.37s to
-    // 4.32s; with a small rule set the per-message reasoning work itself
-    // dominates and the win is correspondingly smaller).
+    // instead of `reason()` recomputing that index from scratch per message.
+    //
+    // Measured against the real alma-rdf-messages.n3 rule set padded out to
+    // 1,615 static rules and run over 1,000 synthetic messages: plain
+    // `reason()` (rebuilding the agenda index from `doc.rules` on every
+    // message) took ~8.4s. Switching to `PreparedReasoner` alone, while it
+    // still cloned the whole static rule set and agenda index into every
+    // call, made this *worse* (~9.9s) -- pure per-call cloning overhead that
+    // the rebuild-from-scratch path didn't pay. `PreparedReasoner::reason`
+    // was then changed to hold its rule set and agenda index as `Cow`, so a
+    // call only clones them if a rule reifies itself as data mid-run and has
+    // to be appended (rare); the common case borrows them for the whole
+    // call. That brings this same benchmark back to ~8.3-8.9s -- essentially
+    // recovering the regression, not a net win over plain `reason()`, because
+    // this workload's real cost is the backward search through the marc:
+    // helper rules per message, not the rule-set clone. With a small rule
+    // set (examples/alma-rdf-messages.n3's own ~400 rules, 100 messages)
+    // neither path is measurably different (~0.5-0.7s either way).
     let prepared = PreparedReasoner::new(program);
     for source in message_sources {
         let base = opt.base_iri.clone().or_else(|| {

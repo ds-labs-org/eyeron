@@ -5,6 +5,7 @@
 use crate::ast::*;
 use crate::n3::parser::{parse_n3, MAX_TERM_NESTING_DEPTH};
 use regex::Regex;
+use std::borrow::Cow;
 use std::cell::RefCell;
 use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 #[cfg(not(target_arch = "wasm32"))]
@@ -765,18 +766,64 @@ impl PreparedReasoner {
     ///
     /// Facts derived by one call are not retained for the next call.
     pub fn reason(&self, data: &Document, options: &ReasonerOptions) -> ReasonerResult {
-        let mut doc = data.clone();
-        doc.merge(self.program.clone());
-
         if data.rules.is_empty() {
+            // `reason_with_plan` reads only `doc.facts`/`doc.fact_sources`/
+            // `doc.prefixes`/`doc.base_iri` on this path -- `query_rules`,
+            // `active_rules` and `agenda_index` are passed explicitly below,
+            // already built once in `new`, so `doc.rules` is never read.
+            // Merging field by field (instead of `data.clone().merge(
+            // self.program.clone())`, as the fallback path below still
+            // does) avoids cloning `self.program`'s `Vec<Rule>` -- on a
+            // large static rule set, cloning it on every call in addition
+            // to separately cloning `active_rules`/`agenda_index` doubled
+            // the per-call cost for nothing it uses.
+            //
+            // `query_rules`, `active_rules` and `agenda_index` are all
+            // passed by reference now (`&self.query_rules`, etc.), not
+            // cloned. `reason_with_plan` holds `active_rules`/`agenda_index`
+            // as `Cow` internally, so the fixpoint loop itself only pays for
+            // an owned copy on the rare path where a rule reifies itself as
+            // data mid-run and has to be appended
+            // (`active_rules.to_mut().extend(pending_rules); agenda_index =
+            // Cow::Owned(build_forward_agenda(&active_rules));`).
+            //
+            // `agenda_index` is purely internal bookkeeping -- it never
+            // appears in `ReasonerResult` -- so on the overwhelmingly common
+            // path (no rule ever generates another rule) its clone is fully
+            // eliminated: previously it was cloned unconditionally in
+            // addition to `active_rules`, for a loop that only ever
+            // rebuilds it from scratch when rules actually change.
+            // `active_rules` is different: `ReasonerResult.rules:
+            // Vec<Rule>` is a public field, so `reason_with_plan` still
+            // materializes an owned `Vec<Rule>` via `.into_owned()` once,
+            // unconditionally, at the end -- exactly one clone, same as
+            // before, just moved from the top of the call to the bottom.
+            // That single clone is the cost of the existing public API,
+            // not something this change removes.
+            let mut doc = data.clone();
+            doc.facts.extend(self.program.facts.iter().cloned());
+            doc.fact_sources.extend(self.program.fact_sources.iter().map(|(k, v)| (k.clone(), v.clone())));
+            for (k, v) in &self.program.prefixes {
+                doc.prefixes.insert(k.clone(), v.clone());
+            }
+            if doc.base_iri.is_none() {
+                doc.base_iri = self.program.base_iri.clone();
+            }
             reason_with_plan(
                 &doc,
                 options,
-                self.query_rules.clone(),
-                self.active_rules.clone(),
-                self.agenda_index.clone(),
+                &self.query_rules,
+                &self.active_rules,
+                &self.agenda_index,
             )
         } else {
+            // Rare: the data document carries its own rules, so a fresh
+            // reason() over the full merge (query/active rules and the
+            // agenda index recomputed from doc.rules, which now includes
+            // both the static program's rules and data's own) is genuinely
+            // needed, exactly as before.
+            let mut doc = data.clone();
+            doc.merge(self.program.clone());
             reason(&doc, options)
         }
     }
@@ -790,16 +837,26 @@ pub fn reason(doc: &Document, options: &ReasonerOptions) -> ReasonerResult {
     let query_rules: Vec<Rule> = doc.rules.iter().filter(|rule| rule.is_query).cloned().collect();
     let active_rules: Vec<Rule> = doc.rules.iter().filter(|rule| !rule.is_query).cloned().collect();
     let agenda_index = build_forward_agenda(&active_rules);
-    reason_with_plan(doc, options, query_rules, active_rules, agenda_index)
+    reason_with_plan(doc, options, &query_rules, &active_rules, &agenda_index)
 }
 
 fn reason_with_plan(
     doc: &Document,
     options: &ReasonerOptions,
-    query_rules: Vec<Rule>,
-    mut active_rules: Vec<Rule>,
-    mut agenda_index: AgendaIndex,
+    query_rules: &[Rule],
+    active_rules: &[Rule],
+    agenda_index: &AgendaIndex,
 ) -> ReasonerResult {
+    // Borrowed until a rule reifies itself as data mid-run (rare -- see
+    // `rule_from_triple`/`pending_rules` below) and has to be appended: only
+    // that path pays for an owned copy of the rule set and a rebuilt agenda.
+    // A caller with a large static rule set (e.g. `PreparedReasoner`, which
+    // holds `active_rules`/`agenda_index` once and reuses them across many
+    // independent `reason()` calls) no longer pays a deep clone on every
+    // call just to run the overwhelmingly common case where no rule ever
+    // generates another rule.
+    let mut active_rules: Cow<[Rule]> = Cow::Borrowed(active_rules);
+    let mut agenda_index: Cow<AgendaIndex> = Cow::Borrowed(agenda_index);
     let _clear_regex_cache = ClearRegexCacheOnDrop;
     let mut closure = Vec::<Triple>::new();
     let mut fact_index = FactIndex::default();
@@ -888,8 +945,8 @@ fn reason_with_plan(
                     );
 
                     if rules_changed {
-                        active_rules.extend(pending_rules);
-                        agenda_index = build_forward_agenda(&active_rules);
+                        active_rules.to_mut().extend(pending_rules);
+                        agenda_index = Cow::Owned(build_forward_agenda(&active_rules));
                         agenda_cursor = 0;
                         restart_agenda = true;
                     }
@@ -937,8 +994,8 @@ fn reason_with_plan(
                     );
 
                     if rules_changed {
-                        active_rules.extend(pending_rules);
-                        agenda_index = build_forward_agenda(&active_rules);
+                        active_rules.to_mut().extend(pending_rules);
+                        agenda_index = Cow::Owned(build_forward_agenda(&active_rules));
                         agenda_cursor = 0;
                         restart_agenda = true;
                         break;
@@ -991,8 +1048,8 @@ fn reason_with_plan(
         }
 
         if !pending_rules.is_empty() {
-            active_rules.extend(pending_rules);
-            agenda_index = build_forward_agenda(&active_rules);
+            active_rules.to_mut().extend(pending_rules);
+            agenda_index = Cow::Owned(build_forward_agenda(&active_rules));
             agenda_cursor = 0;
         }
 
@@ -1009,7 +1066,7 @@ fn reason_with_plan(
 
     if !query_rules.is_empty() {
         derived = evaluate_query_rules(
-            &query_rules,
+            query_rules,
             &closure,
             Some(&fact_index),
             &active_rules,
@@ -1034,7 +1091,7 @@ fn reason_with_plan(
         derived,
         closure,
         proofs,
-        rules: active_rules,
+        rules: active_rules.into_owned(),
     }
 }
 
