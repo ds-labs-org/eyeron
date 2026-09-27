@@ -1,7 +1,7 @@
 use eyeron::error::{EyeronError, Result};
 use eyeron::n3::printing::{document_debug, rdf_result_to_string, result_to_string};
 use eyeron::n3::proof::proof_to_n3;
-use eyeron::n3::reasoner::{reason, ReasonerOptions};
+use eyeron::n3::reasoner::{reason, PreparedReasoner, ReasonerOptions};
 use eyeron::Document;
 use eyeron::{
     is_rdf_message_log, parse_n3, parse_n3_with_source, parse_rdf12, parse_rdf_message_log,
@@ -148,6 +148,27 @@ fn run_stream_messages(opt: &CliOptions) -> Result<()> {
     }
 
     let reasoner_options = cli_reasoner_options(opt, false);
+    // Built once for the whole stream: PreparedReasoner keeps the agenda index
+    // it builds from `program`'s rules and reuses it for every message,
+    // instead of `reason()` recomputing that index from scratch per message.
+    //
+    // Measured against the real alma-rdf-messages.n3 rule set padded out to
+    // 1,615 static rules and run over 1,000 synthetic messages: plain
+    // `reason()` (rebuilding the agenda index from `doc.rules` on every
+    // message) took ~8.4s. Switching to `PreparedReasoner` alone, while it
+    // still cloned the whole static rule set and agenda index into every
+    // call, made this *worse* (~9.9s) -- pure per-call cloning overhead that
+    // the rebuild-from-scratch path didn't pay. `PreparedReasoner::reason`
+    // was then changed to hold its rule set and agenda index as `Cow`, so a
+    // call only clones them if a rule reifies itself as data mid-run and has
+    // to be appended (rare); the common case borrows them for the whole
+    // call. That brings this same benchmark back to ~8.3-8.9s -- essentially
+    // recovering the regression, not a net win over plain `reason()`, because
+    // this workload's real cost is the backward search through the marc:
+    // helper rules per message, not the rule-set clone. With a small rule
+    // set (examples/alma-rdf-messages.n3's own ~400 rules, 100 messages)
+    // neither path is measurably different (~0.5-0.7s either way).
+    let prepared = PreparedReasoner::new(program);
     for source in message_sources {
         let base = opt.base_iri.clone().or_else(|| {
             if is_http_url(&source) {
@@ -165,7 +186,7 @@ fn run_stream_messages(opt: &CliOptions) -> Result<()> {
                 BufReader::new(response.into_body().into_reader()),
                 &final_url,
                 base.as_deref(),
-                &program,
+                &prepared,
                 &reasoner_options,
             )?;
         } else if source == "-" {
@@ -178,7 +199,7 @@ fn run_stream_messages(opt: &CliOptions) -> Result<()> {
                 BufReader::new(file),
                 &source,
                 base.as_deref(),
-                &program,
+                &prepared,
                 &reasoner_options,
             )?;
         }
@@ -190,7 +211,7 @@ fn stream_message_reader<R: BufRead>(
     mut reader: R,
     label: &str,
     base: Option<&str>,
-    program: &Document,
+    prepared: &PreparedReasoner,
     reasoner_options: &ReasonerOptions,
 ) -> Result<()> {
     let mut directives = String::new();
@@ -218,7 +239,7 @@ fn stream_message_reader<R: BufRead>(
             || trimmed.eq_ignore_ascii_case("@message .")
         {
             run_one_message(
-                program,
+                prepared,
                 &directives,
                 &message,
                 label,
@@ -248,7 +269,7 @@ fn stream_message_reader<R: BufRead>(
     }
     if saw_delimiter || !message.trim().is_empty() {
         run_one_message(
-            program,
+            prepared,
             &directives,
             &message,
             label,
@@ -261,7 +282,7 @@ fn stream_message_reader<R: BufRead>(
 }
 
 fn run_one_message(
-    program: &Document,
+    prepared: &PreparedReasoner,
     directives: &str,
     message: &str,
     label: &str,
@@ -271,11 +292,9 @@ fn run_one_message(
 ) -> Result<()> {
     let replay = format!("{directives}\nVERSION \"1.2-messages\"\n{message}");
     let message_label = format!("{label}#message-{index}");
-    let mut merged = program.clone();
     let parsed = parse_rdf_message_log(&replay, base)
         .map_err(|err| EyeronError::new(err.with_source_location(&replay, &message_label)))?;
-    merged.merge(parsed);
-    let result = reason(&merged, reasoner_options);
+    let result = prepared.reason(&parsed, reasoner_options);
     if let Some(summary) = result.incomplete_summary() {
         return Err(EyeronError::new(summary));
     }

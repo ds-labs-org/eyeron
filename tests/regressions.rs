@@ -1267,3 +1267,66 @@ fn list_length_over_a_very_long_explicit_rdf_first_rest_chain_does_not_overflow_
         .join();
     assert!(ok.is_ok() && ok.unwrap(), "the walk must not recurse one stack frame per list cell");
 }
+
+// --- string:matches/notMatches/replace: an unsupported regex pattern (one
+// Rust's regex crate rejects, and outside the small set of exact compat
+// forms the notation3tests corpus needs) must derive nothing, not a
+// confident, silently wrong answer. ---
+
+#[test]
+fn string_matches_with_an_invalid_pattern_derives_nothing_in_either_direction() {
+    // "(" does not compile as a regex (unbalanced paren). The fallback used
+    // to be `text.contains(pattern)`, so whichever direction that guess
+    // happened to agree with derived a conclusion nobody verified.
+    let source = r#"
+        @prefix : <http://e/> .
+        @prefix string: <http://www.w3.org/2000/10/swap/string#> .
+        :a :s "xy(" .
+        :b :s "zzz" .
+        { ?x :s ?v . ?v string:matches "(" } => { ?x :matched true } .
+        { ?x :s ?v . ?v string:notMatches "(" } => { ?x :notmatched true } .
+    "#;
+    let output = reason(source).unwrap();
+    assert!(!output.contains(":matched"), "{output}");
+    assert!(!output.contains(":notmatched"), "{output}");
+}
+
+#[test]
+fn string_replace_treats_an_uncompilable_pattern_as_a_literal_search_string() {
+    // Unlike string:matches/notMatches, string:replace's catch-all is not a
+    // guess: when the pattern doesn't compile as a regex at all (here, `{`
+    // outside a `{n,m}` repetition), reading it as the literal substring to
+    // replace is the one self-consistent interpretation, and the
+    // notation3tests corpus conformance-tests exactly this
+    // (generated/string/replace/success-literal-4.n3, -subject-list-4.n3).
+    // Removing this fallback (an earlier version of this fix did) broke
+    // both. It must keep working.
+    let source = r#"
+        @prefix : <http://e/> .
+        @prefix string: <http://www.w3.org/2000/10/swap/string#> .
+        :a :s "{{tar{{target}}get}}" .
+        { ?x :s ?v . ( ?v "{{target}}" "{over}" ) string:replace ?r } => { ?x :replaced ?r } .
+    "#;
+    let output = reason(source).unwrap();
+    assert!(output.contains(":a :replaced \"{{tar{over}get}}\""), "{output}");
+}
+
+#[test]
+fn known_compatibility_regex_forms_still_answer_as_before() {
+    // The exact-match compatibility table, and the two structurally-correct
+    // branches (a metachar-free ^...$ literal, and ^(?=lookahead)literal$),
+    // are not the bug and must keep working unchanged.
+    let source = r#"
+        @prefix : <http://e/> .
+        @prefix string: <http://www.w3.org/2000/10/swap/string#> .
+        :a :s "hello world!" .
+        :b :s "12" .
+        { ?x :s ?v . ?v string:matches "^\\w+\\s+\\w+!" } => { ?x :table true } .
+        { ?x :s ?v . ?v string:matches "^..$" } => { ?x :literal true } .
+        { ?x :s ?v . ?v string:matches "^(?=[h])(?=.{5} )(?=.*!$).{12}$" } => { ?x :lookahead true } .
+    "#;
+    let output = reason(source).unwrap();
+    assert!(output.contains(":a :table true"), "{output}");
+    assert!(output.contains(":b :literal true"), "{output}");
+    assert!(output.contains(":a :lookahead true"), "{output}");
+}
