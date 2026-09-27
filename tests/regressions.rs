@@ -1292,20 +1292,23 @@ fn string_matches_with_an_invalid_pattern_derives_nothing_in_either_direction() 
 }
 
 #[test]
-fn string_replace_with_an_unrecognized_pattern_derives_nothing() {
-    // "(x)" is valid Rust regex syntax on its own, but this pair is not in
-    // simple_regex_replace's small exact-match compatibility table, and
-    // "(x)" is not literally present in "abc". The fallback used to be
-    // text.replace(pattern, replacement), which silently "succeeds" with
-    // the input unchanged -- a plausible-looking answer nobody verified.
+fn string_replace_treats_an_uncompilable_pattern_as_a_literal_search_string() {
+    // Unlike string:matches/notMatches, string:replace's catch-all is not a
+    // guess: when the pattern doesn't compile as a regex at all (here, `{`
+    // outside a `{n,m}` repetition), reading it as the literal substring to
+    // replace is the one self-consistent interpretation, and the
+    // notation3tests corpus conformance-tests exactly this
+    // (generated/string/replace/success-literal-4.n3, -subject-list-4.n3).
+    // Removing this fallback (an earlier version of this fix did) broke
+    // both. It must keep working.
     let source = r#"
         @prefix : <http://e/> .
         @prefix string: <http://www.w3.org/2000/10/swap/string#> .
-        :a :s "abc" .
-        { ?x :s ?v . ( ?v "(x)" "Y" ) string:replace ?r } => { ?x :replaced ?r } .
+        :a :s "{{tar{{target}}get}}" .
+        { ?x :s ?v . ( ?v "{{target}}" "{over}" ) string:replace ?r } => { ?x :replaced ?r } .
     "#;
     let output = reason(source).unwrap();
-    assert!(!output.contains(":replaced"), "{output}");
+    assert!(output.contains(":a :replaced \"{{tar{over}get}}\""), "{output}");
 }
 
 #[test]

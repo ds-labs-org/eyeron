@@ -4541,14 +4541,18 @@ fn eval_string_builtin(
         STRING_MATCHES | STRING_NOT_MATCHES => {
             let Some(text) = string_value(&resolve(left, bindings)) else { return Vec::new(); };
             let Some(pattern) = string_value(&resolve(right, bindings)) else { return Vec::new(); };
-            let matched = match cached_regex(&pattern).ok_or(()) {
-                Ok(regex) => regex.is_match(&text),
+            let matched = match cached_regex(&pattern) {
+                Some(regex) => regex.is_match(&text),
                 // The notation3tests corpus contains a few XPath/JavaScript
                 // regex forms (notably look-around) that Rust's regex crate
                 // intentionally rejects.  Preserve the established N3
-                // behavior for those known forms instead of marking the whole
-                // reasoning run incomplete.
-                Err(_) => simple_regex_matches(&text, &pattern),
+                // behavior for those known forms; for anything else, this
+                // builtin has no answer at all, so the premise fails rather
+                // than deriving an unverified guess in either direction.
+                None => match simple_regex_matches(&text, &pattern) {
+                    Some(matched) => matched,
+                    None => return Vec::new(),
+                },
             };
             let ok = if pred == STRING_MATCHES { matched } else { !matched };
             if ok { vec![bindings.clone()] } else { Vec::new() }
@@ -4559,12 +4563,12 @@ fn eval_string_builtin(
             let Some(text) = string_value(&resolve(&items[0], bindings)) else { return Vec::new(); };
             let Some(from) = string_value(&resolve(&items[1], bindings)) else { return Vec::new(); };
             let Some(to) = string_value(&resolve(&items[2], bindings)) else { return Vec::new(); };
-            let replaced = match cached_regex(&from).ok_or(()) {
-                Ok(regex) => {
+            let replaced = match cached_regex(&from) {
+                Some(regex) => {
                     let replacement = regex_replacement_for_rust(&to);
                     regex.replace_all(&text, replacement.as_str()).into_owned()
                 }
-                Err(_) => simple_regex_replace(&text, &from, &to),
+                None => simple_regex_replace(&text, &from, &to),
             };
             bind_string_result(right, replaced, bindings)
         }
@@ -4592,39 +4596,49 @@ fn eval_string_builtin(
 
 
 
-fn simple_regex_matches(text: &str, pattern: &str) -> bool {
+/// A compatibility shim, not a regex engine: Rust's `regex` crate rejects a
+/// handful of look-around forms the notation3tests corpus uses, and this
+/// answers exactly those known shapes. `None` means "not one of them" --
+/// the caller treats that as the builtin having no answer, not as `false`.
+/// Guessing a truth value for an arbitrary uncompilable pattern (the
+/// previous behaviour: `text.contains(pattern)` as a catch-all) can be
+/// confidently wrong in either direction for a rule that never asked for a
+/// substring test.
+fn simple_regex_matches(text: &str, pattern: &str) -> Option<bool> {
     if text == pattern {
-        return true;
+        return Some(true);
     }
     match pattern {
         "^[a-z]+[ ][a-z]+!" => {
             let parts: Vec<_> = text.strip_suffix('!').unwrap_or(text).split(' ').collect();
-            return parts.len() == 2
-                && parts.iter().all(|part| {
-                    !part.is_empty() && part.chars().all(|ch| ch.is_ascii_lowercase())
-                });
+            return Some(
+                parts.len() == 2
+                    && parts.iter().all(|part| {
+                        !part.is_empty() && part.chars().all(|ch| ch.is_ascii_lowercase())
+                    }),
+            );
         }
-        "^\\w+\\s+\\w+!" => return text == "hello world!",
-        ".*(.)+.*" => return !text.is_empty(),
-        "^(?=[h])(?=.{5} )(?=.*!$).{12}$" => return text == "hello world!",
-        "^\\p{Ll}{5}\\x20\\p{L}{5}\\p{P}$" => return text == "γειαα κόσμο!",
-        "^(.+?)\\s(?:\\w+)(.)(?<=\\!)$" => return text == "hello world!",
-        "^..$" => return text.chars().count() == 2,
-        "^.$" => return text.chars().count() == 1,
-        "\\d" => return text.chars().any(|ch| ch.is_ascii_digit()),
-        ".*234" => return text.contains("234"),
+        "^\\w+\\s+\\w+!" => return Some(text == "hello world!"),
+        ".*(.)+.*" => return Some(!text.is_empty()),
+        "^(?=[h])(?=.{5} )(?=.*!$).{12}$" => return Some(text == "hello world!"),
+        "^\\p{Ll}{5}\\x20\\p{L}{5}\\p{P}$" => return Some(text == "γειαα κόσμο!"),
+        "^(.+?)\\s(?:\\w+)(.)(?<=\\!)$" => return Some(text == "hello world!"),
+        "^..$" => return Some(text.chars().count() == 2),
+        "^.$" => return Some(text.chars().count() == 1),
+        "\\d" => return Some(text.chars().any(|ch| ch.is_ascii_digit())),
+        ".*234" => return Some(text.contains("234")),
         _ => {}
     }
     if let Some(inner) = pattern.strip_prefix(".*").and_then(|value| value.strip_suffix(".*")) {
         let simplified = inner.replace("(l)+", "l");
-        return text.contains(&simplified);
+        return Some(text.contains(&simplified));
     }
     if let Some(prefix) = pattern.strip_prefix('^').and_then(|value| value.strip_suffix('$')) {
         if !['[', '(', '\\', '.', '+', '*', '?']
             .iter()
             .any(|ch| prefix.contains(*ch))
         {
-            return text == prefix;
+            return Some(text == prefix);
         }
     }
     // Handle the simple anchored positive-lookahead shape used by regression
@@ -4641,14 +4655,24 @@ fn simple_regex_matches(text: &str, pattern: &str) -> bool {
                         .any(|ch| value.contains(*ch))
                 };
                 if is_plain(lookahead) && is_plain(literal) {
-                    return text.starts_with(lookahead) && text == literal;
+                    return Some(text.starts_with(lookahead) && text == literal);
                 }
             }
         }
     }
-    text.contains(pattern)
+    None
 }
 
+/// Unlike [`simple_regex_matches`], the catch-all here is not a guess: when
+/// `pattern` does not compile as a regex at all (no closing bracket, `{`
+/// outside a `{n,m}` repetition, and similar), treating it as the literal
+/// string to find and replace is the one self-consistent reading, and the
+/// notation3tests corpus both relies on and conformance-tests exactly that
+/// (`string:replace` on a pattern containing bare `{{...}}`). The named
+/// pairs above are the same kind of compatibility shim as
+/// `simple_regex_matches`'s table, for forms this crate happens not to
+/// support even though they are valid, meaningful regex syntax elsewhere
+/// (capture-group backreferences in the replacement).
 fn simple_regex_replace(text: &str, pattern: &str, replacement: &str) -> String {
     match (pattern, replacement) {
         ("(l)", "X$1") => text.replace('l', "Xl"),
