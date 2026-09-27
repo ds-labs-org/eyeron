@@ -6,21 +6,17 @@
 //! report;` without also compiling — and getting "never used" warnings
 //! for — this N3-only comparison logic.
 
-use eyeron::{is_rdf_message_log, parse_n3, parse_rdf_message_log, reason_document, result_to_string, Document, ReasonerOptions, Rule, Term, Triple};
+use eyeron::{parse_n3, Document, Rule, Term, Triple};
 use std::collections::BTreeMap;
 
 const LOG_IMPLIES: &str = "http://www.w3.org/2000/10/swap/log#implies";
 const LOG_IMPLIED_BY: &str = "http://www.w3.org/2000/10/swap/log#impliedBy";
 
-pub fn check_golden_documents(name: &str, sources: Vec<(&str, &str)>, golden: &str, golden_is_n3: bool) -> Result<(), String> {
-    let mut doc = Document::new();
-    for (label, source) in sources {
-        let parsed = if is_rdf_message_log(source) { parse_rdf_message_log(source, None) } else { parse_n3(source, None) }.map_err(|err| format!("{name} failed to parse {label}: {err}"))?;
-        doc.merge(parsed);
-    }
-    let result = reason_document(&doc, &ReasonerOptions::default());
-    let out = result_to_string(&doc.prefixes, &result.derived);
-
+/// Compares what an example derived against its golden. An `.n3` golden is
+/// compared as a graph, so triple order and blank-node labels may differ
+/// while a missing or extra triple fails; an `.md` golden is compared by
+/// its stable report lines.
+pub fn compare_output_golden(name: &str, out: &str, golden: &str, golden_is_n3: bool) -> Result<(), String> {
     if !golden_is_n3 {
         for expected in stable_report_lines(golden) {
             if !out.contains(expected) {
@@ -30,7 +26,7 @@ pub fn check_golden_documents(name: &str, sources: Vec<(&str, &str)>, golden: &s
         return Ok(());
     }
 
-    let actual = parse_n3(&out, None).map_err(|err| format!("{name} generated invalid N3: {err}\nactual:\n{out}"))?;
+    let actual = parse_n3(out, None).map_err(|err| format!("{name} generated invalid N3: {err}\nactual:\n{out}"))?;
     let expected = parse_n3(golden, None).map_err(|err| format!("{name} golden is invalid N3: {err}"))?;
     let actual_triples = document_triples(&actual);
     let expected_triples = document_triples(&expected);

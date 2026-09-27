@@ -71,7 +71,7 @@ cargo test --release --test proof_checking
 
 The suite includes unit and CLI tests, example outputs and proofs, the Notation3 conformance suite, and the local W3C RDF manifest mirror. `scripts/test-all` prints a grand total across test binaries. Graph output is compared by graph isomorphism so triple order and blank-node labels may differ, while missing or extra triples fail. Markdown reports are checked against their stable expected lines.
 
-The example suite prints separate output and proof passes. Each proof line shows generation and golden-comparison time. Proofs match their saved goldens exactly, except `age.n3`, whose current clock value and derived elapsed duration are normalized before comparison.
+The example suite reasons over each example once and checks that single run against both of its goldens, the derived output and the proof. Proofs match their saved goldens exactly, except `age.n3`, whose current clock value and derived elapsed duration are normalized before comparison.
 
 ## Repository map
 

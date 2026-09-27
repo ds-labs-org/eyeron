@@ -12,6 +12,8 @@ struct ManifestSpec {
     expected: usize,
 }
 
+const AGGREGATE_LABEL: &str = "w3c_rdf_13_all_manifests_1175_earl_report";
+
 const MANIFESTS: &[ManifestSpec] = &[
     ManifestSpec { label: "w3c_rdf_01_rdf11_n_triples_70", url: "https://w3c.github.io/rdf-tests/rdf/rdf11/rdf-n-triples/manifest.ttl", expected: 70 },
     ManifestSpec { label: "w3c_rdf_02_rdf12_n_triples_29", url: "https://w3c.github.io/rdf-tests/rdf/rdf12/rdf-n-triples/syntax/manifest.ttl", expected: 29 },
@@ -35,7 +37,7 @@ fn main() {
         return;
     }
     if config.list {
-        for test in MANIFESTS.iter().map(|m| m.label).chain(std::iter::once("w3c_rdf_13_all_manifests_1175_earl_report")) {
+        for test in MANIFESTS.iter().map(|m| m.label).chain(std::iter::once(AGGREGATE_LABEL)) {
             println!("{test}: test");
         }
         return;
@@ -45,7 +47,7 @@ fn main() {
         .iter()
         .filter(|manifest| config.matches(manifest.label))
         .collect::<Vec<_>>();
-    let run_aggregate = config.matches("w3c_rdf_13_all_manifests_1175_earl_report");
+    let run_aggregate = config.matches(AGGREGATE_LABEL);
     let total_tests = selected.len() + usize::from(run_aggregate);
 
     println!("running {total_tests} test{}", if total_tests == 1 { "" } else { "s" });
@@ -59,13 +61,40 @@ fn main() {
     let mut passed = 0usize;
     let mut failed = 0usize;
 
-    for manifest in selected {
-        if runner::refresh_requested() {
+    // The aggregate test covers every manifest the per-manifest tests
+    // cover, so when it is selected -- which is every ordinary run -- the
+    // suite runs once and each per-manifest test reads its own slice of
+    // that run. Only a filtered run that excludes the aggregate reruns a
+    // manifest on its own.
+    let suite = if run_aggregate {
+        match runner::run_default_suite() {
+            Ok(suite) => Some(suite),
+            Err(err) => {
+                for manifest in &selected {
+                    print_result(&config, manifest.label, TestOutcome::Failed, &err);
+                    failed += 1;
+                }
+                print_result(&config, AGGREGATE_LABEL, TestOutcome::Failed, &err);
+                failed += 1;
+                finish(&config, passed, failed, started);
+                return;
+            }
+        }
+    } else {
+        None
+    };
+
+    for manifest in &selected {
+        if runner::refresh_requested() && suite.is_none() {
             print_result(&config, manifest.label, TestOutcome::Ok, "refresh delegated to aggregate test");
             passed += 1;
             continue;
         }
-        match runner::run_manifest_suite_for_test(manifest.label, manifest.url, manifest.expected) {
+        let outcome = match &suite {
+            Some(suite) => suite.check_manifest(manifest.label, manifest.url, manifest.expected),
+            None => runner::run_manifest_suite_for_test(manifest.label, manifest.url, manifest.expected),
+        };
+        match outcome {
             Ok(()) => {
                 print_result(&config, manifest.label, TestOutcome::Ok, &format!("{} tests", manifest.expected));
                 passed += 1;
@@ -77,23 +106,26 @@ fn main() {
         }
     }
 
-    if run_aggregate {
-        match runner::run_default_suite() {
+    if let Some(suite) = &suite {
+        match suite.check_total(AGGREGATE_LABEL, 1175) {
             Ok(()) => {
-                print_result(&config, "w3c_rdf_13_all_manifests_1175_earl_report", TestOutcome::Ok, "1175 tests + EARL report");
+                print_result(&config, AGGREGATE_LABEL, TestOutcome::Ok, "1175 tests + EARL report");
                 passed += 1;
             }
             Err(err) => {
-                print_result(&config, "w3c_rdf_13_all_manifests_1175_earl_report", TestOutcome::Failed, &err);
+                print_result(&config, AGGREGATE_LABEL, TestOutcome::Failed, &err);
                 failed += 1;
             }
         }
     }
 
     drop(quiet_guard);
+    finish(&config, passed, failed, started);
+}
 
+fn finish(config: &HarnessConfig, passed: usize, failed: usize, started: Instant) {
     let elapsed = started.elapsed().as_secs_f64();
-    let status = if failed == 0 { colour(&config, "ok", Colour::Green) } else { colour(&config, "FAILED", Colour::Red) };
+    let status = if failed == 0 { colour(config, "ok", Colour::Green) } else { colour(config, "FAILED", Colour::Red) };
     println!(
         "\ntest result: {status}. {passed} passed; {failed} failed; 0 ignored; 0 measured; 0 filtered out; finished in {elapsed:.2}s"
     );

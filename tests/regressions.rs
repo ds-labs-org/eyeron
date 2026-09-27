@@ -3,27 +3,6 @@ use eyeron::{
     reason_document, result_to_string, Document, RdfFormat, ReasonerOptions,
 };
 
-fn check_golden_non_prefix_lines(
-    name: &str,
-    source: &str,
-    golden: &str,
-) -> std::result::Result<(), String> {
-    let out = reason(source).map_err(|err| format!("{} failed: {}", name, err))?;
-    for expected in stable_golden_lines(golden) {
-        if !out.contains(expected) {
-            return Err(format!(
-                "{} missing golden line `{}`\nactual:\n{}",
-                name, expected, out
-            ));
-        }
-    }
-    Ok(())
-}
-
-fn assert_golden_non_prefix_lines(name: &str, source: &str, golden: &str) {
-    check_golden_non_prefix_lines(name, source, golden).unwrap_or_else(|msg| panic!("{}", msg));
-}
-
 #[test]
 fn n3_lists_remain_first_class_in_rule_conclusions() {
     let source = r#"
@@ -98,16 +77,6 @@ fn log_dtlit_decomposes_a_literal_into_partially_bound_list_items() {
     );
 }
 
-fn stable_golden_lines(golden: &str) -> impl Iterator<Item = &str> {
-    golden.lines().map(str::trim).filter(|line| {
-        !line.is_empty()
-            && !line.starts_with("@prefix")
-            && !line.starts_with("#")
-            && !line.starts_with("- [")
-            && !line.contains("_:")
-            && !matches!(*line, "{" | "}" | "} .")
-    })
-}
 
 #[test]
 fn rdf_trig_query_selects_dataset_without_rule_feedback() {
@@ -216,23 +185,7 @@ fn log_skolem_is_stable_by_default() {
     assert!(out1.contains(":Result :skolem genid:"), "{}", out1);
 }
 
-#[test]
-fn witch_derives_girl_as_witch() {
-    assert_golden_non_prefix_lines(
-        "witch",
-        include_str!("../examples/witch.n3"),
-        include_str!("../examples/output/witch.n3"),
-    );
-}
 
-#[test]
-fn equals_surface_syntax_maps_to_owl_same_as() {
-    assert_golden_non_prefix_lines(
-        "equals",
-        include_str!("../examples/equals.n3"),
-        include_str!("../examples/output/equals.n3"),
-    );
-}
 
 #[test]
 fn log_query_can_emit_output_string() {
@@ -241,60 +194,7 @@ fn log_query_can_emit_output_string() {
     assert!(out.contains("Source files"), "{}", out);
 }
 
-#[test]
-fn family_cousins_numeric_generation() {
-    let doc = parse_n3(include_str!("../examples/family-cousins.n3"), None).unwrap();
-    let result = reason_document(&doc, &ReasonerOptions::default());
-    let out = result_to_string(&doc.prefixes, &result.derived);
-    assert!(out.contains(":Bob :generation 1"), "{}", out);
-    assert!(out.contains(":Dave :generation 2"), "{}", out);
-    assert!(out.contains(":Heidi :generation 3"), "{}", out);
-    assert!(out.contains(":Heidi :cousin :Judy"), "{}", out);
-}
 
-#[test]
-fn simple_golden_examples_match_expected_lines() {
-    let cases = [
-        (
-            "backward",
-            include_str!("../examples/backward.n3"),
-            include_str!("../examples/output/backward.n3"),
-        ),
-        (
-            "schema-foaf-mapping",
-            include_str!("../examples/schema-foaf-mapping.n3"),
-            include_str!("../examples/output/schema-foaf-mapping.n3"),
-        ),
-        (
-            "similar",
-            include_str!("../examples/similar.n3"),
-            include_str!("../examples/output/similar.n3"),
-        ),
-        (
-            "monkey",
-            include_str!("../examples/monkey.n3"),
-            include_str!("../examples/output/monkey.n3"),
-        ),
-        (
-            "rdf-list",
-            include_str!("../examples/rdf-list.n3"),
-            include_str!("../examples/output/rdf-list.n3"),
-        ),
-        (
-            "rule-matching",
-            include_str!("../examples/rule-matching.n3"),
-            include_str!("../examples/output/rule-matching.n3"),
-        ),
-        (
-            "log-not-includes",
-            include_str!("../examples/log-not-includes.n3"),
-            include_str!("../examples/output/log-not-includes.n3"),
-        ),
-    ];
-    for (name, source, golden) in cases {
-        assert_golden_non_prefix_lines(name, source, golden);
-    }
-}
 
 #[test]
 fn derived_rules_are_promoted_to_active_rules() {
@@ -345,34 +245,6 @@ fn dog_license_collect_all_is_scoped_by_subject() {
     );
 }
 
-#[test]
-fn collect_all_and_list_builtins_match_golden_lines() {
-    let cases = [
-        (
-            "dog",
-            include_str!("../examples/dog.n3"),
-            include_str!("../examples/output/dog.n3"),
-        ),
-        (
-            "log-collect-all-in",
-            include_str!("../examples/log-collect-all-in.n3"),
-            include_str!("../examples/output/log-collect-all-in.n3"),
-        ),
-        (
-            "list-iterate",
-            include_str!("../examples/list-iterate.n3"),
-            include_str!("../examples/output/list-iterate.n3"),
-        ),
-        (
-            "list-map",
-            include_str!("../examples/list-map.n3"),
-            include_str!("../examples/output/list-map.n3"),
-        ),
-    ];
-    for (name, source, golden) in cases {
-        assert_golden_non_prefix_lines(name, source, golden);
-    }
-}
 
 #[test]
 fn rdf12_turtle_profile_parses_lists_through_shared_parser() {
@@ -1277,4 +1149,45 @@ fn absurdly_nested_terms_are_a_parse_error_rather_than_a_stack_overflow() {
     let turtle = format!("@prefix : <http://e/> .\n:a :b {}:c{} .\n", "[ :p ".repeat(5_000), " ]".repeat(5_000));
     let err = parse_rdf12(&turtle, None, RdfFormat::Turtle).unwrap_err().to_string();
     assert!(err.contains("nested more than"), "{err}");
+}
+
+#[test]
+fn proof_mode_derives_exactly_what_plain_mode_derives() {
+    // `tests/examples.rs` checks each example's output golden and its proof
+    // golden off a single reasoning run, which is only sound if turning
+    // proof collection on cannot change what is derived. That is this
+    // test's job, established once here over the machinery the examples
+    // exercise -- forward and backward rules, builtins, rules that generate
+    // rules, negation as failure and scoped aggregation -- rather than
+    // re-established by a second run of every example.
+    let examples = [
+        "socrates",
+        "ancestor",
+        "backward",
+        "derived-rule",
+        "negation",
+        "fibonacci",
+        "peano-arithmetic",
+        "list-builtins-tests",
+        "string-builtins-tests",
+        "log-collect-all-in",
+    ];
+
+    for name in examples {
+        let path = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("examples")
+            .join(format!("{name}.n3"));
+        let source = std::fs::read_to_string(&path).expect("read example");
+        let doc = parse_n3(&source, None).expect("parse example");
+
+        let plain = reason_document(&doc, &ReasonerOptions::default());
+        let with_proof = reason_document(
+            &doc,
+            &ReasonerOptions { proof: true, ..ReasonerOptions::default() },
+        );
+
+        assert_eq!(plain.derived, with_proof.derived, "{name} derived a different set under --proof");
+        assert_eq!(plain.closure, with_proof.closure, "{name} reached a different closure under --proof");
+        assert_eq!(plain.status, with_proof.status, "{name} reported a different completion status under --proof");
+    }
 }

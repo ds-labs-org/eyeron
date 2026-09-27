@@ -154,10 +154,48 @@ struct Runner {
     refresh_cache: bool,
 }
 
-pub fn run_default_suite() -> Result<(), String> {
-    let counts = run_options(options_from_env(Vec::new(), true))?;
-    let expected = if has_filter() { None } else { Some(1175) };
-    assert_clean_counts("w3c_rdf_13_all_manifests_1175_earl_report", &counts, expected)
+/// How one manifest fared inside a suite run.
+pub struct ManifestOutcome {
+    pub resource: String,
+    total: usize,
+    pass: usize,
+    fail: usize,
+    skip: usize,
+}
+
+/// One pass over every default manifest, writing the EARL report, with each
+/// manifest's own result kept alongside the total.
+///
+/// The per-manifest checks and the aggregate check are the same 1175 cases
+/// counted two ways, so they are run once and read twice rather than run
+/// twice.
+pub struct SuiteRun {
+    counts: Counts,
+    manifests: Vec<ManifestOutcome>,
+}
+
+pub fn run_default_suite() -> Result<SuiteRun, String> {
+    let (counts, manifests) = run_options_detailed(options_from_env(Vec::new(), true))?;
+    Ok(SuiteRun { counts, manifests })
+}
+
+impl SuiteRun {
+    /// Checks one manifest's slice of this run.
+    pub fn check_manifest(&self, label: &str, resource: &str, expected_total: usize) -> Result<(), String> {
+        let wanted = normalize_resource(resource);
+        let Some(outcome) = self.manifests.iter().find(|m| m.resource == wanted) else {
+            return Err(format!("{label}: {wanted} was not among the manifests this run covered"));
+        };
+        let counts = Counts { total: outcome.total, pass: outcome.pass, fail: outcome.fail, skip: outcome.skip };
+        let expected = if has_filter() { None } else { Some(expected_total) };
+        assert_clean_counts(label, &counts, expected)
+    }
+
+    /// Checks the run as a whole.
+    pub fn check_total(&self, label: &str, expected_total: usize) -> Result<(), String> {
+        let expected = if has_filter() { None } else { Some(expected_total) };
+        assert_clean_counts(label, &self.counts, expected)
+    }
 }
 
 pub fn refresh_requested() -> bool { env_flag("EYERON_W3C_RDF_REFRESH") }
@@ -208,6 +246,10 @@ fn assert_clean_counts(label: &str, counts: &Counts, expected_total: Option<usiz
 }
 
 fn run_options(opt: Options) -> Result<Counts, String> {
+    run_options_detailed(opt).map(|(counts, _)| counts)
+}
+
+fn run_options_detailed(opt: Options) -> Result<(Counts, Vec<ManifestOutcome>), String> {
     let resources = if opt.resources.is_empty() {
         DEFAULT_MANIFESTS.iter().map(|s| s.to_string()).collect::<Vec<_>>()
     } else {
@@ -237,7 +279,22 @@ fn run_options(opt: Options) -> Result<Counts, String> {
         println!("{} {}/{} tests passed across {} manifest(s) ({} ms)", if counts.fail == 0 { "OK" } else { "FAIL" }, counts.pass, counts.total, runs.len(), duration_ms);
         if counts.skip > 0 { println!("{} skipped", counts.skip); }
     }
-    Ok(counts)
+    let manifests = runs
+        .iter()
+        .map(|run| {
+            let mut outcome = ManifestOutcome { resource: run.source.clone(), total: 0, pass: 0, fail: 0, skip: 0 };
+            for item in &run.results {
+                outcome.total += 1;
+                match item.status {
+                    Status::Pass => outcome.pass += 1,
+                    Status::Fail => outcome.fail += 1,
+                    Status::Skip => outcome.skip += 1,
+                }
+            }
+            outcome
+        })
+        .collect();
+    Ok((counts, manifests))
 }
 
 fn parse_args(args: Vec<String>) -> Result<Options, String> {

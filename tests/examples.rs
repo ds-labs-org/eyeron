@@ -1,10 +1,24 @@
+//! Checks every packaged `.n3` example against its goldens.
+//!
+//! Each example is parsed once and reasoned once, and that single run is
+//! checked against both of its goldens: `examples/output/<name>.n3` (or
+//! `.md`) for what it derives, and `examples/proof/<name>.n3` for how. The
+//! two goldens describe one run, so running the reasoner twice to check
+//! them would only be asking the same question twice; that proof collection
+//! does not change what is derived is established once, by
+//! `tests/regressions.rs::proof_mode_derives_exactly_what_plain_mode_derives`,
+//! rather than re-established per example.
+//!
+//! Uses a custom harness (`harness = false`) so each example prints its own
+//! line as it runs.
+
 #[path = "support/golden_n3.rs"]
 mod golden_n3;
 #[path = "support/report.rs"]
 mod report;
 
-use eyeron::{parse_n3_with_source, proof_to_n3, reason_document, ReasonerOptions};
-use golden_n3::check_golden_documents;
+use eyeron::{parse_n3_with_source, proof_to_n3, reason_document, result_to_string, Document, ReasonerOptions};
+use golden_n3::compare_output_golden;
 use report::{green, progress_line, red};
 use std::collections::BTreeMap;
 use std::fs;
@@ -16,8 +30,7 @@ use std::path::{Path, PathBuf};
 /// `collection.n3`'s entire derived output is `log:outputString` Markdown
 /// decoration (headers and file links), which `support::stable_report_lines`
 /// strips as noise before comparing a `.md` golden, leaving nothing
-/// substantive a golden could check. Both are still parsed by
-/// `every_top_level_n3_example_parses`.
+/// substantive a golden could check. Both are still parsed, below.
 const PARSE_ONLY_EXAMPLES: &[&str] = &["alma-rdf-messages", "collection"];
 
 /// Top-level `.n3` examples that get neither an `examples/proof/` golden
@@ -35,115 +48,100 @@ const NO_PROOF_EXAMPLES: &[(&str, &str)] = &[
     ),
 ];
 
+/// One example and the goldens describing it.
+struct Case {
+    name: String,
+    source_path: PathBuf,
+    output_golden: PathBuf,
+    proof_golden: Option<PathBuf>,
+}
+
 fn main() {
     let started = std::time::Instant::now();
-    progress_line("running N3 output goldens");
-    let golden_checked = all_packaged_example_goldens_match_expected_lines();
-    let total = every_n3_example_is_accounted_for(golden_checked);
-    every_top_level_n3_example_parses();
+    let cases = collect_cases();
+    every_n3_example_is_accounted_for(cases.len());
     every_eligible_n3_example_has_a_proof_golden();
-    let proof_checked = every_proof_golden_matches();
+
+    let proof_checked = cases.iter().filter(|case| case.proof_golden.is_some()).count();
+    progress_line(&format!(
+        "running {} example{} ({proof_checked} with a proof golden)",
+        cases.len(),
+        if cases.len() == 1 { "" } else { "s" },
+    ));
+    for case in &cases {
+        run_case(case);
+    }
+    every_parse_only_example_parses();
 
     let parse_only = PARSE_ONLY_EXAMPLES.len();
+    let total = cases.len() + parse_only;
     let elapsed = started.elapsed().as_secs_f64();
     progress_line(&format!(
-        "\nn3 result: {}. {total} passed; 0 failed; finished in {elapsed:.2}s ({golden_checked} output goldens, {proof_checked} proof goldens, {parse_only} parse-only)",
+        "\nn3 result: {}. {total} passed; 0 failed; finished in {elapsed:.2}s ({} output goldens, {proof_checked} proof goldens, {parse_only} parse-only)",
         green("ok"),
+        cases.len(),
     ));
+}
+
+/// Pairs each example that has an output golden with that golden and, when
+/// one exists, its proof golden. A `.md` golden wins over a `.n3` one when
+/// both are present.
+fn collect_cases() -> Vec<Case> {
+    let root = manifest_dir();
+    let output_dir = root.join("examples/output");
+    let proof_dir = root.join("examples/proof");
+    let mut by_name: BTreeMap<String, PathBuf> = BTreeMap::new();
+
+    for entry in fs::read_dir(&output_dir).expect("examples/output directory exists") {
+        let path = entry.expect("read examples/output entry").path();
+        let ext = path.extension().and_then(|ext| ext.to_str());
+        if !matches!(ext, Some("n3") | Some("md")) {
+            continue;
+        }
+        let name = path.file_stem().and_then(|stem| stem.to_str()).expect("utf8 example name").to_string();
+        if !root.join("examples").join(format!("{name}.n3")).exists() {
+            continue;
+        }
+        match by_name.get(&name) {
+            Some(existing)
+                if existing.extension().and_then(|ext| ext.to_str()) == Some("n3") && ext == Some("md") =>
+            {
+                by_name.insert(name, path);
+            }
+            None => {
+                by_name.insert(name, path);
+            }
+            _ => {}
+        }
+    }
+
+    let cases: Vec<Case> = by_name
+        .into_iter()
+        .map(|(name, output_golden)| {
+            let proof_golden = proof_dir.join(format!("{name}.n3"));
+            Case {
+                source_path: root.join("examples").join(format!("{name}.n3")),
+                name,
+                output_golden,
+                proof_golden: proof_golden.exists().then_some(proof_golden),
+            }
+        })
+        .collect();
+    assert!(!cases.is_empty(), "no example/golden pairs found");
+    cases
 }
 
 /// Guards against a top-level `.n3` example silently getting neither a
 /// golden check nor a documented reason why not, by requiring every file to
-/// be exactly one or the other. Returns the total example count so the
-/// summary line can report every example as checked, not just the ones a
-/// golden covers.
-fn every_n3_example_is_accounted_for(golden_checked: usize) -> usize {
-    let examples_dir = Path::new(env!("CARGO_MANIFEST_DIR")).join("examples");
-    let total = sorted_n3_files(&examples_dir, "examples").len();
+/// be exactly one or the other.
+fn every_n3_example_is_accounted_for(golden_checked: usize) {
+    let total = sorted_n3_files(&manifest_dir().join("examples"), "examples").len();
     assert_eq!(
         total,
         golden_checked + PARSE_ONLY_EXAMPLES.len(),
         "expected every one of the {total} top-level .n3 examples to either match a golden ({golden_checked} did) or be listed in PARSE_ONLY_EXAMPLES ({} are); update whichever list is out of date",
         PARSE_ONLY_EXAMPLES.len()
     );
-    total
-}
-
-/// As `parse_n3_with_source`, but also merges in `examples/input/{name}.trig`
-/// when present — the same companion-input mechanism
-/// `all_packaged_example_goldens_match_expected_lines`/`run_golden_case`
-/// use for plain-output goldens, needed here too now that
-/// `examples/proof/` covers examples (the `rdf-message-*` ones) that
-/// derive nothing without their companion data.
-fn effective_n3_document(name: &str, source_path: &Path) -> eyeron::Document {
-    let source = read(source_path);
-    let label = source_path.to_string_lossy();
-    let mut doc = parse_n3_with_source(&source, None, Some(label.as_ref())).unwrap_or_else(|err| panic!("failed to parse {}: {}", source_path.display(), err));
-    let input_path = Path::new(env!("CARGO_MANIFEST_DIR")).join("examples/input").join(format!("{name}.trig"));
-    if input_path.exists() {
-        let input = read(&input_path);
-        let parsed_input = if eyeron::is_rdf_message_log(&input) {
-            eyeron::parse_rdf_message_log(&input, None)
-        } else {
-            let input_label = input_path.to_string_lossy();
-            parse_n3_with_source(&input, None, Some(input_label.as_ref()))
-        }
-        .unwrap_or_else(|err| panic!("failed to parse {}: {}", input_path.display(), err));
-        doc.merge(parsed_input);
-    }
-    doc
-}
-
-fn every_proof_golden_matches() -> usize {
-    let root = Path::new(env!("CARGO_MANIFEST_DIR"));
-    let proof_dir = root.join("examples/proof");
-    assert!(proof_dir.exists(), "examples/proof directory is missing");
-    let files = sorted_n3_files(&proof_dir, "examples/proof");
-    assert!(!files.is_empty(), "no proof goldens found in examples/proof");
-    progress_line(&format!("running {} N3 proof goldens", files.len()));
-    let mut mismatches = Vec::new();
-    for golden_path in &files {
-        let started = std::time::Instant::now();
-        let name = golden_path
-            .file_name()
-            .and_then(|name| name.to_str())
-            .expect("utf8 proof name");
-        let source_path = root.join("examples").join(name);
-        assert!(
-            source_path.exists(),
-            "{} has no corresponding source example",
-            golden_path.display()
-        );
-        let stem = golden_path.file_stem().and_then(|s| s.to_str()).expect("utf8 proof stem");
-        let doc = effective_n3_document(stem, &source_path);
-        let result = reason_document(
-            &doc,
-            &ReasonerOptions {
-                proof: true,
-                ..ReasonerOptions::default()
-            },
-        );
-        let proof = proof_to_n3(&doc.prefixes, &result);
-        let generation_time = started.elapsed();
-        assert!(
-            !proof.trim().is_empty(),
-            "{} generated an empty proof",
-            source_path.display()
-        );
-        let expected = read(golden_path);
-        let matches = normalize_proof_golden(stem, &expected) == normalize_proof_golden(stem, &proof);
-        let comparison_time = started.elapsed() - generation_time;
-        let status = if matches { green("ok") } else { red("fail") };
-        progress_line(&format!(
-            "proof examples/proof/{name} ... {status} (generate {:.3}s, compare {:.3}s)",
-            generation_time.as_secs_f64(), comparison_time.as_secs_f64()
-        ));
-        if !matches {
-            mismatches.push(name.to_string());
-        }
-    }
-    assert!(mismatches.is_empty(), "N3 proof golden mismatches: {}", mismatches.join(", "));
-    files.len()
 }
 
 /// Guards against a top-level `.n3` example silently getting no
@@ -152,10 +150,9 @@ fn every_proof_golden_matches() -> usize {
 /// against a stale `NO_PROOF_EXAMPLES` entry naming a file that no longer
 /// exists.
 fn every_eligible_n3_example_has_a_proof_golden() {
-    let root = Path::new(env!("CARGO_MANIFEST_DIR"));
-    let examples_dir = root.join("examples");
+    let root = manifest_dir();
     let proof_dir = root.join("examples/proof");
-    let all = sorted_n3_files(&examples_dir, "examples");
+    let all = sorted_n3_files(&root.join("examples"), "examples");
 
     for (name, _) in NO_PROOF_EXAMPLES {
         assert!(
@@ -177,85 +174,48 @@ fn every_eligible_n3_example_has_a_proof_golden() {
     assert!(missing.is_empty(), "packaged .n3 examples with no proof golden, PARSE_ONLY, or NO_PROOF_EXAMPLES entry: {missing:?}");
 }
 
-fn every_top_level_n3_example_parses() {
-    let examples_dir = Path::new(env!("CARGO_MANIFEST_DIR")).join("examples");
-    let files = sorted_n3_files(&examples_dir, "examples");
-    assert!(!files.is_empty(), "no top-level N3 examples found");
-
-    for path in files {
-        let source = read(&path);
-        let label = path.to_string_lossy();
-        parse_n3_with_source(&source, None, Some(label.as_ref()))
-            .unwrap_or_else(|err| panic!("example {} is not valid N3: {}", path.display(), err));
+/// The two examples no golden covers are still required to be valid N3.
+fn every_parse_only_example_parses() {
+    for name in PARSE_ONLY_EXAMPLES {
+        let path = manifest_dir().join("examples").join(format!("{name}.n3"));
+        parse_document(&path, name);
+        progress_line(&format!("example examples/{name}.n3 ... {} (parse only)", green("ok")));
     }
 }
 
-fn all_packaged_example_goldens_match_expected_lines() -> usize {
-    let root = Path::new(env!("CARGO_MANIFEST_DIR"));
-    let output_dir = root.join("examples/output");
-    let mut by_name: BTreeMap<String, PathBuf> = BTreeMap::new();
+/// Parses an example together with its `examples/input/<name>.trig`
+/// companion, when it has one, into the document the reasoner sees.
+fn parse_document(source_path: &Path, name: &str) -> Document {
+    let source = read(source_path);
+    let label = source_path.to_string_lossy();
+    let mut doc = parse_n3_with_source(&source, None, Some(label.as_ref()))
+        .unwrap_or_else(|err| panic!("example {} is not valid N3: {}", source_path.display(), err));
 
-    for entry in fs::read_dir(&output_dir).expect("examples/output directory exists") {
-        let path = entry.expect("read examples/output entry").path();
-        let ext = path.extension().and_then(|ext| ext.to_str());
-        if !matches!(ext, Some("n3") | Some("md")) {
-            continue;
+    let input_path = manifest_dir().join("examples/input").join(format!("{name}.trig"));
+    if input_path.exists() {
+        let input = read(&input_path);
+        let parsed = if eyeron::is_rdf_message_log(&input) {
+            eyeron::parse_rdf_message_log(&input, None)
+        } else {
+            let input_label = input_path.to_string_lossy();
+            parse_n3_with_source(&input, None, Some(input_label.as_ref()))
         }
-
-        let name = path
-            .file_stem()
-            .and_then(|stem| stem.to_str())
-            .expect("utf8 example name")
-            .to_string();
-        let source_path = root.join("examples").join(format!("{name}.n3"));
-        if !source_path.exists() {
-            continue;
-        }
-
-        match by_name.get(&name) {
-            Some(existing)
-                if existing.extension().and_then(|ext| ext.to_str()) == Some("n3")
-                    && ext == Some("md") =>
-            {
-                // Prefer .md goldens when both formats are present.
-                by_name.insert(name, path);
-            }
-            None => {
-                by_name.insert(name, path);
-            }
-            _ => {}
-        }
+        .unwrap_or_else(|err| panic!("failed to parse {}: {}", input_path.display(), err));
+        doc.merge(parsed);
     }
-
-    let cases = by_name
-        .into_iter()
-        .map(|(name, golden_path)| {
-            let source_path = root.join("examples").join(format!("{name}.n3"));
-            (name, source_path, golden_path)
-        })
-        .collect::<Vec<_>>();
-    assert!(!cases.is_empty(), "no example/golden pairs found");
-
-    let count = cases.len();
-    progress_line(&format!(
-        "running {count} example{}",
-        if count == 1 { "" } else { "s" }
-    ));
-
-    for (name, source_path, golden_path) in cases {
-        run_golden_case(root, name, source_path, golden_path);
-    }
-
-    count
+    doc
 }
 
-fn run_golden_case(root: &Path, name: String, source_path: PathBuf, golden_path: PathBuf) {
+/// Parses, reasons, and checks both goldens — all off one run. Runs on a
+/// worker thread so a rule set that stops making progress fails on a
+/// timeout instead of hanging the suite.
+fn run_case(case: &Case) {
     let started = std::time::Instant::now();
-    let source = read(&source_path);
-    let input_path = root.join("examples/input").join(format!("{name}.trig"));
-    let input = input_path.exists().then(|| read(&input_path));
-    let golden = read(&golden_path);
-    let golden_is_n3 = golden_path.extension().and_then(|ext| ext.to_str()) == Some("n3");
+    let name = case.name.clone();
+    let source_path = case.source_path.clone();
+    let output_golden = read(&case.output_golden);
+    let output_is_n3 = case.output_golden.extension().and_then(|ext| ext.to_str()) == Some("n3");
+    let proof_golden = case.proof_golden.as_ref().map(|path| read(path));
 
     let (tx, rx) = std::sync::mpsc::channel();
     let thread_name = name.clone();
@@ -263,11 +223,20 @@ fn run_golden_case(root: &Path, name: String, source_path: PathBuf, golden_path:
         .name(format!("example-{name}"))
         .stack_size(16 * 1024 * 1024)
         .spawn(move || {
-            let mut sources = vec![("rules", source.as_str())];
-            if let Some(input) = input.as_ref() {
-                sources.push(("input", input.as_str()));
+            let doc = parse_document(&source_path, &thread_name);
+            let result = reason_document(
+                &doc,
+                &ReasonerOptions { proof: proof_golden.is_some(), ..ReasonerOptions::default() },
+            );
+            let output = result_to_string(&doc.prefixes, &result.derived);
+            let mut outcome = compare_output_golden(&thread_name, &output, &output_golden, output_is_n3);
+            if outcome.is_ok() {
+                if let Some(expected) = &proof_golden {
+                    let proof = proof_to_n3(&doc.prefixes, &result);
+                    outcome = compare_proof_golden(&thread_name, &proof, expected);
+                }
             }
-            let _ = tx.send(check_golden_documents(&thread_name, sources, &golden, golden_is_n3));
+            let _ = tx.send(outcome);
         })
         .expect("spawn example golden-test worker");
 
@@ -275,19 +244,19 @@ fn run_golden_case(root: &Path, name: String, source_path: PathBuf, golden_path:
         || name.starts_with("rdf-message-")
         || name == "dining-philosophers"
     {
-        std::time::Duration::from_secs(60)
+        std::time::Duration::from_secs(90)
     } else {
-        std::time::Duration::from_secs(20)
+        std::time::Duration::from_secs(30)
     };
 
     match rx.recv_timeout(timeout) {
-        Ok(Ok(())) => report_case(&name, &green("ok"), started),
+        Ok(Ok(())) => report_case(&name, &green("ok"), started, case.proof_golden.is_some()),
         Ok(Err(msg)) => {
-            report_case(&name, &red("fail"), started);
+            report_case(&name, &red("fail"), started, case.proof_golden.is_some());
             panic!("{msg}");
         }
         Err(std::sync::mpsc::RecvTimeoutError::Timeout) => {
-            report_case(&name, &red("fail"), started);
+            report_case(&name, &red("fail"), started, case.proof_golden.is_some());
             panic!(
                 "{name} exceeded the {:.0}s per-example golden-test limit after {:.3}s",
                 timeout.as_secs_f64(),
@@ -295,17 +264,32 @@ fn run_golden_case(root: &Path, name: String, source_path: PathBuf, golden_path:
             );
         }
         Err(std::sync::mpsc::RecvTimeoutError::Disconnected) => {
-            report_case(&name, &red("fail"), started);
+            report_case(&name, &red("fail"), started, case.proof_golden.is_some());
             panic!("{name} golden-test worker terminated without reporting a result");
         }
     }
 }
 
-fn report_case(name: &str, status: &str, started: std::time::Instant) {
+fn compare_proof_golden(name: &str, proof: &str, expected: &str) -> Result<(), String> {
+    if proof.trim().is_empty() {
+        return Err(format!("{name} generated an empty proof"));
+    }
+    if normalize_proof_golden(name, expected) == normalize_proof_golden(name, proof) {
+        return Ok(());
+    }
+    Err(format!("{name} proof does not match examples/proof/{name}.n3\nactual:\n{proof}"))
+}
+
+fn report_case(name: &str, status: &str, started: std::time::Instant, with_proof: bool) {
     progress_line(&format!(
-        "example examples/{name}.n3 ... {status} ({:.3}s)",
-        started.elapsed().as_secs_f64()
+        "example examples/{name}.n3 ... {status} ({:.3}s{})",
+        started.elapsed().as_secs_f64(),
+        if with_proof { ", output + proof" } else { ", output" },
     ));
+}
+
+fn manifest_dir() -> &'static Path {
+    Path::new(env!("CARGO_MANIFEST_DIR"))
 }
 
 fn sorted_n3_files(directory: &Path, label: &str) -> Vec<PathBuf> {
