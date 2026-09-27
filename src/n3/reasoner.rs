@@ -5678,9 +5678,27 @@ mod prepared_reasoner_tests {
     /// every call pay for cloning its rules twice over for no reason (the
     /// merged copy's `.rules` is never read on this path; `reason_with_plan`
     /// is given `active_rules`/`query_rules` explicitly and only reads the
-    /// merged document's facts). Measured before this test existed: 500
-    /// calls against 2,000 static rules took 817 ms; a bound of 400 ms is
-    /// comfortably between that and what a fix should achieve.
+    /// merged document's facts).
+    ///
+    /// An earlier version of this test asserted an absolute wall-clock
+    /// bound (500 calls under 400 ms). That is exactly the kind of
+    /// assertion that is fine on a quiet machine and flaky under CI
+    /// contention: this repo's own full `cargo test --release --locked` run
+    /// tripped it once, purely from other tests in the same binary
+    /// competing for CPU, even though the fix is real and reproduces
+    /// consistently (~330 ms) when run in isolation. Comparing
+    /// `PreparedReasoner` against plain `reason()` re-run over the same
+    /// static program, in the same process, back to back, is robust to that
+    /// kind of noise instead of fighting it: whatever the machine's load is
+    /// during this test, both sides of the comparison feel it equally, so
+    /// the *ratio* stays meaningful even when the *absolute* numbers don't.
+    /// Plain `reason()` re-filters/re-clones `program.rules` into
+    /// `query_rules`/`active_rules` and rebuilds `agenda_index` from
+    /// scratch on every call -- exactly the redundant work
+    /// `PreparedReasoner` exists to amortize -- so it stands in here for
+    /// "the bug this test guards against", without needing to hardcode a
+    /// bound on how many milliseconds that redundant work costs on any
+    /// particular runner.
     #[test]
     fn reason_does_not_reclone_the_static_program_per_call() {
         let mut source = String::from("@prefix : <http://example.org/>.\n");
@@ -5690,18 +5708,32 @@ mod prepared_reasoner_tests {
             ));
         }
         let program = parse_n3(&source, None).expect("program parses");
-        let prepared = PreparedReasoner::new(program);
         let data = parse_n3("@prefix : <http://example.org/>.\n:a :p :b .\n", None).expect("data parses");
+        const CALLS: usize = 500;
 
+        let prepared = PreparedReasoner::new(program.clone());
         let started = std::time::Instant::now();
-        for _ in 0..500 {
+        for _ in 0..CALLS {
             let result = prepared.reason(&data, &ReasonerOptions::default());
             assert!(result.is_complete());
         }
-        let elapsed = started.elapsed();
+        let prepared_elapsed = started.elapsed();
+
+        let started = std::time::Instant::now();
+        for _ in 0..CALLS {
+            let mut merged = data.clone();
+            merged.merge(program.clone());
+            let result = reason(&merged, &ReasonerOptions::default());
+            assert!(result.is_complete());
+        }
+        let naive_elapsed = started.elapsed();
+
         assert!(
-            elapsed.as_millis() < 400,
-            "500 calls against 2,000 static rules took {elapsed:?}: PreparedReasoner is re-cloning the static program per call"
+            prepared_elapsed.as_nanos().saturating_mul(2) < naive_elapsed.as_nanos(),
+            "500 PreparedReasoner calls against 2,000 static rules took {prepared_elapsed:?}, \
+             500 plain reason() calls over the same rules took {naive_elapsed:?}: PreparedReasoner \
+             should be substantially cheaper than re-deriving active_rules/agenda_index every call, \
+             not merely on par with it"
         );
     }
 }
