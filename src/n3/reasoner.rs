@@ -232,31 +232,161 @@ fn resolve_pattern_with_seen(term: &Term, bindings: &Bindings, seen: &mut HashSe
 }
 
 
+/// Membership in the closure, holding no facts of its own.
+///
+/// `closure` already owns every fact, so a second `HashSet<Triple>` beside it
+/// was a second full copy of every term in the graph.  This keeps only the
+/// hash of each fact and the position in `closure` that holds it, and a
+/// lookup confirms the hit against `closure` itself -- so a hash collision
+/// costs one extra comparison and can never give a wrong answer.
+#[derive(Debug, Default)]
+pub(crate) struct ClosureSet {
+    positions: HashMap<u64, Vec<usize>>,
+}
+
+impl ClosureSet {
+    fn hash_of(triple: &Triple) -> u64 {
+        use std::hash::{Hash, Hasher};
+        let mut hasher = std::collections::hash_map::DefaultHasher::new();
+        triple.hash(&mut hasher);
+        hasher.finish()
+    }
+
+    pub(crate) fn contains(&self, closure: &[Triple], triple: &Triple) -> bool {
+        match self.positions.get(&Self::hash_of(triple)) {
+            Some(slots) => slots.iter().any(|slot| closure[*slot] == *triple),
+            None => false,
+        }
+    }
+
+    /// Records the fact already pushed at `closure[idx]`.  Callers check
+    /// `contains` first, so this never has to compare.
+    pub(crate) fn record(&mut self, closure: &[Triple], idx: usize) {
+        self.positions.entry(Self::hash_of(&closure[idx])).or_default().push(idx);
+    }
+}
+
 /// (predicate, list length, bound positions) -> values at those positions -> fact indices.
 type DeepListIndex = HashMap<(Term, usize, Vec<usize>), HashMap<Vec<Term>, Vec<usize>>>;
 
-#[derive(Debug, Default, Clone)]
+/// Which of a triple's terms a `ShapeIndex` groups by.
+#[derive(Debug, Clone, Copy)]
+enum Shape {
+    P,
+    Sp,
+    Po,
+}
+
+/// The terms a shape groups by, borrowed from wherever they live.
+type Key<'a> = (&'a Term, Option<&'a Term>);
+
+impl Shape {
+    fn key<'a>(self, s: &'a Term, p: &'a Term, o: &'a Term) -> Key<'a> {
+        match self {
+            Shape::P => (p, None),
+            Shape::Sp => (s, Some(p)),
+            Shape::Po => (p, Some(o)),
+        }
+    }
+
+    fn key_of(self, fact: &Triple) -> Key<'_> {
+        self.key(&fact.s, &fact.p, &fact.o)
+    }
+}
+
+fn hash_key(key: Key<'_>) -> u64 {
+    use std::hash::{Hash, Hasher};
+    let mut hasher = std::collections::hash_map::DefaultHasher::new();
+    key.0.hash(&mut hasher);
+    key.1.hash(&mut hasher);
+    hasher.finish()
+}
+
+/// Fact positions grouped by the terms at some of a triple's positions,
+/// holding none of those terms.
+///
+/// `facts` already owns every term, so the earlier `BTreeMap<(Term, Term), _>`
+/// keys were a second and a third copy of every subject, predicate and object
+/// in the graph.  A bucket here carries its key implicitly instead: every fact
+/// in it has the same terms at the indexed positions, so its first fact
+/// answers "is this the bucket I asked for?".  A 64-bit hash collision chains
+/// into a second bucket rather than mixing two shapes, so lookups stay exact.
+#[derive(Debug)]
+struct ShapeIndex {
+    shape: Shape,
+    chains: HashMap<u64, Vec<Vec<usize>>>,
+}
+
+impl ShapeIndex {
+    fn new(shape: Shape) -> Self {
+        Self { shape, chains: HashMap::new() }
+    }
+
+    fn insert(&mut self, facts: &[Triple], idx: usize) {
+        let key = self.shape.key_of(&facts[idx]);
+        let chain = self.chains.entry(hash_key(key)).or_default();
+        for bucket in chain.iter_mut() {
+            if self.shape.key_of(&facts[bucket[0]]) == key {
+                bucket.push(idx);
+                return;
+            }
+        }
+        chain.push(vec![idx]);
+    }
+
+    fn get(&self, facts: &[Triple], key: Key<'_>) -> Option<&Vec<usize>> {
+        self.chains
+            .get(&hash_key(key))?
+            .iter()
+            .find(|bucket| self.shape.key_of(&facts[bucket[0]]) == key)
+    }
+}
+
+#[derive(Debug)]
 pub(crate) struct FactIndex {
     // Keep the index deliberately lean.  Earlier versions indexed each fact in
     // six maps (s, p, o, sp, po, so), which helped small examples but doubled
     // down on memory at deep-taxonomy-100000.  The hot paths in the packaged
     // examples are predicate/object (`?X a :Class`) and subject/predicate
     // (`:arc :check ?Msg`), with predicate-only as a useful fallback.
-    by_p: BTreeMap<Term, Vec<usize>>,
-    by_sp: BTreeMap<(Term, Term), Vec<usize>>,
-    by_po: BTreeMap<(Term, Term), Vec<usize>>,
+    by_p: ShapeIndex,
+    by_sp: ShapeIndex,
+    by_po: ShapeIndex,
     // Partial native-list patterns are indexed only after a lookup shape is
     // actually requested.  The outer key is (predicate, list length, bound
     // positions); the inner key contains the values at those positions.
     deep_list_s: RefCell<DeepListIndex>,
 }
 
+impl Default for FactIndex {
+    fn default() -> Self {
+        Self {
+            by_p: ShapeIndex::new(Shape::P),
+            by_sp: ShapeIndex::new(Shape::Sp),
+            by_po: ShapeIndex::new(Shape::Po),
+            deep_list_s: RefCell::new(DeepListIndex::new()),
+        }
+    }
+}
+
 impl FactIndex {
-    pub(crate) fn insert(&mut self, idx: usize, triple: &Triple) {
+    pub(crate) fn insert(&mut self, facts: &[Triple], idx: usize) {
         self.deep_list_s.get_mut().clear();
-        self.by_p.entry(triple.p.clone()).or_default().push(idx);
-        self.by_sp.entry((triple.s.clone(), triple.p.clone())).or_default().push(idx);
-        self.by_po.entry((triple.p.clone(), triple.o.clone())).or_default().push(idx);
+        self.by_p.insert(facts, idx);
+        self.by_sp.insert(facts, idx);
+        self.by_po.insert(facts, idx);
+    }
+
+    fn p_bucket<'a>(&'a self, facts: &[Triple], p: &Term) -> Option<&'a Vec<usize>> {
+        self.by_p.get(facts, (p, None))
+    }
+
+    fn sp_bucket<'a>(&'a self, facts: &[Triple], s: &Term, p: &Term) -> Option<&'a Vec<usize>> {
+        self.by_sp.get(facts, (s, Some(p)))
+    }
+
+    fn po_bucket<'a>(&'a self, facts: &[Triple], p: &Term, o: &Term) -> Option<&'a Vec<usize>> {
+        self.by_po.get(facts, (p, Some(o)))
     }
 
     pub(crate) fn candidates<'a>(&'a self, facts: &'a [Triple], pattern: &Triple, bindings: &Bindings) -> Vec<&'a Triple> {
@@ -270,7 +400,7 @@ impl FactIndex {
         if pg && !sg {
             if let Some(deep_indices) = self.deep_list_subject_candidates(facts, &p, &s) {
                 let indices = if og {
-                    match self.by_po.get(&(p.clone(), o.clone())) {
+                    match self.po_bucket(facts, &p, &o) {
                         Some(po_indices) if po_indices.len() < deep_indices.len() => po_indices.clone(),
                         _ => deep_indices,
                     }
@@ -288,10 +418,7 @@ impl FactIndex {
             // have thousands of members, while by_sp is often a single fact.
             // Choosing by_po unconditionally made the final grounded check in
             // multi-pattern joins quadratic (GitHub issue #6).
-            match (
-                self.by_sp.get(&(s.clone(), p.clone())),
-                self.by_po.get(&(p.clone(), o.clone())),
-            ) {
+            match (self.sp_bucket(facts, &s, &p), self.po_bucket(facts, &p, &o)) {
                 (Some(sp), Some(po)) if sp.len() <= po.len() => Some(sp),
                 (Some(_), Some(po)) => Some(po),
                 // If either exact projection is absent, no fully bound triple
@@ -299,11 +426,11 @@ impl FactIndex {
                 _ => None,
             }
         } else if pg && og {
-            self.by_po.get(&(p.clone(), o.clone()))
+            self.po_bucket(facts, &p, &o)
         } else if sg && pg {
-            self.by_sp.get(&(s.clone(), p.clone()))
+            self.sp_bucket(facts, &s, &p)
         } else if pg {
-            self.by_p.get(&p)
+            self.p_bucket(facts, &p)
         } else {
             None
         };
@@ -326,7 +453,7 @@ impl FactIndex {
     /// materialising it, plus whether every fact in that bucket is certain to
     /// match (so the bucket size is the exact candidate count). `None` when the
     /// lookup shape is not a plain bucket (unbound predicate, open list subject).
-    pub(crate) fn estimate(&self, pattern: &Triple, bindings: &Bindings) -> Option<(usize, bool)> {
+    pub(crate) fn estimate(&self, facts: &[Triple], pattern: &Triple, bindings: &Bindings) -> Option<(usize, bool)> {
         let s = resolve_pattern(&pattern.s, bindings);
         let p = resolve_pattern(&pattern.p, bindings);
         let o = resolve_pattern(&pattern.o, bindings);
@@ -338,12 +465,12 @@ impl FactIndex {
         let plain = |t: &Term| matches!(t, Term::Var(_));
         let len = |v: Option<&Vec<usize>>| v.map_or(0, |v| v.len());
         if sg && og {
-            let a = self.by_sp.get(&(s, p.clone())).map_or(0, |v| v.len());
-            let b = self.by_po.get(&(p, o)).map_or(0, |v| v.len());
+            let a = len(self.sp_bucket(facts, &s, &p));
+            let b = len(self.po_bucket(facts, &p, &o));
             Some((a.min(b), a.min(b) == 0))
-        } else if og { Some((len(self.by_po.get(&(p, o))), plain(&s))) }
-        else if sg { Some((len(self.by_sp.get(&(s, p))), plain(&o))) }
-        else { Some((len(self.by_p.get(&p)), plain(&s) && plain(&o) && s != o)) }
+        } else if og { Some((len(self.po_bucket(facts, &p, &o)), plain(&s))) }
+        else if sg { Some((len(self.sp_bucket(facts, &s, &p)), plain(&o))) }
+        else { Some((len(self.p_bucket(facts, &p)), plain(&s) && plain(&o) && s != o)) }
     }
 
     fn deep_list_subject_candidates(&self, facts: &[Triple], predicate: &Term, subject: &Term) -> Option<Vec<usize>> {
@@ -363,7 +490,7 @@ impl FactIndex {
         let shape = (predicate.clone(), pattern_items.len(), positions.clone());
         if !self.deep_list_s.borrow().contains_key(&shape) {
             let mut index = HashMap::<Vec<Term>, Vec<usize>>::new();
-            if let Some(predicate_indices) = self.by_p.get(predicate) {
+            if let Some(predicate_indices) = self.p_bucket(facts, predicate) {
                 for fact_index in predicate_indices {
                     let Term::List(fact_items) = &facts[*fact_index].s else { continue; };
                     if fact_items.len() != pattern_items.len() || !fact_items.iter().all(Term::is_ground) { continue; }
@@ -676,15 +803,14 @@ fn reason_with_plan(
     let _clear_regex_cache = ClearRegexCacheOnDrop;
     let mut closure = Vec::<Triple>::new();
     let mut fact_index = FactIndex::default();
-    let mut seen = HashSet::<Triple>::new();
-    let mut explicit_seen = HashSet::<Triple>::new();
+    let mut seen = ClosureSet::default();
 
     for fact in &doc.facts {
-        if admissible_fact(fact) && seen.insert(fact.clone()) {
-            explicit_seen.insert(fact.clone());
+        if admissible_fact(fact) && !seen.contains(&closure, fact) {
             let idx = closure.len();
             closure.push(fact.clone());
-            fact_index.insert(idx, fact);
+            seen.record(&closure, idx);
+            fact_index.insert(&closure, idx);
         }
     }
 
@@ -707,7 +833,7 @@ fn reason_with_plan(
         }
         iteration += 1;
 
-        let before = seen.len();
+        let before = closure.len();
 
         // Fast path, modelled after the earlier Eyeling engine: safe forward
         // rules are driven by newly seen support facts.  This turns both deep
@@ -752,7 +878,6 @@ fn reason_with_plan(
                         &mut closure,
                         &mut fact_index,
                         &mut seen,
-                        &explicit_seen,
                         &mut generated_rule_facts,
                         &mut derived,
                         &mut proofs,
@@ -802,7 +927,6 @@ fn reason_with_plan(
                         &mut closure,
                         &mut fact_index,
                         &mut seen,
-                        &explicit_seen,
                         &mut generated_rule_facts,
                         &mut derived,
                         &mut proofs,
@@ -855,7 +979,6 @@ fn reason_with_plan(
                     &mut closure,
                     &mut fact_index,
                     &mut seen,
-                    &explicit_seen,
                     &mut generated_rule_facts,
                     &mut derived,
                     &mut proofs,
@@ -873,7 +996,7 @@ fn reason_with_plan(
             agenda_cursor = 0;
         }
 
-        if seen.len() == before {
+        if closure.len() == before {
             if agenda_cursor < closure.len() { continue; }
             if !closure_saturated {
                 closure_saturated = true;
@@ -965,8 +1088,7 @@ fn emit_conclusions(
     bindings: &Bindings,
     closure: &mut Vec<Triple>,
     fact_index: &mut FactIndex,
-    seen: &mut HashSet<Triple>,
-    explicit_seen: &HashSet<Triple>,
+    seen: &mut ClosureSet,
     generated_rule_facts: &mut HashSet<Triple>,
     derived: &mut Vec<Triple>,
     proofs: &mut Vec<DerivedFact>,
@@ -994,7 +1116,6 @@ fn emit_conclusions(
                         closure,
                         fact_index,
                         seen,
-                        explicit_seen,
                         generated_rule_facts,
                         derived,
                         proofs,
@@ -1016,7 +1137,6 @@ fn emit_conclusions(
             closure,
             fact_index,
             seen,
-            explicit_seen,
             generated_rule_facts,
             derived,
             proofs,
@@ -1131,8 +1251,7 @@ fn insert_materialized_triple(
     t: Triple,
     closure: &mut Vec<Triple>,
     fact_index: &mut FactIndex,
-    seen: &mut HashSet<Triple>,
-    explicit_seen: &HashSet<Triple>,
+    seen: &mut ClosureSet,
     generated_rule_facts: &mut HashSet<Triple>,
     derived: &mut Vec<Triple>,
     proofs: &mut Vec<DerivedFact>,
@@ -1148,13 +1267,13 @@ fn insert_materialized_triple(
         report.hit_limit(overflow.limit());
         return false;
     }
-    if !seen.insert(t.clone()) { return false; }
+    if seen.contains(closure, &t) { return false; }
 
     let mut rules_changed = false;
-    if !explicit_seen.contains(&t) {
-        derived.push(t.clone());
-        if let Some(proof) = proof { proofs.push(proof); }
-    }
+    // Reaching here means `t` was not in the closure, and every explicit fact
+    // was put there before the first rule fired -- so `t` is derived.
+    derived.push(t.clone());
+    if let Some(proof) = proof { proofs.push(proof); }
     if let Some(new_rule) = rule_from_triple(&t) {
         if generated_rule_facts.insert(t.clone()) {
             pending_rules.push(new_rule);
@@ -1162,8 +1281,9 @@ fn insert_materialized_triple(
         }
     }
     let idx = closure.len();
-    closure.push(t.clone());
-    fact_index.insert(idx, &t);
+    closure.push(t);
+    seen.record(closure, idx);
+    fact_index.insert(closure, idx);
     rules_changed
 }
 
@@ -1451,7 +1571,7 @@ fn match_premise_remaining(
         let mut order: Vec<usize> = (0..premises.len()).collect();
         if let Some(index) = fact_index {
             let slots: Vec<usize> = order.iter().copied().filter(|&i| !is_builtin_premise(&premises[i]) && !may_match_rule_fact(&premises[i], &bindings)).collect();
-            let mut keyed: Vec<(usize, usize)> = slots.iter().map(|&i| (index.estimate(&premises[i], &bindings).map_or(usize::MAX, |e| e.0), i)).collect();
+            let mut keyed: Vec<(usize, usize)> = slots.iter().map(|&i| (index.estimate(facts, &premises[i], &bindings).map_or(usize::MAX, |e| e.0), i)).collect();
             keyed.sort_by_key(|k| k.0);
             for (slot, (_, i)) in slots.iter().zip(keyed) { order[*slot] = i; }
         }
@@ -1476,7 +1596,7 @@ fn match_premise_remaining(
             // with it the solution order, is unchanged.
             if let (Some(index), Some(best)) = (fact_index, best_index) {
                 if !is_builtin_premise(premise) && !may_match_rule_fact(premise, &bindings) {
-                    if let Some((est, exact)) = index.estimate(premise, &bindings) {
+                    if let Some((est, exact)) = index.estimate(facts, premise, &bindings) {
                         if exact && (est, idx) > (best_candidates.len(), best) { continue; }
                     }
                 }
@@ -2209,8 +2329,8 @@ pub fn explain_backward(
     emit: &mut dyn FnMut(BackwardStep),
 ) -> bool {
     let mut fact_index = FactIndex::default();
-    for (idx, fact) in facts.iter().enumerate() {
-        fact_index.insert(idx, fact);
+    for idx in 0..facts.len() {
+        fact_index.insert(facts, idx);
     }
     let mut state = ExplainState { visited: HashSet::new(), done: HashSet::new(), budget: SearchBudget::for_proof(max_depth) };
     explain_backward_inner(goal, facts, &fact_index, given, rules, 0, max_depth, &mut state, emit)
@@ -2402,8 +2522,8 @@ fn bind_concrete_blanks(term: &Term, out: &mut Bindings) {
 
 pub fn find_backward_proof_for_goal(goal: &Triple, facts: &[Triple], rules: &[Rule], max_depth: usize) -> Option<ProofNode> {
     let mut fact_index = FactIndex::default();
-    for (idx, fact) in facts.iter().enumerate() {
-        fact_index.insert(idx, fact);
+    for idx in 0..facts.len() {
+        fact_index.insert(facts, idx);
     }
     let mut visited = HashSet::<String>::new();
     let mut budget = SearchBudget::for_proof(max_depth);
@@ -5330,7 +5450,7 @@ mod reasoner_index_regression_tests {
             );
             let pos = facts.len();
             facts.push(fact);
-            index.insert(pos, &facts[pos]);
+            index.insert(&facts, pos);
         }
 
         let goal = Triple::new(
