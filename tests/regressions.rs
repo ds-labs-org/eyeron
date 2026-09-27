@@ -1330,3 +1330,53 @@ fn known_compatibility_regex_forms_still_answer_as_before() {
     assert!(output.contains(":b :literal true"), "{output}");
     assert!(output.contains(":a :lookahead true"), "{output}");
 }
+
+#[test]
+fn integer_arithmetic_is_exact_beyond_what_an_f64_can_hold() {
+    // Every numeric builtin used to parse its operands into `f64` and format
+    // the `f64` back out, so an integer past 2^53 came back changed: 2^1003
+    // minus 3 was still 2^1003, because an `f64` at that magnitude has no
+    // room for the 3, and 2^65536 was "INF". An xsd:integer literal already
+    // carries its value exactly, so the operations that stay in the integers
+    // now keep it.
+    let source = r#"
+        @prefix : <http://example.org/>.
+        @prefix math: <http://www.w3.org/2000/10/swap/math#>.
+
+        {
+            (2 1003) math:exponentiation ?Power.
+            (?Power 3) math:difference ?Less.
+            (?Less 3) math:sum ?Again.
+            (?Again 1) math:product ?Same.
+            ?Same math:negation ?Negated.
+            ?Negated math:negation ?Back.
+        } => {
+            :result :less ?Less.
+            :result :round-trips ?Back.
+        }.
+    "#;
+
+    let output = reason(source).unwrap();
+    // 2^1003 ends ...555008, so 2^1003 - 3 ends ...555005.
+    assert!(output.contains(":less 85720688574901385675874003924800144844912"), "{output}");
+    assert!(output.contains("341283438653220995094697645344555005"), "{output}");
+    assert!(output.contains(":round-trips 857206885749013856758740039248001448449"), "{output}");
+    assert!(output.contains("341283438653220995094697645344555008"), "{output}");
+    assert!(!output.contains("INF"), "{output}");
+}
+
+#[test]
+fn an_exact_power_too_large_to_materialise_is_refused_rather_than_attempted() {
+    // The exact path is capped at two million bits, matching eyeling. Past
+    // that the operation falls back to the f64 one, which overflows to "INF"
+    // rather than allocating a gigabyte-scale integer.
+    let source = r#"
+        @prefix : <http://example.org/>.
+        @prefix math: <http://www.w3.org/2000/10/swap/math#>.
+
+        { (2 3000000) math:exponentiation ?X } => { :result :is ?X }.
+    "#;
+
+    let output = reason(source).unwrap();
+    assert!(output.contains("INF"), "{output}");
+}
