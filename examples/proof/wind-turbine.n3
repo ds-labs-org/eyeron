@@ -1,0 +1,238 @@
+@prefix : <https://example.org/wind-turbine#> .
+@prefix log: <http://www.w3.org/2000/10/swap/log#> .
+@prefix math: <http://www.w3.org/2000/10/swap/math#> .
+@prefix pe: <https://eyereasoner.github.io/pe#> .
+@prefix string: <http://www.w3.org/2000/10/swap/string#> .
+
+:turbine1 :hasAnomaly :highVibration .
+:decision :outcome "Act now: schedule an urgent inspection and gearbox maintenance." .
+:decision :reason "Both vibration and temperature are above their safety thresholds, so the turbine shows a combined warning pattern. The gearbox is also degraded, so maintenance is needed even though the rotor speed is still below the critical RPM limit." .
+:check :c1 "OK - measured vibration is above the vibration threshold." .
+:turbine1 :hasAnomaly :highTemperature .
+:check :c2 "OK - measured temperature is above the temperature threshold." .
+:check :c8 "OK - rotor speed is below the critical RPM threshold, so the urgent action is not based on overspeed." .
+:check :c6 "OK - the gearbox is marked as degraded." .
+:turbine1 :requires :gearboxMaintenance .
+:check :c3 "OK - a high-vibration anomaly was inferred from the readings." .
+:turbine1 :requires :urgentInspection .
+:check :c4 "OK - a high-temperature anomaly was inferred from the readings." .
+:check :c5 "OK - urgent inspection follows from the combination of both anomalies." .
+:check :c7 "OK - degraded gearbox status triggered gearbox maintenance." .
+:check :c9 "OK - two separate actions were derived: inspection and maintenance." .
+:report log:outputString "Wind turbine — Predictive maintenance\n\n## Answer\nAct now: schedule an urgent inspection and gearbox maintenance.\n\n## Reason Why\nNorth field turbine reports vibration 0.42 against a threshold of 0.35, temperature 78 against a threshold of 75, and rotor speed 1650 against a critical limit of 1800. Both vibration and temperature are above their safety thresholds, so the turbine shows a combined warning pattern. The gearbox is also degraded, so maintenance is needed even though the rotor speed is still below the critical RPM limit.\n\n## Check\nC1 OK - measured vibration is above the vibration threshold.\nC2 OK - measured temperature is above the temperature threshold.\nC3 OK - a high-vibration anomaly was inferred from the readings.\nC4 OK - a high-temperature anomaly was inferred from the readings.\nC5 OK - urgent inspection follows from the combination of both anomalies.\nC6 OK - the gearbox is marked as degraded.\nC7 OK - degraded gearbox status triggered gearbox maintenance.\nC8 OK - rotor speed is below the critical RPM threshold, so the urgent action is not based on overspeed.\nC9 OK - two separate actions were derived: inspection and maintenance.\n" .
+
+{ :turbine1 :hasAnomaly :highVibration . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "T"; pe:value :turbine1 ],
+    [ pe:var "V"; pe:value 0.42 ],
+    [ pe:var "VT"; pe:value 0.35 ];
+  pe:uses
+    { :turbine1 :vibration 0.42 . },
+    { :highVibrationThreshold :value 0.35 . },
+    { 0.42 math:greaterThan 0.35 . }.
+
+{ :turbine1 :vibration 0.42 . }
+  pe:fact "wind-turbine.n3".
+
+{ :highVibrationThreshold :value 0.35 . }
+  pe:fact "wind-turbine.n3".
+
+{ 0.42 math:greaterThan 0.35 . }
+  pe:builtin math:greaterThan.
+
+{ :decision :outcome "Act now: schedule an urgent inspection and gearbox maintenance." . }
+  pe:rule 5;
+  pe:binding
+    [ pe:var "Gearbox"; pe:value :degraded ],
+    [ pe:var "RPM"; pe:value "1650"^^xsd:decimal ],
+    [ pe:var "RT"; pe:value "1800"^^xsd:decimal ],
+    [ pe:var "TT"; pe:value "75"^^xsd:decimal ],
+    [ pe:var "Temp"; pe:value "78"^^xsd:decimal ],
+    [ pe:var "V"; pe:value 0.42 ],
+    [ pe:var "VT"; pe:value 0.35 ];
+  pe:uses
+    { :turbine1 :vibration 0.42 . },
+    { :turbine1 :temperature "78"^^xsd:decimal . },
+    { :turbine1 :rpm "1650"^^xsd:decimal . },
+    { :turbine1 :gearboxStatus :degraded . },
+    { :highVibrationThreshold :value 0.35 . },
+    { :highTemperatureThreshold :value "75"^^xsd:decimal . },
+    { :criticalRPM :value "1800"^^xsd:decimal . },
+    { 0.42 math:greaterThan 0.35 . },
+    { "78"^^xsd:decimal math:greaterThan "75"^^xsd:decimal . },
+    { "1800"^^xsd:decimal math:greaterThan "1650"^^xsd:decimal . }.
+
+{ :turbine1 :temperature "78"^^xsd:decimal . }
+  pe:fact "wind-turbine.n3".
+
+{ :turbine1 :rpm "1650"^^xsd:decimal . }
+  pe:fact "wind-turbine.n3".
+
+{ :turbine1 :gearboxStatus :degraded . }
+  pe:fact "wind-turbine.n3".
+
+{ :highTemperatureThreshold :value "75"^^xsd:decimal . }
+  pe:fact "wind-turbine.n3".
+
+{ :criticalRPM :value "1800"^^xsd:decimal . }
+  pe:fact "wind-turbine.n3".
+
+{ "78"^^xsd:decimal math:greaterThan "75"^^xsd:decimal . }
+  pe:builtin math:greaterThan.
+
+{ "1800"^^xsd:decimal math:greaterThan "1650"^^xsd:decimal . }
+  pe:builtin math:greaterThan.
+
+{ :decision :reason "Both vibration and temperature are above their safety thresholds, so the turbine shows a combined warning pattern. The gearbox is also degraded, so maintenance is needed even though the rotor speed is still below the critical RPM limit." . }
+  pe:rule 5;
+  pe:binding
+    [ pe:var "Gearbox"; pe:value :degraded ],
+    [ pe:var "RPM"; pe:value "1650"^^xsd:decimal ],
+    [ pe:var "RT"; pe:value "1800"^^xsd:decimal ],
+    [ pe:var "TT"; pe:value "75"^^xsd:decimal ],
+    [ pe:var "Temp"; pe:value "78"^^xsd:decimal ],
+    [ pe:var "V"; pe:value 0.42 ],
+    [ pe:var "VT"; pe:value 0.35 ];
+  pe:uses
+    { :turbine1 :vibration 0.42 . },
+    { :turbine1 :temperature "78"^^xsd:decimal . },
+    { :turbine1 :rpm "1650"^^xsd:decimal . },
+    { :turbine1 :gearboxStatus :degraded . },
+    { :highVibrationThreshold :value 0.35 . },
+    { :highTemperatureThreshold :value "75"^^xsd:decimal . },
+    { :criticalRPM :value "1800"^^xsd:decimal . },
+    { 0.42 math:greaterThan 0.35 . },
+    { "78"^^xsd:decimal math:greaterThan "75"^^xsd:decimal . },
+    { "1800"^^xsd:decimal math:greaterThan "1650"^^xsd:decimal . }.
+
+{ :check :c1 "OK - measured vibration is above the vibration threshold." . }
+  pe:rule 6;
+  pe:binding
+    [ pe:var "V"; pe:value 0.42 ],
+    [ pe:var "VT"; pe:value 0.35 ];
+  pe:uses
+    { :turbine1 :vibration 0.42 . },
+    { :highVibrationThreshold :value 0.35 . },
+    { 0.42 math:greaterThan 0.35 . }.
+
+{ :turbine1 :hasAnomaly :highTemperature . }
+  pe:rule 2;
+  pe:binding
+    [ pe:var "T"; pe:value :turbine1 ],
+    [ pe:var "TT"; pe:value "75"^^xsd:decimal ],
+    [ pe:var "Temp"; pe:value "78"^^xsd:decimal ];
+  pe:uses
+    { :turbine1 :temperature "78"^^xsd:decimal . },
+    { :highTemperatureThreshold :value "75"^^xsd:decimal . },
+    { "78"^^xsd:decimal math:greaterThan "75"^^xsd:decimal . }.
+
+{ :check :c2 "OK - measured temperature is above the temperature threshold." . }
+  pe:rule 7;
+  pe:binding
+    [ pe:var "TT"; pe:value "75"^^xsd:decimal ],
+    [ pe:var "Temp"; pe:value "78"^^xsd:decimal ];
+  pe:uses
+    { :turbine1 :temperature "78"^^xsd:decimal . },
+    { :highTemperatureThreshold :value "75"^^xsd:decimal . },
+    { "78"^^xsd:decimal math:greaterThan "75"^^xsd:decimal . }.
+
+{ :check :c8 "OK - rotor speed is below the critical RPM threshold, so the urgent action is not based on overspeed." . }
+  pe:rule 13;
+  pe:binding
+    [ pe:var "RPM"; pe:value "1650"^^xsd:decimal ],
+    [ pe:var "RT"; pe:value "1800"^^xsd:decimal ];
+  pe:uses
+    { :criticalRPM :value "1800"^^xsd:decimal . },
+    { :turbine1 :rpm "1650"^^xsd:decimal . },
+    { "1800"^^xsd:decimal math:greaterThan "1650"^^xsd:decimal . }.
+
+{ :check :c6 "OK - the gearbox is marked as degraded." . }
+  pe:rule 11;
+  pe:uses { :turbine1 :gearboxStatus :degraded . }.
+
+{ :turbine1 :requires :gearboxMaintenance . }
+  pe:rule 4;
+  pe:binding [ pe:var "T"; pe:value :turbine1 ];
+  pe:uses { :turbine1 :gearboxStatus :degraded . }.
+
+{ :check :c3 "OK - a high-vibration anomaly was inferred from the readings." . }
+  pe:rule 8;
+  pe:uses { :turbine1 :hasAnomaly :highVibration . }.
+
+{ :turbine1 :requires :urgentInspection . }
+  pe:rule 3;
+  pe:binding [ pe:var "T"; pe:value :turbine1 ];
+  pe:uses
+    { :turbine1 :hasAnomaly :highVibration . },
+    { :turbine1 :hasAnomaly :highTemperature . }.
+
+{ :check :c4 "OK - a high-temperature anomaly was inferred from the readings." . }
+  pe:rule 9;
+  pe:uses { :turbine1 :hasAnomaly :highTemperature . }.
+
+{ :check :c5 "OK - urgent inspection follows from the combination of both anomalies." . }
+  pe:rule 10;
+  pe:uses
+    { :turbine1 :hasAnomaly :highVibration . },
+    { :turbine1 :hasAnomaly :highTemperature . },
+    { :turbine1 :requires :urgentInspection . }.
+
+{ :check :c7 "OK - degraded gearbox status triggered gearbox maintenance." . }
+  pe:rule 12;
+  pe:uses { :turbine1 :requires :gearboxMaintenance . }.
+
+{ :check :c9 "OK - two separate actions were derived: inspection and maintenance." . }
+  pe:rule 14;
+  pe:uses
+    { :turbine1 :requires :urgentInspection . },
+    { :turbine1 :requires :gearboxMaintenance . }.
+
+{ :report log:outputString "Wind turbine — Predictive maintenance\n\n## Answer\nAct now: schedule an urgent inspection and gearbox maintenance.\n\n## Reason Why\nNorth field turbine reports vibration 0.42 against a threshold of 0.35, temperature 78 against a threshold of 75, and rotor speed 1650 against a critical limit of 1800. Both vibration and temperature are above their safety thresholds, so the turbine shows a combined warning pattern. The gearbox is also degraded, so maintenance is needed even though the rotor speed is still below the critical RPM limit.\n\n## Check\nC1 OK - measured vibration is above the vibration threshold.\nC2 OK - measured temperature is above the temperature threshold.\nC3 OK - a high-vibration anomaly was inferred from the readings.\nC4 OK - a high-temperature anomaly was inferred from the readings.\nC5 OK - urgent inspection follows from the combination of both anomalies.\nC6 OK - the gearbox is marked as degraded.\nC7 OK - degraded gearbox status triggered gearbox maintenance.\nC8 OK - rotor speed is below the critical RPM threshold, so the urgent action is not based on overspeed.\nC9 OK - two separate actions were derived: inspection and maintenance.\n" . }
+  pe:rule 15;
+  pe:binding
+    [ pe:var "Block"; pe:value "Wind turbine — Predictive maintenance\n\n## Answer\nAct now: schedule an urgent inspection and gearbox maintenance.\n\n## Reason Why\nNorth field turbine reports vibration 0.42 against a threshold of 0.35, temperature 78 against a threshold of 75, and rotor speed 1650 against a critical limit of 1800. Both vibration and temperature are above their safety thresholds, so the turbine shows a combined warning pattern. The gearbox is also degraded, so maintenance is needed even though the rotor speed is still below the critical RPM limit.\n\n## Check\nC1 OK - measured vibration is above the vibration threshold.\nC2 OK - measured temperature is above the temperature threshold.\nC3 OK - a high-vibration anomaly was inferred from the readings.\nC4 OK - a high-temperature anomaly was inferred from the readings.\nC5 OK - urgent inspection follows from the combination of both anomalies.\nC6 OK - the gearbox is marked as degraded.\nC7 OK - degraded gearbox status triggered gearbox maintenance.\nC8 OK - rotor speed is below the critical RPM threshold, so the urgent action is not based on overspeed.\nC9 OK - two separate actions were derived: inspection and maintenance.\n" ],
+    [ pe:var "C1"; pe:value "OK - measured vibration is above the vibration threshold." ],
+    [ pe:var "C2"; pe:value "OK - measured temperature is above the temperature threshold." ],
+    [ pe:var "C3"; pe:value "OK - a high-vibration anomaly was inferred from the readings." ],
+    [ pe:var "C4"; pe:value "OK - a high-temperature anomaly was inferred from the readings." ],
+    [ pe:var "C5"; pe:value "OK - urgent inspection follows from the combination of both anomalies." ],
+    [ pe:var "C6"; pe:value "OK - the gearbox is marked as degraded." ],
+    [ pe:var "C7"; pe:value "OK - degraded gearbox status triggered gearbox maintenance." ],
+    [ pe:var "C8"; pe:value "OK - rotor speed is below the critical RPM threshold, so the urgent action is not based on overspeed." ],
+    [ pe:var "C9"; pe:value "OK - two separate actions were derived: inspection and maintenance." ],
+    [ pe:var "Label"; pe:value "North field turbine" ],
+    [ pe:var "Outcome"; pe:value "Act now: schedule an urgent inspection and gearbox maintenance." ],
+    [ pe:var "RPM"; pe:value "1650"^^xsd:decimal ],
+    [ pe:var "RT"; pe:value "1800"^^xsd:decimal ],
+    [ pe:var "Reason"; pe:value "Both vibration and temperature are above their safety thresholds, so the turbine shows a combined warning pattern. The gearbox is also degraded, so maintenance is needed even though the rotor speed is still below the critical RPM limit." ],
+    [ pe:var "TT"; pe:value "75"^^xsd:decimal ],
+    [ pe:var "Temp"; pe:value "78"^^xsd:decimal ],
+    [ pe:var "V"; pe:value 0.42 ],
+    [ pe:var "VT"; pe:value 0.35 ];
+  pe:uses
+    { :turbine1 :label "North field turbine" . },
+    { :turbine1 :vibration 0.42 . },
+    { :turbine1 :temperature "78"^^xsd:decimal . },
+    { :turbine1 :rpm "1650"^^xsd:decimal . },
+    { :highVibrationThreshold :value 0.35 . },
+    { :highTemperatureThreshold :value "75"^^xsd:decimal . },
+    { :criticalRPM :value "1800"^^xsd:decimal . },
+    { :decision :outcome "Act now: schedule an urgent inspection and gearbox maintenance." . },
+    { :decision :reason "Both vibration and temperature are above their safety thresholds, so the turbine shows a combined warning pattern. The gearbox is also degraded, so maintenance is needed even though the rotor speed is still below the critical RPM limit." . },
+    { :check :c1 "OK - measured vibration is above the vibration threshold." . },
+    { :check :c2 "OK - measured temperature is above the temperature threshold." . },
+    { :check :c3 "OK - a high-vibration anomaly was inferred from the readings." . },
+    { :check :c4 "OK - a high-temperature anomaly was inferred from the readings." . },
+    { :check :c5 "OK - urgent inspection follows from the combination of both anomalies." . },
+    { :check :c6 "OK - the gearbox is marked as degraded." . },
+    { :check :c7 "OK - degraded gearbox status triggered gearbox maintenance." . },
+    { :check :c8 "OK - rotor speed is below the critical RPM threshold, so the urgent action is not based on overspeed." . },
+    { :check :c9 "OK - two separate actions were derived: inspection and maintenance." . },
+    { ("Wind turbine — Predictive maintenance\n\n" "## Answer\n" "Act now: schedule an urgent inspection and gearbox maintenance." "\n\n" "## Reason Why\n" "North field turbine" " reports vibration " 0.42 " against a threshold of " 0.35 ", temperature " "78"^^xsd:decimal " against a threshold of " "75"^^xsd:decimal ", and rotor speed " "1650"^^xsd:decimal " against a critical limit of " "1800"^^xsd:decimal ". " "Both vibration and temperature are above their safety thresholds, so the turbine shows a combined warning pattern. The gearbox is also degraded, so maintenance is needed even though the rotor speed is still below the critical RPM limit." "\n\n" "## Check\n" "C1 " "OK - measured vibration is above the vibration threshold." "\n" "C2 " "OK - measured temperature is above the temperature threshold." "\n" "C3 " "OK - a high-vibration anomaly was inferred from the readings." "\n" "C4 " "OK - a high-temperature anomaly was inferred from the readings." "\n" "C5 " "OK - urgent inspection follows from the combination of both anomalies." "\n" "C6 " "OK - the gearbox is marked as degraded." "\n" "C7 " "OK - degraded gearbox status triggered gearbox maintenance." "\n" "C8 " "OK - rotor speed is below the critical RPM threshold, so the urgent action is not based on overspeed." "\n" "C9 " "OK - two separate actions were derived: inspection and maintenance." "\n") string:concatenation "Wind turbine — Predictive maintenance\n\n## Answer\nAct now: schedule an urgent inspection and gearbox maintenance.\n\n## Reason Why\nNorth field turbine reports vibration 0.42 against a threshold of 0.35, temperature 78 against a threshold of 75, and rotor speed 1650 against a critical limit of 1800. Both vibration and temperature are above their safety thresholds, so the turbine shows a combined warning pattern. The gearbox is also degraded, so maintenance is needed even though the rotor speed is still below the critical RPM limit.\n\n## Check\nC1 OK - measured vibration is above the vibration threshold.\nC2 OK - measured temperature is above the temperature threshold.\nC3 OK - a high-vibration anomaly was inferred from the readings.\nC4 OK - a high-temperature anomaly was inferred from the readings.\nC5 OK - urgent inspection follows from the combination of both anomalies.\nC6 OK - the gearbox is marked as degraded.\nC7 OK - degraded gearbox status triggered gearbox maintenance.\nC8 OK - rotor speed is below the critical RPM threshold, so the urgent action is not based on overspeed.\nC9 OK - two separate actions were derived: inspection and maintenance.\n" . }.
+
+{ :turbine1 :label "North field turbine" . }
+  pe:fact "wind-turbine.n3".
+
+{ ("Wind turbine — Predictive maintenance\n\n" "## Answer\n" "Act now: schedule an urgent inspection and gearbox maintenance." "\n\n" "## Reason Why\n" "North field turbine" " reports vibration " 0.42 " against a threshold of " 0.35 ", temperature " "78"^^xsd:decimal " against a threshold of " "75"^^xsd:decimal ", and rotor speed " "1650"^^xsd:decimal " against a critical limit of " "1800"^^xsd:decimal ". " "Both vibration and temperature are above their safety thresholds, so the turbine shows a combined warning pattern. The gearbox is also degraded, so maintenance is needed even though the rotor speed is still below the critical RPM limit." "\n\n" "## Check\n" "C1 " "OK - measured vibration is above the vibration threshold." "\n" "C2 " "OK - measured temperature is above the temperature threshold." "\n" "C3 " "OK - a high-vibration anomaly was inferred from the readings." "\n" "C4 " "OK - a high-temperature anomaly was inferred from the readings." "\n" "C5 " "OK - urgent inspection follows from the combination of both anomalies." "\n" "C6 " "OK - the gearbox is marked as degraded." "\n" "C7 " "OK - degraded gearbox status triggered gearbox maintenance." "\n" "C8 " "OK - rotor speed is below the critical RPM threshold, so the urgent action is not based on overspeed." "\n" "C9 " "OK - two separate actions were derived: inspection and maintenance." "\n") string:concatenation "Wind turbine — Predictive maintenance\n\n## Answer\nAct now: schedule an urgent inspection and gearbox maintenance.\n\n## Reason Why\nNorth field turbine reports vibration 0.42 against a threshold of 0.35, temperature 78 against a threshold of 75, and rotor speed 1650 against a critical limit of 1800. Both vibration and temperature are above their safety thresholds, so the turbine shows a combined warning pattern. The gearbox is also degraded, so maintenance is needed even though the rotor speed is still below the critical RPM limit.\n\n## Check\nC1 OK - measured vibration is above the vibration threshold.\nC2 OK - measured temperature is above the temperature threshold.\nC3 OK - a high-vibration anomaly was inferred from the readings.\nC4 OK - a high-temperature anomaly was inferred from the readings.\nC5 OK - urgent inspection follows from the combination of both anomalies.\nC6 OK - the gearbox is marked as degraded.\nC7 OK - degraded gearbox status triggered gearbox maintenance.\nC8 OK - rotor speed is below the critical RPM threshold, so the urgent action is not based on overspeed.\nC9 OK - two separate actions were derived: inspection and maintenance.\n" . }
+  pe:builtin string:concatenation.

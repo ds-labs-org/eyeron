@@ -1,0 +1,210 @@
+@prefix : <http://example.org/tunnel-junction-wake-switch-becoming/> .
+@prefix log: <http://www.w3.org/2000/10/swap/log#> .
+@prefix pe: <https://eyereasoner.github.io/pe#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+:tunnelJunction :canBecome :QuantumTransferState .
+:tunnelJunction :transportMode :TunnelingDominant .
+:tunnelJunction :canBecome :SubThresholdCurrentState .
+:tunnelJunction :canBecome :NegativeDifferentialResponseState .
+:tunnelJunction :canBecome :UltraLowBiasSwitchingState .
+:ordinaryJunction :cannotBecome :QuantumTransferState .
+:ordinaryJunction :cannotBecome :SubThresholdCurrentState .
+:ordinaryJunction :cannotBecome :UltraLowBiasSwitchingState .
+:case :checkB1 :Passed .
+:case :checkB2 :Passed .
+:case :checkB3 :Passed .
+:case :checkB4 :Passed .
+:case :checkB5 :Passed .
+:tunnelJunction :canBecome :LeakAlarmWakeServingState .
+:case :checkB7 :Passed .
+:ordinaryJunction :cannotBecome :NegativeDifferentialResponseState .
+:case :checkB8 :Passed .
+:case :checkB10 :Passed .
+:ordinaryJunction :cannotBecome :LeakAlarmWakeServingState .
+:case :checkB6 :Passed .
+:case :checkB9 :Passed .
+:case :checkB11 :Passed .
+:out log:outputString "tunnel-junction wake switch — becoming\n\n## Answer\nYES for the tunnel junction.\nNO for the conventional low-bias PN junction in the same wake-switch regime.\n\n## Reason Why\nThe tunnel junction can be read as a becoming under low forward bias. Because it is modeled as a heavily doped narrow PN junction with overlapping states, it can become a quantum-transfer state. In that regime it can become a sub-threshold current state, and under peak-to-valley scanning it can also become a negative differential response state. As a wake-switch device, that lets it become an ultra-low-bias switching state and finally a leak-alarm wake-serving state. By contrast, the conventional junction lacks the structural conditions needed for the same transition into quantum transfer, so the later wake-serving becoming is blocked as well.\n\n## Check\nB1  OK - the tunnel junction can become a quantum-transfer state\nB2  OK - the tunnel junction is classified as tunneling-dominant\nB3  OK - the tunnel junction can become a sub-threshold current state\nB4  OK - the tunnel junction can become a negative differential response state\nB5  OK - the tunnel junction can become an ultra-low-bias switching state\nB6  OK - the tunnel junction can become a leak-alarm wake-serving state\nB7  OK - the conventional junction cannot become a quantum-transfer state\nB8  OK - the conventional junction cannot become a sub-threshold current state\nB9  OK - the conventional junction cannot become the tunnel-style negative differential state\nB10 OK - the conventional junction cannot become an ultra-low-bias switching state here\nB11 OK - the conventional junction cannot become a leak-alarm wake-serving state in this case\n" .
+
+{ :tunnelJunction :canBecome :QuantumTransferState . }
+  pe:rule 1;
+  pe:binding [ pe:var "J"; pe:value :tunnelJunction ];
+  pe:uses
+    { :tunnelJunction a :PNJunction . },
+    { :tunnelJunction :doping :Heavy . },
+    { :tunnelJunction :depletionWidth :Narrow . },
+    { :tunnelJunction :stateAlignment :Overlap . }.
+
+{ :tunnelJunction a :PNJunction . }
+  pe:fact "tunnel-junction-wake-switch-becoming.n3".
+
+{ :tunnelJunction :doping :Heavy . }
+  pe:fact "tunnel-junction-wake-switch-becoming.n3".
+
+{ :tunnelJunction :depletionWidth :Narrow . }
+  pe:fact "tunnel-junction-wake-switch-becoming.n3".
+
+{ :tunnelJunction :stateAlignment :Overlap . }
+  pe:fact "tunnel-junction-wake-switch-becoming.n3".
+
+{ :tunnelJunction :transportMode :TunnelingDominant . }
+  pe:rule 1;
+  pe:binding [ pe:var "J"; pe:value :tunnelJunction ];
+  pe:uses
+    { :tunnelJunction a :PNJunction . },
+    { :tunnelJunction :doping :Heavy . },
+    { :tunnelJunction :depletionWidth :Narrow . },
+    { :tunnelJunction :stateAlignment :Overlap . }.
+
+{ :tunnelJunction :canBecome :SubThresholdCurrentState . }
+  pe:rule 2;
+  pe:binding [ pe:var "J"; pe:value :tunnelJunction ];
+  pe:uses
+    { :tunnelJunction :canBecome :QuantumTransferState . },
+    { :tunnelJunction :biasRegime :LowForwardBias . }.
+
+{ :tunnelJunction :biasRegime :LowForwardBias . }
+  pe:fact "tunnel-junction-wake-switch-becoming.n3".
+
+{ :tunnelJunction :canBecome :NegativeDifferentialResponseState . }
+  pe:rule 3;
+  pe:binding [ pe:var "J"; pe:value :tunnelJunction ];
+  pe:uses
+    { :tunnelJunction :canBecome :QuantumTransferState . },
+    { :tunnelJunction :scanProfile :PeakToValley . }.
+
+{ :tunnelJunction :scanProfile :PeakToValley . }
+  pe:fact "tunnel-junction-wake-switch-becoming.n3".
+
+{ :tunnelJunction :canBecome :UltraLowBiasSwitchingState . }
+  pe:rule 4;
+  pe:binding [ pe:var "J"; pe:value :tunnelJunction ];
+  pe:uses
+    { :tunnelJunction :canBecome :SubThresholdCurrentState . },
+    { :tunnelJunction :deviceRole :WakeSwitch . }.
+
+{ :tunnelJunction :deviceRole :WakeSwitch . }
+  pe:fact "tunnel-junction-wake-switch-becoming.n3".
+
+{ :ordinaryJunction :cannotBecome :QuantumTransferState . }
+  pe:rule 6;
+  pe:binding [ pe:var "J"; pe:value :ordinaryJunction ];
+  pe:uses
+    { :ordinaryJunction a :PNJunction . },
+    { :ordinaryJunction :doping :Standard . },
+    { :ordinaryJunction :depletionWidth :Wide . },
+    { :ordinaryJunction :stateAlignment :NoOverlap . }.
+
+{ :ordinaryJunction a :PNJunction . }
+  pe:fact "tunnel-junction-wake-switch-becoming.n3".
+
+{ :ordinaryJunction :doping :Standard . }
+  pe:fact "tunnel-junction-wake-switch-becoming.n3".
+
+{ :ordinaryJunction :depletionWidth :Wide . }
+  pe:fact "tunnel-junction-wake-switch-becoming.n3".
+
+{ :ordinaryJunction :stateAlignment :NoOverlap . }
+  pe:fact "tunnel-junction-wake-switch-becoming.n3".
+
+{ :ordinaryJunction :cannotBecome :SubThresholdCurrentState . }
+  pe:rule 7;
+  pe:binding [ pe:var "J"; pe:value :ordinaryJunction ];
+  pe:uses
+    { :ordinaryJunction :cannotBecome :QuantumTransferState . },
+    { :ordinaryJunction :biasRegime :LowForwardBias . }.
+
+{ :ordinaryJunction :biasRegime :LowForwardBias . }
+  pe:fact "tunnel-junction-wake-switch-becoming.n3".
+
+{ :ordinaryJunction :cannotBecome :UltraLowBiasSwitchingState . }
+  pe:rule 9;
+  pe:binding [ pe:var "J"; pe:value :ordinaryJunction ];
+  pe:uses
+    { :ordinaryJunction :cannotBecome :SubThresholdCurrentState . },
+    { :ordinaryJunction :deviceRole :WakeSwitch . }.
+
+{ :ordinaryJunction :deviceRole :WakeSwitch . }
+  pe:fact "tunnel-junction-wake-switch-becoming.n3".
+
+{ :case :checkB1 :Passed . }
+  pe:rule 11;
+  pe:uses { :tunnelJunction :canBecome :QuantumTransferState . }.
+
+{ :case :checkB2 :Passed . }
+  pe:rule 12;
+  pe:uses { :tunnelJunction :transportMode :TunnelingDominant . }.
+
+{ :case :checkB3 :Passed . }
+  pe:rule 13;
+  pe:uses { :tunnelJunction :canBecome :SubThresholdCurrentState . }.
+
+{ :case :checkB4 :Passed . }
+  pe:rule 14;
+  pe:uses { :tunnelJunction :canBecome :NegativeDifferentialResponseState . }.
+
+{ :case :checkB5 :Passed . }
+  pe:rule 15;
+  pe:uses { :tunnelJunction :canBecome :UltraLowBiasSwitchingState . }.
+
+{ :tunnelJunction :canBecome :LeakAlarmWakeServingState . }
+  pe:rule 5;
+  pe:binding [ pe:var "J"; pe:value :tunnelJunction ];
+  pe:uses
+    { :tunnelJunction :canBecome :UltraLowBiasSwitchingState . },
+    { :leakAlarmNode :needs :MicrowattWakeSwitching . }.
+
+{ :leakAlarmNode :needs :MicrowattWakeSwitching . }
+  pe:fact "tunnel-junction-wake-switch-becoming.n3".
+
+{ :case :checkB7 :Passed . }
+  pe:rule 17;
+  pe:uses { :ordinaryJunction :cannotBecome :QuantumTransferState . }.
+
+{ :ordinaryJunction :cannotBecome :NegativeDifferentialResponseState . }
+  pe:rule 8;
+  pe:binding [ pe:var "J"; pe:value :ordinaryJunction ];
+  pe:uses { :ordinaryJunction :cannotBecome :QuantumTransferState . }.
+
+{ :case :checkB8 :Passed . }
+  pe:rule 18;
+  pe:uses { :ordinaryJunction :cannotBecome :SubThresholdCurrentState . }.
+
+{ :case :checkB10 :Passed . }
+  pe:rule 20;
+  pe:uses { :ordinaryJunction :cannotBecome :UltraLowBiasSwitchingState . }.
+
+{ :ordinaryJunction :cannotBecome :LeakAlarmWakeServingState . }
+  pe:rule 10;
+  pe:binding [ pe:var "J"; pe:value :ordinaryJunction ];
+  pe:uses
+    { :ordinaryJunction :cannotBecome :UltraLowBiasSwitchingState . },
+    { :leakAlarmNode :needs :MicrowattWakeSwitching . }.
+
+{ :case :checkB6 :Passed . }
+  pe:rule 16;
+  pe:uses { :tunnelJunction :canBecome :LeakAlarmWakeServingState . }.
+
+{ :case :checkB9 :Passed . }
+  pe:rule 19;
+  pe:uses { :ordinaryJunction :cannotBecome :NegativeDifferentialResponseState . }.
+
+{ :case :checkB11 :Passed . }
+  pe:rule 21;
+  pe:uses { :ordinaryJunction :cannotBecome :LeakAlarmWakeServingState . }.
+
+{ :out log:outputString "tunnel-junction wake switch — becoming\n\n## Answer\nYES for the tunnel junction.\nNO for the conventional low-bias PN junction in the same wake-switch regime.\n\n## Reason Why\nThe tunnel junction can be read as a becoming under low forward bias. Because it is modeled as a heavily doped narrow PN junction with overlapping states, it can become a quantum-transfer state. In that regime it can become a sub-threshold current state, and under peak-to-valley scanning it can also become a negative differential response state. As a wake-switch device, that lets it become an ultra-low-bias switching state and finally a leak-alarm wake-serving state. By contrast, the conventional junction lacks the structural conditions needed for the same transition into quantum transfer, so the later wake-serving becoming is blocked as well.\n\n## Check\nB1  OK - the tunnel junction can become a quantum-transfer state\nB2  OK - the tunnel junction is classified as tunneling-dominant\nB3  OK - the tunnel junction can become a sub-threshold current state\nB4  OK - the tunnel junction can become a negative differential response state\nB5  OK - the tunnel junction can become an ultra-low-bias switching state\nB6  OK - the tunnel junction can become a leak-alarm wake-serving state\nB7  OK - the conventional junction cannot become a quantum-transfer state\nB8  OK - the conventional junction cannot become a sub-threshold current state\nB9  OK - the conventional junction cannot become the tunnel-style negative differential state\nB10 OK - the conventional junction cannot become an ultra-low-bias switching state here\nB11 OK - the conventional junction cannot become a leak-alarm wake-serving state in this case\n" . }
+  pe:rule 22;
+  pe:uses
+    { :case :checkB1 :Passed . },
+    { :case :checkB2 :Passed . },
+    { :case :checkB3 :Passed . },
+    { :case :checkB4 :Passed . },
+    { :case :checkB5 :Passed . },
+    { :case :checkB6 :Passed . },
+    { :case :checkB7 :Passed . },
+    { :case :checkB8 :Passed . },
+    { :case :checkB9 :Passed . },
+    { :case :checkB10 :Passed . },
+    { :case :checkB11 :Passed . }.

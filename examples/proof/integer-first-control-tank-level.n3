@@ -1,0 +1,2732 @@
+@prefix : <http://example.org/integer-control#> .
+@prefix math: <http://www.w3.org/2000/10/swap/math#> .
+@prefix pe: <https://eyereasoner.github.io/pe#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+:trialLow :levelAt (0 12) .
+:trialHigh :levelAt (0 28) .
+:trialNominal :levelAt (0 20) .
+:trialLow :valveAt (0 4) .
+:trialLow :levelAt (1 14) .
+:trialLow :errorAt (0 8) .
+:trialLow :sideAt (0 :below) .
+:trialHigh :valveAt (0 0) .
+:trialHigh :levelAt (1 26) .
+:trialHigh :errorAt (0 8) .
+:trialHigh :sideAt (0 :aboveOrOn) .
+:trialNominal :valveAt (0 2) .
+:trialNominal :levelAt (1 20) .
+:trialNominal :errorAt (0 0) .
+:trialNominal :sideAt (0 :aboveOrOn) .
+:trialNominal :holdBandAt 0 .
+:trialNominal :invariantStepAt 0 .
+:trialLow :valveAt (1 4) .
+:trialLow :levelAt (2 16) .
+:trialLow :errorAt (1 6) .
+:trialLow :sideAt (1 :below) .
+:trialLow :strictImprovementAt 0 .
+:trialHigh :valveAt (1 0) .
+:trialHigh :levelAt (2 24) .
+:trialHigh :errorAt (1 6) .
+:trialHigh :sideAt (1 :aboveOrOn) .
+:trialHigh :strictImprovementAt 0 .
+:trialNominal :valveAt (1 2) .
+:trialNominal :levelAt (2 20) .
+:trialNominal :errorAt (1 0) .
+:trialNominal :sideAt (1 :aboveOrOn) .
+:trialNominal :holdBandAt 1 .
+:trialNominal :invariantStepAt 1 .
+:trialLow :valveAt (2 3) .
+:trialLow :levelAt (3 17) .
+:trialLow :errorAt (2 4) .
+:trialLow :sideAt (2 :below) .
+:trialLow :strictImprovementAt 1 .
+:trialHigh :valveAt (2 1) .
+:trialHigh :levelAt (3 23) .
+:trialHigh :errorAt (2 4) .
+:trialHigh :sideAt (2 :aboveOrOn) .
+:trialHigh :strictImprovementAt 1 .
+:trialNominal :valveAt (2 2) .
+:trialNominal :levelAt (3 20) .
+:trialNominal :errorAt (2 0) .
+:trialNominal :sideAt (2 :aboveOrOn) .
+:trialNominal :holdBandAt 2 .
+:trialNominal :invariantStepAt 2 .
+:trialLow :valveAt (3 3) .
+:trialLow :levelAt (4 18) .
+:trialLow :errorAt (3 3) .
+:trialLow :sideAt (3 :below) .
+:trialLow :strictImprovementAt 2 .
+:trialHigh :valveAt (3 1) .
+:trialHigh :levelAt (4 22) .
+:trialHigh :errorAt (3 3) .
+:trialHigh :sideAt (3 :aboveOrOn) .
+:trialHigh :strictImprovementAt 2 .
+:trialNominal :valveAt (3 2) .
+:trialNominal :levelAt (4 20) .
+:trialNominal :errorAt (3 0) .
+:trialNominal :sideAt (3 :aboveOrOn) .
+:trialNominal :holdBandAt 3 .
+:trialNominal :invariantStepAt 3 .
+:trialLow :valveAt (4 3) .
+:trialLow :levelAt (5 19) .
+:trialLow :errorAt (4 2) .
+:trialLow :sideAt (4 :below) .
+:trialLow :strictImprovementAt 3 .
+:trialHigh :valveAt (4 1) .
+:trialHigh :levelAt (5 21) .
+:trialHigh :errorAt (4 2) .
+:trialHigh :sideAt (4 :aboveOrOn) .
+:trialHigh :strictImprovementAt 3 .
+:trialNominal :valveAt (4 2) .
+:trialNominal :levelAt (5 20) .
+:trialNominal :errorAt (4 0) .
+:trialNominal :sideAt (4 :aboveOrOn) .
+:trialNominal :holdBandAt 4 .
+:trialNominal :invariantStepAt 4 .
+:trialLow :valveAt (5 2) .
+:trialLow :levelAt (6 19) .
+:trialLow :errorAt (5 1) .
+:trialLow :sideAt (5 :below) .
+:trialLow :holdBandAt 5 .
+:trialLow :invariantStepAt 5 .
+:trialLow :strictImprovementAt 4 .
+:trialHigh :valveAt (5 2) .
+:trialHigh :levelAt (6 21) .
+:trialHigh :errorAt (5 1) .
+:trialHigh :sideAt (5 :aboveOrOn) .
+:trialHigh :holdBandAt 5 .
+:trialHigh :invariantStepAt 5 .
+:trialHigh :strictImprovementAt 4 .
+:trialNominal :valveAt (5 2) .
+:trialNominal :levelAt (6 20) .
+:trialNominal :errorAt (5 0) .
+:trialNominal :sideAt (5 :aboveOrOn) .
+:trialNominal :holdBandAt 5 .
+:trialNominal :invariantStepAt 5 .
+:trialLow :valveAt (6 2) .
+:trialLow :levelAt (7 19) .
+:trialLow :errorAt (6 1) .
+:trialLow :sideAt (6 :below) .
+:trialLow :holdBandAt 6 .
+:trialLow :invariantStepAt 6 .
+:trialHigh :valveAt (6 2) .
+:trialHigh :levelAt (7 21) .
+:trialHigh :errorAt (6 1) .
+:trialHigh :sideAt (6 :aboveOrOn) .
+:trialHigh :holdBandAt 6 .
+:trialHigh :invariantStepAt 6 .
+:trialNominal :valveAt (6 2) .
+:trialNominal :levelAt (7 20) .
+:trialNominal :errorAt (6 0) .
+:trialNominal :sideAt (6 :aboveOrOn) .
+:trialNominal :holdBandAt 6 .
+:trialNominal :invariantStepAt 6 .
+:trialLow :valveAt (7 2) .
+:trialLow :levelAt (8 19) .
+:trialLow :errorAt (7 1) .
+:trialLow :sideAt (7 :below) .
+:trialLow :holdBandAt 7 .
+:trialLow :invariantStepAt 7 .
+:trialHigh :valveAt (7 2) .
+:trialHigh :levelAt (8 21) .
+:trialHigh :errorAt (7 1) .
+:trialHigh :sideAt (7 :aboveOrOn) .
+:trialHigh :holdBandAt 7 .
+:trialHigh :invariantStepAt 7 .
+:trialNominal :valveAt (7 2) .
+:trialNominal :levelAt (8 20) .
+:trialNominal :errorAt (7 0) .
+:trialNominal :sideAt (7 :aboveOrOn) .
+:trialNominal :holdBandAt 7 .
+:trialNominal :invariantStepAt 7 .
+:trialLow :valveAt (8 2) .
+:trialLow :errorAt (8 1) .
+:trialLow :sideAt (8 :below) .
+:trialHigh :valveAt (8 2) .
+:trialHigh :errorAt (8 1) .
+:trialHigh :sideAt (8 :aboveOrOn) .
+:trialNominal :valveAt (8 2) .
+:trialNominal :errorAt (8 0) .
+:trialNominal :sideAt (8 :aboveOrOn) .
+
+{ :trialLow :levelAt (0 12) . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "level0"; pe:value 12 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses
+    { :trialLow a :ClosedLoopTrial . },
+    { :trialLow :initialLevel 12 . }.
+
+{ :trialLow a :ClosedLoopTrial . }
+  pe:fact "integer-first-control-tank-level.n3".
+
+{ :trialLow :initialLevel 12 . }
+  pe:fact "integer-first-control-tank-level.n3".
+
+{ :trialHigh :levelAt (0 28) . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "level0"; pe:value 28 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses
+    { :trialHigh a :ClosedLoopTrial . },
+    { :trialHigh :initialLevel 28 . }.
+
+{ :trialHigh a :ClosedLoopTrial . }
+  pe:fact "integer-first-control-tank-level.n3".
+
+{ :trialHigh :initialLevel 28 . }
+  pe:fact "integer-first-control-tank-level.n3".
+
+{ :trialNominal :levelAt (0 20) . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "level0"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :trialNominal a :ClosedLoopTrial . },
+    { :trialNominal :initialLevel 20 . }.
+
+{ :trialNominal a :ClosedLoopTrial . }
+  pe:fact "integer-first-control-tank-level.n3".
+
+{ :trialNominal :initialLevel 20 . }
+  pe:fact "integer-first-control-tank-level.n3".
+
+{ :trialLow :valveAt (0 4) . }
+  pe:rule 2;
+  pe:binding
+    [ pe:var "k"; pe:value 0 ],
+    [ pe:var "level"; pe:value 12 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses
+    { :trialLow :levelAt (0 12) . },
+    { 12 math:lessThan 16 . }.
+
+{ 12 math:lessThan 16 . }
+  pe:builtin math:lessThan.
+
+{ :trialLow :levelAt (1 14) . }
+  pe:rule 7;
+  pe:binding
+    [ pe:var "inflowed"; pe:value 16 ],
+    [ pe:var "k"; pe:value 0 ],
+    [ pe:var "k1"; pe:value 1 ],
+    [ pe:var "level"; pe:value 12 ],
+    [ pe:var "max"; pe:value 8 ],
+    [ pe:var "nextLevel"; pe:value 14 ],
+    [ pe:var "outflow"; pe:value 2 ],
+    [ pe:var "trial"; pe:value :trialLow ],
+    [ pe:var "valve"; pe:value 4 ];
+  pe:uses
+    { :controller :maxStep 8 . },
+    { :controller :outflow 2 . },
+    { :trialLow a :ClosedLoopTrial . },
+    { :trialLow :levelAt (0 12) . },
+    { :trialLow :valveAt (0 4) . },
+    { 0 math:lessThan 8 . },
+    { (0 1) math:sum 1 . },
+    { (12 4) math:sum 16 . },
+    { (16 2) math:difference 14 . }.
+
+{ :controller :maxStep 8 . }
+  pe:fact "integer-first-control-tank-level.n3".
+
+{ :controller :outflow 2 . }
+  pe:fact "integer-first-control-tank-level.n3".
+
+{ 0 math:lessThan 8 . }
+  pe:builtin math:lessThan.
+
+{ (0 1) math:sum 1 . }
+  pe:builtin math:sum.
+
+{ (12 4) math:sum 16 . }
+  pe:builtin math:sum.
+
+{ (16 2) math:difference 14 . }
+  pe:builtin math:difference.
+
+{ :trialLow :errorAt (0 8) . }
+  pe:rule 8;
+  pe:binding
+    [ pe:var "error"; pe:value 8 ],
+    [ pe:var "k"; pe:value 0 ],
+    [ pe:var "level"; pe:value 12 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialLow :levelAt (0 12) . },
+    { 12 math:lessThan 20 . },
+    { (20 12) math:difference 8 . }.
+
+{ :controller :setpoint 20 . }
+  pe:fact "integer-first-control-tank-level.n3".
+
+{ 12 math:lessThan 20 . }
+  pe:builtin math:lessThan.
+
+{ (20 12) math:difference 8 . }
+  pe:builtin math:difference.
+
+{ :trialLow :sideAt (0 :below) . }
+  pe:rule 8;
+  pe:binding
+    [ pe:var "error"; pe:value 8 ],
+    [ pe:var "k"; pe:value 0 ],
+    [ pe:var "level"; pe:value 12 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialLow :levelAt (0 12) . },
+    { 12 math:lessThan 20 . },
+    { (20 12) math:difference 8 . }.
+
+{ :trialHigh :valveAt (0 0) . }
+  pe:rule 6;
+  pe:binding
+    [ pe:var "k"; pe:value 0 ],
+    [ pe:var "level"; pe:value 28 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses
+    { :trialHigh :levelAt (0 28) . },
+    { 28 math:greaterThan 24 . }.
+
+{ 28 math:greaterThan 24 . }
+  pe:builtin math:greaterThan.
+
+{ :trialHigh :levelAt (1 26) . }
+  pe:rule 7;
+  pe:binding
+    [ pe:var "inflowed"; pe:value 28 ],
+    [ pe:var "k"; pe:value 0 ],
+    [ pe:var "k1"; pe:value 1 ],
+    [ pe:var "level"; pe:value 28 ],
+    [ pe:var "max"; pe:value 8 ],
+    [ pe:var "nextLevel"; pe:value 26 ],
+    [ pe:var "outflow"; pe:value 2 ],
+    [ pe:var "trial"; pe:value :trialHigh ],
+    [ pe:var "valve"; pe:value 0 ];
+  pe:uses
+    { :controller :maxStep 8 . },
+    { :controller :outflow 2 . },
+    { :trialHigh a :ClosedLoopTrial . },
+    { :trialHigh :levelAt (0 28) . },
+    { :trialHigh :valveAt (0 0) . },
+    { 0 math:lessThan 8 . },
+    { (0 1) math:sum 1 . },
+    { (28 0) math:sum 28 . },
+    { (28 2) math:difference 26 . }.
+
+{ (28 0) math:sum 28 . }
+  pe:builtin math:sum.
+
+{ (28 2) math:difference 26 . }
+  pe:builtin math:difference.
+
+{ :trialHigh :errorAt (0 8) . }
+  pe:rule 9;
+  pe:binding
+    [ pe:var "error"; pe:value 8 ],
+    [ pe:var "k"; pe:value 0 ],
+    [ pe:var "level"; pe:value 28 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialHigh :levelAt (0 28) . },
+    { 28 math:notLessThan 20 . },
+    { (28 20) math:difference 8 . }.
+
+{ 28 math:notLessThan 20 . }
+  pe:builtin math:notLessThan.
+
+{ (28 20) math:difference 8 . }
+  pe:builtin math:difference.
+
+{ :trialHigh :sideAt (0 :aboveOrOn) . }
+  pe:rule 9;
+  pe:binding
+    [ pe:var "error"; pe:value 8 ],
+    [ pe:var "k"; pe:value 0 ],
+    [ pe:var "level"; pe:value 28 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialHigh :levelAt (0 28) . },
+    { 28 math:notLessThan 20 . },
+    { (28 20) math:difference 8 . }.
+
+{ :trialNominal :valveAt (0 2) . }
+  pe:rule 4;
+  pe:binding
+    [ pe:var "k"; pe:value 0 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :trialNominal :levelAt (0 20) . },
+    { 20 math:notLessThan 19 . },
+    { 20 math:notGreaterThan 21 . }.
+
+{ 20 math:notLessThan 19 . }
+  pe:builtin math:notLessThan.
+
+{ 20 math:notGreaterThan 21 . }
+  pe:builtin math:notGreaterThan.
+
+{ :trialNominal :levelAt (1 20) . }
+  pe:rule 7;
+  pe:binding
+    [ pe:var "inflowed"; pe:value 22 ],
+    [ pe:var "k"; pe:value 0 ],
+    [ pe:var "k1"; pe:value 1 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "max"; pe:value 8 ],
+    [ pe:var "nextLevel"; pe:value 20 ],
+    [ pe:var "outflow"; pe:value 2 ],
+    [ pe:var "trial"; pe:value :trialNominal ],
+    [ pe:var "valve"; pe:value 2 ];
+  pe:uses
+    { :controller :maxStep 8 . },
+    { :controller :outflow 2 . },
+    { :trialNominal a :ClosedLoopTrial . },
+    { :trialNominal :levelAt (0 20) . },
+    { :trialNominal :valveAt (0 2) . },
+    { 0 math:lessThan 8 . },
+    { (0 1) math:sum 1 . },
+    { (20 2) math:sum 22 . },
+    { (22 2) math:difference 20 . }.
+
+{ (20 2) math:sum 22 . }
+  pe:builtin math:sum.
+
+{ (22 2) math:difference 20 . }
+  pe:builtin math:difference.
+
+{ :trialNominal :errorAt (0 0) . }
+  pe:rule 9;
+  pe:binding
+    [ pe:var "error"; pe:value 0 ],
+    [ pe:var "k"; pe:value 0 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialNominal :levelAt (0 20) . },
+    { 20 math:notLessThan 20 . },
+    { (20 20) math:difference 0 . }.
+
+{ 20 math:notLessThan 20 . }
+  pe:builtin math:notLessThan.
+
+{ (20 20) math:difference 0 . }
+  pe:builtin math:difference.
+
+{ :trialNominal :sideAt (0 :aboveOrOn) . }
+  pe:rule 9;
+  pe:binding
+    [ pe:var "error"; pe:value 0 ],
+    [ pe:var "k"; pe:value 0 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialNominal :levelAt (0 20) . },
+    { 20 math:notLessThan 20 . },
+    { (20 20) math:difference 0 . }.
+
+{ :trialNominal :holdBandAt 0 . }
+  pe:rule 11;
+  pe:binding
+    [ pe:var "k"; pe:value 0 ],
+    [ pe:var "k1"; pe:value 1 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "nextLevel"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :trialNominal :levelAt (0 20) . },
+    { :trialNominal :valveAt (0 2) . },
+    { 20 math:notLessThan 19 . },
+    { 20 math:notGreaterThan 21 . },
+    { (0 1) math:sum 1 . },
+    { :trialNominal :levelAt (1 20) . },
+    { 20 math:equalTo 20 . }.
+
+{ 20 math:equalTo 20 . }
+  pe:builtin math:equalTo.
+
+{ :trialNominal :invariantStepAt 0 . }
+  pe:rule 11;
+  pe:binding
+    [ pe:var "k"; pe:value 0 ],
+    [ pe:var "k1"; pe:value 1 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "nextLevel"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :trialNominal :levelAt (0 20) . },
+    { :trialNominal :valveAt (0 2) . },
+    { 20 math:notLessThan 19 . },
+    { 20 math:notGreaterThan 21 . },
+    { (0 1) math:sum 1 . },
+    { :trialNominal :levelAt (1 20) . },
+    { 20 math:equalTo 20 . }.
+
+{ :trialLow :valveAt (1 4) . }
+  pe:rule 2;
+  pe:binding
+    [ pe:var "k"; pe:value 1 ],
+    [ pe:var "level"; pe:value 14 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses
+    { :trialLow :levelAt (1 14) . },
+    { 14 math:lessThan 16 . }.
+
+{ 14 math:lessThan 16 . }
+  pe:builtin math:lessThan.
+
+{ :trialLow :levelAt (2 16) . }
+  pe:rule 7;
+  pe:binding
+    [ pe:var "inflowed"; pe:value 18 ],
+    [ pe:var "k"; pe:value 1 ],
+    [ pe:var "k1"; pe:value 2 ],
+    [ pe:var "level"; pe:value 14 ],
+    [ pe:var "max"; pe:value 8 ],
+    [ pe:var "nextLevel"; pe:value 16 ],
+    [ pe:var "outflow"; pe:value 2 ],
+    [ pe:var "trial"; pe:value :trialLow ],
+    [ pe:var "valve"; pe:value 4 ];
+  pe:uses
+    { :controller :maxStep 8 . },
+    { :controller :outflow 2 . },
+    { :trialLow a :ClosedLoopTrial . },
+    { :trialLow :levelAt (1 14) . },
+    { :trialLow :valveAt (1 4) . },
+    { 1 math:lessThan 8 . },
+    { (1 1) math:sum 2 . },
+    { (14 4) math:sum 18 . },
+    { (18 2) math:difference 16 . }.
+
+{ 1 math:lessThan 8 . }
+  pe:builtin math:lessThan.
+
+{ (1 1) math:sum 2 . }
+  pe:builtin math:sum.
+
+{ (14 4) math:sum 18 . }
+  pe:builtin math:sum.
+
+{ (18 2) math:difference 16 . }
+  pe:builtin math:difference.
+
+{ :trialLow :errorAt (1 6) . }
+  pe:rule 8;
+  pe:binding
+    [ pe:var "error"; pe:value 6 ],
+    [ pe:var "k"; pe:value 1 ],
+    [ pe:var "level"; pe:value 14 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialLow :levelAt (1 14) . },
+    { 14 math:lessThan 20 . },
+    { (20 14) math:difference 6 . }.
+
+{ 14 math:lessThan 20 . }
+  pe:builtin math:lessThan.
+
+{ (20 14) math:difference 6 . }
+  pe:builtin math:difference.
+
+{ :trialLow :sideAt (1 :below) . }
+  pe:rule 8;
+  pe:binding
+    [ pe:var "error"; pe:value 6 ],
+    [ pe:var "k"; pe:value 1 ],
+    [ pe:var "level"; pe:value 14 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialLow :levelAt (1 14) . },
+    { 14 math:lessThan 20 . },
+    { (20 14) math:difference 6 . }.
+
+{ :trialLow :strictImprovementAt 0 . }
+  pe:rule 10;
+  pe:binding
+    [ pe:var "error"; pe:value 8 ],
+    [ pe:var "k"; pe:value 0 ],
+    [ pe:var "k1"; pe:value 1 ],
+    [ pe:var "nextError"; pe:value 6 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses
+    { :trialLow :errorAt (0 8) . },
+    { 8 math:greaterThan 1 . },
+    { (0 1) math:sum 1 . },
+    { :trialLow :errorAt (1 6) . },
+    { 6 math:lessThan 8 . }.
+
+{ 8 math:greaterThan 1 . }
+  pe:builtin math:greaterThan.
+
+{ 6 math:lessThan 8 . }
+  pe:builtin math:lessThan.
+
+{ :trialHigh :valveAt (1 0) . }
+  pe:rule 6;
+  pe:binding
+    [ pe:var "k"; pe:value 1 ],
+    [ pe:var "level"; pe:value 26 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses
+    { :trialHigh :levelAt (1 26) . },
+    { 26 math:greaterThan 24 . }.
+
+{ 26 math:greaterThan 24 . }
+  pe:builtin math:greaterThan.
+
+{ :trialHigh :levelAt (2 24) . }
+  pe:rule 7;
+  pe:binding
+    [ pe:var "inflowed"; pe:value 26 ],
+    [ pe:var "k"; pe:value 1 ],
+    [ pe:var "k1"; pe:value 2 ],
+    [ pe:var "level"; pe:value 26 ],
+    [ pe:var "max"; pe:value 8 ],
+    [ pe:var "nextLevel"; pe:value 24 ],
+    [ pe:var "outflow"; pe:value 2 ],
+    [ pe:var "trial"; pe:value :trialHigh ],
+    [ pe:var "valve"; pe:value 0 ];
+  pe:uses
+    { :controller :maxStep 8 . },
+    { :controller :outflow 2 . },
+    { :trialHigh a :ClosedLoopTrial . },
+    { :trialHigh :levelAt (1 26) . },
+    { :trialHigh :valveAt (1 0) . },
+    { 1 math:lessThan 8 . },
+    { (1 1) math:sum 2 . },
+    { (26 0) math:sum 26 . },
+    { (26 2) math:difference 24 . }.
+
+{ (26 0) math:sum 26 . }
+  pe:builtin math:sum.
+
+{ (26 2) math:difference 24 . }
+  pe:builtin math:difference.
+
+{ :trialHigh :errorAt (1 6) . }
+  pe:rule 9;
+  pe:binding
+    [ pe:var "error"; pe:value 6 ],
+    [ pe:var "k"; pe:value 1 ],
+    [ pe:var "level"; pe:value 26 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialHigh :levelAt (1 26) . },
+    { 26 math:notLessThan 20 . },
+    { (26 20) math:difference 6 . }.
+
+{ 26 math:notLessThan 20 . }
+  pe:builtin math:notLessThan.
+
+{ (26 20) math:difference 6 . }
+  pe:builtin math:difference.
+
+{ :trialHigh :sideAt (1 :aboveOrOn) . }
+  pe:rule 9;
+  pe:binding
+    [ pe:var "error"; pe:value 6 ],
+    [ pe:var "k"; pe:value 1 ],
+    [ pe:var "level"; pe:value 26 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialHigh :levelAt (1 26) . },
+    { 26 math:notLessThan 20 . },
+    { (26 20) math:difference 6 . }.
+
+{ :trialHigh :strictImprovementAt 0 . }
+  pe:rule 10;
+  pe:binding
+    [ pe:var "error"; pe:value 8 ],
+    [ pe:var "k"; pe:value 0 ],
+    [ pe:var "k1"; pe:value 1 ],
+    [ pe:var "nextError"; pe:value 6 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses
+    { :trialHigh :errorAt (0 8) . },
+    { 8 math:greaterThan 1 . },
+    { (0 1) math:sum 1 . },
+    { :trialHigh :errorAt (1 6) . },
+    { 6 math:lessThan 8 . }.
+
+{ :trialNominal :valveAt (1 2) . }
+  pe:rule 4;
+  pe:binding
+    [ pe:var "k"; pe:value 1 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :trialNominal :levelAt (1 20) . },
+    { 20 math:notLessThan 19 . },
+    { 20 math:notGreaterThan 21 . }.
+
+{ :trialNominal :levelAt (2 20) . }
+  pe:rule 7;
+  pe:binding
+    [ pe:var "inflowed"; pe:value 22 ],
+    [ pe:var "k"; pe:value 1 ],
+    [ pe:var "k1"; pe:value 2 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "max"; pe:value 8 ],
+    [ pe:var "nextLevel"; pe:value 20 ],
+    [ pe:var "outflow"; pe:value 2 ],
+    [ pe:var "trial"; pe:value :trialNominal ],
+    [ pe:var "valve"; pe:value 2 ];
+  pe:uses
+    { :controller :maxStep 8 . },
+    { :controller :outflow 2 . },
+    { :trialNominal a :ClosedLoopTrial . },
+    { :trialNominal :levelAt (1 20) . },
+    { :trialNominal :valveAt (1 2) . },
+    { 1 math:lessThan 8 . },
+    { (1 1) math:sum 2 . },
+    { (20 2) math:sum 22 . },
+    { (22 2) math:difference 20 . }.
+
+{ :trialNominal :errorAt (1 0) . }
+  pe:rule 9;
+  pe:binding
+    [ pe:var "error"; pe:value 0 ],
+    [ pe:var "k"; pe:value 1 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialNominal :levelAt (1 20) . },
+    { 20 math:notLessThan 20 . },
+    { (20 20) math:difference 0 . }.
+
+{ :trialNominal :sideAt (1 :aboveOrOn) . }
+  pe:rule 9;
+  pe:binding
+    [ pe:var "error"; pe:value 0 ],
+    [ pe:var "k"; pe:value 1 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialNominal :levelAt (1 20) . },
+    { 20 math:notLessThan 20 . },
+    { (20 20) math:difference 0 . }.
+
+{ :trialNominal :holdBandAt 1 . }
+  pe:rule 11;
+  pe:binding
+    [ pe:var "k"; pe:value 1 ],
+    [ pe:var "k1"; pe:value 2 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "nextLevel"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :trialNominal :levelAt (1 20) . },
+    { :trialNominal :valveAt (1 2) . },
+    { 20 math:notLessThan 19 . },
+    { 20 math:notGreaterThan 21 . },
+    { (1 1) math:sum 2 . },
+    { :trialNominal :levelAt (2 20) . },
+    { 20 math:equalTo 20 . }.
+
+{ :trialNominal :invariantStepAt 1 . }
+  pe:rule 11;
+  pe:binding
+    [ pe:var "k"; pe:value 1 ],
+    [ pe:var "k1"; pe:value 2 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "nextLevel"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :trialNominal :levelAt (1 20) . },
+    { :trialNominal :valveAt (1 2) . },
+    { 20 math:notLessThan 19 . },
+    { 20 math:notGreaterThan 21 . },
+    { (1 1) math:sum 2 . },
+    { :trialNominal :levelAt (2 20) . },
+    { 20 math:equalTo 20 . }.
+
+{ :trialLow :valveAt (2 3) . }
+  pe:rule 3;
+  pe:binding
+    [ pe:var "k"; pe:value 2 ],
+    [ pe:var "level"; pe:value 16 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses
+    { :trialLow :levelAt (2 16) . },
+    { 16 math:notLessThan 16 . },
+    { 16 math:lessThan 19 . }.
+
+{ 16 math:notLessThan 16 . }
+  pe:builtin math:notLessThan.
+
+{ 16 math:lessThan 19 . }
+  pe:builtin math:lessThan.
+
+{ :trialLow :levelAt (3 17) . }
+  pe:rule 7;
+  pe:binding
+    [ pe:var "inflowed"; pe:value 19 ],
+    [ pe:var "k"; pe:value 2 ],
+    [ pe:var "k1"; pe:value 3 ],
+    [ pe:var "level"; pe:value 16 ],
+    [ pe:var "max"; pe:value 8 ],
+    [ pe:var "nextLevel"; pe:value 17 ],
+    [ pe:var "outflow"; pe:value 2 ],
+    [ pe:var "trial"; pe:value :trialLow ],
+    [ pe:var "valve"; pe:value 3 ];
+  pe:uses
+    { :controller :maxStep 8 . },
+    { :controller :outflow 2 . },
+    { :trialLow a :ClosedLoopTrial . },
+    { :trialLow :levelAt (2 16) . },
+    { :trialLow :valveAt (2 3) . },
+    { 2 math:lessThan 8 . },
+    { (2 1) math:sum 3 . },
+    { (16 3) math:sum 19 . },
+    { (19 2) math:difference 17 . }.
+
+{ 2 math:lessThan 8 . }
+  pe:builtin math:lessThan.
+
+{ (2 1) math:sum 3 . }
+  pe:builtin math:sum.
+
+{ (16 3) math:sum 19 . }
+  pe:builtin math:sum.
+
+{ (19 2) math:difference 17 . }
+  pe:builtin math:difference.
+
+{ :trialLow :errorAt (2 4) . }
+  pe:rule 8;
+  pe:binding
+    [ pe:var "error"; pe:value 4 ],
+    [ pe:var "k"; pe:value 2 ],
+    [ pe:var "level"; pe:value 16 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialLow :levelAt (2 16) . },
+    { 16 math:lessThan 20 . },
+    { (20 16) math:difference 4 . }.
+
+{ 16 math:lessThan 20 . }
+  pe:builtin math:lessThan.
+
+{ (20 16) math:difference 4 . }
+  pe:builtin math:difference.
+
+{ :trialLow :sideAt (2 :below) . }
+  pe:rule 8;
+  pe:binding
+    [ pe:var "error"; pe:value 4 ],
+    [ pe:var "k"; pe:value 2 ],
+    [ pe:var "level"; pe:value 16 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialLow :levelAt (2 16) . },
+    { 16 math:lessThan 20 . },
+    { (20 16) math:difference 4 . }.
+
+{ :trialLow :strictImprovementAt 1 . }
+  pe:rule 10;
+  pe:binding
+    [ pe:var "error"; pe:value 6 ],
+    [ pe:var "k"; pe:value 1 ],
+    [ pe:var "k1"; pe:value 2 ],
+    [ pe:var "nextError"; pe:value 4 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses
+    { :trialLow :errorAt (1 6) . },
+    { 6 math:greaterThan 1 . },
+    { (1 1) math:sum 2 . },
+    { :trialLow :errorAt (2 4) . },
+    { 4 math:lessThan 6 . }.
+
+{ 6 math:greaterThan 1 . }
+  pe:builtin math:greaterThan.
+
+{ 4 math:lessThan 6 . }
+  pe:builtin math:lessThan.
+
+{ :trialHigh :valveAt (2 1) . }
+  pe:rule 5;
+  pe:binding
+    [ pe:var "k"; pe:value 2 ],
+    [ pe:var "level"; pe:value 24 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses
+    { :trialHigh :levelAt (2 24) . },
+    { 24 math:greaterThan 21 . },
+    { 24 math:notGreaterThan 24 . }.
+
+{ 24 math:greaterThan 21 . }
+  pe:builtin math:greaterThan.
+
+{ 24 math:notGreaterThan 24 . }
+  pe:builtin math:notGreaterThan.
+
+{ :trialHigh :levelAt (3 23) . }
+  pe:rule 7;
+  pe:binding
+    [ pe:var "inflowed"; pe:value 25 ],
+    [ pe:var "k"; pe:value 2 ],
+    [ pe:var "k1"; pe:value 3 ],
+    [ pe:var "level"; pe:value 24 ],
+    [ pe:var "max"; pe:value 8 ],
+    [ pe:var "nextLevel"; pe:value 23 ],
+    [ pe:var "outflow"; pe:value 2 ],
+    [ pe:var "trial"; pe:value :trialHigh ],
+    [ pe:var "valve"; pe:value 1 ];
+  pe:uses
+    { :controller :maxStep 8 . },
+    { :controller :outflow 2 . },
+    { :trialHigh a :ClosedLoopTrial . },
+    { :trialHigh :levelAt (2 24) . },
+    { :trialHigh :valveAt (2 1) . },
+    { 2 math:lessThan 8 . },
+    { (2 1) math:sum 3 . },
+    { (24 1) math:sum 25 . },
+    { (25 2) math:difference 23 . }.
+
+{ (24 1) math:sum 25 . }
+  pe:builtin math:sum.
+
+{ (25 2) math:difference 23 . }
+  pe:builtin math:difference.
+
+{ :trialHigh :errorAt (2 4) . }
+  pe:rule 9;
+  pe:binding
+    [ pe:var "error"; pe:value 4 ],
+    [ pe:var "k"; pe:value 2 ],
+    [ pe:var "level"; pe:value 24 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialHigh :levelAt (2 24) . },
+    { 24 math:notLessThan 20 . },
+    { (24 20) math:difference 4 . }.
+
+{ 24 math:notLessThan 20 . }
+  pe:builtin math:notLessThan.
+
+{ (24 20) math:difference 4 . }
+  pe:builtin math:difference.
+
+{ :trialHigh :sideAt (2 :aboveOrOn) . }
+  pe:rule 9;
+  pe:binding
+    [ pe:var "error"; pe:value 4 ],
+    [ pe:var "k"; pe:value 2 ],
+    [ pe:var "level"; pe:value 24 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialHigh :levelAt (2 24) . },
+    { 24 math:notLessThan 20 . },
+    { (24 20) math:difference 4 . }.
+
+{ :trialHigh :strictImprovementAt 1 . }
+  pe:rule 10;
+  pe:binding
+    [ pe:var "error"; pe:value 6 ],
+    [ pe:var "k"; pe:value 1 ],
+    [ pe:var "k1"; pe:value 2 ],
+    [ pe:var "nextError"; pe:value 4 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses
+    { :trialHigh :errorAt (1 6) . },
+    { 6 math:greaterThan 1 . },
+    { (1 1) math:sum 2 . },
+    { :trialHigh :errorAt (2 4) . },
+    { 4 math:lessThan 6 . }.
+
+{ :trialNominal :valveAt (2 2) . }
+  pe:rule 4;
+  pe:binding
+    [ pe:var "k"; pe:value 2 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :trialNominal :levelAt (2 20) . },
+    { 20 math:notLessThan 19 . },
+    { 20 math:notGreaterThan 21 . }.
+
+{ :trialNominal :levelAt (3 20) . }
+  pe:rule 7;
+  pe:binding
+    [ pe:var "inflowed"; pe:value 22 ],
+    [ pe:var "k"; pe:value 2 ],
+    [ pe:var "k1"; pe:value 3 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "max"; pe:value 8 ],
+    [ pe:var "nextLevel"; pe:value 20 ],
+    [ pe:var "outflow"; pe:value 2 ],
+    [ pe:var "trial"; pe:value :trialNominal ],
+    [ pe:var "valve"; pe:value 2 ];
+  pe:uses
+    { :controller :maxStep 8 . },
+    { :controller :outflow 2 . },
+    { :trialNominal a :ClosedLoopTrial . },
+    { :trialNominal :levelAt (2 20) . },
+    { :trialNominal :valveAt (2 2) . },
+    { 2 math:lessThan 8 . },
+    { (2 1) math:sum 3 . },
+    { (20 2) math:sum 22 . },
+    { (22 2) math:difference 20 . }.
+
+{ :trialNominal :errorAt (2 0) . }
+  pe:rule 9;
+  pe:binding
+    [ pe:var "error"; pe:value 0 ],
+    [ pe:var "k"; pe:value 2 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialNominal :levelAt (2 20) . },
+    { 20 math:notLessThan 20 . },
+    { (20 20) math:difference 0 . }.
+
+{ :trialNominal :sideAt (2 :aboveOrOn) . }
+  pe:rule 9;
+  pe:binding
+    [ pe:var "error"; pe:value 0 ],
+    [ pe:var "k"; pe:value 2 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialNominal :levelAt (2 20) . },
+    { 20 math:notLessThan 20 . },
+    { (20 20) math:difference 0 . }.
+
+{ :trialNominal :holdBandAt 2 . }
+  pe:rule 11;
+  pe:binding
+    [ pe:var "k"; pe:value 2 ],
+    [ pe:var "k1"; pe:value 3 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "nextLevel"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :trialNominal :levelAt (2 20) . },
+    { :trialNominal :valveAt (2 2) . },
+    { 20 math:notLessThan 19 . },
+    { 20 math:notGreaterThan 21 . },
+    { (2 1) math:sum 3 . },
+    { :trialNominal :levelAt (3 20) . },
+    { 20 math:equalTo 20 . }.
+
+{ :trialNominal :invariantStepAt 2 . }
+  pe:rule 11;
+  pe:binding
+    [ pe:var "k"; pe:value 2 ],
+    [ pe:var "k1"; pe:value 3 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "nextLevel"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :trialNominal :levelAt (2 20) . },
+    { :trialNominal :valveAt (2 2) . },
+    { 20 math:notLessThan 19 . },
+    { 20 math:notGreaterThan 21 . },
+    { (2 1) math:sum 3 . },
+    { :trialNominal :levelAt (3 20) . },
+    { 20 math:equalTo 20 . }.
+
+{ :trialLow :valveAt (3 3) . }
+  pe:rule 3;
+  pe:binding
+    [ pe:var "k"; pe:value 3 ],
+    [ pe:var "level"; pe:value 17 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses
+    { :trialLow :levelAt (3 17) . },
+    { 17 math:notLessThan 16 . },
+    { 17 math:lessThan 19 . }.
+
+{ 17 math:notLessThan 16 . }
+  pe:builtin math:notLessThan.
+
+{ 17 math:lessThan 19 . }
+  pe:builtin math:lessThan.
+
+{ :trialLow :levelAt (4 18) . }
+  pe:rule 7;
+  pe:binding
+    [ pe:var "inflowed"; pe:value 20 ],
+    [ pe:var "k"; pe:value 3 ],
+    [ pe:var "k1"; pe:value 4 ],
+    [ pe:var "level"; pe:value 17 ],
+    [ pe:var "max"; pe:value 8 ],
+    [ pe:var "nextLevel"; pe:value 18 ],
+    [ pe:var "outflow"; pe:value 2 ],
+    [ pe:var "trial"; pe:value :trialLow ],
+    [ pe:var "valve"; pe:value 3 ];
+  pe:uses
+    { :controller :maxStep 8 . },
+    { :controller :outflow 2 . },
+    { :trialLow a :ClosedLoopTrial . },
+    { :trialLow :levelAt (3 17) . },
+    { :trialLow :valveAt (3 3) . },
+    { 3 math:lessThan 8 . },
+    { (3 1) math:sum 4 . },
+    { (17 3) math:sum 20 . },
+    { (20 2) math:difference 18 . }.
+
+{ 3 math:lessThan 8 . }
+  pe:builtin math:lessThan.
+
+{ (3 1) math:sum 4 . }
+  pe:builtin math:sum.
+
+{ (17 3) math:sum 20 . }
+  pe:builtin math:sum.
+
+{ (20 2) math:difference 18 . }
+  pe:builtin math:difference.
+
+{ :trialLow :errorAt (3 3) . }
+  pe:rule 8;
+  pe:binding
+    [ pe:var "error"; pe:value 3 ],
+    [ pe:var "k"; pe:value 3 ],
+    [ pe:var "level"; pe:value 17 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialLow :levelAt (3 17) . },
+    { 17 math:lessThan 20 . },
+    { (20 17) math:difference 3 . }.
+
+{ 17 math:lessThan 20 . }
+  pe:builtin math:lessThan.
+
+{ (20 17) math:difference 3 . }
+  pe:builtin math:difference.
+
+{ :trialLow :sideAt (3 :below) . }
+  pe:rule 8;
+  pe:binding
+    [ pe:var "error"; pe:value 3 ],
+    [ pe:var "k"; pe:value 3 ],
+    [ pe:var "level"; pe:value 17 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialLow :levelAt (3 17) . },
+    { 17 math:lessThan 20 . },
+    { (20 17) math:difference 3 . }.
+
+{ :trialLow :strictImprovementAt 2 . }
+  pe:rule 10;
+  pe:binding
+    [ pe:var "error"; pe:value 4 ],
+    [ pe:var "k"; pe:value 2 ],
+    [ pe:var "k1"; pe:value 3 ],
+    [ pe:var "nextError"; pe:value 3 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses
+    { :trialLow :errorAt (2 4) . },
+    { 4 math:greaterThan 1 . },
+    { (2 1) math:sum 3 . },
+    { :trialLow :errorAt (3 3) . },
+    { 3 math:lessThan 4 . }.
+
+{ 4 math:greaterThan 1 . }
+  pe:builtin math:greaterThan.
+
+{ 3 math:lessThan 4 . }
+  pe:builtin math:lessThan.
+
+{ :trialHigh :valveAt (3 1) . }
+  pe:rule 5;
+  pe:binding
+    [ pe:var "k"; pe:value 3 ],
+    [ pe:var "level"; pe:value 23 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses
+    { :trialHigh :levelAt (3 23) . },
+    { 23 math:greaterThan 21 . },
+    { 23 math:notGreaterThan 24 . }.
+
+{ 23 math:greaterThan 21 . }
+  pe:builtin math:greaterThan.
+
+{ 23 math:notGreaterThan 24 . }
+  pe:builtin math:notGreaterThan.
+
+{ :trialHigh :levelAt (4 22) . }
+  pe:rule 7;
+  pe:binding
+    [ pe:var "inflowed"; pe:value 24 ],
+    [ pe:var "k"; pe:value 3 ],
+    [ pe:var "k1"; pe:value 4 ],
+    [ pe:var "level"; pe:value 23 ],
+    [ pe:var "max"; pe:value 8 ],
+    [ pe:var "nextLevel"; pe:value 22 ],
+    [ pe:var "outflow"; pe:value 2 ],
+    [ pe:var "trial"; pe:value :trialHigh ],
+    [ pe:var "valve"; pe:value 1 ];
+  pe:uses
+    { :controller :maxStep 8 . },
+    { :controller :outflow 2 . },
+    { :trialHigh a :ClosedLoopTrial . },
+    { :trialHigh :levelAt (3 23) . },
+    { :trialHigh :valveAt (3 1) . },
+    { 3 math:lessThan 8 . },
+    { (3 1) math:sum 4 . },
+    { (23 1) math:sum 24 . },
+    { (24 2) math:difference 22 . }.
+
+{ (23 1) math:sum 24 . }
+  pe:builtin math:sum.
+
+{ (24 2) math:difference 22 . }
+  pe:builtin math:difference.
+
+{ :trialHigh :errorAt (3 3) . }
+  pe:rule 9;
+  pe:binding
+    [ pe:var "error"; pe:value 3 ],
+    [ pe:var "k"; pe:value 3 ],
+    [ pe:var "level"; pe:value 23 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialHigh :levelAt (3 23) . },
+    { 23 math:notLessThan 20 . },
+    { (23 20) math:difference 3 . }.
+
+{ 23 math:notLessThan 20 . }
+  pe:builtin math:notLessThan.
+
+{ (23 20) math:difference 3 . }
+  pe:builtin math:difference.
+
+{ :trialHigh :sideAt (3 :aboveOrOn) . }
+  pe:rule 9;
+  pe:binding
+    [ pe:var "error"; pe:value 3 ],
+    [ pe:var "k"; pe:value 3 ],
+    [ pe:var "level"; pe:value 23 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialHigh :levelAt (3 23) . },
+    { 23 math:notLessThan 20 . },
+    { (23 20) math:difference 3 . }.
+
+{ :trialHigh :strictImprovementAt 2 . }
+  pe:rule 10;
+  pe:binding
+    [ pe:var "error"; pe:value 4 ],
+    [ pe:var "k"; pe:value 2 ],
+    [ pe:var "k1"; pe:value 3 ],
+    [ pe:var "nextError"; pe:value 3 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses
+    { :trialHigh :errorAt (2 4) . },
+    { 4 math:greaterThan 1 . },
+    { (2 1) math:sum 3 . },
+    { :trialHigh :errorAt (3 3) . },
+    { 3 math:lessThan 4 . }.
+
+{ :trialNominal :valveAt (3 2) . }
+  pe:rule 4;
+  pe:binding
+    [ pe:var "k"; pe:value 3 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :trialNominal :levelAt (3 20) . },
+    { 20 math:notLessThan 19 . },
+    { 20 math:notGreaterThan 21 . }.
+
+{ :trialNominal :levelAt (4 20) . }
+  pe:rule 7;
+  pe:binding
+    [ pe:var "inflowed"; pe:value 22 ],
+    [ pe:var "k"; pe:value 3 ],
+    [ pe:var "k1"; pe:value 4 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "max"; pe:value 8 ],
+    [ pe:var "nextLevel"; pe:value 20 ],
+    [ pe:var "outflow"; pe:value 2 ],
+    [ pe:var "trial"; pe:value :trialNominal ],
+    [ pe:var "valve"; pe:value 2 ];
+  pe:uses
+    { :controller :maxStep 8 . },
+    { :controller :outflow 2 . },
+    { :trialNominal a :ClosedLoopTrial . },
+    { :trialNominal :levelAt (3 20) . },
+    { :trialNominal :valveAt (3 2) . },
+    { 3 math:lessThan 8 . },
+    { (3 1) math:sum 4 . },
+    { (20 2) math:sum 22 . },
+    { (22 2) math:difference 20 . }.
+
+{ :trialNominal :errorAt (3 0) . }
+  pe:rule 9;
+  pe:binding
+    [ pe:var "error"; pe:value 0 ],
+    [ pe:var "k"; pe:value 3 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialNominal :levelAt (3 20) . },
+    { 20 math:notLessThan 20 . },
+    { (20 20) math:difference 0 . }.
+
+{ :trialNominal :sideAt (3 :aboveOrOn) . }
+  pe:rule 9;
+  pe:binding
+    [ pe:var "error"; pe:value 0 ],
+    [ pe:var "k"; pe:value 3 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialNominal :levelAt (3 20) . },
+    { 20 math:notLessThan 20 . },
+    { (20 20) math:difference 0 . }.
+
+{ :trialNominal :holdBandAt 3 . }
+  pe:rule 11;
+  pe:binding
+    [ pe:var "k"; pe:value 3 ],
+    [ pe:var "k1"; pe:value 4 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "nextLevel"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :trialNominal :levelAt (3 20) . },
+    { :trialNominal :valveAt (3 2) . },
+    { 20 math:notLessThan 19 . },
+    { 20 math:notGreaterThan 21 . },
+    { (3 1) math:sum 4 . },
+    { :trialNominal :levelAt (4 20) . },
+    { 20 math:equalTo 20 . }.
+
+{ :trialNominal :invariantStepAt 3 . }
+  pe:rule 11;
+  pe:binding
+    [ pe:var "k"; pe:value 3 ],
+    [ pe:var "k1"; pe:value 4 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "nextLevel"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :trialNominal :levelAt (3 20) . },
+    { :trialNominal :valveAt (3 2) . },
+    { 20 math:notLessThan 19 . },
+    { 20 math:notGreaterThan 21 . },
+    { (3 1) math:sum 4 . },
+    { :trialNominal :levelAt (4 20) . },
+    { 20 math:equalTo 20 . }.
+
+{ :trialLow :valveAt (4 3) . }
+  pe:rule 3;
+  pe:binding
+    [ pe:var "k"; pe:value 4 ],
+    [ pe:var "level"; pe:value 18 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses
+    { :trialLow :levelAt (4 18) . },
+    { 18 math:notLessThan 16 . },
+    { 18 math:lessThan 19 . }.
+
+{ 18 math:notLessThan 16 . }
+  pe:builtin math:notLessThan.
+
+{ 18 math:lessThan 19 . }
+  pe:builtin math:lessThan.
+
+{ :trialLow :levelAt (5 19) . }
+  pe:rule 7;
+  pe:binding
+    [ pe:var "inflowed"; pe:value 21 ],
+    [ pe:var "k"; pe:value 4 ],
+    [ pe:var "k1"; pe:value 5 ],
+    [ pe:var "level"; pe:value 18 ],
+    [ pe:var "max"; pe:value 8 ],
+    [ pe:var "nextLevel"; pe:value 19 ],
+    [ pe:var "outflow"; pe:value 2 ],
+    [ pe:var "trial"; pe:value :trialLow ],
+    [ pe:var "valve"; pe:value 3 ];
+  pe:uses
+    { :controller :maxStep 8 . },
+    { :controller :outflow 2 . },
+    { :trialLow a :ClosedLoopTrial . },
+    { :trialLow :levelAt (4 18) . },
+    { :trialLow :valveAt (4 3) . },
+    { 4 math:lessThan 8 . },
+    { (4 1) math:sum 5 . },
+    { (18 3) math:sum 21 . },
+    { (21 2) math:difference 19 . }.
+
+{ 4 math:lessThan 8 . }
+  pe:builtin math:lessThan.
+
+{ (4 1) math:sum 5 . }
+  pe:builtin math:sum.
+
+{ (18 3) math:sum 21 . }
+  pe:builtin math:sum.
+
+{ (21 2) math:difference 19 . }
+  pe:builtin math:difference.
+
+{ :trialLow :errorAt (4 2) . }
+  pe:rule 8;
+  pe:binding
+    [ pe:var "error"; pe:value 2 ],
+    [ pe:var "k"; pe:value 4 ],
+    [ pe:var "level"; pe:value 18 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialLow :levelAt (4 18) . },
+    { 18 math:lessThan 20 . },
+    { (20 18) math:difference 2 . }.
+
+{ 18 math:lessThan 20 . }
+  pe:builtin math:lessThan.
+
+{ (20 18) math:difference 2 . }
+  pe:builtin math:difference.
+
+{ :trialLow :sideAt (4 :below) . }
+  pe:rule 8;
+  pe:binding
+    [ pe:var "error"; pe:value 2 ],
+    [ pe:var "k"; pe:value 4 ],
+    [ pe:var "level"; pe:value 18 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialLow :levelAt (4 18) . },
+    { 18 math:lessThan 20 . },
+    { (20 18) math:difference 2 . }.
+
+{ :trialLow :strictImprovementAt 3 . }
+  pe:rule 10;
+  pe:binding
+    [ pe:var "error"; pe:value 3 ],
+    [ pe:var "k"; pe:value 3 ],
+    [ pe:var "k1"; pe:value 4 ],
+    [ pe:var "nextError"; pe:value 2 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses
+    { :trialLow :errorAt (3 3) . },
+    { 3 math:greaterThan 1 . },
+    { (3 1) math:sum 4 . },
+    { :trialLow :errorAt (4 2) . },
+    { 2 math:lessThan 3 . }.
+
+{ 3 math:greaterThan 1 . }
+  pe:builtin math:greaterThan.
+
+{ 2 math:lessThan 3 . }
+  pe:builtin math:lessThan.
+
+{ :trialHigh :valveAt (4 1) . }
+  pe:rule 5;
+  pe:binding
+    [ pe:var "k"; pe:value 4 ],
+    [ pe:var "level"; pe:value 22 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses
+    { :trialHigh :levelAt (4 22) . },
+    { 22 math:greaterThan 21 . },
+    { 22 math:notGreaterThan 24 . }.
+
+{ 22 math:greaterThan 21 . }
+  pe:builtin math:greaterThan.
+
+{ 22 math:notGreaterThan 24 . }
+  pe:builtin math:notGreaterThan.
+
+{ :trialHigh :levelAt (5 21) . }
+  pe:rule 7;
+  pe:binding
+    [ pe:var "inflowed"; pe:value 23 ],
+    [ pe:var "k"; pe:value 4 ],
+    [ pe:var "k1"; pe:value 5 ],
+    [ pe:var "level"; pe:value 22 ],
+    [ pe:var "max"; pe:value 8 ],
+    [ pe:var "nextLevel"; pe:value 21 ],
+    [ pe:var "outflow"; pe:value 2 ],
+    [ pe:var "trial"; pe:value :trialHigh ],
+    [ pe:var "valve"; pe:value 1 ];
+  pe:uses
+    { :controller :maxStep 8 . },
+    { :controller :outflow 2 . },
+    { :trialHigh a :ClosedLoopTrial . },
+    { :trialHigh :levelAt (4 22) . },
+    { :trialHigh :valveAt (4 1) . },
+    { 4 math:lessThan 8 . },
+    { (4 1) math:sum 5 . },
+    { (22 1) math:sum 23 . },
+    { (23 2) math:difference 21 . }.
+
+{ (22 1) math:sum 23 . }
+  pe:builtin math:sum.
+
+{ (23 2) math:difference 21 . }
+  pe:builtin math:difference.
+
+{ :trialHigh :errorAt (4 2) . }
+  pe:rule 9;
+  pe:binding
+    [ pe:var "error"; pe:value 2 ],
+    [ pe:var "k"; pe:value 4 ],
+    [ pe:var "level"; pe:value 22 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialHigh :levelAt (4 22) . },
+    { 22 math:notLessThan 20 . },
+    { (22 20) math:difference 2 . }.
+
+{ 22 math:notLessThan 20 . }
+  pe:builtin math:notLessThan.
+
+{ (22 20) math:difference 2 . }
+  pe:builtin math:difference.
+
+{ :trialHigh :sideAt (4 :aboveOrOn) . }
+  pe:rule 9;
+  pe:binding
+    [ pe:var "error"; pe:value 2 ],
+    [ pe:var "k"; pe:value 4 ],
+    [ pe:var "level"; pe:value 22 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialHigh :levelAt (4 22) . },
+    { 22 math:notLessThan 20 . },
+    { (22 20) math:difference 2 . }.
+
+{ :trialHigh :strictImprovementAt 3 . }
+  pe:rule 10;
+  pe:binding
+    [ pe:var "error"; pe:value 3 ],
+    [ pe:var "k"; pe:value 3 ],
+    [ pe:var "k1"; pe:value 4 ],
+    [ pe:var "nextError"; pe:value 2 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses
+    { :trialHigh :errorAt (3 3) . },
+    { 3 math:greaterThan 1 . },
+    { (3 1) math:sum 4 . },
+    { :trialHigh :errorAt (4 2) . },
+    { 2 math:lessThan 3 . }.
+
+{ :trialNominal :valveAt (4 2) . }
+  pe:rule 4;
+  pe:binding
+    [ pe:var "k"; pe:value 4 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :trialNominal :levelAt (4 20) . },
+    { 20 math:notLessThan 19 . },
+    { 20 math:notGreaterThan 21 . }.
+
+{ :trialNominal :levelAt (5 20) . }
+  pe:rule 7;
+  pe:binding
+    [ pe:var "inflowed"; pe:value 22 ],
+    [ pe:var "k"; pe:value 4 ],
+    [ pe:var "k1"; pe:value 5 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "max"; pe:value 8 ],
+    [ pe:var "nextLevel"; pe:value 20 ],
+    [ pe:var "outflow"; pe:value 2 ],
+    [ pe:var "trial"; pe:value :trialNominal ],
+    [ pe:var "valve"; pe:value 2 ];
+  pe:uses
+    { :controller :maxStep 8 . },
+    { :controller :outflow 2 . },
+    { :trialNominal a :ClosedLoopTrial . },
+    { :trialNominal :levelAt (4 20) . },
+    { :trialNominal :valveAt (4 2) . },
+    { 4 math:lessThan 8 . },
+    { (4 1) math:sum 5 . },
+    { (20 2) math:sum 22 . },
+    { (22 2) math:difference 20 . }.
+
+{ :trialNominal :errorAt (4 0) . }
+  pe:rule 9;
+  pe:binding
+    [ pe:var "error"; pe:value 0 ],
+    [ pe:var "k"; pe:value 4 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialNominal :levelAt (4 20) . },
+    { 20 math:notLessThan 20 . },
+    { (20 20) math:difference 0 . }.
+
+{ :trialNominal :sideAt (4 :aboveOrOn) . }
+  pe:rule 9;
+  pe:binding
+    [ pe:var "error"; pe:value 0 ],
+    [ pe:var "k"; pe:value 4 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialNominal :levelAt (4 20) . },
+    { 20 math:notLessThan 20 . },
+    { (20 20) math:difference 0 . }.
+
+{ :trialNominal :holdBandAt 4 . }
+  pe:rule 11;
+  pe:binding
+    [ pe:var "k"; pe:value 4 ],
+    [ pe:var "k1"; pe:value 5 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "nextLevel"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :trialNominal :levelAt (4 20) . },
+    { :trialNominal :valveAt (4 2) . },
+    { 20 math:notLessThan 19 . },
+    { 20 math:notGreaterThan 21 . },
+    { (4 1) math:sum 5 . },
+    { :trialNominal :levelAt (5 20) . },
+    { 20 math:equalTo 20 . }.
+
+{ :trialNominal :invariantStepAt 4 . }
+  pe:rule 11;
+  pe:binding
+    [ pe:var "k"; pe:value 4 ],
+    [ pe:var "k1"; pe:value 5 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "nextLevel"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :trialNominal :levelAt (4 20) . },
+    { :trialNominal :valveAt (4 2) . },
+    { 20 math:notLessThan 19 . },
+    { 20 math:notGreaterThan 21 . },
+    { (4 1) math:sum 5 . },
+    { :trialNominal :levelAt (5 20) . },
+    { 20 math:equalTo 20 . }.
+
+{ :trialLow :valveAt (5 2) . }
+  pe:rule 4;
+  pe:binding
+    [ pe:var "k"; pe:value 5 ],
+    [ pe:var "level"; pe:value 19 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses
+    { :trialLow :levelAt (5 19) . },
+    { 19 math:notLessThan 19 . },
+    { 19 math:notGreaterThan 21 . }.
+
+{ 19 math:notLessThan 19 . }
+  pe:builtin math:notLessThan.
+
+{ 19 math:notGreaterThan 21 . }
+  pe:builtin math:notGreaterThan.
+
+{ :trialLow :levelAt (6 19) . }
+  pe:rule 7;
+  pe:binding
+    [ pe:var "inflowed"; pe:value 21 ],
+    [ pe:var "k"; pe:value 5 ],
+    [ pe:var "k1"; pe:value 6 ],
+    [ pe:var "level"; pe:value 19 ],
+    [ pe:var "max"; pe:value 8 ],
+    [ pe:var "nextLevel"; pe:value 19 ],
+    [ pe:var "outflow"; pe:value 2 ],
+    [ pe:var "trial"; pe:value :trialLow ],
+    [ pe:var "valve"; pe:value 2 ];
+  pe:uses
+    { :controller :maxStep 8 . },
+    { :controller :outflow 2 . },
+    { :trialLow a :ClosedLoopTrial . },
+    { :trialLow :levelAt (5 19) . },
+    { :trialLow :valveAt (5 2) . },
+    { 5 math:lessThan 8 . },
+    { (5 1) math:sum 6 . },
+    { (19 2) math:sum 21 . },
+    { (21 2) math:difference 19 . }.
+
+{ 5 math:lessThan 8 . }
+  pe:builtin math:lessThan.
+
+{ (5 1) math:sum 6 . }
+  pe:builtin math:sum.
+
+{ (19 2) math:sum 21 . }
+  pe:builtin math:sum.
+
+{ :trialLow :errorAt (5 1) . }
+  pe:rule 8;
+  pe:binding
+    [ pe:var "error"; pe:value 1 ],
+    [ pe:var "k"; pe:value 5 ],
+    [ pe:var "level"; pe:value 19 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialLow :levelAt (5 19) . },
+    { 19 math:lessThan 20 . },
+    { (20 19) math:difference 1 . }.
+
+{ 19 math:lessThan 20 . }
+  pe:builtin math:lessThan.
+
+{ (20 19) math:difference 1 . }
+  pe:builtin math:difference.
+
+{ :trialLow :sideAt (5 :below) . }
+  pe:rule 8;
+  pe:binding
+    [ pe:var "error"; pe:value 1 ],
+    [ pe:var "k"; pe:value 5 ],
+    [ pe:var "level"; pe:value 19 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialLow :levelAt (5 19) . },
+    { 19 math:lessThan 20 . },
+    { (20 19) math:difference 1 . }.
+
+{ :trialLow :holdBandAt 5 . }
+  pe:rule 11;
+  pe:binding
+    [ pe:var "k"; pe:value 5 ],
+    [ pe:var "k1"; pe:value 6 ],
+    [ pe:var "level"; pe:value 19 ],
+    [ pe:var "nextLevel"; pe:value 19 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses
+    { :trialLow :levelAt (5 19) . },
+    { :trialLow :valveAt (5 2) . },
+    { 19 math:notLessThan 19 . },
+    { 19 math:notGreaterThan 21 . },
+    { (5 1) math:sum 6 . },
+    { :trialLow :levelAt (6 19) . },
+    { 19 math:equalTo 19 . }.
+
+{ 19 math:equalTo 19 . }
+  pe:builtin math:equalTo.
+
+{ :trialLow :invariantStepAt 5 . }
+  pe:rule 11;
+  pe:binding
+    [ pe:var "k"; pe:value 5 ],
+    [ pe:var "k1"; pe:value 6 ],
+    [ pe:var "level"; pe:value 19 ],
+    [ pe:var "nextLevel"; pe:value 19 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses
+    { :trialLow :levelAt (5 19) . },
+    { :trialLow :valveAt (5 2) . },
+    { 19 math:notLessThan 19 . },
+    { 19 math:notGreaterThan 21 . },
+    { (5 1) math:sum 6 . },
+    { :trialLow :levelAt (6 19) . },
+    { 19 math:equalTo 19 . }.
+
+{ :trialLow :strictImprovementAt 4 . }
+  pe:rule 10;
+  pe:binding
+    [ pe:var "error"; pe:value 2 ],
+    [ pe:var "k"; pe:value 4 ],
+    [ pe:var "k1"; pe:value 5 ],
+    [ pe:var "nextError"; pe:value 1 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses
+    { :trialLow :errorAt (4 2) . },
+    { 2 math:greaterThan 1 . },
+    { (4 1) math:sum 5 . },
+    { :trialLow :errorAt (5 1) . },
+    { 1 math:lessThan 2 . }.
+
+{ 2 math:greaterThan 1 . }
+  pe:builtin math:greaterThan.
+
+{ 1 math:lessThan 2 . }
+  pe:builtin math:lessThan.
+
+{ :trialHigh :valveAt (5 2) . }
+  pe:rule 4;
+  pe:binding
+    [ pe:var "k"; pe:value 5 ],
+    [ pe:var "level"; pe:value 21 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses
+    { :trialHigh :levelAt (5 21) . },
+    { 21 math:notLessThan 19 . },
+    { 21 math:notGreaterThan 21 . }.
+
+{ 21 math:notLessThan 19 . }
+  pe:builtin math:notLessThan.
+
+{ 21 math:notGreaterThan 21 . }
+  pe:builtin math:notGreaterThan.
+
+{ :trialHigh :levelAt (6 21) . }
+  pe:rule 7;
+  pe:binding
+    [ pe:var "inflowed"; pe:value 23 ],
+    [ pe:var "k"; pe:value 5 ],
+    [ pe:var "k1"; pe:value 6 ],
+    [ pe:var "level"; pe:value 21 ],
+    [ pe:var "max"; pe:value 8 ],
+    [ pe:var "nextLevel"; pe:value 21 ],
+    [ pe:var "outflow"; pe:value 2 ],
+    [ pe:var "trial"; pe:value :trialHigh ],
+    [ pe:var "valve"; pe:value 2 ];
+  pe:uses
+    { :controller :maxStep 8 . },
+    { :controller :outflow 2 . },
+    { :trialHigh a :ClosedLoopTrial . },
+    { :trialHigh :levelAt (5 21) . },
+    { :trialHigh :valveAt (5 2) . },
+    { 5 math:lessThan 8 . },
+    { (5 1) math:sum 6 . },
+    { (21 2) math:sum 23 . },
+    { (23 2) math:difference 21 . }.
+
+{ (21 2) math:sum 23 . }
+  pe:builtin math:sum.
+
+{ :trialHigh :errorAt (5 1) . }
+  pe:rule 9;
+  pe:binding
+    [ pe:var "error"; pe:value 1 ],
+    [ pe:var "k"; pe:value 5 ],
+    [ pe:var "level"; pe:value 21 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialHigh :levelAt (5 21) . },
+    { 21 math:notLessThan 20 . },
+    { (21 20) math:difference 1 . }.
+
+{ 21 math:notLessThan 20 . }
+  pe:builtin math:notLessThan.
+
+{ (21 20) math:difference 1 . }
+  pe:builtin math:difference.
+
+{ :trialHigh :sideAt (5 :aboveOrOn) . }
+  pe:rule 9;
+  pe:binding
+    [ pe:var "error"; pe:value 1 ],
+    [ pe:var "k"; pe:value 5 ],
+    [ pe:var "level"; pe:value 21 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialHigh :levelAt (5 21) . },
+    { 21 math:notLessThan 20 . },
+    { (21 20) math:difference 1 . }.
+
+{ :trialHigh :holdBandAt 5 . }
+  pe:rule 11;
+  pe:binding
+    [ pe:var "k"; pe:value 5 ],
+    [ pe:var "k1"; pe:value 6 ],
+    [ pe:var "level"; pe:value 21 ],
+    [ pe:var "nextLevel"; pe:value 21 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses
+    { :trialHigh :levelAt (5 21) . },
+    { :trialHigh :valveAt (5 2) . },
+    { 21 math:notLessThan 19 . },
+    { 21 math:notGreaterThan 21 . },
+    { (5 1) math:sum 6 . },
+    { :trialHigh :levelAt (6 21) . },
+    { 21 math:equalTo 21 . }.
+
+{ 21 math:equalTo 21 . }
+  pe:builtin math:equalTo.
+
+{ :trialHigh :invariantStepAt 5 . }
+  pe:rule 11;
+  pe:binding
+    [ pe:var "k"; pe:value 5 ],
+    [ pe:var "k1"; pe:value 6 ],
+    [ pe:var "level"; pe:value 21 ],
+    [ pe:var "nextLevel"; pe:value 21 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses
+    { :trialHigh :levelAt (5 21) . },
+    { :trialHigh :valveAt (5 2) . },
+    { 21 math:notLessThan 19 . },
+    { 21 math:notGreaterThan 21 . },
+    { (5 1) math:sum 6 . },
+    { :trialHigh :levelAt (6 21) . },
+    { 21 math:equalTo 21 . }.
+
+{ :trialHigh :strictImprovementAt 4 . }
+  pe:rule 10;
+  pe:binding
+    [ pe:var "error"; pe:value 2 ],
+    [ pe:var "k"; pe:value 4 ],
+    [ pe:var "k1"; pe:value 5 ],
+    [ pe:var "nextError"; pe:value 1 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses
+    { :trialHigh :errorAt (4 2) . },
+    { 2 math:greaterThan 1 . },
+    { (4 1) math:sum 5 . },
+    { :trialHigh :errorAt (5 1) . },
+    { 1 math:lessThan 2 . }.
+
+{ :trialNominal :valveAt (5 2) . }
+  pe:rule 4;
+  pe:binding
+    [ pe:var "k"; pe:value 5 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :trialNominal :levelAt (5 20) . },
+    { 20 math:notLessThan 19 . },
+    { 20 math:notGreaterThan 21 . }.
+
+{ :trialNominal :levelAt (6 20) . }
+  pe:rule 7;
+  pe:binding
+    [ pe:var "inflowed"; pe:value 22 ],
+    [ pe:var "k"; pe:value 5 ],
+    [ pe:var "k1"; pe:value 6 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "max"; pe:value 8 ],
+    [ pe:var "nextLevel"; pe:value 20 ],
+    [ pe:var "outflow"; pe:value 2 ],
+    [ pe:var "trial"; pe:value :trialNominal ],
+    [ pe:var "valve"; pe:value 2 ];
+  pe:uses
+    { :controller :maxStep 8 . },
+    { :controller :outflow 2 . },
+    { :trialNominal a :ClosedLoopTrial . },
+    { :trialNominal :levelAt (5 20) . },
+    { :trialNominal :valveAt (5 2) . },
+    { 5 math:lessThan 8 . },
+    { (5 1) math:sum 6 . },
+    { (20 2) math:sum 22 . },
+    { (22 2) math:difference 20 . }.
+
+{ :trialNominal :errorAt (5 0) . }
+  pe:rule 9;
+  pe:binding
+    [ pe:var "error"; pe:value 0 ],
+    [ pe:var "k"; pe:value 5 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialNominal :levelAt (5 20) . },
+    { 20 math:notLessThan 20 . },
+    { (20 20) math:difference 0 . }.
+
+{ :trialNominal :sideAt (5 :aboveOrOn) . }
+  pe:rule 9;
+  pe:binding
+    [ pe:var "error"; pe:value 0 ],
+    [ pe:var "k"; pe:value 5 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialNominal :levelAt (5 20) . },
+    { 20 math:notLessThan 20 . },
+    { (20 20) math:difference 0 . }.
+
+{ :trialNominal :holdBandAt 5 . }
+  pe:rule 11;
+  pe:binding
+    [ pe:var "k"; pe:value 5 ],
+    [ pe:var "k1"; pe:value 6 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "nextLevel"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :trialNominal :levelAt (5 20) . },
+    { :trialNominal :valveAt (5 2) . },
+    { 20 math:notLessThan 19 . },
+    { 20 math:notGreaterThan 21 . },
+    { (5 1) math:sum 6 . },
+    { :trialNominal :levelAt (6 20) . },
+    { 20 math:equalTo 20 . }.
+
+{ :trialNominal :invariantStepAt 5 . }
+  pe:rule 11;
+  pe:binding
+    [ pe:var "k"; pe:value 5 ],
+    [ pe:var "k1"; pe:value 6 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "nextLevel"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :trialNominal :levelAt (5 20) . },
+    { :trialNominal :valveAt (5 2) . },
+    { 20 math:notLessThan 19 . },
+    { 20 math:notGreaterThan 21 . },
+    { (5 1) math:sum 6 . },
+    { :trialNominal :levelAt (6 20) . },
+    { 20 math:equalTo 20 . }.
+
+{ :trialLow :valveAt (6 2) . }
+  pe:rule 4;
+  pe:binding
+    [ pe:var "k"; pe:value 6 ],
+    [ pe:var "level"; pe:value 19 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses
+    { :trialLow :levelAt (6 19) . },
+    { 19 math:notLessThan 19 . },
+    { 19 math:notGreaterThan 21 . }.
+
+{ :trialLow :levelAt (7 19) . }
+  pe:rule 7;
+  pe:binding
+    [ pe:var "inflowed"; pe:value 21 ],
+    [ pe:var "k"; pe:value 6 ],
+    [ pe:var "k1"; pe:value 7 ],
+    [ pe:var "level"; pe:value 19 ],
+    [ pe:var "max"; pe:value 8 ],
+    [ pe:var "nextLevel"; pe:value 19 ],
+    [ pe:var "outflow"; pe:value 2 ],
+    [ pe:var "trial"; pe:value :trialLow ],
+    [ pe:var "valve"; pe:value 2 ];
+  pe:uses
+    { :controller :maxStep 8 . },
+    { :controller :outflow 2 . },
+    { :trialLow a :ClosedLoopTrial . },
+    { :trialLow :levelAt (6 19) . },
+    { :trialLow :valveAt (6 2) . },
+    { 6 math:lessThan 8 . },
+    { (6 1) math:sum 7 . },
+    { (19 2) math:sum 21 . },
+    { (21 2) math:difference 19 . }.
+
+{ (6 1) math:sum 7 . }
+  pe:builtin math:sum.
+
+{ :trialLow :errorAt (6 1) . }
+  pe:rule 8;
+  pe:binding
+    [ pe:var "error"; pe:value 1 ],
+    [ pe:var "k"; pe:value 6 ],
+    [ pe:var "level"; pe:value 19 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialLow :levelAt (6 19) . },
+    { 19 math:lessThan 20 . },
+    { (20 19) math:difference 1 . }.
+
+{ :trialLow :sideAt (6 :below) . }
+  pe:rule 8;
+  pe:binding
+    [ pe:var "error"; pe:value 1 ],
+    [ pe:var "k"; pe:value 6 ],
+    [ pe:var "level"; pe:value 19 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialLow :levelAt (6 19) . },
+    { 19 math:lessThan 20 . },
+    { (20 19) math:difference 1 . }.
+
+{ :trialLow :holdBandAt 6 . }
+  pe:rule 11;
+  pe:binding
+    [ pe:var "k"; pe:value 6 ],
+    [ pe:var "k1"; pe:value 7 ],
+    [ pe:var "level"; pe:value 19 ],
+    [ pe:var "nextLevel"; pe:value 19 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses
+    { :trialLow :levelAt (6 19) . },
+    { :trialLow :valveAt (6 2) . },
+    { 19 math:notLessThan 19 . },
+    { 19 math:notGreaterThan 21 . },
+    { (6 1) math:sum 7 . },
+    { :trialLow :levelAt (7 19) . },
+    { 19 math:equalTo 19 . }.
+
+{ :trialLow :invariantStepAt 6 . }
+  pe:rule 11;
+  pe:binding
+    [ pe:var "k"; pe:value 6 ],
+    [ pe:var "k1"; pe:value 7 ],
+    [ pe:var "level"; pe:value 19 ],
+    [ pe:var "nextLevel"; pe:value 19 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses
+    { :trialLow :levelAt (6 19) . },
+    { :trialLow :valveAt (6 2) . },
+    { 19 math:notLessThan 19 . },
+    { 19 math:notGreaterThan 21 . },
+    { (6 1) math:sum 7 . },
+    { :trialLow :levelAt (7 19) . },
+    { 19 math:equalTo 19 . }.
+
+{ :trialHigh :valveAt (6 2) . }
+  pe:rule 4;
+  pe:binding
+    [ pe:var "k"; pe:value 6 ],
+    [ pe:var "level"; pe:value 21 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses
+    { :trialHigh :levelAt (6 21) . },
+    { 21 math:notLessThan 19 . },
+    { 21 math:notGreaterThan 21 . }.
+
+{ :trialHigh :levelAt (7 21) . }
+  pe:rule 7;
+  pe:binding
+    [ pe:var "inflowed"; pe:value 23 ],
+    [ pe:var "k"; pe:value 6 ],
+    [ pe:var "k1"; pe:value 7 ],
+    [ pe:var "level"; pe:value 21 ],
+    [ pe:var "max"; pe:value 8 ],
+    [ pe:var "nextLevel"; pe:value 21 ],
+    [ pe:var "outflow"; pe:value 2 ],
+    [ pe:var "trial"; pe:value :trialHigh ],
+    [ pe:var "valve"; pe:value 2 ];
+  pe:uses
+    { :controller :maxStep 8 . },
+    { :controller :outflow 2 . },
+    { :trialHigh a :ClosedLoopTrial . },
+    { :trialHigh :levelAt (6 21) . },
+    { :trialHigh :valveAt (6 2) . },
+    { 6 math:lessThan 8 . },
+    { (6 1) math:sum 7 . },
+    { (21 2) math:sum 23 . },
+    { (23 2) math:difference 21 . }.
+
+{ :trialHigh :errorAt (6 1) . }
+  pe:rule 9;
+  pe:binding
+    [ pe:var "error"; pe:value 1 ],
+    [ pe:var "k"; pe:value 6 ],
+    [ pe:var "level"; pe:value 21 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialHigh :levelAt (6 21) . },
+    { 21 math:notLessThan 20 . },
+    { (21 20) math:difference 1 . }.
+
+{ :trialHigh :sideAt (6 :aboveOrOn) . }
+  pe:rule 9;
+  pe:binding
+    [ pe:var "error"; pe:value 1 ],
+    [ pe:var "k"; pe:value 6 ],
+    [ pe:var "level"; pe:value 21 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialHigh :levelAt (6 21) . },
+    { 21 math:notLessThan 20 . },
+    { (21 20) math:difference 1 . }.
+
+{ :trialHigh :holdBandAt 6 . }
+  pe:rule 11;
+  pe:binding
+    [ pe:var "k"; pe:value 6 ],
+    [ pe:var "k1"; pe:value 7 ],
+    [ pe:var "level"; pe:value 21 ],
+    [ pe:var "nextLevel"; pe:value 21 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses
+    { :trialHigh :levelAt (6 21) . },
+    { :trialHigh :valveAt (6 2) . },
+    { 21 math:notLessThan 19 . },
+    { 21 math:notGreaterThan 21 . },
+    { (6 1) math:sum 7 . },
+    { :trialHigh :levelAt (7 21) . },
+    { 21 math:equalTo 21 . }.
+
+{ :trialHigh :invariantStepAt 6 . }
+  pe:rule 11;
+  pe:binding
+    [ pe:var "k"; pe:value 6 ],
+    [ pe:var "k1"; pe:value 7 ],
+    [ pe:var "level"; pe:value 21 ],
+    [ pe:var "nextLevel"; pe:value 21 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses
+    { :trialHigh :levelAt (6 21) . },
+    { :trialHigh :valveAt (6 2) . },
+    { 21 math:notLessThan 19 . },
+    { 21 math:notGreaterThan 21 . },
+    { (6 1) math:sum 7 . },
+    { :trialHigh :levelAt (7 21) . },
+    { 21 math:equalTo 21 . }.
+
+{ :trialNominal :valveAt (6 2) . }
+  pe:rule 4;
+  pe:binding
+    [ pe:var "k"; pe:value 6 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :trialNominal :levelAt (6 20) . },
+    { 20 math:notLessThan 19 . },
+    { 20 math:notGreaterThan 21 . }.
+
+{ :trialNominal :levelAt (7 20) . }
+  pe:rule 7;
+  pe:binding
+    [ pe:var "inflowed"; pe:value 22 ],
+    [ pe:var "k"; pe:value 6 ],
+    [ pe:var "k1"; pe:value 7 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "max"; pe:value 8 ],
+    [ pe:var "nextLevel"; pe:value 20 ],
+    [ pe:var "outflow"; pe:value 2 ],
+    [ pe:var "trial"; pe:value :trialNominal ],
+    [ pe:var "valve"; pe:value 2 ];
+  pe:uses
+    { :controller :maxStep 8 . },
+    { :controller :outflow 2 . },
+    { :trialNominal a :ClosedLoopTrial . },
+    { :trialNominal :levelAt (6 20) . },
+    { :trialNominal :valveAt (6 2) . },
+    { 6 math:lessThan 8 . },
+    { (6 1) math:sum 7 . },
+    { (20 2) math:sum 22 . },
+    { (22 2) math:difference 20 . }.
+
+{ :trialNominal :errorAt (6 0) . }
+  pe:rule 9;
+  pe:binding
+    [ pe:var "error"; pe:value 0 ],
+    [ pe:var "k"; pe:value 6 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialNominal :levelAt (6 20) . },
+    { 20 math:notLessThan 20 . },
+    { (20 20) math:difference 0 . }.
+
+{ :trialNominal :sideAt (6 :aboveOrOn) . }
+  pe:rule 9;
+  pe:binding
+    [ pe:var "error"; pe:value 0 ],
+    [ pe:var "k"; pe:value 6 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialNominal :levelAt (6 20) . },
+    { 20 math:notLessThan 20 . },
+    { (20 20) math:difference 0 . }.
+
+{ :trialNominal :holdBandAt 6 . }
+  pe:rule 11;
+  pe:binding
+    [ pe:var "k"; pe:value 6 ],
+    [ pe:var "k1"; pe:value 7 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "nextLevel"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :trialNominal :levelAt (6 20) . },
+    { :trialNominal :valveAt (6 2) . },
+    { 20 math:notLessThan 19 . },
+    { 20 math:notGreaterThan 21 . },
+    { (6 1) math:sum 7 . },
+    { :trialNominal :levelAt (7 20) . },
+    { 20 math:equalTo 20 . }.
+
+{ :trialNominal :invariantStepAt 6 . }
+  pe:rule 11;
+  pe:binding
+    [ pe:var "k"; pe:value 6 ],
+    [ pe:var "k1"; pe:value 7 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "nextLevel"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :trialNominal :levelAt (6 20) . },
+    { :trialNominal :valveAt (6 2) . },
+    { 20 math:notLessThan 19 . },
+    { 20 math:notGreaterThan 21 . },
+    { (6 1) math:sum 7 . },
+    { :trialNominal :levelAt (7 20) . },
+    { 20 math:equalTo 20 . }.
+
+{ :trialLow :valveAt (7 2) . }
+  pe:rule 4;
+  pe:binding
+    [ pe:var "k"; pe:value 7 ],
+    [ pe:var "level"; pe:value 19 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses
+    { :trialLow :levelAt (7 19) . },
+    { 19 math:notLessThan 19 . },
+    { 19 math:notGreaterThan 21 . }.
+
+{ :trialLow :levelAt (8 19) . }
+  pe:rule 7;
+  pe:binding
+    [ pe:var "inflowed"; pe:value 21 ],
+    [ pe:var "k"; pe:value 7 ],
+    [ pe:var "k1"; pe:value 8 ],
+    [ pe:var "level"; pe:value 19 ],
+    [ pe:var "max"; pe:value 8 ],
+    [ pe:var "nextLevel"; pe:value 19 ],
+    [ pe:var "outflow"; pe:value 2 ],
+    [ pe:var "trial"; pe:value :trialLow ],
+    [ pe:var "valve"; pe:value 2 ];
+  pe:uses
+    { :controller :maxStep 8 . },
+    { :controller :outflow 2 . },
+    { :trialLow a :ClosedLoopTrial . },
+    { :trialLow :levelAt (7 19) . },
+    { :trialLow :valveAt (7 2) . },
+    { 7 math:lessThan 8 . },
+    { (7 1) math:sum 8 . },
+    { (19 2) math:sum 21 . },
+    { (21 2) math:difference 19 . }.
+
+{ 7 math:lessThan 8 . }
+  pe:builtin math:lessThan.
+
+{ (7 1) math:sum 8 . }
+  pe:builtin math:sum.
+
+{ :trialLow :errorAt (7 1) . }
+  pe:rule 8;
+  pe:binding
+    [ pe:var "error"; pe:value 1 ],
+    [ pe:var "k"; pe:value 7 ],
+    [ pe:var "level"; pe:value 19 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialLow :levelAt (7 19) . },
+    { 19 math:lessThan 20 . },
+    { (20 19) math:difference 1 . }.
+
+{ :trialLow :sideAt (7 :below) . }
+  pe:rule 8;
+  pe:binding
+    [ pe:var "error"; pe:value 1 ],
+    [ pe:var "k"; pe:value 7 ],
+    [ pe:var "level"; pe:value 19 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialLow :levelAt (7 19) . },
+    { 19 math:lessThan 20 . },
+    { (20 19) math:difference 1 . }.
+
+{ :trialLow :holdBandAt 7 . }
+  pe:rule 11;
+  pe:binding
+    [ pe:var "k"; pe:value 7 ],
+    [ pe:var "k1"; pe:value 8 ],
+    [ pe:var "level"; pe:value 19 ],
+    [ pe:var "nextLevel"; pe:value 19 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses
+    { :trialLow :levelAt (7 19) . },
+    { :trialLow :valveAt (7 2) . },
+    { 19 math:notLessThan 19 . },
+    { 19 math:notGreaterThan 21 . },
+    { (7 1) math:sum 8 . },
+    { :trialLow :levelAt (8 19) . },
+    { 19 math:equalTo 19 . }.
+
+{ :trialLow :invariantStepAt 7 . }
+  pe:rule 11;
+  pe:binding
+    [ pe:var "k"; pe:value 7 ],
+    [ pe:var "k1"; pe:value 8 ],
+    [ pe:var "level"; pe:value 19 ],
+    [ pe:var "nextLevel"; pe:value 19 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses
+    { :trialLow :levelAt (7 19) . },
+    { :trialLow :valveAt (7 2) . },
+    { 19 math:notLessThan 19 . },
+    { 19 math:notGreaterThan 21 . },
+    { (7 1) math:sum 8 . },
+    { :trialLow :levelAt (8 19) . },
+    { 19 math:equalTo 19 . }.
+
+{ :trialHigh :valveAt (7 2) . }
+  pe:rule 4;
+  pe:binding
+    [ pe:var "k"; pe:value 7 ],
+    [ pe:var "level"; pe:value 21 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses
+    { :trialHigh :levelAt (7 21) . },
+    { 21 math:notLessThan 19 . },
+    { 21 math:notGreaterThan 21 . }.
+
+{ :trialHigh :levelAt (8 21) . }
+  pe:rule 7;
+  pe:binding
+    [ pe:var "inflowed"; pe:value 23 ],
+    [ pe:var "k"; pe:value 7 ],
+    [ pe:var "k1"; pe:value 8 ],
+    [ pe:var "level"; pe:value 21 ],
+    [ pe:var "max"; pe:value 8 ],
+    [ pe:var "nextLevel"; pe:value 21 ],
+    [ pe:var "outflow"; pe:value 2 ],
+    [ pe:var "trial"; pe:value :trialHigh ],
+    [ pe:var "valve"; pe:value 2 ];
+  pe:uses
+    { :controller :maxStep 8 . },
+    { :controller :outflow 2 . },
+    { :trialHigh a :ClosedLoopTrial . },
+    { :trialHigh :levelAt (7 21) . },
+    { :trialHigh :valveAt (7 2) . },
+    { 7 math:lessThan 8 . },
+    { (7 1) math:sum 8 . },
+    { (21 2) math:sum 23 . },
+    { (23 2) math:difference 21 . }.
+
+{ :trialHigh :errorAt (7 1) . }
+  pe:rule 9;
+  pe:binding
+    [ pe:var "error"; pe:value 1 ],
+    [ pe:var "k"; pe:value 7 ],
+    [ pe:var "level"; pe:value 21 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialHigh :levelAt (7 21) . },
+    { 21 math:notLessThan 20 . },
+    { (21 20) math:difference 1 . }.
+
+{ :trialHigh :sideAt (7 :aboveOrOn) . }
+  pe:rule 9;
+  pe:binding
+    [ pe:var "error"; pe:value 1 ],
+    [ pe:var "k"; pe:value 7 ],
+    [ pe:var "level"; pe:value 21 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialHigh :levelAt (7 21) . },
+    { 21 math:notLessThan 20 . },
+    { (21 20) math:difference 1 . }.
+
+{ :trialHigh :holdBandAt 7 . }
+  pe:rule 11;
+  pe:binding
+    [ pe:var "k"; pe:value 7 ],
+    [ pe:var "k1"; pe:value 8 ],
+    [ pe:var "level"; pe:value 21 ],
+    [ pe:var "nextLevel"; pe:value 21 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses
+    { :trialHigh :levelAt (7 21) . },
+    { :trialHigh :valveAt (7 2) . },
+    { 21 math:notLessThan 19 . },
+    { 21 math:notGreaterThan 21 . },
+    { (7 1) math:sum 8 . },
+    { :trialHigh :levelAt (8 21) . },
+    { 21 math:equalTo 21 . }.
+
+{ :trialHigh :invariantStepAt 7 . }
+  pe:rule 11;
+  pe:binding
+    [ pe:var "k"; pe:value 7 ],
+    [ pe:var "k1"; pe:value 8 ],
+    [ pe:var "level"; pe:value 21 ],
+    [ pe:var "nextLevel"; pe:value 21 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses
+    { :trialHigh :levelAt (7 21) . },
+    { :trialHigh :valveAt (7 2) . },
+    { 21 math:notLessThan 19 . },
+    { 21 math:notGreaterThan 21 . },
+    { (7 1) math:sum 8 . },
+    { :trialHigh :levelAt (8 21) . },
+    { 21 math:equalTo 21 . }.
+
+{ :trialNominal :valveAt (7 2) . }
+  pe:rule 4;
+  pe:binding
+    [ pe:var "k"; pe:value 7 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :trialNominal :levelAt (7 20) . },
+    { 20 math:notLessThan 19 . },
+    { 20 math:notGreaterThan 21 . }.
+
+{ :trialNominal :levelAt (8 20) . }
+  pe:rule 7;
+  pe:binding
+    [ pe:var "inflowed"; pe:value 22 ],
+    [ pe:var "k"; pe:value 7 ],
+    [ pe:var "k1"; pe:value 8 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "max"; pe:value 8 ],
+    [ pe:var "nextLevel"; pe:value 20 ],
+    [ pe:var "outflow"; pe:value 2 ],
+    [ pe:var "trial"; pe:value :trialNominal ],
+    [ pe:var "valve"; pe:value 2 ];
+  pe:uses
+    { :controller :maxStep 8 . },
+    { :controller :outflow 2 . },
+    { :trialNominal a :ClosedLoopTrial . },
+    { :trialNominal :levelAt (7 20) . },
+    { :trialNominal :valveAt (7 2) . },
+    { 7 math:lessThan 8 . },
+    { (7 1) math:sum 8 . },
+    { (20 2) math:sum 22 . },
+    { (22 2) math:difference 20 . }.
+
+{ :trialNominal :errorAt (7 0) . }
+  pe:rule 9;
+  pe:binding
+    [ pe:var "error"; pe:value 0 ],
+    [ pe:var "k"; pe:value 7 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialNominal :levelAt (7 20) . },
+    { 20 math:notLessThan 20 . },
+    { (20 20) math:difference 0 . }.
+
+{ :trialNominal :sideAt (7 :aboveOrOn) . }
+  pe:rule 9;
+  pe:binding
+    [ pe:var "error"; pe:value 0 ],
+    [ pe:var "k"; pe:value 7 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialNominal :levelAt (7 20) . },
+    { 20 math:notLessThan 20 . },
+    { (20 20) math:difference 0 . }.
+
+{ :trialNominal :holdBandAt 7 . }
+  pe:rule 11;
+  pe:binding
+    [ pe:var "k"; pe:value 7 ],
+    [ pe:var "k1"; pe:value 8 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "nextLevel"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :trialNominal :levelAt (7 20) . },
+    { :trialNominal :valveAt (7 2) . },
+    { 20 math:notLessThan 19 . },
+    { 20 math:notGreaterThan 21 . },
+    { (7 1) math:sum 8 . },
+    { :trialNominal :levelAt (8 20) . },
+    { 20 math:equalTo 20 . }.
+
+{ :trialNominal :invariantStepAt 7 . }
+  pe:rule 11;
+  pe:binding
+    [ pe:var "k"; pe:value 7 ],
+    [ pe:var "k1"; pe:value 8 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "nextLevel"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :trialNominal :levelAt (7 20) . },
+    { :trialNominal :valveAt (7 2) . },
+    { 20 math:notLessThan 19 . },
+    { 20 math:notGreaterThan 21 . },
+    { (7 1) math:sum 8 . },
+    { :trialNominal :levelAt (8 20) . },
+    { 20 math:equalTo 20 . }.
+
+{ :trialLow :valveAt (8 2) . }
+  pe:rule 4;
+  pe:binding
+    [ pe:var "k"; pe:value 8 ],
+    [ pe:var "level"; pe:value 19 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses
+    { :trialLow :levelAt (8 19) . },
+    { 19 math:notLessThan 19 . },
+    { 19 math:notGreaterThan 21 . }.
+
+{ :trialLow :errorAt (8 1) . }
+  pe:rule 8;
+  pe:binding
+    [ pe:var "error"; pe:value 1 ],
+    [ pe:var "k"; pe:value 8 ],
+    [ pe:var "level"; pe:value 19 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialLow :levelAt (8 19) . },
+    { 19 math:lessThan 20 . },
+    { (20 19) math:difference 1 . }.
+
+{ :trialLow :sideAt (8 :below) . }
+  pe:rule 8;
+  pe:binding
+    [ pe:var "error"; pe:value 1 ],
+    [ pe:var "k"; pe:value 8 ],
+    [ pe:var "level"; pe:value 19 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialLow :levelAt (8 19) . },
+    { 19 math:lessThan 20 . },
+    { (20 19) math:difference 1 . }.
+
+{ :trialHigh :valveAt (8 2) . }
+  pe:rule 4;
+  pe:binding
+    [ pe:var "k"; pe:value 8 ],
+    [ pe:var "level"; pe:value 21 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses
+    { :trialHigh :levelAt (8 21) . },
+    { 21 math:notLessThan 19 . },
+    { 21 math:notGreaterThan 21 . }.
+
+{ :trialHigh :errorAt (8 1) . }
+  pe:rule 9;
+  pe:binding
+    [ pe:var "error"; pe:value 1 ],
+    [ pe:var "k"; pe:value 8 ],
+    [ pe:var "level"; pe:value 21 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialHigh :levelAt (8 21) . },
+    { 21 math:notLessThan 20 . },
+    { (21 20) math:difference 1 . }.
+
+{ :trialHigh :sideAt (8 :aboveOrOn) . }
+  pe:rule 9;
+  pe:binding
+    [ pe:var "error"; pe:value 1 ],
+    [ pe:var "k"; pe:value 8 ],
+    [ pe:var "level"; pe:value 21 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialHigh :levelAt (8 21) . },
+    { 21 math:notLessThan 20 . },
+    { (21 20) math:difference 1 . }.
+
+{ :trialNominal :valveAt (8 2) . }
+  pe:rule 4;
+  pe:binding
+    [ pe:var "k"; pe:value 8 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :trialNominal :levelAt (8 20) . },
+    { 20 math:notLessThan 19 . },
+    { 20 math:notGreaterThan 21 . }.
+
+{ :trialNominal :errorAt (8 0) . }
+  pe:rule 9;
+  pe:binding
+    [ pe:var "error"; pe:value 0 ],
+    [ pe:var "k"; pe:value 8 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialNominal :levelAt (8 20) . },
+    { 20 math:notLessThan 20 . },
+    { (20 20) math:difference 0 . }.
+
+{ :trialNominal :sideAt (8 :aboveOrOn) . }
+  pe:rule 9;
+  pe:binding
+    [ pe:var "error"; pe:value 0 ],
+    [ pe:var "k"; pe:value 8 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "sp"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :controller :setpoint 20 . },
+    { :trialNominal :levelAt (8 20) . },
+    { 20 math:notLessThan 20 . },
+    { (20 20) math:difference 0 . }.

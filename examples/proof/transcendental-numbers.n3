@@ -1,0 +1,283 @@
+@prefix : <https://example.org/transcendental#> .
+@prefix pe: <https://eyereasoner.github.io/pe#> .
+
+:e :kind :NotStraightedgeCompassConstructible .
+:pi :kind :NotStraightedgeCompassConstructible .
+:pow_2_sqrt2 :kind :Transcendental .
+:pow_2_sqrt2 :provedBy :GelfondSchneider .
+:pow_minus1_minusI :kind :Transcendental .
+:pow_minus1_minusI :provedBy :GelfondSchneider .
+:exp_sqrt2 :kind :Transcendental .
+:exp_sqrt2 :provedBy :LindemannWeierstrass .
+:pow_i_i :kind :Transcendental .
+:pow_i_i :provedBy :GelfondSchneider .
+:liouvilleL :kind :NotStraightedgeCompassConstructible .
+:pow_e_pi :kind :Transcendental .
+:pow_e_pi :provedBy :GelfondSchneider .
+:exp_minus_pi_over_2 :kind :Transcendental .
+:exp_minus_pi_over_2 :provedBy :GelfondSchneider .
+:pow_2_sqrt2 :kind :NotStraightedgeCompassConstructible .
+:pow_minus1_minusI :kind :NotStraightedgeCompassConstructible .
+:exp_sqrt2 :kind :NotStraightedgeCompassConstructible .
+:pow_i_i :kind :NotStraightedgeCompassConstructible .
+:pow_e_pi :kind :NotStraightedgeCompassConstructible .
+:exp_minus_pi_over_2 :kind :NotStraightedgeCompassConstructible .
+
+{ :e :kind :NotStraightedgeCompassConstructible . }
+  pe:rule 5;
+  pe:binding [ pe:var "X"; pe:value :e ];
+  pe:uses { :e :kind :Transcendental . }.
+
+{ :e :kind :Transcendental . }
+  pe:fact "transcendental-numbers.n3".
+
+{ :pi :kind :NotStraightedgeCompassConstructible . }
+  pe:rule 5;
+  pe:binding [ pe:var "X"; pe:value :pi ];
+  pe:uses { :pi :kind :Transcendental . }.
+
+{ :pi :kind :Transcendental . }
+  pe:fact "transcendental-numbers.n3".
+
+{ :pow_2_sqrt2 :kind :Transcendental . }
+  pe:rule 2;
+  pe:binding
+    [ pe:var "A"; pe:value :two ],
+    [ pe:var "B"; pe:value :sqrt2 ],
+    [ pe:var "X"; pe:value :pow_2_sqrt2 ];
+  pe:uses
+    { :pow_2_sqrt2 :powBase :two . },
+    { :pow_2_sqrt2 :powExp :sqrt2 . },
+    { :two :kind :Algebraic . },
+    { :two :kind :NotZeroOrOne . },
+    { :sqrt2 :kind :Algebraic . },
+    { :sqrt2 :kind :NonRational . }.
+
+{ :pow_2_sqrt2 :powBase :two . }
+  pe:fact "transcendental-numbers.n3".
+
+{ :pow_2_sqrt2 :powExp :sqrt2 . }
+  pe:fact "transcendental-numbers.n3".
+
+{ :two :kind :Algebraic . }
+  pe:fact "transcendental-numbers.n3".
+
+{ :two :kind :NotZeroOrOne . }
+  pe:fact "transcendental-numbers.n3".
+
+{ :sqrt2 :kind :Algebraic . }
+  pe:fact "transcendental-numbers.n3".
+
+{ :sqrt2 :kind :NonRational . }
+  pe:fact "transcendental-numbers.n3".
+
+{ :pow_2_sqrt2 :provedBy :GelfondSchneider . }
+  pe:rule 2;
+  pe:binding
+    [ pe:var "A"; pe:value :two ],
+    [ pe:var "B"; pe:value :sqrt2 ],
+    [ pe:var "X"; pe:value :pow_2_sqrt2 ];
+  pe:uses
+    { :pow_2_sqrt2 :powBase :two . },
+    { :pow_2_sqrt2 :powExp :sqrt2 . },
+    { :two :kind :Algebraic . },
+    { :two :kind :NotZeroOrOne . },
+    { :sqrt2 :kind :Algebraic . },
+    { :sqrt2 :kind :NonRational . }.
+
+{ :pow_minus1_minusI :kind :Transcendental . }
+  pe:rule 2;
+  pe:binding
+    [ pe:var "A"; pe:value :minusOne ],
+    [ pe:var "B"; pe:value :minusI ],
+    [ pe:var "X"; pe:value :pow_minus1_minusI ];
+  pe:uses
+    { :pow_minus1_minusI :powBase :minusOne . },
+    { :pow_minus1_minusI :powExp :minusI . },
+    { :minusOne :kind :Algebraic . },
+    { :minusOne :kind :NotZeroOrOne . },
+    { :minusI :kind :Algebraic . },
+    { :minusI :kind :NonRational . }.
+
+{ :pow_minus1_minusI :powBase :minusOne . }
+  pe:fact "transcendental-numbers.n3".
+
+{ :pow_minus1_minusI :powExp :minusI . }
+  pe:fact "transcendental-numbers.n3".
+
+{ :minusOne :kind :Algebraic . }
+  pe:fact "transcendental-numbers.n3".
+
+{ :minusOne :kind :NotZeroOrOne . }
+  pe:fact "transcendental-numbers.n3".
+
+{ :minusI :kind :Algebraic . }
+  pe:fact "transcendental-numbers.n3".
+
+{ :minusI :kind :NonRational . }
+  pe:fact "transcendental-numbers.n3".
+
+{ :pow_minus1_minusI :provedBy :GelfondSchneider . }
+  pe:rule 2;
+  pe:binding
+    [ pe:var "A"; pe:value :minusOne ],
+    [ pe:var "B"; pe:value :minusI ],
+    [ pe:var "X"; pe:value :pow_minus1_minusI ];
+  pe:uses
+    { :pow_minus1_minusI :powBase :minusOne . },
+    { :pow_minus1_minusI :powExp :minusI . },
+    { :minusOne :kind :Algebraic . },
+    { :minusOne :kind :NotZeroOrOne . },
+    { :minusI :kind :Algebraic . },
+    { :minusI :kind :NonRational . }.
+
+{ :exp_sqrt2 :kind :Transcendental . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "A"; pe:value :sqrt2 ],
+    [ pe:var "X"; pe:value :exp_sqrt2 ];
+  pe:uses
+    { :exp_sqrt2 :expArg :sqrt2 . },
+    { :sqrt2 :kind :Algebraic . },
+    { :sqrt2 :kind :NonZero . }.
+
+{ :exp_sqrt2 :expArg :sqrt2 . }
+  pe:fact "transcendental-numbers.n3".
+
+{ :sqrt2 :kind :NonZero . }
+  pe:fact "transcendental-numbers.n3".
+
+{ :exp_sqrt2 :provedBy :LindemannWeierstrass . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "A"; pe:value :sqrt2 ],
+    [ pe:var "X"; pe:value :exp_sqrt2 ];
+  pe:uses
+    { :exp_sqrt2 :expArg :sqrt2 . },
+    { :sqrt2 :kind :Algebraic . },
+    { :sqrt2 :kind :NonZero . }.
+
+{ :pow_i_i :kind :Transcendental . }
+  pe:rule 2;
+  pe:binding
+    [ pe:var "A"; pe:value :i ],
+    [ pe:var "B"; pe:value :i ],
+    [ pe:var "X"; pe:value :pow_i_i ];
+  pe:uses
+    { :pow_i_i :powBase :i . },
+    { :pow_i_i :powExp :i . },
+    { :i :kind :Algebraic . },
+    { :i :kind :NotZeroOrOne . },
+    { :i :kind :Algebraic . },
+    { :i :kind :NonRational . }.
+
+{ :pow_i_i :powBase :i . }
+  pe:fact "transcendental-numbers.n3".
+
+{ :pow_i_i :powExp :i . }
+  pe:fact "transcendental-numbers.n3".
+
+{ :i :kind :Algebraic . }
+  pe:fact "transcendental-numbers.n3".
+
+{ :i :kind :NotZeroOrOne . }
+  pe:fact "transcendental-numbers.n3".
+
+{ :i :kind :NonRational . }
+  pe:fact "transcendental-numbers.n3".
+
+{ :pow_i_i :provedBy :GelfondSchneider . }
+  pe:rule 2;
+  pe:binding
+    [ pe:var "A"; pe:value :i ],
+    [ pe:var "B"; pe:value :i ],
+    [ pe:var "X"; pe:value :pow_i_i ];
+  pe:uses
+    { :pow_i_i :powBase :i . },
+    { :pow_i_i :powExp :i . },
+    { :i :kind :Algebraic . },
+    { :i :kind :NotZeroOrOne . },
+    { :i :kind :Algebraic . },
+    { :i :kind :NonRational . }.
+
+{ :liouvilleL :kind :NotStraightedgeCompassConstructible . }
+  pe:rule 5;
+  pe:binding [ pe:var "X"; pe:value :liouvilleL ];
+  pe:uses { :liouvilleL :kind :Transcendental . }.
+
+{ :liouvilleL :kind :Transcendental . }
+  pe:fact "transcendental-numbers.n3".
+
+{ :pow_e_pi :kind :Transcendental . }
+  pe:rule 3;
+  pe:binding
+    [ pe:var "X"; pe:value :pow_e_pi ],
+    [ pe:var "Y"; pe:value :pow_minus1_minusI ];
+  pe:uses
+    { :pow_e_pi :sameAs :pow_minus1_minusI . },
+    { :pow_minus1_minusI :kind :Transcendental . }.
+
+{ :pow_e_pi :sameAs :pow_minus1_minusI . }
+  pe:fact "transcendental-numbers.n3".
+
+{ :pow_e_pi :provedBy :GelfondSchneider . }
+  pe:rule 4;
+  pe:binding
+    [ pe:var "T"; pe:value :GelfondSchneider ],
+    [ pe:var "X"; pe:value :pow_e_pi ],
+    [ pe:var "Y"; pe:value :pow_minus1_minusI ];
+  pe:uses
+    { :pow_e_pi :sameAs :pow_minus1_minusI . },
+    { :pow_minus1_minusI :provedBy :GelfondSchneider . }.
+
+{ :exp_minus_pi_over_2 :kind :Transcendental . }
+  pe:rule 3;
+  pe:binding
+    [ pe:var "X"; pe:value :exp_minus_pi_over_2 ],
+    [ pe:var "Y"; pe:value :pow_i_i ];
+  pe:uses
+    { :exp_minus_pi_over_2 :sameAs :pow_i_i . },
+    { :pow_i_i :kind :Transcendental . }.
+
+{ :exp_minus_pi_over_2 :sameAs :pow_i_i . }
+  pe:fact "transcendental-numbers.n3".
+
+{ :exp_minus_pi_over_2 :provedBy :GelfondSchneider . }
+  pe:rule 4;
+  pe:binding
+    [ pe:var "T"; pe:value :GelfondSchneider ],
+    [ pe:var "X"; pe:value :exp_minus_pi_over_2 ],
+    [ pe:var "Y"; pe:value :pow_i_i ];
+  pe:uses
+    { :exp_minus_pi_over_2 :sameAs :pow_i_i . },
+    { :pow_i_i :provedBy :GelfondSchneider . }.
+
+{ :pow_2_sqrt2 :kind :NotStraightedgeCompassConstructible . }
+  pe:rule 5;
+  pe:binding [ pe:var "X"; pe:value :pow_2_sqrt2 ];
+  pe:uses { :pow_2_sqrt2 :kind :Transcendental . }.
+
+{ :pow_minus1_minusI :kind :NotStraightedgeCompassConstructible . }
+  pe:rule 5;
+  pe:binding [ pe:var "X"; pe:value :pow_minus1_minusI ];
+  pe:uses { :pow_minus1_minusI :kind :Transcendental . }.
+
+{ :exp_sqrt2 :kind :NotStraightedgeCompassConstructible . }
+  pe:rule 5;
+  pe:binding [ pe:var "X"; pe:value :exp_sqrt2 ];
+  pe:uses { :exp_sqrt2 :kind :Transcendental . }.
+
+{ :pow_i_i :kind :NotStraightedgeCompassConstructible . }
+  pe:rule 5;
+  pe:binding [ pe:var "X"; pe:value :pow_i_i ];
+  pe:uses { :pow_i_i :kind :Transcendental . }.
+
+{ :pow_e_pi :kind :NotStraightedgeCompassConstructible . }
+  pe:rule 5;
+  pe:binding [ pe:var "X"; pe:value :pow_e_pi ];
+  pe:uses { :pow_e_pi :kind :Transcendental . }.
+
+{ :exp_minus_pi_over_2 :kind :NotStraightedgeCompassConstructible . }
+  pe:rule 5;
+  pe:binding [ pe:var "X"; pe:value :exp_minus_pi_over_2 ];
+  pe:uses { :exp_minus_pi_over_2 :kind :Transcendental . }.

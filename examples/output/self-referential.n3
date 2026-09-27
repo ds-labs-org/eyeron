@@ -1,0 +1,7 @@
+@prefix : <https://eyereasoner.github.io/ns#> .
+@prefix log: <http://www.w3.org/2000/10/swap/log#> .
+
+:answer :contains log:implies .
+:answer :contains :contains .
+:test :is true .
+:answer :contains :is .

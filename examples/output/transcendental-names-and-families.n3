@@ -1,0 +1,167 @@
+@prefix : <https://example.org/named-transcendentals#> .
+
+:report :family :AlgorithmicRandomNumbers .
+:report :family :AllTranscendentals .
+:report :family :DigitExpansionTranscendentals .
+:report :family :EllipticPeriodConstants .
+:report :family :GelfondSchneiderNumbers .
+:report :family :LiouvilleNumbers .
+:report :family :LWExpNumbers .
+:report :member [
+  :family :EllipticPeriodConstants ;
+  :x :lemniscateConstant
+] .
+:report :member [
+  :family :AllTranscendentals ;
+  :x :liouvillesConstant
+] .
+:report :member [
+  :family :AllTranscendentals ;
+  :x :kempnerNumber
+] .
+:report :member [
+  :family :AllTranscendentals ;
+  :x :champernowneC10
+] .
+:report :member [
+  :family :AllTranscendentals ;
+  :x :lemniscateConstant
+] .
+:report :member [
+  :family :AlgorithmicRandomNumbers ;
+  :x :chaitinsOmega
+] .
+:report :member [
+  :family :LWExpNumbers ;
+  :x :exp_sqrt2
+] .
+:report :member [
+  :family :GelfondSchneiderNumbers ;
+  :x :pow_2_sqrt2
+] .
+:report :member [
+  :family :GelfondSchneiderNumbers ;
+  :x :pow_minus1_minusi
+] .
+:report :member [
+  :family :GelfondSchneiderNumbers ;
+  :x :gelfondsConstant
+] .
+:report :member [
+  :family :AllTranscendentals ;
+  :x :e
+] .
+:report :member [
+  :family :AllTranscendentals ;
+  :x :pi
+] .
+:report :member [
+  :family :AllTranscendentals ;
+  :x :chaitinsOmega
+] .
+:report :member [
+  :family :AllTranscendentals ;
+  :x :exp_sqrt2
+] .
+:report :member [
+  :family :AllTranscendentals ;
+  :x :pow_2_sqrt2
+] .
+:report :member [
+  :family :AllTranscendentals ;
+  :x :pow_minus1_minusi
+] .
+:report :member [
+  :family :AllTranscendentals ;
+  :x :gelfondsConstant
+] .
+:report :member [
+  :family :LiouvilleNumbers ;
+  :x :liouvillesConstant
+] .
+:report :member [
+  :family :DigitExpansionTranscendentals ;
+  :x :liouvillesConstant
+] .
+:report :member [
+  :family :DigitExpansionTranscendentals ;
+  :x :kempnerNumber
+] .
+:report :member [
+  :family :DigitExpansionTranscendentals ;
+  :x :champernowneC10
+] .
+:report :namedTranscendental :chaitinsOmega .
+:report :namedTranscendental :champernowneC10 .
+:report :namedTranscendental :e .
+:report :namedTranscendental :exp_sqrt2 .
+:report :namedTranscendental :gelfondsConstant .
+:report :namedTranscendental :kempnerNumber .
+:report :namedTranscendental :lemniscateConstant .
+:report :namedTranscendental :liouvillesConstant .
+:report :namedTranscendental :pi .
+:report :namedTranscendental :pow_2_sqrt2 .
+:report :namedTranscendental :pow_minus1_minusi .
+:report :proof {
+    :chaitinsOmega :provedBy :NoncomputableImpliesTranscendental .
+} .
+:report :proof {
+    :champernowneC10 :provedBy :Mahler1937 .
+} .
+:report :proof {
+    :e :provedBy :Hermite1873 .
+} .
+:report :proof {
+    :exp_sqrt2 :provedBy :LindemannWeierstrass .
+} .
+:report :proof {
+    :gelfondsConstant :provedBy :GelfondSchneider .
+} .
+:report :proof {
+    :kempnerNumber :provedBy :Kempner1916 .
+} .
+:report :proof {
+    :lemniscateConstant :provedBy :Schneider .
+} .
+:report :proof {
+    :liouvillesConstant :provedBy :Liouville1844 .
+} .
+:report :proof {
+    :pi :provedBy :Lindemann1882 .
+} .
+:report :proof {
+    :pow_2_sqrt2 :provedBy :GelfondSchneider .
+} .
+:report :proof {
+    :pow_minus1_minusi :provedBy :GelfondSchneider .
+} .
+:report :subFamily [
+  :child :LWExpNumbers ;
+  :parent :AllTranscendentals
+] .
+:report :subFamily [
+  :child :GelfondSchneiderNumbers ;
+  :parent :AllTranscendentals
+] .
+:report :subFamily [
+  :child :LiouvilleNumbers ;
+  :parent :AllTranscendentals
+] .
+:report :subFamily [
+  :child :DigitExpansionTranscendentals ;
+  :parent :AllTranscendentals
+] .
+:report :subFamily [
+  :child :AlgorithmicRandomNumbers ;
+  :parent :AllTranscendentals
+] .
+:report :subFamily [
+  :child :EllipticPeriodConstants ;
+  :parent :AllTranscendentals
+] .
+:report :unknown :aperyZeta3 .
+:report :unknown :catalanG .
+:report :unknown :ePlusPi .
+:report :unknown :eTimesPi .
+:report :unknown :eulerMascheroniGamma .
+:report :unknown :piPowE .

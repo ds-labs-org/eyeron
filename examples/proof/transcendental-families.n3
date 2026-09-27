@@ -1,0 +1,890 @@
+@prefix : <https://example.org/trans-families#> .
+@prefix pe: <https://eyereasoner.github.io/pe#> .
+
+:LiouvilleL :inFamily :MahlerUNumbers .
+:LiouvilleL :inFamily :AllTranscendentals .
+:e_plus_1 :inFamily :AlgebraicClosureFamily .
+:e_plus_1 :provedBy :TransPlusAlg .
+:pow_2_sqrt2 :inFamily :GelfondSchneiderNumbers .
+:pow_2_sqrt2 :provedBy :GelfondSchneider .
+:two_times_pi :inFamily :AlgebraicClosureFamily .
+:two_times_pi :provedBy :TransTimesAlg .
+:pi_div_2 :inFamily :AlgebraicClosureFamily .
+:pi_div_2 :provedBy :TransDivAlg .
+:pow_minus1_minusI :inFamily :GelfondSchneiderNumbers .
+:pow_minus1_minusI :provedBy :GelfondSchneider .
+:exp_sqrt2 :inFamily :LWExpNumbers .
+:exp_sqrt2 :provedBy :LindemannWeierstrass .
+:pi_plus_sqrt2 :inFamily :AlgebraicClosureFamily .
+:pi_plus_sqrt2 :provedBy :TransPlusAlg .
+:pow_i_i :inFamily :GelfondSchneiderNumbers .
+:pow_i_i :provedBy :GelfondSchneider .
+:e :inFamily :ComputableTranscendentals .
+:e :kind :Irrational .
+:e :provedBy :TransImpliesIrrational .
+:e :kind :NotStraightedgeCompassConstructible .
+:e :provedBy :TransImpliesNotConstructible .
+:pi :inFamily :ComputableTranscendentals .
+:pi :kind :Irrational .
+:pi :provedBy :TransImpliesIrrational .
+:pi :kind :NotStraightedgeCompassConstructible .
+:pi :provedBy :TransImpliesNotConstructible .
+:LiouvilleL :inFamily :ComputableTranscendentals .
+:LiouvilleL :kind :Irrational .
+:LiouvilleL :provedBy :TransImpliesIrrational .
+:LiouvilleL :kind :NotStraightedgeCompassConstructible .
+:LiouvilleL :provedBy :TransImpliesNotConstructible .
+:e_plus_1 :inFamily :AllTranscendentals .
+:pow_2_sqrt2 :inFamily :AllTranscendentals .
+:two_times_pi :inFamily :AllTranscendentals .
+:pi_div_2 :inFamily :AllTranscendentals .
+:pow_minus1_minusI :inFamily :AllTranscendentals .
+:exp_sqrt2 :inFamily :AllTranscendentals .
+:pi_plus_sqrt2 :inFamily :AllTranscendentals .
+:pow_i_i :inFamily :AllTranscendentals .
+:e :inFamily :AllTranscendentals .
+:pi :inFamily :AllTranscendentals .
+:e_plus_1 :kind :Transcendental .
+:pow_2_sqrt2 :kind :Transcendental .
+:two_times_pi :kind :Transcendental .
+:pi_div_2 :kind :Transcendental .
+:pow_minus1_minusI :kind :Transcendental .
+:exp_sqrt2 :kind :Transcendental .
+:pi_plus_sqrt2 :kind :Transcendental .
+:pow_i_i :kind :Transcendental .
+:e_plus_1 :kind :Irrational .
+:e_plus_1 :provedBy :TransImpliesIrrational .
+:e_plus_1 :kind :NotStraightedgeCompassConstructible .
+:e_plus_1 :provedBy :TransImpliesNotConstructible .
+:pow_2_sqrt2_plus_1 :inFamily :AlgebraicClosureFamily .
+:pow_2_sqrt2_plus_1 :provedBy :TransPlusAlg .
+:pow_2_sqrt2 :kind :Irrational .
+:pow_2_sqrt2 :provedBy :TransImpliesIrrational .
+:pow_2_sqrt2 :kind :NotStraightedgeCompassConstructible .
+:pow_2_sqrt2 :provedBy :TransImpliesNotConstructible .
+:two_times_pi :kind :Irrational .
+:two_times_pi :provedBy :TransImpliesIrrational .
+:two_times_pi :kind :NotStraightedgeCompassConstructible .
+:two_times_pi :provedBy :TransImpliesNotConstructible .
+:pi_div_2 :kind :Irrational .
+:pi_div_2 :provedBy :TransImpliesIrrational .
+:pi_div_2 :kind :NotStraightedgeCompassConstructible .
+:pi_div_2 :provedBy :TransImpliesNotConstructible .
+:pow_minus1_minusI :kind :Irrational .
+:pow_minus1_minusI :provedBy :TransImpliesIrrational .
+:pow_minus1_minusI :kind :NotStraightedgeCompassConstructible .
+:pow_minus1_minusI :provedBy :TransImpliesNotConstructible .
+:exp_sqrt2 :kind :Irrational .
+:exp_sqrt2 :provedBy :TransImpliesIrrational .
+:exp_sqrt2 :kind :NotStraightedgeCompassConstructible .
+:exp_sqrt2 :provedBy :TransImpliesNotConstructible .
+:pi_plus_sqrt2 :kind :Irrational .
+:pi_plus_sqrt2 :provedBy :TransImpliesIrrational .
+:pi_plus_sqrt2 :kind :NotStraightedgeCompassConstructible .
+:pi_plus_sqrt2 :provedBy :TransImpliesNotConstructible .
+:pow_i_i :kind :Irrational .
+:pow_i_i :provedBy :TransImpliesIrrational .
+:pow_i_i :kind :NotStraightedgeCompassConstructible .
+:pow_i_i :provedBy :TransImpliesNotConstructible .
+:pow_2_sqrt2_plus_1 :inFamily :AllTranscendentals .
+:pow_2_sqrt2_plus_1 :kind :Transcendental .
+:pow_2_sqrt2_plus_1 :kind :Irrational .
+:pow_2_sqrt2_plus_1 :provedBy :TransImpliesIrrational .
+:pow_2_sqrt2_plus_1 :kind :NotStraightedgeCompassConstructible .
+:pow_2_sqrt2_plus_1 :provedBy :TransImpliesNotConstructible .
+
+{ :LiouvilleL :inFamily :MahlerUNumbers . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "F"; pe:value :LiouvilleNumbers ],
+    [ pe:var "G"; pe:value :MahlerUNumbers ],
+    [ pe:var "X"; pe:value :LiouvilleL ];
+  pe:uses
+    { :LiouvilleL :inFamily :LiouvilleNumbers . },
+    { :LiouvilleNumbers :subFamilyOf :MahlerUNumbers . }.
+
+{ :LiouvilleL :inFamily :LiouvilleNumbers . }
+  pe:fact "transcendental-families.n3".
+
+{ :LiouvilleNumbers :subFamilyOf :MahlerUNumbers . }
+  pe:fact "transcendental-families.n3".
+
+{ :LiouvilleL :inFamily :AllTranscendentals . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "F"; pe:value :MahlerUNumbers ],
+    [ pe:var "G"; pe:value :AllTranscendentals ],
+    [ pe:var "X"; pe:value :LiouvilleL ];
+  pe:uses
+    { :LiouvilleL :inFamily :MahlerUNumbers . },
+    { :MahlerUNumbers :subFamilyOf :AllTranscendentals . }.
+
+{ :MahlerUNumbers :subFamilyOf :AllTranscendentals . }
+  pe:fact "transcendental-families.n3".
+
+{ :e_plus_1 :inFamily :AlgebraicClosureFamily . }
+  pe:rule 5;
+  pe:binding
+    [ pe:var "A"; pe:value :1 ],
+    [ pe:var "T"; pe:value :e ],
+    [ pe:var "X"; pe:value :e_plus_1 ];
+  pe:uses
+    { :e_plus_1 :plusLeft :e . },
+    { :e_plus_1 :plusRight :1 . },
+    { :e :kind :Transcendental . },
+    { :1 :kind :Algebraic . }.
+
+{ :e_plus_1 :plusLeft :e . }
+  pe:fact "transcendental-families.n3".
+
+{ :e_plus_1 :plusRight :1 . }
+  pe:fact "transcendental-families.n3".
+
+{ :e :kind :Transcendental . }
+  pe:fact "transcendental-families.n3".
+
+{ :1 :kind :Algebraic . }
+  pe:fact "transcendental-families.n3".
+
+{ :e_plus_1 :provedBy :TransPlusAlg . }
+  pe:rule 5;
+  pe:binding
+    [ pe:var "A"; pe:value :1 ],
+    [ pe:var "T"; pe:value :e ],
+    [ pe:var "X"; pe:value :e_plus_1 ];
+  pe:uses
+    { :e_plus_1 :plusLeft :e . },
+    { :e_plus_1 :plusRight :1 . },
+    { :e :kind :Transcendental . },
+    { :1 :kind :Algebraic . }.
+
+{ :pow_2_sqrt2 :inFamily :GelfondSchneiderNumbers . }
+  pe:rule 4;
+  pe:binding
+    [ pe:var "A"; pe:value :2 ],
+    [ pe:var "B"; pe:value :sqrt2 ],
+    [ pe:var "X"; pe:value :pow_2_sqrt2 ];
+  pe:uses
+    { :pow_2_sqrt2 :powBase :2 . },
+    { :pow_2_sqrt2 :powExp :sqrt2 . },
+    { :2 :kind :Algebraic . },
+    { :2 :kind :NotZeroOrOne . },
+    { :sqrt2 :kind :Algebraic . },
+    { :sqrt2 :kind :NonRational . }.
+
+{ :pow_2_sqrt2 :powBase :2 . }
+  pe:fact "transcendental-families.n3".
+
+{ :pow_2_sqrt2 :powExp :sqrt2 . }
+  pe:fact "transcendental-families.n3".
+
+{ :2 :kind :Algebraic . }
+  pe:fact "transcendental-families.n3".
+
+{ :2 :kind :NotZeroOrOne . }
+  pe:fact "transcendental-families.n3".
+
+{ :sqrt2 :kind :Algebraic . }
+  pe:fact "transcendental-families.n3".
+
+{ :sqrt2 :kind :NonRational . }
+  pe:fact "transcendental-families.n3".
+
+{ :pow_2_sqrt2 :provedBy :GelfondSchneider . }
+  pe:rule 4;
+  pe:binding
+    [ pe:var "A"; pe:value :2 ],
+    [ pe:var "B"; pe:value :sqrt2 ],
+    [ pe:var "X"; pe:value :pow_2_sqrt2 ];
+  pe:uses
+    { :pow_2_sqrt2 :powBase :2 . },
+    { :pow_2_sqrt2 :powExp :sqrt2 . },
+    { :2 :kind :Algebraic . },
+    { :2 :kind :NotZeroOrOne . },
+    { :sqrt2 :kind :Algebraic . },
+    { :sqrt2 :kind :NonRational . }.
+
+{ :two_times_pi :inFamily :AlgebraicClosureFamily . }
+  pe:rule 8;
+  pe:binding
+    [ pe:var "A"; pe:value :2 ],
+    [ pe:var "T"; pe:value :pi ],
+    [ pe:var "X"; pe:value :two_times_pi ];
+  pe:uses
+    { :two_times_pi :timesLeft :2 . },
+    { :two_times_pi :timesRight :pi . },
+    { :pi :kind :Transcendental . },
+    { :2 :kind :Algebraic . },
+    { :2 :kind :NonZero . }.
+
+{ :two_times_pi :timesLeft :2 . }
+  pe:fact "transcendental-families.n3".
+
+{ :two_times_pi :timesRight :pi . }
+  pe:fact "transcendental-families.n3".
+
+{ :pi :kind :Transcendental . }
+  pe:fact "transcendental-families.n3".
+
+{ :2 :kind :NonZero . }
+  pe:fact "transcendental-families.n3".
+
+{ :two_times_pi :provedBy :TransTimesAlg . }
+  pe:rule 8;
+  pe:binding
+    [ pe:var "A"; pe:value :2 ],
+    [ pe:var "T"; pe:value :pi ],
+    [ pe:var "X"; pe:value :two_times_pi ];
+  pe:uses
+    { :two_times_pi :timesLeft :2 . },
+    { :two_times_pi :timesRight :pi . },
+    { :pi :kind :Transcendental . },
+    { :2 :kind :Algebraic . },
+    { :2 :kind :NonZero . }.
+
+{ :pi_div_2 :inFamily :AlgebraicClosureFamily . }
+  pe:rule 9;
+  pe:binding
+    [ pe:var "A"; pe:value :2 ],
+    [ pe:var "T"; pe:value :pi ],
+    [ pe:var "X"; pe:value :pi_div_2 ];
+  pe:uses
+    { :pi_div_2 :divNum :pi . },
+    { :pi_div_2 :divDen :2 . },
+    { :pi :kind :Transcendental . },
+    { :2 :kind :Algebraic . },
+    { :2 :kind :NonZero . }.
+
+{ :pi_div_2 :divNum :pi . }
+  pe:fact "transcendental-families.n3".
+
+{ :pi_div_2 :divDen :2 . }
+  pe:fact "transcendental-families.n3".
+
+{ :pi_div_2 :provedBy :TransDivAlg . }
+  pe:rule 9;
+  pe:binding
+    [ pe:var "A"; pe:value :2 ],
+    [ pe:var "T"; pe:value :pi ],
+    [ pe:var "X"; pe:value :pi_div_2 ];
+  pe:uses
+    { :pi_div_2 :divNum :pi . },
+    { :pi_div_2 :divDen :2 . },
+    { :pi :kind :Transcendental . },
+    { :2 :kind :Algebraic . },
+    { :2 :kind :NonZero . }.
+
+{ :pow_minus1_minusI :inFamily :GelfondSchneiderNumbers . }
+  pe:rule 4;
+  pe:binding
+    [ pe:var "A"; pe:value :minus1 ],
+    [ pe:var "B"; pe:value :minusi ],
+    [ pe:var "X"; pe:value :pow_minus1_minusI ];
+  pe:uses
+    { :pow_minus1_minusI :powBase :minus1 . },
+    { :pow_minus1_minusI :powExp :minusi . },
+    { :minus1 :kind :Algebraic . },
+    { :minus1 :kind :NotZeroOrOne . },
+    { :minusi :kind :Algebraic . },
+    { :minusi :kind :NonRational . }.
+
+{ :pow_minus1_minusI :powBase :minus1 . }
+  pe:fact "transcendental-families.n3".
+
+{ :pow_minus1_minusI :powExp :minusi . }
+  pe:fact "transcendental-families.n3".
+
+{ :minus1 :kind :Algebraic . }
+  pe:fact "transcendental-families.n3".
+
+{ :minus1 :kind :NotZeroOrOne . }
+  pe:fact "transcendental-families.n3".
+
+{ :minusi :kind :Algebraic . }
+  pe:fact "transcendental-families.n3".
+
+{ :minusi :kind :NonRational . }
+  pe:fact "transcendental-families.n3".
+
+{ :pow_minus1_minusI :provedBy :GelfondSchneider . }
+  pe:rule 4;
+  pe:binding
+    [ pe:var "A"; pe:value :minus1 ],
+    [ pe:var "B"; pe:value :minusi ],
+    [ pe:var "X"; pe:value :pow_minus1_minusI ];
+  pe:uses
+    { :pow_minus1_minusI :powBase :minus1 . },
+    { :pow_minus1_minusI :powExp :minusi . },
+    { :minus1 :kind :Algebraic . },
+    { :minus1 :kind :NotZeroOrOne . },
+    { :minusi :kind :Algebraic . },
+    { :minusi :kind :NonRational . }.
+
+{ :exp_sqrt2 :inFamily :LWExpNumbers . }
+  pe:rule 3;
+  pe:binding
+    [ pe:var "A"; pe:value :sqrt2 ],
+    [ pe:var "X"; pe:value :exp_sqrt2 ];
+  pe:uses
+    { :exp_sqrt2 :expArg :sqrt2 . },
+    { :sqrt2 :kind :Algebraic . },
+    { :sqrt2 :kind :NonZero . }.
+
+{ :exp_sqrt2 :expArg :sqrt2 . }
+  pe:fact "transcendental-families.n3".
+
+{ :sqrt2 :kind :NonZero . }
+  pe:fact "transcendental-families.n3".
+
+{ :exp_sqrt2 :provedBy :LindemannWeierstrass . }
+  pe:rule 3;
+  pe:binding
+    [ pe:var "A"; pe:value :sqrt2 ],
+    [ pe:var "X"; pe:value :exp_sqrt2 ];
+  pe:uses
+    { :exp_sqrt2 :expArg :sqrt2 . },
+    { :sqrt2 :kind :Algebraic . },
+    { :sqrt2 :kind :NonZero . }.
+
+{ :pi_plus_sqrt2 :inFamily :AlgebraicClosureFamily . }
+  pe:rule 5;
+  pe:binding
+    [ pe:var "A"; pe:value :sqrt2 ],
+    [ pe:var "T"; pe:value :pi ],
+    [ pe:var "X"; pe:value :pi_plus_sqrt2 ];
+  pe:uses
+    { :pi_plus_sqrt2 :plusLeft :pi . },
+    { :pi_plus_sqrt2 :plusRight :sqrt2 . },
+    { :pi :kind :Transcendental . },
+    { :sqrt2 :kind :Algebraic . }.
+
+{ :pi_plus_sqrt2 :plusLeft :pi . }
+  pe:fact "transcendental-families.n3".
+
+{ :pi_plus_sqrt2 :plusRight :sqrt2 . }
+  pe:fact "transcendental-families.n3".
+
+{ :pi_plus_sqrt2 :provedBy :TransPlusAlg . }
+  pe:rule 5;
+  pe:binding
+    [ pe:var "A"; pe:value :sqrt2 ],
+    [ pe:var "T"; pe:value :pi ],
+    [ pe:var "X"; pe:value :pi_plus_sqrt2 ];
+  pe:uses
+    { :pi_plus_sqrt2 :plusLeft :pi . },
+    { :pi_plus_sqrt2 :plusRight :sqrt2 . },
+    { :pi :kind :Transcendental . },
+    { :sqrt2 :kind :Algebraic . }.
+
+{ :pow_i_i :inFamily :GelfondSchneiderNumbers . }
+  pe:rule 4;
+  pe:binding
+    [ pe:var "A"; pe:value :i ],
+    [ pe:var "B"; pe:value :i ],
+    [ pe:var "X"; pe:value :pow_i_i ];
+  pe:uses
+    { :pow_i_i :powBase :i . },
+    { :pow_i_i :powExp :i . },
+    { :i :kind :Algebraic . },
+    { :i :kind :NotZeroOrOne . },
+    { :i :kind :Algebraic . },
+    { :i :kind :NonRational . }.
+
+{ :pow_i_i :powBase :i . }
+  pe:fact "transcendental-families.n3".
+
+{ :pow_i_i :powExp :i . }
+  pe:fact "transcendental-families.n3".
+
+{ :i :kind :Algebraic . }
+  pe:fact "transcendental-families.n3".
+
+{ :i :kind :NotZeroOrOne . }
+  pe:fact "transcendental-families.n3".
+
+{ :i :kind :NonRational . }
+  pe:fact "transcendental-families.n3".
+
+{ :pow_i_i :provedBy :GelfondSchneider . }
+  pe:rule 4;
+  pe:binding
+    [ pe:var "A"; pe:value :i ],
+    [ pe:var "B"; pe:value :i ],
+    [ pe:var "X"; pe:value :pow_i_i ];
+  pe:uses
+    { :pow_i_i :powBase :i . },
+    { :pow_i_i :powExp :i . },
+    { :i :kind :Algebraic . },
+    { :i :kind :NotZeroOrOne . },
+    { :i :kind :Algebraic . },
+    { :i :kind :NonRational . }.
+
+{ :e :inFamily :ComputableTranscendentals . }
+  pe:rule 10;
+  pe:binding [ pe:var "X"; pe:value :e ];
+  pe:uses
+    { :e :kind :Transcendental . },
+    { :e :tag :Computable . }.
+
+{ :e :tag :Computable . }
+  pe:fact "transcendental-families.n3".
+
+{ :e :kind :Irrational . }
+  pe:rule 11;
+  pe:binding [ pe:var "X"; pe:value :e ];
+  pe:uses { :e :kind :Transcendental . }.
+
+{ :e :provedBy :TransImpliesIrrational . }
+  pe:rule 11;
+  pe:binding [ pe:var "X"; pe:value :e ];
+  pe:uses { :e :kind :Transcendental . }.
+
+{ :e :kind :NotStraightedgeCompassConstructible . }
+  pe:rule 11;
+  pe:binding [ pe:var "X"; pe:value :e ];
+  pe:uses { :e :kind :Transcendental . }.
+
+{ :e :provedBy :TransImpliesNotConstructible . }
+  pe:rule 11;
+  pe:binding [ pe:var "X"; pe:value :e ];
+  pe:uses { :e :kind :Transcendental . }.
+
+{ :pi :inFamily :ComputableTranscendentals . }
+  pe:rule 10;
+  pe:binding [ pe:var "X"; pe:value :pi ];
+  pe:uses
+    { :pi :kind :Transcendental . },
+    { :pi :tag :Computable . }.
+
+{ :pi :tag :Computable . }
+  pe:fact "transcendental-families.n3".
+
+{ :pi :kind :Irrational . }
+  pe:rule 11;
+  pe:binding [ pe:var "X"; pe:value :pi ];
+  pe:uses { :pi :kind :Transcendental . }.
+
+{ :pi :provedBy :TransImpliesIrrational . }
+  pe:rule 11;
+  pe:binding [ pe:var "X"; pe:value :pi ];
+  pe:uses { :pi :kind :Transcendental . }.
+
+{ :pi :kind :NotStraightedgeCompassConstructible . }
+  pe:rule 11;
+  pe:binding [ pe:var "X"; pe:value :pi ];
+  pe:uses { :pi :kind :Transcendental . }.
+
+{ :pi :provedBy :TransImpliesNotConstructible . }
+  pe:rule 11;
+  pe:binding [ pe:var "X"; pe:value :pi ];
+  pe:uses { :pi :kind :Transcendental . }.
+
+{ :LiouvilleL :inFamily :ComputableTranscendentals . }
+  pe:rule 10;
+  pe:binding [ pe:var "X"; pe:value :LiouvilleL ];
+  pe:uses
+    { :LiouvilleL :kind :Transcendental . },
+    { :LiouvilleL :tag :Computable . }.
+
+{ :LiouvilleL :kind :Transcendental . }
+  pe:fact "transcendental-families.n3".
+
+{ :LiouvilleL :tag :Computable . }
+  pe:fact "transcendental-families.n3".
+
+{ :LiouvilleL :kind :Irrational . }
+  pe:rule 11;
+  pe:binding [ pe:var "X"; pe:value :LiouvilleL ];
+  pe:uses { :LiouvilleL :kind :Transcendental . }.
+
+{ :LiouvilleL :provedBy :TransImpliesIrrational . }
+  pe:rule 11;
+  pe:binding [ pe:var "X"; pe:value :LiouvilleL ];
+  pe:uses { :LiouvilleL :kind :Transcendental . }.
+
+{ :LiouvilleL :kind :NotStraightedgeCompassConstructible . }
+  pe:rule 11;
+  pe:binding [ pe:var "X"; pe:value :LiouvilleL ];
+  pe:uses { :LiouvilleL :kind :Transcendental . }.
+
+{ :LiouvilleL :provedBy :TransImpliesNotConstructible . }
+  pe:rule 11;
+  pe:binding [ pe:var "X"; pe:value :LiouvilleL ];
+  pe:uses { :LiouvilleL :kind :Transcendental . }.
+
+{ :e_plus_1 :inFamily :AllTranscendentals . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "F"; pe:value :AlgebraicClosureFamily ],
+    [ pe:var "G"; pe:value :AllTranscendentals ],
+    [ pe:var "X"; pe:value :e_plus_1 ];
+  pe:uses
+    { :e_plus_1 :inFamily :AlgebraicClosureFamily . },
+    { :AlgebraicClosureFamily :subFamilyOf :AllTranscendentals . }.
+
+{ :AlgebraicClosureFamily :subFamilyOf :AllTranscendentals . }
+  pe:fact "transcendental-families.n3".
+
+{ :pow_2_sqrt2 :inFamily :AllTranscendentals . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "F"; pe:value :GelfondSchneiderNumbers ],
+    [ pe:var "G"; pe:value :AllTranscendentals ],
+    [ pe:var "X"; pe:value :pow_2_sqrt2 ];
+  pe:uses
+    { :pow_2_sqrt2 :inFamily :GelfondSchneiderNumbers . },
+    { :GelfondSchneiderNumbers :subFamilyOf :AllTranscendentals . }.
+
+{ :GelfondSchneiderNumbers :subFamilyOf :AllTranscendentals . }
+  pe:fact "transcendental-families.n3".
+
+{ :two_times_pi :inFamily :AllTranscendentals . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "F"; pe:value :AlgebraicClosureFamily ],
+    [ pe:var "G"; pe:value :AllTranscendentals ],
+    [ pe:var "X"; pe:value :two_times_pi ];
+  pe:uses
+    { :two_times_pi :inFamily :AlgebraicClosureFamily . },
+    { :AlgebraicClosureFamily :subFamilyOf :AllTranscendentals . }.
+
+{ :pi_div_2 :inFamily :AllTranscendentals . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "F"; pe:value :AlgebraicClosureFamily ],
+    [ pe:var "G"; pe:value :AllTranscendentals ],
+    [ pe:var "X"; pe:value :pi_div_2 ];
+  pe:uses
+    { :pi_div_2 :inFamily :AlgebraicClosureFamily . },
+    { :AlgebraicClosureFamily :subFamilyOf :AllTranscendentals . }.
+
+{ :pow_minus1_minusI :inFamily :AllTranscendentals . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "F"; pe:value :GelfondSchneiderNumbers ],
+    [ pe:var "G"; pe:value :AllTranscendentals ],
+    [ pe:var "X"; pe:value :pow_minus1_minusI ];
+  pe:uses
+    { :pow_minus1_minusI :inFamily :GelfondSchneiderNumbers . },
+    { :GelfondSchneiderNumbers :subFamilyOf :AllTranscendentals . }.
+
+{ :exp_sqrt2 :inFamily :AllTranscendentals . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "F"; pe:value :LWExpNumbers ],
+    [ pe:var "G"; pe:value :AllTranscendentals ],
+    [ pe:var "X"; pe:value :exp_sqrt2 ];
+  pe:uses
+    { :exp_sqrt2 :inFamily :LWExpNumbers . },
+    { :LWExpNumbers :subFamilyOf :AllTranscendentals . }.
+
+{ :LWExpNumbers :subFamilyOf :AllTranscendentals . }
+  pe:fact "transcendental-families.n3".
+
+{ :pi_plus_sqrt2 :inFamily :AllTranscendentals . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "F"; pe:value :AlgebraicClosureFamily ],
+    [ pe:var "G"; pe:value :AllTranscendentals ],
+    [ pe:var "X"; pe:value :pi_plus_sqrt2 ];
+  pe:uses
+    { :pi_plus_sqrt2 :inFamily :AlgebraicClosureFamily . },
+    { :AlgebraicClosureFamily :subFamilyOf :AllTranscendentals . }.
+
+{ :pow_i_i :inFamily :AllTranscendentals . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "F"; pe:value :GelfondSchneiderNumbers ],
+    [ pe:var "G"; pe:value :AllTranscendentals ],
+    [ pe:var "X"; pe:value :pow_i_i ];
+  pe:uses
+    { :pow_i_i :inFamily :GelfondSchneiderNumbers . },
+    { :GelfondSchneiderNumbers :subFamilyOf :AllTranscendentals . }.
+
+{ :e :inFamily :AllTranscendentals . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "F"; pe:value :ComputableTranscendentals ],
+    [ pe:var "G"; pe:value :AllTranscendentals ],
+    [ pe:var "X"; pe:value :e ];
+  pe:uses
+    { :e :inFamily :ComputableTranscendentals . },
+    { :ComputableTranscendentals :subFamilyOf :AllTranscendentals . }.
+
+{ :ComputableTranscendentals :subFamilyOf :AllTranscendentals . }
+  pe:fact "transcendental-families.n3".
+
+{ :pi :inFamily :AllTranscendentals . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "F"; pe:value :ComputableTranscendentals ],
+    [ pe:var "G"; pe:value :AllTranscendentals ],
+    [ pe:var "X"; pe:value :pi ];
+  pe:uses
+    { :pi :inFamily :ComputableTranscendentals . },
+    { :ComputableTranscendentals :subFamilyOf :AllTranscendentals . }.
+
+{ :e_plus_1 :kind :Transcendental . }
+  pe:rule 2;
+  pe:binding [ pe:var "X"; pe:value :e_plus_1 ];
+  pe:uses { :e_plus_1 :inFamily :AllTranscendentals . }.
+
+{ :pow_2_sqrt2 :kind :Transcendental . }
+  pe:rule 2;
+  pe:binding [ pe:var "X"; pe:value :pow_2_sqrt2 ];
+  pe:uses { :pow_2_sqrt2 :inFamily :AllTranscendentals . }.
+
+{ :two_times_pi :kind :Transcendental . }
+  pe:rule 2;
+  pe:binding [ pe:var "X"; pe:value :two_times_pi ];
+  pe:uses { :two_times_pi :inFamily :AllTranscendentals . }.
+
+{ :pi_div_2 :kind :Transcendental . }
+  pe:rule 2;
+  pe:binding [ pe:var "X"; pe:value :pi_div_2 ];
+  pe:uses { :pi_div_2 :inFamily :AllTranscendentals . }.
+
+{ :pow_minus1_minusI :kind :Transcendental . }
+  pe:rule 2;
+  pe:binding [ pe:var "X"; pe:value :pow_minus1_minusI ];
+  pe:uses { :pow_minus1_minusI :inFamily :AllTranscendentals . }.
+
+{ :exp_sqrt2 :kind :Transcendental . }
+  pe:rule 2;
+  pe:binding [ pe:var "X"; pe:value :exp_sqrt2 ];
+  pe:uses { :exp_sqrt2 :inFamily :AllTranscendentals . }.
+
+{ :pi_plus_sqrt2 :kind :Transcendental . }
+  pe:rule 2;
+  pe:binding [ pe:var "X"; pe:value :pi_plus_sqrt2 ];
+  pe:uses { :pi_plus_sqrt2 :inFamily :AllTranscendentals . }.
+
+{ :pow_i_i :kind :Transcendental . }
+  pe:rule 2;
+  pe:binding [ pe:var "X"; pe:value :pow_i_i ];
+  pe:uses { :pow_i_i :inFamily :AllTranscendentals . }.
+
+{ :e_plus_1 :kind :Irrational . }
+  pe:rule 11;
+  pe:binding [ pe:var "X"; pe:value :e_plus_1 ];
+  pe:uses { :e_plus_1 :kind :Transcendental . }.
+
+{ :e_plus_1 :provedBy :TransImpliesIrrational . }
+  pe:rule 11;
+  pe:binding [ pe:var "X"; pe:value :e_plus_1 ];
+  pe:uses { :e_plus_1 :kind :Transcendental . }.
+
+{ :e_plus_1 :kind :NotStraightedgeCompassConstructible . }
+  pe:rule 11;
+  pe:binding [ pe:var "X"; pe:value :e_plus_1 ];
+  pe:uses { :e_plus_1 :kind :Transcendental . }.
+
+{ :e_plus_1 :provedBy :TransImpliesNotConstructible . }
+  pe:rule 11;
+  pe:binding [ pe:var "X"; pe:value :e_plus_1 ];
+  pe:uses { :e_plus_1 :kind :Transcendental . }.
+
+{ :pow_2_sqrt2_plus_1 :inFamily :AlgebraicClosureFamily . }
+  pe:rule 5;
+  pe:binding
+    [ pe:var "A"; pe:value :1 ],
+    [ pe:var "T"; pe:value :pow_2_sqrt2 ],
+    [ pe:var "X"; pe:value :pow_2_sqrt2_plus_1 ];
+  pe:uses
+    { :pow_2_sqrt2_plus_1 :plusLeft :pow_2_sqrt2 . },
+    { :pow_2_sqrt2_plus_1 :plusRight :1 . },
+    { :pow_2_sqrt2 :kind :Transcendental . },
+    { :1 :kind :Algebraic . }.
+
+{ :pow_2_sqrt2_plus_1 :plusLeft :pow_2_sqrt2 . }
+  pe:fact "transcendental-families.n3".
+
+{ :pow_2_sqrt2_plus_1 :plusRight :1 . }
+  pe:fact "transcendental-families.n3".
+
+{ :pow_2_sqrt2_plus_1 :provedBy :TransPlusAlg . }
+  pe:rule 5;
+  pe:binding
+    [ pe:var "A"; pe:value :1 ],
+    [ pe:var "T"; pe:value :pow_2_sqrt2 ],
+    [ pe:var "X"; pe:value :pow_2_sqrt2_plus_1 ];
+  pe:uses
+    { :pow_2_sqrt2_plus_1 :plusLeft :pow_2_sqrt2 . },
+    { :pow_2_sqrt2_plus_1 :plusRight :1 . },
+    { :pow_2_sqrt2 :kind :Transcendental . },
+    { :1 :kind :Algebraic . }.
+
+{ :pow_2_sqrt2 :kind :Irrational . }
+  pe:rule 11;
+  pe:binding [ pe:var "X"; pe:value :pow_2_sqrt2 ];
+  pe:uses { :pow_2_sqrt2 :kind :Transcendental . }.
+
+{ :pow_2_sqrt2 :provedBy :TransImpliesIrrational . }
+  pe:rule 11;
+  pe:binding [ pe:var "X"; pe:value :pow_2_sqrt2 ];
+  pe:uses { :pow_2_sqrt2 :kind :Transcendental . }.
+
+{ :pow_2_sqrt2 :kind :NotStraightedgeCompassConstructible . }
+  pe:rule 11;
+  pe:binding [ pe:var "X"; pe:value :pow_2_sqrt2 ];
+  pe:uses { :pow_2_sqrt2 :kind :Transcendental . }.
+
+{ :pow_2_sqrt2 :provedBy :TransImpliesNotConstructible . }
+  pe:rule 11;
+  pe:binding [ pe:var "X"; pe:value :pow_2_sqrt2 ];
+  pe:uses { :pow_2_sqrt2 :kind :Transcendental . }.
+
+{ :two_times_pi :kind :Irrational . }
+  pe:rule 11;
+  pe:binding [ pe:var "X"; pe:value :two_times_pi ];
+  pe:uses { :two_times_pi :kind :Transcendental . }.
+
+{ :two_times_pi :provedBy :TransImpliesIrrational . }
+  pe:rule 11;
+  pe:binding [ pe:var "X"; pe:value :two_times_pi ];
+  pe:uses { :two_times_pi :kind :Transcendental . }.
+
+{ :two_times_pi :kind :NotStraightedgeCompassConstructible . }
+  pe:rule 11;
+  pe:binding [ pe:var "X"; pe:value :two_times_pi ];
+  pe:uses { :two_times_pi :kind :Transcendental . }.
+
+{ :two_times_pi :provedBy :TransImpliesNotConstructible . }
+  pe:rule 11;
+  pe:binding [ pe:var "X"; pe:value :two_times_pi ];
+  pe:uses { :two_times_pi :kind :Transcendental . }.
+
+{ :pi_div_2 :kind :Irrational . }
+  pe:rule 11;
+  pe:binding [ pe:var "X"; pe:value :pi_div_2 ];
+  pe:uses { :pi_div_2 :kind :Transcendental . }.
+
+{ :pi_div_2 :provedBy :TransImpliesIrrational . }
+  pe:rule 11;
+  pe:binding [ pe:var "X"; pe:value :pi_div_2 ];
+  pe:uses { :pi_div_2 :kind :Transcendental . }.
+
+{ :pi_div_2 :kind :NotStraightedgeCompassConstructible . }
+  pe:rule 11;
+  pe:binding [ pe:var "X"; pe:value :pi_div_2 ];
+  pe:uses { :pi_div_2 :kind :Transcendental . }.
+
+{ :pi_div_2 :provedBy :TransImpliesNotConstructible . }
+  pe:rule 11;
+  pe:binding [ pe:var "X"; pe:value :pi_div_2 ];
+  pe:uses { :pi_div_2 :kind :Transcendental . }.
+
+{ :pow_minus1_minusI :kind :Irrational . }
+  pe:rule 11;
+  pe:binding [ pe:var "X"; pe:value :pow_minus1_minusI ];
+  pe:uses { :pow_minus1_minusI :kind :Transcendental . }.
+
+{ :pow_minus1_minusI :provedBy :TransImpliesIrrational . }
+  pe:rule 11;
+  pe:binding [ pe:var "X"; pe:value :pow_minus1_minusI ];
+  pe:uses { :pow_minus1_minusI :kind :Transcendental . }.
+
+{ :pow_minus1_minusI :kind :NotStraightedgeCompassConstructible . }
+  pe:rule 11;
+  pe:binding [ pe:var "X"; pe:value :pow_minus1_minusI ];
+  pe:uses { :pow_minus1_minusI :kind :Transcendental . }.
+
+{ :pow_minus1_minusI :provedBy :TransImpliesNotConstructible . }
+  pe:rule 11;
+  pe:binding [ pe:var "X"; pe:value :pow_minus1_minusI ];
+  pe:uses { :pow_minus1_minusI :kind :Transcendental . }.
+
+{ :exp_sqrt2 :kind :Irrational . }
+  pe:rule 11;
+  pe:binding [ pe:var "X"; pe:value :exp_sqrt2 ];
+  pe:uses { :exp_sqrt2 :kind :Transcendental . }.
+
+{ :exp_sqrt2 :provedBy :TransImpliesIrrational . }
+  pe:rule 11;
+  pe:binding [ pe:var "X"; pe:value :exp_sqrt2 ];
+  pe:uses { :exp_sqrt2 :kind :Transcendental . }.
+
+{ :exp_sqrt2 :kind :NotStraightedgeCompassConstructible . }
+  pe:rule 11;
+  pe:binding [ pe:var "X"; pe:value :exp_sqrt2 ];
+  pe:uses { :exp_sqrt2 :kind :Transcendental . }.
+
+{ :exp_sqrt2 :provedBy :TransImpliesNotConstructible . }
+  pe:rule 11;
+  pe:binding [ pe:var "X"; pe:value :exp_sqrt2 ];
+  pe:uses { :exp_sqrt2 :kind :Transcendental . }.
+
+{ :pi_plus_sqrt2 :kind :Irrational . }
+  pe:rule 11;
+  pe:binding [ pe:var "X"; pe:value :pi_plus_sqrt2 ];
+  pe:uses { :pi_plus_sqrt2 :kind :Transcendental . }.
+
+{ :pi_plus_sqrt2 :provedBy :TransImpliesIrrational . }
+  pe:rule 11;
+  pe:binding [ pe:var "X"; pe:value :pi_plus_sqrt2 ];
+  pe:uses { :pi_plus_sqrt2 :kind :Transcendental . }.
+
+{ :pi_plus_sqrt2 :kind :NotStraightedgeCompassConstructible . }
+  pe:rule 11;
+  pe:binding [ pe:var "X"; pe:value :pi_plus_sqrt2 ];
+  pe:uses { :pi_plus_sqrt2 :kind :Transcendental . }.
+
+{ :pi_plus_sqrt2 :provedBy :TransImpliesNotConstructible . }
+  pe:rule 11;
+  pe:binding [ pe:var "X"; pe:value :pi_plus_sqrt2 ];
+  pe:uses { :pi_plus_sqrt2 :kind :Transcendental . }.
+
+{ :pow_i_i :kind :Irrational . }
+  pe:rule 11;
+  pe:binding [ pe:var "X"; pe:value :pow_i_i ];
+  pe:uses { :pow_i_i :kind :Transcendental . }.
+
+{ :pow_i_i :provedBy :TransImpliesIrrational . }
+  pe:rule 11;
+  pe:binding [ pe:var "X"; pe:value :pow_i_i ];
+  pe:uses { :pow_i_i :kind :Transcendental . }.
+
+{ :pow_i_i :kind :NotStraightedgeCompassConstructible . }
+  pe:rule 11;
+  pe:binding [ pe:var "X"; pe:value :pow_i_i ];
+  pe:uses { :pow_i_i :kind :Transcendental . }.
+
+{ :pow_i_i :provedBy :TransImpliesNotConstructible . }
+  pe:rule 11;
+  pe:binding [ pe:var "X"; pe:value :pow_i_i ];
+  pe:uses { :pow_i_i :kind :Transcendental . }.
+
+{ :pow_2_sqrt2_plus_1 :inFamily :AllTranscendentals . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "F"; pe:value :AlgebraicClosureFamily ],
+    [ pe:var "G"; pe:value :AllTranscendentals ],
+    [ pe:var "X"; pe:value :pow_2_sqrt2_plus_1 ];
+  pe:uses
+    { :pow_2_sqrt2_plus_1 :inFamily :AlgebraicClosureFamily . },
+    { :AlgebraicClosureFamily :subFamilyOf :AllTranscendentals . }.
+
+{ :pow_2_sqrt2_plus_1 :kind :Transcendental . }
+  pe:rule 2;
+  pe:binding [ pe:var "X"; pe:value :pow_2_sqrt2_plus_1 ];
+  pe:uses { :pow_2_sqrt2_plus_1 :inFamily :AllTranscendentals . }.
+
+{ :pow_2_sqrt2_plus_1 :kind :Irrational . }
+  pe:rule 11;
+  pe:binding [ pe:var "X"; pe:value :pow_2_sqrt2_plus_1 ];
+  pe:uses { :pow_2_sqrt2_plus_1 :kind :Transcendental . }.
+
+{ :pow_2_sqrt2_plus_1 :provedBy :TransImpliesIrrational . }
+  pe:rule 11;
+  pe:binding [ pe:var "X"; pe:value :pow_2_sqrt2_plus_1 ];
+  pe:uses { :pow_2_sqrt2_plus_1 :kind :Transcendental . }.
+
+{ :pow_2_sqrt2_plus_1 :kind :NotStraightedgeCompassConstructible . }
+  pe:rule 11;
+  pe:binding [ pe:var "X"; pe:value :pow_2_sqrt2_plus_1 ];
+  pe:uses { :pow_2_sqrt2_plus_1 :kind :Transcendental . }.
+
+{ :pow_2_sqrt2_plus_1 :provedBy :TransImpliesNotConstructible . }
+  pe:rule 11;
+  pe:binding [ pe:var "X"; pe:value :pow_2_sqrt2_plus_1 ];
+  pe:uses { :pow_2_sqrt2_plus_1 :kind :Transcendental . }.

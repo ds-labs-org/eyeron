@@ -1,0 +1,350 @@
+@prefix : <http://example.org/act/yeast/> .
+@prefix log: <http://www.w3.org/2000/10/swap/log#> .
+@prefix pe: <https://eyereasoner.github.io/pe#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+:dnaRegister :can :SupportReplicationUnderNoDesignLaws .
+:ReplicationUnderNoDesignLaws a :PossibleTask .
+:contrastGenome :cannot :AccurateGenomeCopyUnderNoDesignLaws .
+:case :checkC1 :Passed .
+:case :checkC2 :Passed .
+:starterGenome :can :HeritableVariation .
+:HeritableVariation a :PossibleTask .
+:contrastGenome :can :HeritableVariation .
+:case :checkC3 :Passed .
+:starterGenome :can :AccurateGenomeCopyUnderNoDesignLaws .
+:GenomeCopying a :PossibleTask .
+:starterCell :can :AccurateReplicationArchitecture .
+:AccurateReplicationArchitecture a :PossibleTask .
+:case :checkC4 :Passed .
+:starterCell a :SelfReproducer .
+:starterCell :can :SelfReproduce .
+:SelfReproduction a :PossibleTask .
+:starterCell :can :NaturalSelectionLineage .
+:NaturalSelection a :PossibleTask .
+:starterGenome :selectedIn :fermenter .
+:contrastCell :can :AccurateReplicationArchitecture .
+:contrastCell :cannot :AccurateSelfReproduction .
+:case :checkC11 :Passed .
+:case :checkC8 :Passed .
+:case :checkC5 :Passed .
+:case :checkC6 :Passed .
+:case :checkC7 :Passed .
+:case :checkC9 :Passed .
+:case :checkC10 :Passed .
+:case :checkC12 :Passed .
+:contrastCell :cannot :NaturalSelectionLineage .
+:case :checkC13 :Passed .
+:out log:outputString "ACT yeast self-reproduction\n\n## Answer\nYES for the viable starter culture.\nNO for accurate self-reproduction in the non-digital contrast lineage.\n\n## Reason Why\nThe starter genome is treated as a replicator storing digital hereditary information, while the cell machinery is treated as the vehicle that enables metabolism and copying support. Under no-design laws, digital information makes accurate genome copying possible. Because the replicator is accurate and paired with a vehicle, the whole starter cell qualifies as a self-reproducer. With a variation source and a selection environment, natural selection also becomes possible. By contrast, the non-digital lineage cannot support accurate genome copying under the same no-design-laws assumption, so it cannot sustain the same accurate self-reproduction or natural-selection story.\n\n## Check\nC1  OK - no-design laws are assumed\nC2  OK - digital information is physically instantiated for the viable lineage\nC3  OK - a viable replicator is present\nC4  OK - a viable vehicle is present\nC5  OK - accurate genome copying is possible for the viable lineage\nC6  OK - the viable lineage has a replicator-plus-vehicle architecture\nC7  OK - the starter cell qualifies as a self-reproducer\nC8  OK - heritable variation is possible for the viable lineage\nC9  OK - the viable starter culture can support a natural-selection lineage\nC10 OK - the fitter viable variant is selected in the fermenter\nC11 OK - the non-digital contrast genome cannot be copied accurately under no-design laws\nC12 OK - the non-digital contrast cell cannot achieve accurate self-reproduction\nC13 OK - the non-digital contrast cell cannot support the same natural-selection lineage\n" .
+
+{ :dnaRegister :can :SupportReplicationUnderNoDesignLaws . }
+  pe:rule 1;
+  pe:binding [ pe:var "Medium"; pe:value :dnaRegister ];
+  pe:uses
+    { :world :obeys :NoDesignLaws . },
+    { :dnaRegister a :DigitalInformationMedium . }.
+
+{ :world :obeys :NoDesignLaws . }
+  pe:fact "act-yeast-self-reproduction.n3".
+
+{ :dnaRegister a :DigitalInformationMedium . }
+  pe:fact "act-yeast-self-reproduction.n3".
+
+{ :ReplicationUnderNoDesignLaws a :PossibleTask . }
+  pe:rule 1;
+  pe:binding [ pe:var "Medium"; pe:value :dnaRegister ];
+  pe:uses
+    { :world :obeys :NoDesignLaws . },
+    { :dnaRegister a :DigitalInformationMedium . }.
+
+{ :contrastGenome :cannot :AccurateGenomeCopyUnderNoDesignLaws . }
+  pe:rule 8;
+  pe:binding
+    [ pe:var "Genome"; pe:value :contrastGenome ],
+    [ pe:var "Medium"; pe:value :analogRegister ];
+  pe:uses
+    { :world :obeys :NoDesignLaws . },
+    { :contrastGenome a :Replicator . },
+    { :contrastGenome :storedIn :analogRegister . },
+    { :analogRegister a :NonDigitalInformationMedium . }.
+
+{ :contrastGenome a :Replicator . }
+  pe:fact "act-yeast-self-reproduction.n3".
+
+{ :contrastGenome :storedIn :analogRegister . }
+  pe:fact "act-yeast-self-reproduction.n3".
+
+{ :analogRegister a :NonDigitalInformationMedium . }
+  pe:fact "act-yeast-self-reproduction.n3".
+
+{ :case :checkC1 :Passed . }
+  pe:rule 11;
+  pe:uses { :world :obeys :NoDesignLaws . }.
+
+{ :case :checkC2 :Passed . }
+  pe:rule 12;
+  pe:uses { :dnaRegister a :DigitalInformationMedium . }.
+
+{ :starterGenome :can :HeritableVariation . }
+  pe:rule 5;
+  pe:binding [ pe:var "Genome"; pe:value :starterGenome ];
+  pe:uses
+    { :starterGenome a :Replicator . },
+    { :mutationSource a :VariationSource . }.
+
+{ :starterGenome a :Replicator . }
+  pe:fact "act-yeast-self-reproduction.n3".
+
+{ :mutationSource a :VariationSource . }
+  pe:fact "act-yeast-self-reproduction.n3".
+
+{ :HeritableVariation a :PossibleTask . }
+  pe:rule 5;
+  pe:binding [ pe:var "Genome"; pe:value :starterGenome ];
+  pe:uses
+    { :starterGenome a :Replicator . },
+    { :mutationSource a :VariationSource . }.
+
+{ :contrastGenome :can :HeritableVariation . }
+  pe:rule 5;
+  pe:binding [ pe:var "Genome"; pe:value :contrastGenome ];
+  pe:uses
+    { :contrastGenome a :Replicator . },
+    { :mutationSource a :VariationSource . }.
+
+{ :case :checkC3 :Passed . }
+  pe:rule 13;
+  pe:uses { :starterGenome a :Replicator . }.
+
+{ :starterGenome :can :AccurateGenomeCopyUnderNoDesignLaws . }
+  pe:rule 2;
+  pe:binding
+    [ pe:var "Genome"; pe:value :starterGenome ],
+    [ pe:var "Medium"; pe:value :dnaRegister ];
+  pe:uses
+    { :starterGenome a :Replicator . },
+    { :starterGenome :storedIn :dnaRegister . },
+    { :dnaRegister :can :SupportReplicationUnderNoDesignLaws . }.
+
+{ :starterGenome :storedIn :dnaRegister . }
+  pe:fact "act-yeast-self-reproduction.n3".
+
+{ :GenomeCopying a :PossibleTask . }
+  pe:rule 2;
+  pe:binding
+    [ pe:var "Genome"; pe:value :starterGenome ],
+    [ pe:var "Medium"; pe:value :dnaRegister ];
+  pe:uses
+    { :starterGenome a :Replicator . },
+    { :starterGenome :storedIn :dnaRegister . },
+    { :dnaRegister :can :SupportReplicationUnderNoDesignLaws . }.
+
+{ :starterCell :can :AccurateReplicationArchitecture . }
+  pe:rule 3;
+  pe:binding
+    [ pe:var "Cell"; pe:value :starterCell ],
+    [ pe:var "Genome"; pe:value :starterGenome ],
+    [ pe:var "Vehicle"; pe:value :starterVehicle ];
+  pe:uses
+    { :starterGenome :accuracy :High . },
+    { :starterCell :hasReplicator :starterGenome . },
+    { :starterCell :hasVehicle :starterVehicle . },
+    { :starterVehicle a :Vehicle . }.
+
+{ :starterGenome :accuracy :High . }
+  pe:fact "act-yeast-self-reproduction.n3".
+
+{ :starterCell :hasReplicator :starterGenome . }
+  pe:fact "act-yeast-self-reproduction.n3".
+
+{ :starterCell :hasVehicle :starterVehicle . }
+  pe:fact "act-yeast-self-reproduction.n3".
+
+{ :starterVehicle a :Vehicle . }
+  pe:fact "act-yeast-self-reproduction.n3".
+
+{ :AccurateReplicationArchitecture a :PossibleTask . }
+  pe:rule 3;
+  pe:binding
+    [ pe:var "Cell"; pe:value :starterCell ],
+    [ pe:var "Genome"; pe:value :starterGenome ],
+    [ pe:var "Vehicle"; pe:value :starterVehicle ];
+  pe:uses
+    { :starterGenome :accuracy :High . },
+    { :starterCell :hasReplicator :starterGenome . },
+    { :starterCell :hasVehicle :starterVehicle . },
+    { :starterVehicle a :Vehicle . }.
+
+{ :case :checkC4 :Passed . }
+  pe:rule 14;
+  pe:uses { :starterVehicle a :Vehicle . }.
+
+{ :starterCell a :SelfReproducer . }
+  pe:rule 4;
+  pe:binding
+    [ pe:var "Cell"; pe:value :starterCell ],
+    [ pe:var "Genome"; pe:value :starterGenome ];
+  pe:uses
+    { :starterCell :hasReplicator :starterGenome . },
+    { :starterGenome :can :AccurateGenomeCopyUnderNoDesignLaws . },
+    { :starterCell :can :AccurateReplicationArchitecture . },
+    { :nutrientBath a :RawMaterialSupply . }.
+
+{ :nutrientBath a :RawMaterialSupply . }
+  pe:fact "act-yeast-self-reproduction.n3".
+
+{ :starterCell :can :SelfReproduce . }
+  pe:rule 4;
+  pe:binding
+    [ pe:var "Cell"; pe:value :starterCell ],
+    [ pe:var "Genome"; pe:value :starterGenome ];
+  pe:uses
+    { :starterCell :hasReplicator :starterGenome . },
+    { :starterGenome :can :AccurateGenomeCopyUnderNoDesignLaws . },
+    { :starterCell :can :AccurateReplicationArchitecture . },
+    { :nutrientBath a :RawMaterialSupply . }.
+
+{ :SelfReproduction a :PossibleTask . }
+  pe:rule 4;
+  pe:binding
+    [ pe:var "Cell"; pe:value :starterCell ],
+    [ pe:var "Genome"; pe:value :starterGenome ];
+  pe:uses
+    { :starterCell :hasReplicator :starterGenome . },
+    { :starterGenome :can :AccurateGenomeCopyUnderNoDesignLaws . },
+    { :starterCell :can :AccurateReplicationArchitecture . },
+    { :nutrientBath a :RawMaterialSupply . }.
+
+{ :starterCell :can :NaturalSelectionLineage . }
+  pe:rule 6;
+  pe:binding
+    [ pe:var "Cell"; pe:value :starterCell ],
+    [ pe:var "Genome"; pe:value :starterGenome ];
+  pe:uses
+    { :starterCell :hasReplicator :starterGenome . },
+    { :starterCell :can :SelfReproduce . },
+    { :starterGenome :can :HeritableVariation . },
+    { :fermenter a :SelectionEnvironment . }.
+
+{ :fermenter a :SelectionEnvironment . }
+  pe:fact "act-yeast-self-reproduction.n3".
+
+{ :NaturalSelection a :PossibleTask . }
+  pe:rule 6;
+  pe:binding
+    [ pe:var "Cell"; pe:value :starterCell ],
+    [ pe:var "Genome"; pe:value :starterGenome ];
+  pe:uses
+    { :starterCell :hasReplicator :starterGenome . },
+    { :starterCell :can :SelfReproduce . },
+    { :starterGenome :can :HeritableVariation . },
+    { :fermenter a :SelectionEnvironment . }.
+
+{ :starterGenome :selectedIn :fermenter . }
+  pe:rule 7;
+  pe:binding
+    [ pe:var "Cell"; pe:value :starterCell ],
+    [ pe:var "Genome"; pe:value :starterGenome ],
+    [ pe:var "V"; pe:value :RespireFast ];
+  pe:uses
+    { :starterCell :hasReplicator :starterGenome . },
+    { :starterCell :can :NaturalSelectionLineage . },
+    { :starterGenome :variant :RespireFast . },
+    { :fermenter :favours :RespireFast . }.
+
+{ :starterGenome :variant :RespireFast . }
+  pe:fact "act-yeast-self-reproduction.n3".
+
+{ :fermenter :favours :RespireFast . }
+  pe:fact "act-yeast-self-reproduction.n3".
+
+{ :contrastCell :can :AccurateReplicationArchitecture . }
+  pe:rule 3;
+  pe:binding
+    [ pe:var "Cell"; pe:value :contrastCell ],
+    [ pe:var "Genome"; pe:value :contrastGenome ],
+    [ pe:var "Vehicle"; pe:value :contrastVehicle ];
+  pe:uses
+    { :contrastGenome :accuracy :High . },
+    { :contrastCell :hasReplicator :contrastGenome . },
+    { :contrastCell :hasVehicle :contrastVehicle . },
+    { :contrastVehicle a :Vehicle . }.
+
+{ :contrastGenome :accuracy :High . }
+  pe:fact "act-yeast-self-reproduction.n3".
+
+{ :contrastCell :hasReplicator :contrastGenome . }
+  pe:fact "act-yeast-self-reproduction.n3".
+
+{ :contrastCell :hasVehicle :contrastVehicle . }
+  pe:fact "act-yeast-self-reproduction.n3".
+
+{ :contrastVehicle a :Vehicle . }
+  pe:fact "act-yeast-self-reproduction.n3".
+
+{ :contrastCell :cannot :AccurateSelfReproduction . }
+  pe:rule 9;
+  pe:binding
+    [ pe:var "Cell"; pe:value :contrastCell ],
+    [ pe:var "Genome"; pe:value :contrastGenome ];
+  pe:uses
+    { :contrastCell :hasReplicator :contrastGenome . },
+    { :contrastGenome :cannot :AccurateGenomeCopyUnderNoDesignLaws . }.
+
+{ :case :checkC11 :Passed . }
+  pe:rule 21;
+  pe:uses { :contrastGenome :cannot :AccurateGenomeCopyUnderNoDesignLaws . }.
+
+{ :case :checkC8 :Passed . }
+  pe:rule 18;
+  pe:uses { :starterGenome :can :HeritableVariation . }.
+
+{ :case :checkC5 :Passed . }
+  pe:rule 15;
+  pe:uses { :starterGenome :can :AccurateGenomeCopyUnderNoDesignLaws . }.
+
+{ :case :checkC6 :Passed . }
+  pe:rule 16;
+  pe:uses { :starterCell :can :AccurateReplicationArchitecture . }.
+
+{ :case :checkC7 :Passed . }
+  pe:rule 17;
+  pe:uses { :starterCell a :SelfReproducer . }.
+
+{ :case :checkC9 :Passed . }
+  pe:rule 19;
+  pe:uses { :starterCell :can :NaturalSelectionLineage . }.
+
+{ :case :checkC10 :Passed . }
+  pe:rule 20;
+  pe:uses { :starterGenome :selectedIn :fermenter . }.
+
+{ :case :checkC12 :Passed . }
+  pe:rule 22;
+  pe:uses { :contrastCell :cannot :AccurateSelfReproduction . }.
+
+{ :contrastCell :cannot :NaturalSelectionLineage . }
+  pe:rule 10;
+  pe:binding [ pe:var "Cell"; pe:value :contrastCell ];
+  pe:uses { :contrastCell :cannot :AccurateSelfReproduction . }.
+
+{ :case :checkC13 :Passed . }
+  pe:rule 23;
+  pe:uses { :contrastCell :cannot :NaturalSelectionLineage . }.
+
+{ :out log:outputString "ACT yeast self-reproduction\n\n## Answer\nYES for the viable starter culture.\nNO for accurate self-reproduction in the non-digital contrast lineage.\n\n## Reason Why\nThe starter genome is treated as a replicator storing digital hereditary information, while the cell machinery is treated as the vehicle that enables metabolism and copying support. Under no-design laws, digital information makes accurate genome copying possible. Because the replicator is accurate and paired with a vehicle, the whole starter cell qualifies as a self-reproducer. With a variation source and a selection environment, natural selection also becomes possible. By contrast, the non-digital lineage cannot support accurate genome copying under the same no-design-laws assumption, so it cannot sustain the same accurate self-reproduction or natural-selection story.\n\n## Check\nC1  OK - no-design laws are assumed\nC2  OK - digital information is physically instantiated for the viable lineage\nC3  OK - a viable replicator is present\nC4  OK - a viable vehicle is present\nC5  OK - accurate genome copying is possible for the viable lineage\nC6  OK - the viable lineage has a replicator-plus-vehicle architecture\nC7  OK - the starter cell qualifies as a self-reproducer\nC8  OK - heritable variation is possible for the viable lineage\nC9  OK - the viable starter culture can support a natural-selection lineage\nC10 OK - the fitter viable variant is selected in the fermenter\nC11 OK - the non-digital contrast genome cannot be copied accurately under no-design laws\nC12 OK - the non-digital contrast cell cannot achieve accurate self-reproduction\nC13 OK - the non-digital contrast cell cannot support the same natural-selection lineage\n" . }
+  pe:rule 24;
+  pe:uses
+    { :case :checkC1 :Passed . },
+    { :case :checkC2 :Passed . },
+    { :case :checkC3 :Passed . },
+    { :case :checkC4 :Passed . },
+    { :case :checkC5 :Passed . },
+    { :case :checkC6 :Passed . },
+    { :case :checkC7 :Passed . },
+    { :case :checkC8 :Passed . },
+    { :case :checkC9 :Passed . },
+    { :case :checkC10 :Passed . },
+    { :case :checkC11 :Passed . },
+    { :case :checkC12 :Passed . },
+    { :case :checkC13 :Passed . }.

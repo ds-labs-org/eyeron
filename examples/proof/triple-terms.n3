@@ -1,0 +1,36 @@
+@prefix : <https://eyereasoner.github.io/eyeling/examples/triple_terms#> .
+@prefix pe: <https://eyereasoner.github.io/pe#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+:observation :entails {
+    :sensor :needs :inspection .
+} .
+
+{
+  :observation :entails {
+      :sensor :needs :inspection .
+  } .
+}
+  pe:rule 1;
+  pe:binding
+    [ pe:var "action"; pe:value :inspection ],
+    [ pe:var "condition"; pe:value :overheating ],
+    [ pe:var "device"; pe:value :sensor ],
+    [ pe:var "observation"; pe:value :observation ];
+  pe:uses
+    {
+        :observation rdf:reifies {
+            :sensor :reports :overheating .
+        } .
+    },
+    { :overheating :requires :inspection . }.
+
+{
+  :observation rdf:reifies {
+      :sensor :reports :overheating .
+  } .
+}
+  pe:fact "<unknown>".
+
+{ :overheating :requires :inspection . }
+  pe:fact "<unknown>".

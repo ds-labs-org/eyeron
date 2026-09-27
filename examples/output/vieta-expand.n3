@@ -1,0 +1,4 @@
+@prefix : <http://example.org/#> .
+
+:poly1 :verified true .
+:poly2 :verified true .

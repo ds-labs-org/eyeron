@@ -1,0 +1,210 @@
+@prefix : <http://example.org/act/tunnel-junction/> .
+@prefix log: <http://www.w3.org/2000/10/swap/log#> .
+@prefix pe: <https://eyereasoner.github.io/pe#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+:tunnelJunction :can :QuantumBarrierTransfer .
+:tunnelJunction :transportMode :TunnelingDominant .
+:tunnelJunction :can :SubThresholdCurrent .
+:tunnelJunction :can :NegativeDifferentialResponse .
+:tunnelJunction :can :UltraLowBiasSwitching .
+:ordinaryJunction :cannot :QuantumBarrierTransfer .
+:ordinaryJunction :cannot :SubThresholdCurrent .
+:ordinaryJunction :cannot :UltraLowBiasSwitching .
+:case :checkC1 :Passed .
+:case :checkC2 :Passed .
+:case :checkC3 :Passed .
+:case :checkC4 :Passed .
+:case :checkC5 :Passed .
+:tunnelJunction :can :ServeLeakAlarmWakeCircuit .
+:case :checkC7 :Passed .
+:ordinaryJunction :cannot :NegativeDifferentialResponse .
+:case :checkC8 :Passed .
+:case :checkC10 :Passed .
+:ordinaryJunction :cannot :ServeLeakAlarmWakeCircuit .
+:case :checkC6 :Passed .
+:case :checkC9 :Passed .
+:case :checkC11 :Passed .
+:out log:outputString "ACT tunnel-junction wake switch\n\n## Answer\nYES for the tunnel junction.\nNO for the conventional low-bias PN junction in the same wake-switch regime.\n\n## Reason Why\nThe tunnel junction is modeled as a heavily doped narrow PN junction with overlapping states, so quantum barrier transfer is possible. That makes sub-threshold current possible in the low-forward-bias regime, which in turn makes ultra-low-bias switching possible for the wake circuit. Because the device is also scanned through a peak-to-valley window, a negative differential response is possible as well. By contrast, the conventional junction lacks the structural conditions for the same transfer mode, so it cannot deliver the same low-bias switching task in this case.\n\n## Check\nC1  OK - the tunnel junction can support quantum barrier transfer\nC2  OK - the tunnel junction is classified as tunneling-dominant\nC3  OK - the tunnel junction can deliver sub-threshold current\nC4  OK - the tunnel junction can show negative differential response\nC5  OK - the tunnel junction can perform ultra-low-bias switching\nC6  OK - the tunnel junction can serve the leak-alarm wake circuit\nC7  OK - the conventional junction cannot support the same quantum barrier transfer\nC8  OK - the conventional junction cannot deliver sub-threshold current in this regime\nC9  OK - the conventional junction cannot show the tunnel-style negative differential response\nC10 OK - the conventional junction cannot perform ultra-low-bias switching here\nC11 OK - the conventional junction cannot serve the leak-alarm wake circuit in this case\n" .
+
+{ :tunnelJunction :can :QuantumBarrierTransfer . }
+  pe:rule 1;
+  pe:binding [ pe:var "J"; pe:value :tunnelJunction ];
+  pe:uses
+    { :tunnelJunction a :PNJunction . },
+    { :tunnelJunction :doping :Heavy . },
+    { :tunnelJunction :depletionWidth :Narrow . },
+    { :tunnelJunction :stateAlignment :Overlap . }.
+
+{ :tunnelJunction a :PNJunction . }
+  pe:fact "act-tunnel-junction-wake-switch.n3".
+
+{ :tunnelJunction :doping :Heavy . }
+  pe:fact "act-tunnel-junction-wake-switch.n3".
+
+{ :tunnelJunction :depletionWidth :Narrow . }
+  pe:fact "act-tunnel-junction-wake-switch.n3".
+
+{ :tunnelJunction :stateAlignment :Overlap . }
+  pe:fact "act-tunnel-junction-wake-switch.n3".
+
+{ :tunnelJunction :transportMode :TunnelingDominant . }
+  pe:rule 1;
+  pe:binding [ pe:var "J"; pe:value :tunnelJunction ];
+  pe:uses
+    { :tunnelJunction a :PNJunction . },
+    { :tunnelJunction :doping :Heavy . },
+    { :tunnelJunction :depletionWidth :Narrow . },
+    { :tunnelJunction :stateAlignment :Overlap . }.
+
+{ :tunnelJunction :can :SubThresholdCurrent . }
+  pe:rule 2;
+  pe:binding [ pe:var "J"; pe:value :tunnelJunction ];
+  pe:uses
+    { :tunnelJunction :can :QuantumBarrierTransfer . },
+    { :tunnelJunction :biasRegime :LowForwardBias . }.
+
+{ :tunnelJunction :biasRegime :LowForwardBias . }
+  pe:fact "act-tunnel-junction-wake-switch.n3".
+
+{ :tunnelJunction :can :NegativeDifferentialResponse . }
+  pe:rule 3;
+  pe:binding [ pe:var "J"; pe:value :tunnelJunction ];
+  pe:uses
+    { :tunnelJunction :can :QuantumBarrierTransfer . },
+    { :tunnelJunction :scanProfile :PeakToValley . }.
+
+{ :tunnelJunction :scanProfile :PeakToValley . }
+  pe:fact "act-tunnel-junction-wake-switch.n3".
+
+{ :tunnelJunction :can :UltraLowBiasSwitching . }
+  pe:rule 4;
+  pe:binding [ pe:var "J"; pe:value :tunnelJunction ];
+  pe:uses
+    { :tunnelJunction :can :SubThresholdCurrent . },
+    { :tunnelJunction :deviceRole :WakeSwitch . }.
+
+{ :tunnelJunction :deviceRole :WakeSwitch . }
+  pe:fact "act-tunnel-junction-wake-switch.n3".
+
+{ :ordinaryJunction :cannot :QuantumBarrierTransfer . }
+  pe:rule 6;
+  pe:binding [ pe:var "J"; pe:value :ordinaryJunction ];
+  pe:uses
+    { :ordinaryJunction a :PNJunction . },
+    { :ordinaryJunction :doping :Standard . },
+    { :ordinaryJunction :depletionWidth :Wide . },
+    { :ordinaryJunction :stateAlignment :NoOverlap . }.
+
+{ :ordinaryJunction a :PNJunction . }
+  pe:fact "act-tunnel-junction-wake-switch.n3".
+
+{ :ordinaryJunction :doping :Standard . }
+  pe:fact "act-tunnel-junction-wake-switch.n3".
+
+{ :ordinaryJunction :depletionWidth :Wide . }
+  pe:fact "act-tunnel-junction-wake-switch.n3".
+
+{ :ordinaryJunction :stateAlignment :NoOverlap . }
+  pe:fact "act-tunnel-junction-wake-switch.n3".
+
+{ :ordinaryJunction :cannot :SubThresholdCurrent . }
+  pe:rule 7;
+  pe:binding [ pe:var "J"; pe:value :ordinaryJunction ];
+  pe:uses
+    { :ordinaryJunction :cannot :QuantumBarrierTransfer . },
+    { :ordinaryJunction :biasRegime :LowForwardBias . }.
+
+{ :ordinaryJunction :biasRegime :LowForwardBias . }
+  pe:fact "act-tunnel-junction-wake-switch.n3".
+
+{ :ordinaryJunction :cannot :UltraLowBiasSwitching . }
+  pe:rule 9;
+  pe:binding [ pe:var "J"; pe:value :ordinaryJunction ];
+  pe:uses
+    { :ordinaryJunction :cannot :SubThresholdCurrent . },
+    { :ordinaryJunction :deviceRole :WakeSwitch . }.
+
+{ :ordinaryJunction :deviceRole :WakeSwitch . }
+  pe:fact "act-tunnel-junction-wake-switch.n3".
+
+{ :case :checkC1 :Passed . }
+  pe:rule 11;
+  pe:uses { :tunnelJunction :can :QuantumBarrierTransfer . }.
+
+{ :case :checkC2 :Passed . }
+  pe:rule 12;
+  pe:uses { :tunnelJunction :transportMode :TunnelingDominant . }.
+
+{ :case :checkC3 :Passed . }
+  pe:rule 13;
+  pe:uses { :tunnelJunction :can :SubThresholdCurrent . }.
+
+{ :case :checkC4 :Passed . }
+  pe:rule 14;
+  pe:uses { :tunnelJunction :can :NegativeDifferentialResponse . }.
+
+{ :case :checkC5 :Passed . }
+  pe:rule 15;
+  pe:uses { :tunnelJunction :can :UltraLowBiasSwitching . }.
+
+{ :tunnelJunction :can :ServeLeakAlarmWakeCircuit . }
+  pe:rule 5;
+  pe:binding [ pe:var "J"; pe:value :tunnelJunction ];
+  pe:uses
+    { :tunnelJunction :can :UltraLowBiasSwitching . },
+    { :leakAlarmNode :needs :MicrowattWakeSwitching . }.
+
+{ :leakAlarmNode :needs :MicrowattWakeSwitching . }
+  pe:fact "act-tunnel-junction-wake-switch.n3".
+
+{ :case :checkC7 :Passed . }
+  pe:rule 17;
+  pe:uses { :ordinaryJunction :cannot :QuantumBarrierTransfer . }.
+
+{ :ordinaryJunction :cannot :NegativeDifferentialResponse . }
+  pe:rule 8;
+  pe:binding [ pe:var "J"; pe:value :ordinaryJunction ];
+  pe:uses { :ordinaryJunction :cannot :QuantumBarrierTransfer . }.
+
+{ :case :checkC8 :Passed . }
+  pe:rule 18;
+  pe:uses { :ordinaryJunction :cannot :SubThresholdCurrent . }.
+
+{ :case :checkC10 :Passed . }
+  pe:rule 20;
+  pe:uses { :ordinaryJunction :cannot :UltraLowBiasSwitching . }.
+
+{ :ordinaryJunction :cannot :ServeLeakAlarmWakeCircuit . }
+  pe:rule 10;
+  pe:binding [ pe:var "J"; pe:value :ordinaryJunction ];
+  pe:uses
+    { :ordinaryJunction :cannot :UltraLowBiasSwitching . },
+    { :leakAlarmNode :needs :MicrowattWakeSwitching . }.
+
+{ :case :checkC6 :Passed . }
+  pe:rule 16;
+  pe:uses { :tunnelJunction :can :ServeLeakAlarmWakeCircuit . }.
+
+{ :case :checkC9 :Passed . }
+  pe:rule 19;
+  pe:uses { :ordinaryJunction :cannot :NegativeDifferentialResponse . }.
+
+{ :case :checkC11 :Passed . }
+  pe:rule 21;
+  pe:uses { :ordinaryJunction :cannot :ServeLeakAlarmWakeCircuit . }.
+
+{ :out log:outputString "ACT tunnel-junction wake switch\n\n## Answer\nYES for the tunnel junction.\nNO for the conventional low-bias PN junction in the same wake-switch regime.\n\n## Reason Why\nThe tunnel junction is modeled as a heavily doped narrow PN junction with overlapping states, so quantum barrier transfer is possible. That makes sub-threshold current possible in the low-forward-bias regime, which in turn makes ultra-low-bias switching possible for the wake circuit. Because the device is also scanned through a peak-to-valley window, a negative differential response is possible as well. By contrast, the conventional junction lacks the structural conditions for the same transfer mode, so it cannot deliver the same low-bias switching task in this case.\n\n## Check\nC1  OK - the tunnel junction can support quantum barrier transfer\nC2  OK - the tunnel junction is classified as tunneling-dominant\nC3  OK - the tunnel junction can deliver sub-threshold current\nC4  OK - the tunnel junction can show negative differential response\nC5  OK - the tunnel junction can perform ultra-low-bias switching\nC6  OK - the tunnel junction can serve the leak-alarm wake circuit\nC7  OK - the conventional junction cannot support the same quantum barrier transfer\nC8  OK - the conventional junction cannot deliver sub-threshold current in this regime\nC9  OK - the conventional junction cannot show the tunnel-style negative differential response\nC10 OK - the conventional junction cannot perform ultra-low-bias switching here\nC11 OK - the conventional junction cannot serve the leak-alarm wake circuit in this case\n" . }
+  pe:rule 22;
+  pe:uses
+    { :case :checkC1 :Passed . },
+    { :case :checkC2 :Passed . },
+    { :case :checkC3 :Passed . },
+    { :case :checkC4 :Passed . },
+    { :case :checkC5 :Passed . },
+    { :case :checkC6 :Passed . },
+    { :case :checkC7 :Passed . },
+    { :case :checkC8 :Passed . },
+    { :case :checkC9 :Passed . },
+    { :case :checkC10 :Passed . },
+    { :case :checkC11 :Passed . }.

@@ -1,0 +1,657 @@
+@prefix : <http://example.org/alarm-bit/> .
+@prefix log: <http://www.w3.org/2000/10/swap/log#> .
+@prefix pe: <https://eyereasoner.github.io/pe#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+:case :checkC1 :Passed .
+:opticalBeacon :can :LocalPermutation .
+_:b1_544194f05f56e92a a :PossibleTask .
+_:b1_544194f05f56e92a :taskType :Permute .
+_:b1_544194f05f56e92a :on :opticalBeacon .
+_:b1_544194f05f56e92a :variable :AlarmBit .
+_:b1_544194f05f56e92a :fromState :BlueLamp .
+_:b1_544194f05f56e92a :toState :RedLamp .
+:opticalBeacon :can :InteroperateForVariable .
+_:b2_ff61f896812a7b58 a :PossibleTask .
+_:b2_ff61f896812a7b58 :taskType :Copy .
+_:b2_ff61f896812a7b58 :from :opticalBeacon .
+_:b2_ff61f896812a7b58 :to :opticalBeacon .
+_:b2_ff61f896812a7b58 :variable :AlarmBit .
+:relayRegister :can :InteroperateForVariable .
+_:b2_3711e27ffff54b58 a :PossibleTask .
+_:b2_3711e27ffff54b58 :taskType :Copy .
+_:b2_3711e27ffff54b58 :from :opticalBeacon .
+_:b2_3711e27ffff54b58 :to :relayRegister .
+_:b2_3711e27ffff54b58 :variable :AlarmBit .
+_:b2_9ddf694a8a6dfa24 a :PossibleTask .
+_:b2_9ddf694a8a6dfa24 :taskType :Copy .
+_:b2_9ddf694a8a6dfa24 :from :relayRegister .
+_:b2_9ddf694a8a6dfa24 :to :opticalBeacon .
+_:b2_9ddf694a8a6dfa24 :variable :AlarmBit .
+:case :checkC3 :Passed .
+:case :checkC2 :Passed .
+:relayRegister :can :LocalPermutation .
+_:b1_bf6938ac59ae865b a :PossibleTask .
+_:b1_bf6938ac59ae865b :taskType :Permute .
+_:b1_bf6938ac59ae865b :on :relayRegister .
+_:b1_bf6938ac59ae865b :variable :AlarmBit .
+_:b1_bf6938ac59ae865b :fromState :LowVoltage .
+_:b1_bf6938ac59ae865b :toState :HighVoltage .
+_:b2_20482bf374f34 a :PossibleTask .
+_:b2_20482bf374f34 :taskType :Copy .
+_:b2_20482bf374f34 :from :relayRegister .
+_:b2_20482bf374f34 :to :relayRegister .
+_:b2_20482bf374f34 :variable :AlarmBit .
+:quantumToken :cannot :UniversalClone .
+_:b3_e5757adbac385ce6 a :ImpossibleTask .
+_:b3_e5757adbac385ce6 :taskType :CloneAllStates .
+_:b3_e5757adbac385ce6 :on :quantumToken .
+_:b3_e5757adbac385ce6 :variable :PolarizationVariable .
+:case :checkC6 :Passed .
+:case :checkC4 :Passed .
+:case :checkC5 :Passed .
+:case :checkC7 :Passed .
+:case :checkC9 :Passed .
+:quantumToken :cannot :UnrestrictedStateFanOut .
+:case :checkC8 :Passed .
+:case :checkC10 :Passed .
+:out log:outputString "ACT harbor alarm bit interoperability\n\n## Answer\nYES for the classical alarm bit.\nNO for universal cloning and unrestricted fan-out of the quantum-like token.\n\n## Reason Why\nThe alarm state is modeled as an abstract bit carried by two unlike classical substrates. Because both the optical beacon and the relay register are information media for the same variable, local permutation and copying in both directions are possible. By contrast, the quantum-like token is treated as a superinformation medium, so universal cloning of all of its states is impossible, and unrestricted classical-style fan-out is blocked as well.\n\n## Check\nC1  OK - the optical beacon is an information medium\nC2  OK - the relay register is an information medium\nC3  OK - both substrates encode the same abstract variable: AlarmBit\nC4  OK - AlarmBit can be copied from optical beacon to relay register\nC5  OK - AlarmBit can be copied from relay register to optical beacon\nC6  OK - local permutation of AlarmBit is possible on the optical beacon\nC7  OK - local permutation of AlarmBit is possible on the relay register\nC8  OK - cloning all states of the quantum token is an impossible task\nC9  OK - the quantum token cannot be universally cloned\nC10 OK - the quantum token cannot support unrestricted classical-style fan-out\n" .
+
+{ :case :checkC1 :Passed . }
+  pe:rule 5;
+  pe:uses { :opticalBeacon a :InformationMedium . }.
+
+{ :opticalBeacon a :InformationMedium . }
+  pe:fact "act-alarm-bit-interoperability.n3".
+
+{ :opticalBeacon :can :LocalPermutation . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "M"; pe:value :opticalBeacon ],
+    [ pe:var "O"; pe:value :RedLamp ],
+    [ pe:var "V"; pe:value :AlarmBit ],
+    [ pe:var "Z"; pe:value :BlueLamp ];
+  pe:uses
+    { :opticalBeacon a :InformationMedium . },
+    { :opticalBeacon :encodes :AlarmBit . },
+    { :opticalBeacon :zeroState :BlueLamp . },
+    { :opticalBeacon :oneState :RedLamp . }.
+
+{ :opticalBeacon :encodes :AlarmBit . }
+  pe:fact "act-alarm-bit-interoperability.n3".
+
+{ :opticalBeacon :zeroState :BlueLamp . }
+  pe:fact "act-alarm-bit-interoperability.n3".
+
+{ :opticalBeacon :oneState :RedLamp . }
+  pe:fact "act-alarm-bit-interoperability.n3".
+
+{ _:b1_544194f05f56e92a a :PossibleTask . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "M"; pe:value :opticalBeacon ],
+    [ pe:var "O"; pe:value :RedLamp ],
+    [ pe:var "V"; pe:value :AlarmBit ],
+    [ pe:var "Z"; pe:value :BlueLamp ];
+  pe:uses
+    { :opticalBeacon a :InformationMedium . },
+    { :opticalBeacon :encodes :AlarmBit . },
+    { :opticalBeacon :zeroState :BlueLamp . },
+    { :opticalBeacon :oneState :RedLamp . }.
+
+{ _:b1_544194f05f56e92a :taskType :Permute . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "M"; pe:value :opticalBeacon ],
+    [ pe:var "O"; pe:value :RedLamp ],
+    [ pe:var "V"; pe:value :AlarmBit ],
+    [ pe:var "Z"; pe:value :BlueLamp ];
+  pe:uses
+    { :opticalBeacon a :InformationMedium . },
+    { :opticalBeacon :encodes :AlarmBit . },
+    { :opticalBeacon :zeroState :BlueLamp . },
+    { :opticalBeacon :oneState :RedLamp . }.
+
+{ _:b1_544194f05f56e92a :on :opticalBeacon . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "M"; pe:value :opticalBeacon ],
+    [ pe:var "O"; pe:value :RedLamp ],
+    [ pe:var "V"; pe:value :AlarmBit ],
+    [ pe:var "Z"; pe:value :BlueLamp ];
+  pe:uses
+    { :opticalBeacon a :InformationMedium . },
+    { :opticalBeacon :encodes :AlarmBit . },
+    { :opticalBeacon :zeroState :BlueLamp . },
+    { :opticalBeacon :oneState :RedLamp . }.
+
+{ _:b1_544194f05f56e92a :variable :AlarmBit . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "M"; pe:value :opticalBeacon ],
+    [ pe:var "O"; pe:value :RedLamp ],
+    [ pe:var "V"; pe:value :AlarmBit ],
+    [ pe:var "Z"; pe:value :BlueLamp ];
+  pe:uses
+    { :opticalBeacon a :InformationMedium . },
+    { :opticalBeacon :encodes :AlarmBit . },
+    { :opticalBeacon :zeroState :BlueLamp . },
+    { :opticalBeacon :oneState :RedLamp . }.
+
+{ _:b1_544194f05f56e92a :fromState :BlueLamp . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "M"; pe:value :opticalBeacon ],
+    [ pe:var "O"; pe:value :RedLamp ],
+    [ pe:var "V"; pe:value :AlarmBit ],
+    [ pe:var "Z"; pe:value :BlueLamp ];
+  pe:uses
+    { :opticalBeacon a :InformationMedium . },
+    { :opticalBeacon :encodes :AlarmBit . },
+    { :opticalBeacon :zeroState :BlueLamp . },
+    { :opticalBeacon :oneState :RedLamp . }.
+
+{ _:b1_544194f05f56e92a :toState :RedLamp . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "M"; pe:value :opticalBeacon ],
+    [ pe:var "O"; pe:value :RedLamp ],
+    [ pe:var "V"; pe:value :AlarmBit ],
+    [ pe:var "Z"; pe:value :BlueLamp ];
+  pe:uses
+    { :opticalBeacon a :InformationMedium . },
+    { :opticalBeacon :encodes :AlarmBit . },
+    { :opticalBeacon :zeroState :BlueLamp . },
+    { :opticalBeacon :oneState :RedLamp . }.
+
+{ :opticalBeacon :can :InteroperateForVariable . }
+  pe:rule 2;
+  pe:binding
+    [ pe:var "A"; pe:value :opticalBeacon ],
+    [ pe:var "B"; pe:value :opticalBeacon ],
+    [ pe:var "V"; pe:value :AlarmBit ];
+  pe:uses
+    { :opticalBeacon a :InformationMedium . },
+    { :opticalBeacon :encodes :AlarmBit . },
+    { :opticalBeacon a :InformationMedium . },
+    { :opticalBeacon :encodes :AlarmBit . }.
+
+{ _:b2_ff61f896812a7b58 a :PossibleTask . }
+  pe:rule 2;
+  pe:binding
+    [ pe:var "A"; pe:value :opticalBeacon ],
+    [ pe:var "B"; pe:value :opticalBeacon ],
+    [ pe:var "V"; pe:value :AlarmBit ];
+  pe:uses
+    { :opticalBeacon a :InformationMedium . },
+    { :opticalBeacon :encodes :AlarmBit . },
+    { :opticalBeacon a :InformationMedium . },
+    { :opticalBeacon :encodes :AlarmBit . }.
+
+{ _:b2_ff61f896812a7b58 :taskType :Copy . }
+  pe:rule 2;
+  pe:binding
+    [ pe:var "A"; pe:value :opticalBeacon ],
+    [ pe:var "B"; pe:value :opticalBeacon ],
+    [ pe:var "V"; pe:value :AlarmBit ];
+  pe:uses
+    { :opticalBeacon a :InformationMedium . },
+    { :opticalBeacon :encodes :AlarmBit . },
+    { :opticalBeacon a :InformationMedium . },
+    { :opticalBeacon :encodes :AlarmBit . }.
+
+{ _:b2_ff61f896812a7b58 :from :opticalBeacon . }
+  pe:rule 2;
+  pe:binding
+    [ pe:var "A"; pe:value :opticalBeacon ],
+    [ pe:var "B"; pe:value :opticalBeacon ],
+    [ pe:var "V"; pe:value :AlarmBit ];
+  pe:uses
+    { :opticalBeacon a :InformationMedium . },
+    { :opticalBeacon :encodes :AlarmBit . },
+    { :opticalBeacon a :InformationMedium . },
+    { :opticalBeacon :encodes :AlarmBit . }.
+
+{ _:b2_ff61f896812a7b58 :to :opticalBeacon . }
+  pe:rule 2;
+  pe:binding
+    [ pe:var "A"; pe:value :opticalBeacon ],
+    [ pe:var "B"; pe:value :opticalBeacon ],
+    [ pe:var "V"; pe:value :AlarmBit ];
+  pe:uses
+    { :opticalBeacon a :InformationMedium . },
+    { :opticalBeacon :encodes :AlarmBit . },
+    { :opticalBeacon a :InformationMedium . },
+    { :opticalBeacon :encodes :AlarmBit . }.
+
+{ _:b2_ff61f896812a7b58 :variable :AlarmBit . }
+  pe:rule 2;
+  pe:binding
+    [ pe:var "A"; pe:value :opticalBeacon ],
+    [ pe:var "B"; pe:value :opticalBeacon ],
+    [ pe:var "V"; pe:value :AlarmBit ];
+  pe:uses
+    { :opticalBeacon a :InformationMedium . },
+    { :opticalBeacon :encodes :AlarmBit . },
+    { :opticalBeacon a :InformationMedium . },
+    { :opticalBeacon :encodes :AlarmBit . }.
+
+{ :relayRegister :can :InteroperateForVariable . }
+  pe:rule 2;
+  pe:binding
+    [ pe:var "A"; pe:value :opticalBeacon ],
+    [ pe:var "B"; pe:value :relayRegister ],
+    [ pe:var "V"; pe:value :AlarmBit ];
+  pe:uses
+    { :opticalBeacon a :InformationMedium . },
+    { :opticalBeacon :encodes :AlarmBit . },
+    { :relayRegister a :InformationMedium . },
+    { :relayRegister :encodes :AlarmBit . }.
+
+{ :relayRegister a :InformationMedium . }
+  pe:fact "act-alarm-bit-interoperability.n3".
+
+{ :relayRegister :encodes :AlarmBit . }
+  pe:fact "act-alarm-bit-interoperability.n3".
+
+{ _:b2_3711e27ffff54b58 a :PossibleTask . }
+  pe:rule 2;
+  pe:binding
+    [ pe:var "A"; pe:value :opticalBeacon ],
+    [ pe:var "B"; pe:value :relayRegister ],
+    [ pe:var "V"; pe:value :AlarmBit ];
+  pe:uses
+    { :opticalBeacon a :InformationMedium . },
+    { :opticalBeacon :encodes :AlarmBit . },
+    { :relayRegister a :InformationMedium . },
+    { :relayRegister :encodes :AlarmBit . }.
+
+{ _:b2_3711e27ffff54b58 :taskType :Copy . }
+  pe:rule 2;
+  pe:binding
+    [ pe:var "A"; pe:value :opticalBeacon ],
+    [ pe:var "B"; pe:value :relayRegister ],
+    [ pe:var "V"; pe:value :AlarmBit ];
+  pe:uses
+    { :opticalBeacon a :InformationMedium . },
+    { :opticalBeacon :encodes :AlarmBit . },
+    { :relayRegister a :InformationMedium . },
+    { :relayRegister :encodes :AlarmBit . }.
+
+{ _:b2_3711e27ffff54b58 :from :opticalBeacon . }
+  pe:rule 2;
+  pe:binding
+    [ pe:var "A"; pe:value :opticalBeacon ],
+    [ pe:var "B"; pe:value :relayRegister ],
+    [ pe:var "V"; pe:value :AlarmBit ];
+  pe:uses
+    { :opticalBeacon a :InformationMedium . },
+    { :opticalBeacon :encodes :AlarmBit . },
+    { :relayRegister a :InformationMedium . },
+    { :relayRegister :encodes :AlarmBit . }.
+
+{ _:b2_3711e27ffff54b58 :to :relayRegister . }
+  pe:rule 2;
+  pe:binding
+    [ pe:var "A"; pe:value :opticalBeacon ],
+    [ pe:var "B"; pe:value :relayRegister ],
+    [ pe:var "V"; pe:value :AlarmBit ];
+  pe:uses
+    { :opticalBeacon a :InformationMedium . },
+    { :opticalBeacon :encodes :AlarmBit . },
+    { :relayRegister a :InformationMedium . },
+    { :relayRegister :encodes :AlarmBit . }.
+
+{ _:b2_3711e27ffff54b58 :variable :AlarmBit . }
+  pe:rule 2;
+  pe:binding
+    [ pe:var "A"; pe:value :opticalBeacon ],
+    [ pe:var "B"; pe:value :relayRegister ],
+    [ pe:var "V"; pe:value :AlarmBit ];
+  pe:uses
+    { :opticalBeacon a :InformationMedium . },
+    { :opticalBeacon :encodes :AlarmBit . },
+    { :relayRegister a :InformationMedium . },
+    { :relayRegister :encodes :AlarmBit . }.
+
+{ _:b2_9ddf694a8a6dfa24 a :PossibleTask . }
+  pe:rule 2;
+  pe:binding
+    [ pe:var "A"; pe:value :relayRegister ],
+    [ pe:var "B"; pe:value :opticalBeacon ],
+    [ pe:var "V"; pe:value :AlarmBit ];
+  pe:uses
+    { :relayRegister a :InformationMedium . },
+    { :relayRegister :encodes :AlarmBit . },
+    { :opticalBeacon a :InformationMedium . },
+    { :opticalBeacon :encodes :AlarmBit . }.
+
+{ _:b2_9ddf694a8a6dfa24 :taskType :Copy . }
+  pe:rule 2;
+  pe:binding
+    [ pe:var "A"; pe:value :relayRegister ],
+    [ pe:var "B"; pe:value :opticalBeacon ],
+    [ pe:var "V"; pe:value :AlarmBit ];
+  pe:uses
+    { :relayRegister a :InformationMedium . },
+    { :relayRegister :encodes :AlarmBit . },
+    { :opticalBeacon a :InformationMedium . },
+    { :opticalBeacon :encodes :AlarmBit . }.
+
+{ _:b2_9ddf694a8a6dfa24 :from :relayRegister . }
+  pe:rule 2;
+  pe:binding
+    [ pe:var "A"; pe:value :relayRegister ],
+    [ pe:var "B"; pe:value :opticalBeacon ],
+    [ pe:var "V"; pe:value :AlarmBit ];
+  pe:uses
+    { :relayRegister a :InformationMedium . },
+    { :relayRegister :encodes :AlarmBit . },
+    { :opticalBeacon a :InformationMedium . },
+    { :opticalBeacon :encodes :AlarmBit . }.
+
+{ _:b2_9ddf694a8a6dfa24 :to :opticalBeacon . }
+  pe:rule 2;
+  pe:binding
+    [ pe:var "A"; pe:value :relayRegister ],
+    [ pe:var "B"; pe:value :opticalBeacon ],
+    [ pe:var "V"; pe:value :AlarmBit ];
+  pe:uses
+    { :relayRegister a :InformationMedium . },
+    { :relayRegister :encodes :AlarmBit . },
+    { :opticalBeacon a :InformationMedium . },
+    { :opticalBeacon :encodes :AlarmBit . }.
+
+{ _:b2_9ddf694a8a6dfa24 :variable :AlarmBit . }
+  pe:rule 2;
+  pe:binding
+    [ pe:var "A"; pe:value :relayRegister ],
+    [ pe:var "B"; pe:value :opticalBeacon ],
+    [ pe:var "V"; pe:value :AlarmBit ];
+  pe:uses
+    { :relayRegister a :InformationMedium . },
+    { :relayRegister :encodes :AlarmBit . },
+    { :opticalBeacon a :InformationMedium . },
+    { :opticalBeacon :encodes :AlarmBit . }.
+
+{ :case :checkC3 :Passed . }
+  pe:rule 7;
+  pe:uses
+    { :opticalBeacon :encodes :AlarmBit . },
+    { :relayRegister :encodes :AlarmBit . }.
+
+{ :case :checkC2 :Passed . }
+  pe:rule 6;
+  pe:uses { :relayRegister a :InformationMedium . }.
+
+{ :relayRegister :can :LocalPermutation . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "M"; pe:value :relayRegister ],
+    [ pe:var "O"; pe:value :HighVoltage ],
+    [ pe:var "V"; pe:value :AlarmBit ],
+    [ pe:var "Z"; pe:value :LowVoltage ];
+  pe:uses
+    { :relayRegister a :InformationMedium . },
+    { :relayRegister :encodes :AlarmBit . },
+    { :relayRegister :zeroState :LowVoltage . },
+    { :relayRegister :oneState :HighVoltage . }.
+
+{ :relayRegister :zeroState :LowVoltage . }
+  pe:fact "act-alarm-bit-interoperability.n3".
+
+{ :relayRegister :oneState :HighVoltage . }
+  pe:fact "act-alarm-bit-interoperability.n3".
+
+{ _:b1_bf6938ac59ae865b a :PossibleTask . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "M"; pe:value :relayRegister ],
+    [ pe:var "O"; pe:value :HighVoltage ],
+    [ pe:var "V"; pe:value :AlarmBit ],
+    [ pe:var "Z"; pe:value :LowVoltage ];
+  pe:uses
+    { :relayRegister a :InformationMedium . },
+    { :relayRegister :encodes :AlarmBit . },
+    { :relayRegister :zeroState :LowVoltage . },
+    { :relayRegister :oneState :HighVoltage . }.
+
+{ _:b1_bf6938ac59ae865b :taskType :Permute . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "M"; pe:value :relayRegister ],
+    [ pe:var "O"; pe:value :HighVoltage ],
+    [ pe:var "V"; pe:value :AlarmBit ],
+    [ pe:var "Z"; pe:value :LowVoltage ];
+  pe:uses
+    { :relayRegister a :InformationMedium . },
+    { :relayRegister :encodes :AlarmBit . },
+    { :relayRegister :zeroState :LowVoltage . },
+    { :relayRegister :oneState :HighVoltage . }.
+
+{ _:b1_bf6938ac59ae865b :on :relayRegister . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "M"; pe:value :relayRegister ],
+    [ pe:var "O"; pe:value :HighVoltage ],
+    [ pe:var "V"; pe:value :AlarmBit ],
+    [ pe:var "Z"; pe:value :LowVoltage ];
+  pe:uses
+    { :relayRegister a :InformationMedium . },
+    { :relayRegister :encodes :AlarmBit . },
+    { :relayRegister :zeroState :LowVoltage . },
+    { :relayRegister :oneState :HighVoltage . }.
+
+{ _:b1_bf6938ac59ae865b :variable :AlarmBit . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "M"; pe:value :relayRegister ],
+    [ pe:var "O"; pe:value :HighVoltage ],
+    [ pe:var "V"; pe:value :AlarmBit ],
+    [ pe:var "Z"; pe:value :LowVoltage ];
+  pe:uses
+    { :relayRegister a :InformationMedium . },
+    { :relayRegister :encodes :AlarmBit . },
+    { :relayRegister :zeroState :LowVoltage . },
+    { :relayRegister :oneState :HighVoltage . }.
+
+{ _:b1_bf6938ac59ae865b :fromState :LowVoltage . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "M"; pe:value :relayRegister ],
+    [ pe:var "O"; pe:value :HighVoltage ],
+    [ pe:var "V"; pe:value :AlarmBit ],
+    [ pe:var "Z"; pe:value :LowVoltage ];
+  pe:uses
+    { :relayRegister a :InformationMedium . },
+    { :relayRegister :encodes :AlarmBit . },
+    { :relayRegister :zeroState :LowVoltage . },
+    { :relayRegister :oneState :HighVoltage . }.
+
+{ _:b1_bf6938ac59ae865b :toState :HighVoltage . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "M"; pe:value :relayRegister ],
+    [ pe:var "O"; pe:value :HighVoltage ],
+    [ pe:var "V"; pe:value :AlarmBit ],
+    [ pe:var "Z"; pe:value :LowVoltage ];
+  pe:uses
+    { :relayRegister a :InformationMedium . },
+    { :relayRegister :encodes :AlarmBit . },
+    { :relayRegister :zeroState :LowVoltage . },
+    { :relayRegister :oneState :HighVoltage . }.
+
+{ _:b2_20482bf374f34 a :PossibleTask . }
+  pe:rule 2;
+  pe:binding
+    [ pe:var "A"; pe:value :relayRegister ],
+    [ pe:var "B"; pe:value :relayRegister ],
+    [ pe:var "V"; pe:value :AlarmBit ];
+  pe:uses
+    { :relayRegister a :InformationMedium . },
+    { :relayRegister :encodes :AlarmBit . },
+    { :relayRegister a :InformationMedium . },
+    { :relayRegister :encodes :AlarmBit . }.
+
+{ _:b2_20482bf374f34 :taskType :Copy . }
+  pe:rule 2;
+  pe:binding
+    [ pe:var "A"; pe:value :relayRegister ],
+    [ pe:var "B"; pe:value :relayRegister ],
+    [ pe:var "V"; pe:value :AlarmBit ];
+  pe:uses
+    { :relayRegister a :InformationMedium . },
+    { :relayRegister :encodes :AlarmBit . },
+    { :relayRegister a :InformationMedium . },
+    { :relayRegister :encodes :AlarmBit . }.
+
+{ _:b2_20482bf374f34 :from :relayRegister . }
+  pe:rule 2;
+  pe:binding
+    [ pe:var "A"; pe:value :relayRegister ],
+    [ pe:var "B"; pe:value :relayRegister ],
+    [ pe:var "V"; pe:value :AlarmBit ];
+  pe:uses
+    { :relayRegister a :InformationMedium . },
+    { :relayRegister :encodes :AlarmBit . },
+    { :relayRegister a :InformationMedium . },
+    { :relayRegister :encodes :AlarmBit . }.
+
+{ _:b2_20482bf374f34 :to :relayRegister . }
+  pe:rule 2;
+  pe:binding
+    [ pe:var "A"; pe:value :relayRegister ],
+    [ pe:var "B"; pe:value :relayRegister ],
+    [ pe:var "V"; pe:value :AlarmBit ];
+  pe:uses
+    { :relayRegister a :InformationMedium . },
+    { :relayRegister :encodes :AlarmBit . },
+    { :relayRegister a :InformationMedium . },
+    { :relayRegister :encodes :AlarmBit . }.
+
+{ _:b2_20482bf374f34 :variable :AlarmBit . }
+  pe:rule 2;
+  pe:binding
+    [ pe:var "A"; pe:value :relayRegister ],
+    [ pe:var "B"; pe:value :relayRegister ],
+    [ pe:var "V"; pe:value :AlarmBit ];
+  pe:uses
+    { :relayRegister a :InformationMedium . },
+    { :relayRegister :encodes :AlarmBit . },
+    { :relayRegister a :InformationMedium . },
+    { :relayRegister :encodes :AlarmBit . }.
+
+{ :quantumToken :cannot :UniversalClone . }
+  pe:rule 3;
+  pe:binding
+    [ pe:var "M"; pe:value :quantumToken ],
+    [ pe:var "V"; pe:value :PolarizationVariable ];
+  pe:uses
+    { :quantumToken a :SuperinformationMedium . },
+    { :quantumToken :encodes :PolarizationVariable . }.
+
+{ :quantumToken a :SuperinformationMedium . }
+  pe:fact "act-alarm-bit-interoperability.n3".
+
+{ :quantumToken :encodes :PolarizationVariable . }
+  pe:fact "act-alarm-bit-interoperability.n3".
+
+{ _:b3_e5757adbac385ce6 a :ImpossibleTask . }
+  pe:rule 3;
+  pe:binding
+    [ pe:var "M"; pe:value :quantumToken ],
+    [ pe:var "V"; pe:value :PolarizationVariable ];
+  pe:uses
+    { :quantumToken a :SuperinformationMedium . },
+    { :quantumToken :encodes :PolarizationVariable . }.
+
+{ _:b3_e5757adbac385ce6 :taskType :CloneAllStates . }
+  pe:rule 3;
+  pe:binding
+    [ pe:var "M"; pe:value :quantumToken ],
+    [ pe:var "V"; pe:value :PolarizationVariable ];
+  pe:uses
+    { :quantumToken a :SuperinformationMedium . },
+    { :quantumToken :encodes :PolarizationVariable . }.
+
+{ _:b3_e5757adbac385ce6 :on :quantumToken . }
+  pe:rule 3;
+  pe:binding
+    [ pe:var "M"; pe:value :quantumToken ],
+    [ pe:var "V"; pe:value :PolarizationVariable ];
+  pe:uses
+    { :quantumToken a :SuperinformationMedium . },
+    { :quantumToken :encodes :PolarizationVariable . }.
+
+{ _:b3_e5757adbac385ce6 :variable :PolarizationVariable . }
+  pe:rule 3;
+  pe:binding
+    [ pe:var "M"; pe:value :quantumToken ],
+    [ pe:var "V"; pe:value :PolarizationVariable ];
+  pe:uses
+    { :quantumToken a :SuperinformationMedium . },
+    { :quantumToken :encodes :PolarizationVariable . }.
+
+{ :case :checkC6 :Passed . }
+  pe:rule 10;
+  pe:uses { :opticalBeacon :can :LocalPermutation . }.
+
+{ :case :checkC4 :Passed . }
+  pe:rule 8;
+  pe:binding [ pe:var "T"; pe:value _:b2_3711e27ffff54b58 ];
+  pe:uses
+    { _:b2_3711e27ffff54b58 a :PossibleTask . },
+    { _:b2_3711e27ffff54b58 :taskType :Copy . },
+    { _:b2_3711e27ffff54b58 :from :opticalBeacon . },
+    { _:b2_3711e27ffff54b58 :to :relayRegister . },
+    { _:b2_3711e27ffff54b58 :variable :AlarmBit . }.
+
+{ :case :checkC5 :Passed . }
+  pe:rule 9;
+  pe:binding [ pe:var "T"; pe:value _:b2_9ddf694a8a6dfa24 ];
+  pe:uses
+    { _:b2_9ddf694a8a6dfa24 a :PossibleTask . },
+    { _:b2_9ddf694a8a6dfa24 :taskType :Copy . },
+    { _:b2_9ddf694a8a6dfa24 :from :relayRegister . },
+    { _:b2_9ddf694a8a6dfa24 :to :opticalBeacon . },
+    { _:b2_9ddf694a8a6dfa24 :variable :AlarmBit . }.
+
+{ :case :checkC7 :Passed . }
+  pe:rule 11;
+  pe:uses { :relayRegister :can :LocalPermutation . }.
+
+{ :case :checkC9 :Passed . }
+  pe:rule 13;
+  pe:uses { :quantumToken :cannot :UniversalClone . }.
+
+{ :quantumToken :cannot :UnrestrictedStateFanOut . }
+  pe:rule 4;
+  pe:binding [ pe:var "M"; pe:value :quantumToken ];
+  pe:uses { :quantumToken :cannot :UniversalClone . }.
+
+{ :case :checkC8 :Passed . }
+  pe:rule 12;
+  pe:binding [ pe:var "T"; pe:value _:b3_e5757adbac385ce6 ];
+  pe:uses
+    { _:b3_e5757adbac385ce6 a :ImpossibleTask . },
+    { _:b3_e5757adbac385ce6 :taskType :CloneAllStates . },
+    { _:b3_e5757adbac385ce6 :on :quantumToken . },
+    { _:b3_e5757adbac385ce6 :variable :PolarizationVariable . }.
+
+{ :case :checkC10 :Passed . }
+  pe:rule 14;
+  pe:uses { :quantumToken :cannot :UnrestrictedStateFanOut . }.
+
+{ :out log:outputString "ACT harbor alarm bit interoperability\n\n## Answer\nYES for the classical alarm bit.\nNO for universal cloning and unrestricted fan-out of the quantum-like token.\n\n## Reason Why\nThe alarm state is modeled as an abstract bit carried by two unlike classical substrates. Because both the optical beacon and the relay register are information media for the same variable, local permutation and copying in both directions are possible. By contrast, the quantum-like token is treated as a superinformation medium, so universal cloning of all of its states is impossible, and unrestricted classical-style fan-out is blocked as well.\n\n## Check\nC1  OK - the optical beacon is an information medium\nC2  OK - the relay register is an information medium\nC3  OK - both substrates encode the same abstract variable: AlarmBit\nC4  OK - AlarmBit can be copied from optical beacon to relay register\nC5  OK - AlarmBit can be copied from relay register to optical beacon\nC6  OK - local permutation of AlarmBit is possible on the optical beacon\nC7  OK - local permutation of AlarmBit is possible on the relay register\nC8  OK - cloning all states of the quantum token is an impossible task\nC9  OK - the quantum token cannot be universally cloned\nC10 OK - the quantum token cannot support unrestricted classical-style fan-out\n" . }
+  pe:rule 15;
+  pe:uses
+    { :case :checkC1 :Passed . },
+    { :case :checkC2 :Passed . },
+    { :case :checkC3 :Passed . },
+    { :case :checkC4 :Passed . },
+    { :case :checkC5 :Passed . },
+    { :case :checkC6 :Passed . },
+    { :case :checkC7 :Passed . },
+    { :case :checkC8 :Passed . },
+    { :case :checkC9 :Passed . },
+    { :case :checkC10 :Passed . }.

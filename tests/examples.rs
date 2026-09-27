@@ -40,8 +40,13 @@ const PARSE_ONLY_EXAMPLES: &[&str] = &["alma-rdf-messages", "collection"];
 /// derives anything now has a proof golden, `deep-taxonomy-100000`
 /// included. Only these three are left out, and none of them for size.
 const NO_PROOF_EXAMPLES: &[(&str, &str)] = &[
+    ("annotation", "its printed result comes from a log:query goal, not a forward-derived fact --proof tracks"),
+    ("builtin-coverage", "its printed result comes from a log:query goal, not a forward-derived fact --proof tracks"),
     ("check-unsafe", "deliberately derives nothing: its head variable is unsafe/unbound by design"),
+    ("fft8-symbolic", "its printed result comes from a log:query goal, not a forward-derived fact --proof tracks"),
+    ("kaprekar-6174", "its printed result comes from a log:query goal, not a forward-derived fact --proof tracks"),
     ("monoid-identity-uniqueness", "its printed result comes from a log:query goal, not a forward-derived fact --proof tracks"),
+    ("relational-cube-lookup", "its printed result comes from a log:query goal, not a forward-derived fact --proof tracks"),
     (
         "proof-audit",
         "its companion input (examples/input/proof-audit.trig) is itself an N3 proof document with quoted formulas, which the CLI's second positional file argument parses in RDF-only mode and rejects",
@@ -194,11 +199,16 @@ fn parse_document(source_path: &Path, name: &str) -> Document {
     let input_path = manifest_dir().join("examples/input").join(format!("{name}.trig"));
     if input_path.exists() {
         let input = read(&input_path);
+        // An `examples/input/*.trig` companion is either an RDF Message Log,
+        // an N3 document (`proof-audit.trig` is an N3 proof, quoted formulas
+        // and all), or real TriG with named graphs. Try N3 before TriG, the
+        // way the CLI's own N3-first reading does, so both kinds load.
+        let input_label = input_path.to_string_lossy();
         let parsed = if eyeron::is_rdf_message_log(&input) {
             eyeron::parse_rdf_message_log(&input, None)
         } else {
-            let input_label = input_path.to_string_lossy();
             parse_n3_with_source(&input, None, Some(input_label.as_ref()))
+                .or_else(|_| eyeron::parse_rdf12(&input, None, eyeron::RdfFormat::Trig))
         }
         .unwrap_or_else(|err| panic!("failed to parse {}: {}", input_path.display(), err));
         doc.merge(parsed);
@@ -243,6 +253,10 @@ fn run_case(case: &Case) {
     let timeout = if name.starts_with("deep-taxonomy-")
         || name.starts_with("rdf-message-")
         || name == "dining-philosophers"
+        // Searches every 4-digit number for its Kaprekar chain. It takes about
+        // 30s here against eyeling's 3s, which is a gap worth closing, not a
+        // reason to leave the example out.
+        || name == "kaprekar-6174"
     {
         std::time::Duration::from_secs(90)
     } else {

@@ -1,0 +1,379 @@
+# =============================================================================
+# This example illustrates “eventual interoperability”:
+#   1) Start with rich, internally coherent source semantics (my:*).
+#   2) Add interoperability later as explicit, reusable alignments when a
+#      concrete interaction/business case exists.
+#   3) Alignments can be versioned and swapped without changing the source.
+#   4) Same source can be aligned one-to-many: different partners, different
+#      target shapes.
+#
+# The file models a dataset owner publishing a roster using their own rich
+# vocabulary (my:) without forcing early agreement on a shared schema.
+# When two concrete reuse needs appear (exporting to Partner A and Partner B),
+# each integration is handled by introducing an interaction pattern:
+#   alignment artefact (mappings) + an expected output shape.
+# The reasoner selects the active alignment for each partner, applies
+# class/property/inverse-property mappings to produce each partner’s expected
+# shape, and then emits “ready” roster views (:PartnerA_Roster, :PartnerB_Roster).
+# In other words: local semantics first, interoperability later, and one dataset
+# can be aligned to multiple consumers without changing the producer’s model.
+#
+# SHACL note:
+#   SHACL NodeShapes describe each partner’s expected output shape and act as a
+#   consumer-facing “contract” for the aligned view (they can also be validated).
+#
+# Inspired by: https://pietercolpaert.be/interoperability/2026/01/08/eventual-interoperability
+# =============================================================================
+
+@prefix my:    <http://example.org/my#>.
+@prefix a:     <http://example.org/partnerA#>.
+@prefix b:     <http://example.org/partnerB#>.
+@prefix align: <http://example.org/align#>.
+@prefix :      <http://example.org/demo#>.
+
+@prefix list: <http://www.w3.org/2000/10/swap/list#>.
+@prefix math: <http://www.w3.org/2000/10/swap/math#>.
+@prefix log:   <http://www.w3.org/2000/10/swap/log#>.
+@prefix owl:   <http://www.w3.org/2002/07/owl#>.
+@prefix sh:    <http://www.w3.org/ns/shacl#>.
+
+# ----------------------------------------------------------
+# 1) Producer data (rich, local semantics)
+# ----------------------------------------------------------
+
+my:Course_KG a my:Course ;
+  my:courseCode "KG-101" ;
+  my:title "Knowledge Graphs" .
+
+my:Student_A a my:Student ;
+  my:givenName  "Ava" ;
+  my:familyName "Ng" ;
+  my:displayName "Ava Ng" ;
+  my:studentID  "S123" ;
+  my:enrolledInCourse my:Course_KG ;
+  my:enrollmentRole my:TeachingAssistant .
+
+my:Student_B a my:Student ;
+  my:givenName  "Bram" ;
+  my:familyName "Peeters" ;
+  my:displayName "Bram Peeters" ;
+  my:studentID  "S124" ;
+  my:enrolledInCourse my:Course_KG ;
+  my:enrollmentRole my:Student .
+
+# ----------------------------------------------------------
+# 2) Interaction patterns (business cases)
+# ----------------------------------------------------------
+
+:RosterExportToPartnerA a :InteractionPattern ;
+  :enabled true ;
+  :usesAlignmentFamily :AlignFamily_PartnerA ;
+  # SHACL shapes used by this interaction pattern:
+  :usesShape :AStudentShape, :ACourseShape .
+
+:RosterExportToPartnerB a :InteractionPattern ;
+  :enabled true ;
+  :usesAlignmentFamily :AlignFamily_PartnerB ;
+  # SHACL shapes used by this interaction pattern:
+  :usesShape :BLearnerShape, :BModuleShape .
+
+# ----------------------------------------------------------
+# 3) SHACL shapes (descriptions of what partners expect)
+# ----------------------------------------------------------
+
+# Partner A expects:
+#   - Students have identifier, givenName, familyName
+#   - Courses have at least one hasStudent, and those values are Students
+
+:AStudentShape a sh:NodeShape ;
+  sh:targetClass a:Student ;
+  sh:property [
+    a sh:PropertyShape ;
+    sh:path a:identifier ;
+    sh:minCount 1
+  ] ;
+  sh:property [
+    a sh:PropertyShape ;
+    sh:path a:givenName ;
+    sh:minCount 1
+  ] ;
+  sh:property [
+    a sh:PropertyShape ;
+    sh:path a:familyName ;
+    sh:minCount 1
+  ] .
+
+:ACourseShape a sh:NodeShape ;
+  sh:targetClass a:Course ;
+  sh:property [
+    a sh:PropertyShape ;
+    sh:path a:hasStudent ;
+    sh:minCount 1 ;
+    sh:class a:Student
+  ] .
+
+# Partner B expects:
+#   - Learners have learnerId and fullName
+#   - Modules have moduleCode and at least one hasLearner (values are Learners)
+
+:BLearnerShape a sh:NodeShape ;
+  sh:targetClass b:Learner ;
+  sh:property [
+    a sh:PropertyShape ;
+    sh:path b:learnerId ;
+    sh:minCount 1
+  ] ;
+  sh:property [
+    a sh:PropertyShape ;
+    sh:path b:fullName ;
+    sh:minCount 1
+  ] .
+
+:BModuleShape a sh:NodeShape ;
+  sh:targetClass b:Module ;
+  sh:property [
+    a sh:PropertyShape ;
+    sh:path b:moduleCode ;
+    sh:minCount 1
+  ] ;
+  sh:property [
+    a sh:PropertyShape ;
+    sh:path b:hasLearner ;
+    sh:minCount 1 ;
+    sh:class b:Learner
+  ] .
+
+# ----------------------------------------------------------
+# 4) Alignment artefacts (kept separate from producer model)
+#    Demonstrates incremental/versioned alignments.
+# ----------------------------------------------------------
+
+:Align_A_v1 a :Alignment ; :active false ; :hasFormula {
+  # Minimal mapping: only identifier and enrollment link
+  my:studentID owl:equivalentProperty a:identifier .
+  my:enrolledInCourse owl:inverseOf a:hasStudent .
+  my:Student owl:equivalentClass a:Student .
+  my:Course  owl:equivalentClass a:Course .
+}.
+
+:Align_A_v2 a :Alignment ; :active true ; :hasFormula {
+  # More complete mapping (later, when the business case is clear)
+  my:studentID   owl:equivalentProperty a:identifier .
+  my:givenName   owl:equivalentProperty a:givenName .
+  my:familyName  owl:equivalentProperty a:familyName .
+  my:enrolledInCourse owl:inverseOf a:hasStudent .
+  my:Student owl:equivalentClass a:Student .
+  my:Course  owl:equivalentClass a:Course .
+}.
+
+:AlignFamily_PartnerA :hasMember :Align_A_v1, :Align_A_v2.
+
+:Align_B_v1 a :Alignment ; :active true ; :hasFormula {
+  # Partner B wants a different shape
+  my:Student owl:equivalentClass b:Learner .
+  my:studentID owl:equivalentProperty b:learnerId .
+  my:displayName owl:equivalentProperty b:fullName .
+  my:enrolledInCourse owl:inverseOf b:hasLearner .
+  my:Course owl:equivalentClass b:Module .
+  my:courseCode owl:equivalentProperty b:moduleCode .
+}.
+
+:AlignFamily_PartnerB :hasMember :Align_B_v1.
+
+# ----------------------------------------------------------
+# 5) Generic “eventual interoperability” engine
+#    - pick the active alignment for the interaction pattern
+#    - apply vocabulary-level alignments
+# ----------------------------------------------------------
+
+# Pick the active alignment for a pattern from its family
+{
+  ?pat a :InteractionPattern ;
+       :enabled true ;
+       :usesAlignmentFamily ?fam .
+  ?fam :hasMember ?al .
+  ?al :active true .
+} => {
+  ?pat :usesAlignment ?al .
+}.
+
+# Equivalent class mapping
+{
+  ?pat :usesAlignment ?al .
+  ?al :hasFormula ?A.
+  ?A log:includes { ?c1 owl:equivalentClass ?c2. }.
+  ?x a ?c1.
+} => {
+  ?x a ?c2.
+  ?x :alignedBy ?pat.
+}.
+
+# Equivalent property mapping
+{
+  ?pat :usesAlignment ?al .
+  ?al :hasFormula ?A.
+  ?A log:includes { ?p1 owl:equivalentProperty ?p2. }.
+  ?s ?p1 ?o.
+} => {
+  ?s ?p2 ?o.
+  ?s :alignedBy ?pat.
+}.
+
+# Inverse property mapping (shape translation)
+{
+  ?pat :usesAlignment ?al .
+  ?al :hasFormula ?A.
+  ?A log:includes { ?p1 owl:inverseOf ?p2. }.
+  ?s ?p1 ?o.
+} => {
+  ?o ?p2 ?s.
+  ?o :alignedBy ?pat.
+}.
+
+# ----------------------------------------------------------
+# 6) Interaction-pattern outputs (same checks as original)
+#    These rules correspond directly to the SHACL shapes above.
+# ----------------------------------------------------------
+
+# Partner A “ready” (corresponds to :AStudentShape + :ACourseShape)
+{
+  ?pat a :InteractionPattern ; :enabled true .
+  ?pat :usesShape :AStudentShape, :ACourseShape.
+
+  ?student a a:Student ;
+           a:identifier ?id ;
+           a:givenName ?gn ;
+           a:familyName ?fn .
+  ?course a a:Course ;
+          a:hasStudent ?student .
+  ?student :alignedBy ?pat.
+} => {
+  :PartnerA_Roster :fromPattern ?pat ;
+                   :includesCourse ?course ;
+                   :includesStudent ?student ;
+                   :ready true .
+}.
+
+# Partner B “ready” (corresponds to :BLearnerShape + :BModuleShape)
+{
+  ?pat a :InteractionPattern ; :enabled true .
+  ?pat :usesShape :BLearnerShape, :BModuleShape.
+
+  ?learner a b:Learner ;
+           b:learnerId ?id ;
+           b:fullName ?name .
+  ?module  a b:Module ;
+           b:moduleCode ?code ;
+           b:hasLearner ?learner .
+  ?learner :alignedBy ?pat.
+} => {
+  :PartnerB_Roster :fromPattern ?pat ;
+                   :includesModule ?module ;
+                   :includesLearner ?learner ;
+                   :ready true .
+}.
+
+# ----------------------------------------------------------
+# 7) SHACL validation in N3 (minimal subset)
+#    - sh:minCount 1
+#    - sh:class
+#
+# Reports are per interaction pattern.
+# ----------------------------------------------------------
+
+# Reports (stable IRIs; keeps things simple/deterministic)
+:PartnerA_Report a sh:ValidationReport ;
+  :forPattern :RosterExportToPartnerA ;
+  :forRoster  :PartnerA_Roster .
+
+:PartnerB_Report a sh:ValidationReport ;
+  :forPattern :RosterExportToPartnerB ;
+  :forRoster  :PartnerB_Roster .
+
+# --------------------------
+# minCount violations
+# --------------------------
+
+{
+  ?rep a sh:ValidationReport ;
+       :forPattern ?pat .
+
+  # this pattern uses this shape
+  ?pat :usesShape ?shape .
+
+  # shape definition
+  ?shape a sh:NodeShape ;
+         sh:targetClass ?class ;
+         sh:property ?ps .
+
+  ?ps sh:path ?path ;
+      sh:minCount ?min .
+
+  # focus nodes: nodes aligned for this pattern and of the target class
+  ?focus a ?class ;
+         :alignedBy ?pat .
+  # count values in the closure for (focus,path)
+  ( 1 { ?focus ?path ?v. } ?vals ) log:collectAllIn ?SCOPE.
+  ?vals list:length ?count .
+
+  # violation if count < min
+  ?count math:lessThan ?min .
+} => {
+  ?rep sh:result [
+    a sh:ValidationResult ;
+    sh:focusNode ?focus ;
+    sh:resultPath ?path ;
+    sh:sourceShape ?shape ;
+    sh:sourceConstraintComponent sh:MinCountConstraintComponent ;
+    sh:resultMessage "Missing required property (minCount)."
+  ] .
+}.
+
+# --------------------------
+# sh:class violations
+# --------------------------
+
+{
+  ?rep a sh:ValidationReport ;
+       :forPattern ?pat .
+
+  ?pat :usesShape ?shape .
+
+  ?shape a sh:NodeShape ;
+         sh:targetClass ?class ;
+         sh:property ?ps .
+
+  ?ps sh:path ?path ;
+      sh:class ?requiredClass .
+
+  ?focus a ?class ;
+         :alignedBy ?pat ;
+         ?path ?value .
+
+  # scoped NAF: value does NOT have the required rdf:type
+  ( 1 { ?value a ?requiredClass. } () ) log:collectAllIn ?SCOPE.
+} => {
+  ?rep sh:result [
+    a sh:ValidationResult ;
+    sh:focusNode ?focus ;
+    sh:resultPath ?path ;
+    sh:sourceShape ?shape ;
+    sh:sourceConstraintComponent sh:ClassConstraintComponent ;
+    sh:resultMessage "Value does not have required sh:class."
+  ] .
+}.
+
+# --------------------------
+# sh:conforms
+# --------------------------
+
+# If any result exists (in the current graph) -> conforms false
+{ ?rep a sh:ValidationReport.
+  ?rep sh:result ?r.
+} => { ?rep sh:conforms false. }.
+
+# If no result exists (SNAF in current scope) -> conforms true
+{ ?rep a sh:ValidationReport.
+  (1 { ?rep sh:result ?r. } () ) log:collectAllIn 2.
+} => { ?rep sh:conforms true. }.
+

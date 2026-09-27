@@ -1,0 +1,203 @@
+@prefix : <http://example.org/act/photosynthesis/> .
+@prefix log: <http://www.w3.org/2000/10/swap/log#> .
+@prefix pe: <https://eyereasoner.github.io/pe#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+:tunedAntenna :can :CoherentPathwaySampling .
+:tunedAntenna :can :VibronicallyAssistedTransfer .
+:tunedAntenna :can :ShortLivedQuantumAssistance .
+:tunedAntenna :can :EfficientExcitonTransfer .
+:tunedAntenna :can :DeliverExcitationToReactionCenter .
+:detunedAntenna :cannot :CoherentPathwaySampling .
+:detunedAntenna :cannot :VibronicallyAssistedTransfer .
+:detunedAntenna :cannot :DirectedReactionCenterTransfer .
+:case :checkC1 :Passed .
+:case :checkC2 :Passed .
+:case :checkC3 :Passed .
+:case :checkC4 :Passed .
+:case :checkC5 :Passed .
+:case :checkC6 :Passed .
+:detunedAntenna :cannot :EfficientExcitonTransfer .
+:case :checkC7 :Passed .
+:case :checkC8 :Passed .
+:detunedAntenna :cannot :DeliverExcitationToReactionCenter .
+:case :checkC9 :Passed .
+:case :checkC10 :Passed .
+:out log:outputString "ACT photosynthetic exciton transfer\n\n## Answer\nYES for the tuned antenna complex.\nNO for the detuned, strongly decohered contrast complex.\n\n## Reason Why\nThe tuned complex can sample exciton pathways coherently, use vibronically assisted transfer, and exploit short-lived quantum assistance along a downhill route to the reaction center. That makes efficient exciton transfer and reaction-center delivery possible in this case. The detuned contrast complex lacks the same alignment: coherent pathway sampling is blocked, vibronic assistance is unavailable, and the energy landscape is mismatched, so efficient reaction-center delivery is not possible in the same operating picture.\n\n## Check\nC1  OK - the tuned complex can sample exciton pathways coherently\nC2  OK - the tuned complex can use vibronically assisted transfer\nC3  OK - short-lived quantum assistance is enough in the tuned downhill regime\nC4  OK - efficient exciton transfer is possible in the tuned complex\nC5  OK - the tuned complex can deliver excitation to the reaction center\nC6  OK - the detuned complex cannot sample pathways coherently\nC7  OK - the detuned complex cannot use vibronically assisted transfer\nC8  OK - the detuned complex cannot achieve directed reaction-center transfer\nC9  OK - the detuned complex cannot achieve efficient exciton transfer\nC10 OK - the detuned complex cannot deliver excitation efficiently to the reaction center\n" .
+
+{ :tunedAntenna :can :CoherentPathwaySampling . }
+  pe:rule 1;
+  pe:binding [ pe:var "C"; pe:value :tunedAntenna ];
+  pe:uses
+    { :tunedAntenna a :LightHarvestingComplex . },
+    { :tunedAntenna :excitonCoupling :Strong . },
+    { :tunedAntenna :stateDelocalization :Present . }.
+
+{ :tunedAntenna a :LightHarvestingComplex . }
+  pe:fact "act-photosynthetic-exciton-transfer.n3".
+
+{ :tunedAntenna :excitonCoupling :Strong . }
+  pe:fact "act-photosynthetic-exciton-transfer.n3".
+
+{ :tunedAntenna :stateDelocalization :Present . }
+  pe:fact "act-photosynthetic-exciton-transfer.n3".
+
+{ :tunedAntenna :can :VibronicallyAssistedTransfer . }
+  pe:rule 2;
+  pe:binding [ pe:var "C"; pe:value :tunedAntenna ];
+  pe:uses
+    { :tunedAntenna a :LightHarvestingComplex . },
+    { :tunedAntenna :vibronicBridge :Tuned . },
+    { :tunedAntenna :dephasing :Moderate . }.
+
+{ :tunedAntenna :vibronicBridge :Tuned . }
+  pe:fact "act-photosynthetic-exciton-transfer.n3".
+
+{ :tunedAntenna :dephasing :Moderate . }
+  pe:fact "act-photosynthetic-exciton-transfer.n3".
+
+{ :tunedAntenna :can :ShortLivedQuantumAssistance . }
+  pe:rule 3;
+  pe:binding [ pe:var "C"; pe:value :tunedAntenna ];
+  pe:uses
+    { :tunedAntenna a :LightHarvestingComplex . },
+    { :tunedAntenna :electronicCoherenceLifetime :Short . },
+    { :tunedAntenna :energyLandscape :DownhillToReactionCenter . }.
+
+{ :tunedAntenna :electronicCoherenceLifetime :Short . }
+  pe:fact "act-photosynthetic-exciton-transfer.n3".
+
+{ :tunedAntenna :energyLandscape :DownhillToReactionCenter . }
+  pe:fact "act-photosynthetic-exciton-transfer.n3".
+
+{ :tunedAntenna :can :EfficientExcitonTransfer . }
+  pe:rule 4;
+  pe:binding [ pe:var "C"; pe:value :tunedAntenna ];
+  pe:uses
+    { :tunedAntenna :can :CoherentPathwaySampling . },
+    { :tunedAntenna :can :VibronicallyAssistedTransfer . },
+    { :tunedAntenna :can :ShortLivedQuantumAssistance . },
+    { :tunedAntenna :energyLandscape :DownhillToReactionCenter . }.
+
+{ :tunedAntenna :can :DeliverExcitationToReactionCenter . }
+  pe:rule 5;
+  pe:binding
+    [ pe:var "C"; pe:value :tunedAntenna ],
+    [ pe:var "RC"; pe:value :reactionCenter ];
+  pe:uses
+    { :tunedAntenna :can :EfficientExcitonTransfer . },
+    { :tunedAntenna :connectedTo :reactionCenter . },
+    { :reactionCenter a :ReactionCenter . }.
+
+{ :tunedAntenna :connectedTo :reactionCenter . }
+  pe:fact "act-photosynthetic-exciton-transfer.n3".
+
+{ :reactionCenter a :ReactionCenter . }
+  pe:fact "act-photosynthetic-exciton-transfer.n3".
+
+{ :detunedAntenna :cannot :CoherentPathwaySampling . }
+  pe:rule 6;
+  pe:binding [ pe:var "C"; pe:value :detunedAntenna ];
+  pe:uses
+    { :detunedAntenna a :LightHarvestingComplex . },
+    { :detunedAntenna :excitonCoupling :Weak . },
+    { :detunedAntenna :stateDelocalization :Absent . }.
+
+{ :detunedAntenna a :LightHarvestingComplex . }
+  pe:fact "act-photosynthetic-exciton-transfer.n3".
+
+{ :detunedAntenna :excitonCoupling :Weak . }
+  pe:fact "act-photosynthetic-exciton-transfer.n3".
+
+{ :detunedAntenna :stateDelocalization :Absent . }
+  pe:fact "act-photosynthetic-exciton-transfer.n3".
+
+{ :detunedAntenna :cannot :VibronicallyAssistedTransfer . }
+  pe:rule 7;
+  pe:binding [ pe:var "C"; pe:value :detunedAntenna ];
+  pe:uses
+    { :detunedAntenna a :LightHarvestingComplex . },
+    { :detunedAntenna :vibronicBridge :Absent . },
+    { :detunedAntenna :dephasing :Strong . }.
+
+{ :detunedAntenna :vibronicBridge :Absent . }
+  pe:fact "act-photosynthetic-exciton-transfer.n3".
+
+{ :detunedAntenna :dephasing :Strong . }
+  pe:fact "act-photosynthetic-exciton-transfer.n3".
+
+{ :detunedAntenna :cannot :DirectedReactionCenterTransfer . }
+  pe:rule 8;
+  pe:binding [ pe:var "C"; pe:value :detunedAntenna ];
+  pe:uses
+    { :detunedAntenna a :LightHarvestingComplex . },
+    { :detunedAntenna :energyLandscape :TrappingMismatch . }.
+
+{ :detunedAntenna :energyLandscape :TrappingMismatch . }
+  pe:fact "act-photosynthetic-exciton-transfer.n3".
+
+{ :case :checkC1 :Passed . }
+  pe:rule 12;
+  pe:uses { :tunedAntenna :can :CoherentPathwaySampling . }.
+
+{ :case :checkC2 :Passed . }
+  pe:rule 13;
+  pe:uses { :tunedAntenna :can :VibronicallyAssistedTransfer . }.
+
+{ :case :checkC3 :Passed . }
+  pe:rule 14;
+  pe:uses { :tunedAntenna :can :ShortLivedQuantumAssistance . }.
+
+{ :case :checkC4 :Passed . }
+  pe:rule 15;
+  pe:uses { :tunedAntenna :can :EfficientExcitonTransfer . }.
+
+{ :case :checkC5 :Passed . }
+  pe:rule 16;
+  pe:uses { :tunedAntenna :can :DeliverExcitationToReactionCenter . }.
+
+{ :case :checkC6 :Passed . }
+  pe:rule 17;
+  pe:uses { :detunedAntenna :cannot :CoherentPathwaySampling . }.
+
+{ :detunedAntenna :cannot :EfficientExcitonTransfer . }
+  pe:rule 9;
+  pe:binding [ pe:var "C"; pe:value :detunedAntenna ];
+  pe:uses
+    { :detunedAntenna :cannot :CoherentPathwaySampling . },
+    { :detunedAntenna :cannot :VibronicallyAssistedTransfer . }.
+
+{ :case :checkC7 :Passed . }
+  pe:rule 18;
+  pe:uses { :detunedAntenna :cannot :VibronicallyAssistedTransfer . }.
+
+{ :case :checkC8 :Passed . }
+  pe:rule 19;
+  pe:uses { :detunedAntenna :cannot :DirectedReactionCenterTransfer . }.
+
+{ :detunedAntenna :cannot :DeliverExcitationToReactionCenter . }
+  pe:rule 10;
+  pe:binding [ pe:var "C"; pe:value :detunedAntenna ];
+  pe:uses { :detunedAntenna :cannot :DirectedReactionCenterTransfer . }.
+
+{ :case :checkC9 :Passed . }
+  pe:rule 20;
+  pe:uses { :detunedAntenna :cannot :EfficientExcitonTransfer . }.
+
+{ :case :checkC10 :Passed . }
+  pe:rule 21;
+  pe:uses { :detunedAntenna :cannot :DeliverExcitationToReactionCenter . }.
+
+{ :out log:outputString "ACT photosynthetic exciton transfer\n\n## Answer\nYES for the tuned antenna complex.\nNO for the detuned, strongly decohered contrast complex.\n\n## Reason Why\nThe tuned complex can sample exciton pathways coherently, use vibronically assisted transfer, and exploit short-lived quantum assistance along a downhill route to the reaction center. That makes efficient exciton transfer and reaction-center delivery possible in this case. The detuned contrast complex lacks the same alignment: coherent pathway sampling is blocked, vibronic assistance is unavailable, and the energy landscape is mismatched, so efficient reaction-center delivery is not possible in the same operating picture.\n\n## Check\nC1  OK - the tuned complex can sample exciton pathways coherently\nC2  OK - the tuned complex can use vibronically assisted transfer\nC3  OK - short-lived quantum assistance is enough in the tuned downhill regime\nC4  OK - efficient exciton transfer is possible in the tuned complex\nC5  OK - the tuned complex can deliver excitation to the reaction center\nC6  OK - the detuned complex cannot sample pathways coherently\nC7  OK - the detuned complex cannot use vibronically assisted transfer\nC8  OK - the detuned complex cannot achieve directed reaction-center transfer\nC9  OK - the detuned complex cannot achieve efficient exciton transfer\nC10 OK - the detuned complex cannot deliver excitation efficiently to the reaction center\n" . }
+  pe:rule 22;
+  pe:uses
+    { :case :checkC1 :Passed . },
+    { :case :checkC2 :Passed . },
+    { :case :checkC3 :Passed . },
+    { :case :checkC4 :Passed . },
+    { :case :checkC5 :Passed . },
+    { :case :checkC6 :Passed . },
+    { :case :checkC7 :Passed . },
+    { :case :checkC8 :Passed . },
+    { :case :checkC9 :Passed . },
+    { :case :checkC10 :Passed . }.

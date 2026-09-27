@@ -1,0 +1,182 @@
+# =============================================================================
+# AIR-style policy reasoning with a paraconsistent conflict and deterministic
+# conflict resolution.
+#
+# Scenario:
+#   - Jos has Flu; Flu is a Disease -> Jos is Sick.
+#   - Doctor says Jos can do ProgrammingWork.
+#   - Policy: Sick + Work => deny Work (general).
+#   - Policy: Sick + Work + Office => deny Work (avoid infecting colleagues).
+#   - Resolution: If conflicted:
+#       * Work  => Deny
+#       * Home+ProgrammingWork => Permit
+#       * otherwise => Undecided
+#
+# Technique:
+#   - Keep facts+rules in a quoted KB formula, compute closure with log:conclusion.
+#   - Use log:includes / log:notIncludes for scoped checks (SNAF).
+# =============================================================================
+
+@prefix :    <http://example.org/#>.
+@prefix air: <http://dig.csail.mit.edu/TAMI/2007/amord/air#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix log:  <http://www.w3.org/2000/10/swap/log#>.
+
+# -----------------------------------------------------------------------------
+# 1) KB formula
+# -----------------------------------------------------------------------------
+
+:kb :hasFormula {
+
+  # Facts
+  :Jos a :Person ; :has :Flu .
+  :Flu :typeOf :Disease.
+
+  :Home a :Location.
+  :Office a :Location.
+
+  :ProgrammingWork rdfs:subClassOf :Work.
+
+  # Requests
+  :Request_Jos_Prog_Home a :Request ;
+      :agent :Jos ;
+      :job :ProgrammingWork ;
+      :location :Home .
+
+  :Request_Jos_Prog_Office a :Request ;
+      :agent :Jos ;
+      :job :ProgrammingWork ;
+      :location :Office .
+
+  # Doctor said (quoted)
+  :Doctor :says { :Jos :canDo :ProgrammingWork. }.
+
+  # Lift quoted statement
+  { ?doc :says ?G.
+    ?G log:includes { ?x :canDo ?job. }.
+  } => { ?x :canDo ?job. }.
+
+  # Flu -> Disease
+  { ?x :has ?a. ?a :typeOf ?b. } => { ?x :has ?b. }.
+
+  # Disease -> Sick (context)
+  { ?x :has :Disease. } => { ?x :healthStatus :Sick. }.
+
+  # Minimal subclass closure helper
+  { ?a rdfs:subClassOf ?b. } => { ?a :isKindOf ?b. }.
+  { ?a :isKindOf ?b. ?b :isKindOf ?c. } => { ?a :isKindOf ?c. }.
+
+  # canDo propagates to supertypes
+  { ?x :canDo ?job. ?job rdfs:subClassOf ?super. } => { ?x :canDo ?super. }.
+
+  # ----------------------------------------------------------
+  # AIR-annotated rules (documentation) + executable counterparts
+  # ----------------------------------------------------------
+
+  # Doctor: if canDo requested job => Permit
+  :R_DoctorPermit a air:Rule;
+    air:if   { ?req a :Request; :agent ?x; :job ?job. ?x :canDo ?job. };
+    air:then { ?req :decision :Permit. }.
+
+  { ?req a :Request; :agent ?x; :job ?job. ?x :canDo ?job. }
+    => { ?req :decision :Permit. }.
+
+  # Health: Sick + Work => Deny
+  :R_SickNoWork a air:Rule;
+    air:if   { ?req a :Request; :agent ?x; :job ?job. ?x :healthStatus :Sick. ?job :isKindOf :Work. };
+    air:then { ?req :decision :Deny. }.
+
+  { ?req a :Request; :agent ?x; :job ?job. ?x :healthStatus :Sick. ?job :isKindOf :Work. }
+    => { ?req :decision :Deny. }.
+
+  # Health: Sick + Work + Office => Deny (avoid infecting colleagues)
+  :R_SickWork a air:Rule;
+    air:if   { ?req a :Request; :agent ?x; :job ?job; :location :Office.
+               ?x :healthStatus :Sick. ?job :isKindOf :Office. };
+    air:then { ?req :decision :Deny. ?x :avoidInfectingColleagues true. }.
+
+  { ?req a :Request; :agent ?x; :job ?job; :location :Office.
+    ?x :healthStatus :Sick. ?job :isKindOf :Office. }
+    => { ?req :decision :Deny. ?x :avoidInfectingColleagues true. }.
+
+  # Resolution hint: Sick + ProgrammingWork at Home => Permit
+  :R_SickProgHome a air:Rule;
+    air:if   { ?req a :Request; :agent ?x; :job :ProgrammingWork; :location :Home. ?x :healthStatus :Sick. };
+    air:then { ?req :decision :Permit. ?x :remoteWorkRecommended true. }.
+
+  { ?req a :Request; :agent ?x; :job :ProgrammingWork; :location :Home. ?x :healthStatus :Sick. }
+    => { ?req :decision :Permit. ?x :remoteWorkRecommended true. }.
+}.
+
+# -----------------------------------------------------------------------------
+# 2) Lift request facts out of the closure (small, deterministic output)
+# -----------------------------------------------------------------------------
+
+{ :kb :hasFormula ?F. ?F log:conclusion ?C.
+  ?C log:includes { ?req a :Request; :agent ?who; :job ?job; :location ?loc. }.
+} => { ?req :agent ?who; :job ?job; :location ?loc. }.
+
+# -----------------------------------------------------------------------------
+# 3) decisionStatus via scoped checks on closure
+# -----------------------------------------------------------------------------
+
+{ :kb :hasFormula ?F. ?F log:conclusion ?C.
+  ?C log:includes { ?req :decision :Permit. }.
+  ?C log:includes { ?req :decision :Deny. }.
+} => { ?req :decisionStatus :BothPermitDeny. }.
+
+{ :kb :hasFormula ?F. ?F log:conclusion ?C.
+  ?C log:includes    { ?req :decision :Permit. }.
+  ?C log:notIncludes { ?req :decision :Deny. }.
+} => { ?req :decisionStatus :PermitOnly. }.
+
+{ :kb :hasFormula ?F. ?F log:conclusion ?C.
+  ?C log:includes    { ?req :decision :Deny. }.
+  ?C log:notIncludes { ?req :decision :Permit. }.
+} => { ?req :decisionStatus :DenyOnly. }.
+
+{ :kb :hasFormula ?F. ?F log:conclusion ?C.
+  ?C log:notIncludes { ?req :decision :Permit. }.
+  ?C log:notIncludes { ?req :decision :Deny. }.
+} => { ?req :decisionStatus :Neither. }.
+
+# -----------------------------------------------------------------------------
+# 4) effectiveDecision (mutually exclusive; no extra Undecided)
+# -----------------------------------------------------------------------------
+
+# Non-conflicts
+{ ?req :decisionStatus :PermitOnly. } => { ?req :effectiveDecision :Permit. }.
+{ ?req :decisionStatus :DenyOnly.   } => { ?req :effectiveDecision :Deny. }.
+{ ?req :decisionStatus :Neither.    } => { ?req :effectiveDecision :NotSpecified. }.
+
+# Conflict + Work => Deny (+ flag in same rule)
+{ :kb :hasFormula ?F. ?F log:conclusion ?C.
+  ?C log:includes { ?req :decision :Permit. }.
+  ?C log:includes { ?req :decision :Deny. }.
+  ?C log:includes { ?req :location :Office }.
+} => { ?req :effectiveDecision :Deny. }.
+
+# Conflict + Home + ProgrammingWork => Permit (+ flag)
+{ :kb :hasFormula ?F. ?F log:conclusion ?C.
+  ?C log:includes { ?req :decision :Permit. }.
+  ?C log:includes { ?req :decision :Deny. }.
+  ?C log:includes { ?req :location :Home. }.
+  ?C log:includes { ?req :job :ProgrammingWork. }.
+} => { ?req :effectiveDecision :Permit. }.
+
+# Conflict that matches neither resolver => Undecided (+ flag)
+{ :kb :hasFormula ?F. ?F log:conclusion ?C.
+  ?C log:includes    { ?req :decision :Permit. }.
+  ?C log:includes    { ?req :decision :Deny. }.
+  ?C log:notIncludes { ?req :location :Office. }.
+  ?C log:notIncludes { ?req :location :Home. ?req :job :ProgrammingWork. }.
+} => { ?req :effectiveDecision :Undecided. }.
+
+# -----------------------------------------------------------------------------
+# 5) Summary: if Home permitted + Work denied => RemoteWorkOnly
+# -----------------------------------------------------------------------------
+
+{ ?rH :agent ?who; :location :Home;    :effectiveDecision :Permit.
+  ?rC :agent ?who; :location :Office; :effectiveDecision :Deny.
+} => { ?who :workDecision :RemoteWorkOnly. }.
+

@@ -1,0 +1,325 @@
+@prefix : <http://example.org/act-gravity/> .
+@prefix log: <http://www.w3.org/2000/10/swap/log#> .
+@prefix pe: <https://eyereasoner.github.io/pe#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+:run :interactionPath :MediatorOnlyPath .
+:run :pathMediator :gravityMediator .
+:run :supports :InformationTransferInterface .
+:run :supports :LocalReadoutInterface .
+:gravityMediator a :NonClassicalMediator .
+:run :can :SupportMediatorOnlyEntanglementWitness .
+:run :supportsConclusion :MediatorNonClassical .
+:run :rulesOut :PurelyClassicalMediatorModel .
+:run :supportsConclusion :GravityMediatorNonClassical .
+:case :checkC1 :Passed .
+:case :checkC2 :Passed .
+:case :checkC3 :Passed .
+:case :checkC5 :Passed .
+:contrastRun :interactionPath :MediatorOnlyPath .
+:contrastRun :pathMediator :classicalGravityMediator .
+:contrastRun :supports :InformationTransferInterface .
+:contrastRun :supports :LocalReadoutInterface .
+:contrastRun :cannot :SupportMediatorOnlyEntanglementWitness .
+:classicalGravityMediator :cannot :MediateEntanglementUnderWitnessConditions .
+:case :checkC4 :Passed .
+:case :checkC6 :Passed .
+:case :checkC7 :Passed .
+:case :checkC8 :Passed .
+:case :checkC9 :Passed .
+:case :checkC10 :Passed .
+:case :checkC11 :Passed .
+:case :checkC12 :Passed .
+:contrastRun :cannot :SupportMediatorNonClassicalConclusion .
+:case :checkC13 :Passed .
+:case :checkC14 :Passed .
+:out log:outputString "ACT gravity mediator witness\n\n## Answer\nYES for the mediator-only witness run.\nNO for a purely classical mediator model under the same mediator-only conditions.\n\n## Reason Why\nThe positive run assumes locality and interoperability, excludes direct coupling between the two quantum systems, and records an entanglement witness after interaction through the mediator alone. Under those constructor-theoretic conditions, the mediator must be non-classical, so the run rules out a purely classical mediator model. The contrast run keeps the same locality, interoperability, and mediator-only structure but assigns the mediator a purely classical model. In that case the mediator-only entanglement witness is blocked, so the run cannot support the same non-classicality conclusion.\n\n## Check\nC1  OK - locality is assumed in the positive run\nC2  OK - interoperability is assumed in the positive run\nC3  OK - direct coupling between the two quantum systems is excluded\nC4  OK - the positive run has a mediator-only interaction path\nC5  OK - an entanglement witness is observed in the positive run\nC6  OK - the positive run supports an information-transfer interface\nC7  OK - the positive run supports local readout\nC8  OK - the positive mediator is derived to be non-classical\nC9  OK - a purely classical mediator model is ruled out by the positive run\nC10 OK - the non-classicality conclusion applies to the gravitational mediator\nC11 OK - the contrast run is also mediator-only\nC12 OK - the contrast run cannot support a mediator-only entanglement witness\nC13 OK - the purely classical gravitational mediator cannot mediate entanglement under the witness conditions\nC14 OK - the contrast run cannot support the non-classicality conclusion\n" .
+
+{ :run :interactionPath :MediatorOnlyPath . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "M"; pe:value :gravityMediator ],
+    [ pe:var "R"; pe:value :run ];
+  pe:uses
+    { :run a :ExperimentRun . },
+    { :run :assumes :Locality . },
+    { :run :directCouplingStatus :NoDirectCoupling . },
+    { :run :usesMediator :gravityMediator . }.
+
+{ :run a :ExperimentRun . }
+  pe:fact "act-gravity-mediator-witness.n3".
+
+{ :run :assumes :Locality . }
+  pe:fact "act-gravity-mediator-witness.n3".
+
+{ :run :directCouplingStatus :NoDirectCoupling . }
+  pe:fact "act-gravity-mediator-witness.n3".
+
+{ :run :usesMediator :gravityMediator . }
+  pe:fact "act-gravity-mediator-witness.n3".
+
+{ :run :pathMediator :gravityMediator . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "M"; pe:value :gravityMediator ],
+    [ pe:var "R"; pe:value :run ];
+  pe:uses
+    { :run a :ExperimentRun . },
+    { :run :assumes :Locality . },
+    { :run :directCouplingStatus :NoDirectCoupling . },
+    { :run :usesMediator :gravityMediator . }.
+
+{ :run :supports :InformationTransferInterface . }
+  pe:rule 2;
+  pe:binding [ pe:var "R"; pe:value :run ];
+  pe:uses
+    { :run a :ExperimentRun . },
+    { :run :assumes :Interoperability . },
+    { :run :controlStatus :CopyLikeControlPresent . }.
+
+{ :run :assumes :Interoperability . }
+  pe:fact "act-gravity-mediator-witness.n3".
+
+{ :run :controlStatus :CopyLikeControlPresent . }
+  pe:fact "act-gravity-mediator-witness.n3".
+
+{ :run :supports :LocalReadoutInterface . }
+  pe:rule 3;
+  pe:binding [ pe:var "R"; pe:value :run ];
+  pe:uses
+    { :run a :ExperimentRun . },
+    { :run :probeStatus :LocalProbeReadoutPresent . }.
+
+{ :run :probeStatus :LocalProbeReadoutPresent . }
+  pe:fact "act-gravity-mediator-witness.n3".
+
+{ :gravityMediator a :NonClassicalMediator . }
+  pe:rule 4;
+  pe:binding
+    [ pe:var "M"; pe:value :gravityMediator ],
+    [ pe:var "R"; pe:value :run ];
+  pe:uses
+    { :run a :ExperimentRun . },
+    { :run :assumes :Locality . },
+    { :run :assumes :Interoperability . },
+    { :run :interactionPath :MediatorOnlyPath . },
+    { :run :usesMediator :gravityMediator . },
+    { :run :observed :EntanglementWitnessPassed . }.
+
+{ :run :observed :EntanglementWitnessPassed . }
+  pe:fact "act-gravity-mediator-witness.n3".
+
+{ :run :can :SupportMediatorOnlyEntanglementWitness . }
+  pe:rule 4;
+  pe:binding
+    [ pe:var "M"; pe:value :gravityMediator ],
+    [ pe:var "R"; pe:value :run ];
+  pe:uses
+    { :run a :ExperimentRun . },
+    { :run :assumes :Locality . },
+    { :run :assumes :Interoperability . },
+    { :run :interactionPath :MediatorOnlyPath . },
+    { :run :usesMediator :gravityMediator . },
+    { :run :observed :EntanglementWitnessPassed . }.
+
+{ :run :supportsConclusion :MediatorNonClassical . }
+  pe:rule 4;
+  pe:binding
+    [ pe:var "M"; pe:value :gravityMediator ],
+    [ pe:var "R"; pe:value :run ];
+  pe:uses
+    { :run a :ExperimentRun . },
+    { :run :assumes :Locality . },
+    { :run :assumes :Interoperability . },
+    { :run :interactionPath :MediatorOnlyPath . },
+    { :run :usesMediator :gravityMediator . },
+    { :run :observed :EntanglementWitnessPassed . }.
+
+{ :run :rulesOut :PurelyClassicalMediatorModel . }
+  pe:rule 5;
+  pe:binding
+    [ pe:var "M"; pe:value :gravityMediator ],
+    [ pe:var "R"; pe:value :run ];
+  pe:uses
+    { :run :supportsConclusion :MediatorNonClassical . },
+    { :run :usesMediator :gravityMediator . },
+    { :gravityMediator a :NonClassicalMediator . }.
+
+{ :run :supportsConclusion :GravityMediatorNonClassical . }
+  pe:rule 6;
+  pe:binding
+    [ pe:var "M"; pe:value :gravityMediator ],
+    [ pe:var "R"; pe:value :run ];
+  pe:uses
+    { :run :usesMediator :gravityMediator . },
+    { :gravityMediator :couplingMode :Gravitational . },
+    { :gravityMediator a :NonClassicalMediator . }.
+
+{ :gravityMediator :couplingMode :Gravitational . }
+  pe:fact "act-gravity-mediator-witness.n3".
+
+{ :case :checkC1 :Passed . }
+  pe:rule 9;
+  pe:uses { :run :assumes :Locality . }.
+
+{ :case :checkC2 :Passed . }
+  pe:rule 10;
+  pe:uses { :run :assumes :Interoperability . }.
+
+{ :case :checkC3 :Passed . }
+  pe:rule 11;
+  pe:uses { :run :directCouplingStatus :NoDirectCoupling . }.
+
+{ :case :checkC5 :Passed . }
+  pe:rule 13;
+  pe:uses { :run :observed :EntanglementWitnessPassed . }.
+
+{ :contrastRun :interactionPath :MediatorOnlyPath . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "M"; pe:value :classicalGravityMediator ],
+    [ pe:var "R"; pe:value :contrastRun ];
+  pe:uses
+    { :contrastRun a :ExperimentRun . },
+    { :contrastRun :assumes :Locality . },
+    { :contrastRun :directCouplingStatus :NoDirectCoupling . },
+    { :contrastRun :usesMediator :classicalGravityMediator . }.
+
+{ :contrastRun a :ExperimentRun . }
+  pe:fact "act-gravity-mediator-witness.n3".
+
+{ :contrastRun :assumes :Locality . }
+  pe:fact "act-gravity-mediator-witness.n3".
+
+{ :contrastRun :directCouplingStatus :NoDirectCoupling . }
+  pe:fact "act-gravity-mediator-witness.n3".
+
+{ :contrastRun :usesMediator :classicalGravityMediator . }
+  pe:fact "act-gravity-mediator-witness.n3".
+
+{ :contrastRun :pathMediator :classicalGravityMediator . }
+  pe:rule 1;
+  pe:binding
+    [ pe:var "M"; pe:value :classicalGravityMediator ],
+    [ pe:var "R"; pe:value :contrastRun ];
+  pe:uses
+    { :contrastRun a :ExperimentRun . },
+    { :contrastRun :assumes :Locality . },
+    { :contrastRun :directCouplingStatus :NoDirectCoupling . },
+    { :contrastRun :usesMediator :classicalGravityMediator . }.
+
+{ :contrastRun :supports :InformationTransferInterface . }
+  pe:rule 2;
+  pe:binding [ pe:var "R"; pe:value :contrastRun ];
+  pe:uses
+    { :contrastRun a :ExperimentRun . },
+    { :contrastRun :assumes :Interoperability . },
+    { :contrastRun :controlStatus :CopyLikeControlPresent . }.
+
+{ :contrastRun :assumes :Interoperability . }
+  pe:fact "act-gravity-mediator-witness.n3".
+
+{ :contrastRun :controlStatus :CopyLikeControlPresent . }
+  pe:fact "act-gravity-mediator-witness.n3".
+
+{ :contrastRun :supports :LocalReadoutInterface . }
+  pe:rule 3;
+  pe:binding [ pe:var "R"; pe:value :contrastRun ];
+  pe:uses
+    { :contrastRun a :ExperimentRun . },
+    { :contrastRun :probeStatus :LocalProbeReadoutPresent . }.
+
+{ :contrastRun :probeStatus :LocalProbeReadoutPresent . }
+  pe:fact "act-gravity-mediator-witness.n3".
+
+{ :contrastRun :cannot :SupportMediatorOnlyEntanglementWitness . }
+  pe:rule 7;
+  pe:binding
+    [ pe:var "M"; pe:value :classicalGravityMediator ],
+    [ pe:var "R"; pe:value :contrastRun ];
+  pe:uses
+    { :contrastRun a :ExperimentRun . },
+    { :contrastRun :assumes :Locality . },
+    { :contrastRun :assumes :Interoperability . },
+    { :contrastRun :interactionPath :MediatorOnlyPath . },
+    { :contrastRun :usesMediator :classicalGravityMediator . },
+    { :classicalGravityMediator :mediatorModel :PurelyClassical . }.
+
+{ :classicalGravityMediator :mediatorModel :PurelyClassical . }
+  pe:fact "act-gravity-mediator-witness.n3".
+
+{ :classicalGravityMediator :cannot :MediateEntanglementUnderWitnessConditions . }
+  pe:rule 7;
+  pe:binding
+    [ pe:var "M"; pe:value :classicalGravityMediator ],
+    [ pe:var "R"; pe:value :contrastRun ];
+  pe:uses
+    { :contrastRun a :ExperimentRun . },
+    { :contrastRun :assumes :Locality . },
+    { :contrastRun :assumes :Interoperability . },
+    { :contrastRun :interactionPath :MediatorOnlyPath . },
+    { :contrastRun :usesMediator :classicalGravityMediator . },
+    { :classicalGravityMediator :mediatorModel :PurelyClassical . }.
+
+{ :case :checkC4 :Passed . }
+  pe:rule 12;
+  pe:uses { :run :interactionPath :MediatorOnlyPath . }.
+
+{ :case :checkC6 :Passed . }
+  pe:rule 14;
+  pe:uses { :run :supports :InformationTransferInterface . }.
+
+{ :case :checkC7 :Passed . }
+  pe:rule 15;
+  pe:uses { :run :supports :LocalReadoutInterface . }.
+
+{ :case :checkC8 :Passed . }
+  pe:rule 16;
+  pe:uses { :gravityMediator a :NonClassicalMediator . }.
+
+{ :case :checkC9 :Passed . }
+  pe:rule 17;
+  pe:uses { :run :rulesOut :PurelyClassicalMediatorModel . }.
+
+{ :case :checkC10 :Passed . }
+  pe:rule 18;
+  pe:uses { :run :supportsConclusion :GravityMediatorNonClassical . }.
+
+{ :case :checkC11 :Passed . }
+  pe:rule 19;
+  pe:uses { :contrastRun :interactionPath :MediatorOnlyPath . }.
+
+{ :case :checkC12 :Passed . }
+  pe:rule 20;
+  pe:uses { :contrastRun :cannot :SupportMediatorOnlyEntanglementWitness . }.
+
+{ :contrastRun :cannot :SupportMediatorNonClassicalConclusion . }
+  pe:rule 8;
+  pe:binding [ pe:var "R"; pe:value :contrastRun ];
+  pe:uses { :contrastRun :cannot :SupportMediatorOnlyEntanglementWitness . }.
+
+{ :case :checkC13 :Passed . }
+  pe:rule 21;
+  pe:uses { :classicalGravityMediator :cannot :MediateEntanglementUnderWitnessConditions . }.
+
+{ :case :checkC14 :Passed . }
+  pe:rule 22;
+  pe:uses { :contrastRun :cannot :SupportMediatorNonClassicalConclusion . }.
+
+{ :out log:outputString "ACT gravity mediator witness\n\n## Answer\nYES for the mediator-only witness run.\nNO for a purely classical mediator model under the same mediator-only conditions.\n\n## Reason Why\nThe positive run assumes locality and interoperability, excludes direct coupling between the two quantum systems, and records an entanglement witness after interaction through the mediator alone. Under those constructor-theoretic conditions, the mediator must be non-classical, so the run rules out a purely classical mediator model. The contrast run keeps the same locality, interoperability, and mediator-only structure but assigns the mediator a purely classical model. In that case the mediator-only entanglement witness is blocked, so the run cannot support the same non-classicality conclusion.\n\n## Check\nC1  OK - locality is assumed in the positive run\nC2  OK - interoperability is assumed in the positive run\nC3  OK - direct coupling between the two quantum systems is excluded\nC4  OK - the positive run has a mediator-only interaction path\nC5  OK - an entanglement witness is observed in the positive run\nC6  OK - the positive run supports an information-transfer interface\nC7  OK - the positive run supports local readout\nC8  OK - the positive mediator is derived to be non-classical\nC9  OK - a purely classical mediator model is ruled out by the positive run\nC10 OK - the non-classicality conclusion applies to the gravitational mediator\nC11 OK - the contrast run is also mediator-only\nC12 OK - the contrast run cannot support a mediator-only entanglement witness\nC13 OK - the purely classical gravitational mediator cannot mediate entanglement under the witness conditions\nC14 OK - the contrast run cannot support the non-classicality conclusion\n" . }
+  pe:rule 23;
+  pe:uses
+    { :case :checkC1 :Passed . },
+    { :case :checkC2 :Passed . },
+    { :case :checkC3 :Passed . },
+    { :case :checkC4 :Passed . },
+    { :case :checkC5 :Passed . },
+    { :case :checkC6 :Passed . },
+    { :case :checkC7 :Passed . },
+    { :case :checkC8 :Passed . },
+    { :case :checkC9 :Passed . },
+    { :case :checkC10 :Passed . },
+    { :case :checkC11 :Passed . },
+    { :case :checkC12 :Passed . },
+    { :case :checkC13 :Passed . },
+    { :case :checkC14 :Passed . }.
