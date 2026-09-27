@@ -1,5 +1,5 @@
 # N3 example: shortest-path.
-# Companion to shortest-path.srl: uses dijkstra.n3's own proven
+# Uses dijkstra.n3's own proven
 # priority-queue algorithm (adapted for directed, not symmetric, edges)
 # then take the minimum" -- naive backward-chained cycle-safe recursion
 # (a visited list checked with list:notMember) hits a real limitation of

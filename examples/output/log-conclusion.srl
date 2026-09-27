@@ -1,4 +1,0 @@
-@prefix : <http://example.org/> .
-
-:Felix a :Cat .
-:Felix :says "Meow" .

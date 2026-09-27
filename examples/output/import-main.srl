@@ -1,7 +1,0 @@
-@prefix : <http://example/> .
-
-:alice :parentOf :bob .
-:bob :parentOf :carol .
-:alice :ancestorOf :bob .
-:bob :ancestorOf :carol .
-:alice :ancestorOf :carol .

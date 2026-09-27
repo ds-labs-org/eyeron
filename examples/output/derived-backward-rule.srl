@@ -1,5 +1,0 @@
-@prefix : <https://eyereasoner.github.io/ns#> .
-
-:alice :parentOf :bob .
-:bob :childOf :alice .
-:bob :hasParent :alice .

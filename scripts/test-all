@@ -7,9 +7,8 @@
 # target (and the lib's own unit tests) as a *separate process*, and each
 # one prints its own "test result: ok. N passed; M failed; ..." line (or,
 # for the custom harnesses that print one line per packaged example —
-# tests/examples.rs, tests/sparql_rl_examples.rs — their own
-# "example result: ..."/"sparql_rl_examples result: ..."
-# line) with no aggregation across binaries. This script runs the real
+# tests/examples.rs — its own "example result: ..." line) with no
+# aggregation across binaries. This script runs the real
 # `cargo test --release`, shows its normal live output, then parses every
 # such summary line out of it and sums them into one final line.
 #
@@ -24,7 +23,7 @@
 #     not a terminal, to every test binary's own --color=auto detection, so
 #     color mostly disappears once you wrap the command at all.
 #   - This project's own harnesses (tests/support/report.rs, src/bin/w3c_rdf.rs,
-#     src/bin/w3c_sparql_rl.rs and their tests/*/runner.rs counterparts)
+#     src/bin/w3c_rdf.rs and its tests/*/runner.rs counterpart)
 #     already check the CARGO_TERM_COLOR env var and default to colored
 #     output, so exporting CARGO_TERM_COLOR=always alone fixes those; the
 #     *default* libtest harness (lib unit tests, cli_help, cli_stream_
@@ -66,7 +65,7 @@ read -r passed failed ignored binaries <<< "$totals"
 
 # A handful of those "passed" checks each roll up many individual
 # conformance cases, reported via their own known summary lines rather
-# than as separate top-level tests: the W3C RDF and W3C SPARQL-RL harnesses'
+# than as separate top-level tests: the W3C RDF harness's
 # aggregate lines, and the vendored notation3tests suite's score line.
 cases=$(echo "$plain_log" | grep -oE '(_all_manifests_[0-9]+_earl_report ... ok \([0-9]+)|notation3tests score: [0-9.]+% \([0-9]+' | grep -oE '[0-9]+$' | awk '{ sum += $1 } END { print sum + 0 }')
 
@@ -77,7 +76,7 @@ if [[ "$status" -ne 0 || "$failed" -ne 0 ]]; then
 fi
 echo "=== ${summary} ==="
 if [[ "$cases" -gt 0 ]]; then
-  echo "=== (of which ${cases} are individual W3C RDF / W3C SPARQL-RL / notation3tests conformance cases rolled up into a handful of the checks above) ==="
+  echo "=== (of which ${cases} are individual W3C RDF / notation3tests conformance cases rolled up into a handful of the checks above) ==="
 fi
 
 exit "$status"

@@ -1,4 +1,0 @@
-@prefix : <http://example/> .
-
-:Socrates a :Man .
-:Socrates a :Mortal .

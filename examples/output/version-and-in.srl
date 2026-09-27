@@ -1,9 +1,0 @@
-@prefix : <http://example/> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-
-:alice :level "gold" .
-:bob :level "bronze" .
-:carol :level "platinum" .
-:alice :priority true .
-:carol :priority true .
-:bob :ordinary true .

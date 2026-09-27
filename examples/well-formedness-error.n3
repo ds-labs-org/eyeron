@@ -1,5 +1,5 @@
 # N3 example: well-formedness-error.
-# Companion to well-formedness-error.srl: the source rule body
+# The source rule body
 # deliberately uses a comparison before the variable it compares is
 # (strictly-ordered body evaluation). N3 has no such requirement: its
 # premise matcher reorders clauses by selectivity rather than evaluating

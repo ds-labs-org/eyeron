@@ -1,8 +1,7 @@
-//! Shared 9x9 Sudoku backtracking solver (minimum-remaining-candidates
-//! search), used by both `n3::reasoner`'s `sudoku#solve` builtin and
-//! `srl::expr`'s `sudoku(...)` custom function. The puzzle and solution are
-//! both 81-character strings (`.` or `0` for a blank cell, `1`-`9` for a
-//! given).
+//! 9x9 Sudoku backtracking solver (minimum-remaining-candidates search),
+//! behind `n3::reasoner`'s `sudoku#solve` builtin. The puzzle and solution
+//! are both 81-character strings (`.` or `0` for a blank cell, `1`-`9` for
+//! a given).
 
 use std::collections::BTreeSet;
 use std::sync::OnceLock;

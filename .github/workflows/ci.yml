@@ -57,8 +57,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
       # Unit + doc tests, the notation3tests conformance suite, the W3C RDF
-      # and SPARQL-RL suites, the Prolog conformance suite, the examples'
-      # golden outputs and the proof-checking corpus.
+      # suite, the examples' golden outputs and the proof-checking corpus.
       - run: cargo test --locked
 
   wasm:

@@ -1,8 +1,7 @@
 # N3 example: builtin-call-complete.
-# exponentiation (used as a square root via a 0.5 exponent, since N3 has
-# no dedicated sqrt builtin), list length, and list sorting -- the same
-# narrower smoke test than the .srl companion's full BuiltInCall-grammar
-# sweep, which N3 has no equivalent surface for).
+# A smoke test for absolute value, exponentiation (used as a square root
+# via a 0.5 exponent, since N3 has no dedicated sqrt builtin), list
+# length, and list sorting.
 
 @prefix math: <http://www.w3.org/2000/10/swap/math#>.
 @prefix list: <http://www.w3.org/2000/10/swap/list#>.

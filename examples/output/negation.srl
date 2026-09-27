@@ -1,7 +1,0 @@
-@prefix : <http://example/> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-
-:alice a :Person .
-:bob a :Person .
-:bob :blocked true .
-:alice :eligible true .

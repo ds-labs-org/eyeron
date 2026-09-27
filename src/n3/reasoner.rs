@@ -531,10 +531,8 @@ impl Default for ReasonerOptions {
             // Counting agenda steps as well as outer passes makes this
             // roughly "how many facts may be derived": the N3 engine takes
             // 300,014 steps on `deep-taxonomy-100000.n3` for a closure of
-            // 300,011, and `srl::forward::reason`'s pass-per-chain-link
-            // fixpoint (see its module docs) takes ~100,010 passes on
-            // `deep-taxonomy-100000.srl`.  A million leaves both ample room
-            // while still stopping a non-terminating rule set in seconds.
+            // 300,011.  A million leaves ample room while still stopping
+            // a non-terminating rule set in seconds.
             // Each step past the point where nothing new fires is O(1)
             // thanks to rule-activation tracking, so raising this only
             // lengthens how long a runaway rule set is given before being
@@ -4846,9 +4844,7 @@ fn format_datetime_utc(seconds: i64, millis: u32) -> String {
 /// The current wall-clock time as `(unix seconds, milliseconds)`. `SystemTime::now()`
 /// panics unconditionally on `wasm32-unknown-unknown` (there is no clock
 /// syscall without a JS bridge), so the wasm32 build instead calls through
-/// to JS's `Date.now()`. `pub(crate)` so other front ends needing "now"
-/// (e.g. `crate::srl::expr`'s `NOW()`) share this instead of re-panicking
-/// with their own `SystemTime::now()` call.
+/// to JS's `Date.now()`.
 #[cfg(not(target_arch = "wasm32"))]
 pub(crate) fn current_unix_time() -> Option<(i64, u32)> {
     let now = SystemTime::now().duration_since(UNIX_EPOCH).ok()?;

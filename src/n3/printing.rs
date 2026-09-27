@@ -226,7 +226,7 @@ fn formula_to_n3(triples: &[Triple], prefixes: &BTreeMap<String, String>, indent
 /// A numeric literal may be written without its datatype only when the
 /// shorthand reads back as the same datatype: an `INTEGER` has no `.` or
 /// exponent, a `DECIMAL` has a `.`, a `DOUBLE` has an exponent (Turtle
-/// grammar, mirrored by SPARQL 1.2 RL [95]-[97]). `"72.0"^^xsd:double`
+/// grammar). `"72.0"^^xsd:double`
 /// written bare would come back as an `xsd:decimal`, so it keeps its
 /// datatype instead.
 fn numeric_shorthand_round_trips(datatype: &str, value: &str) -> bool {

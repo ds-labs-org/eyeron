@@ -2,8 +2,8 @@
 # Equals test
 # Example from Patrick Hochstenbach
 # =================================
-# Companion to equals-same-as.srl (equals.n3 already ports this same
-# .srl's own).
+# owl:sameAs against log:equalTo (equals.n3 ports the same test
+# without the sameAs half).
 
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix : <http://example.org/socrates#>.

@@ -1,6 +1,5 @@
 # N3 example: assignment.
-# Companion to assignment.srl. The grade is a compound term
-# (rather than SRL's string-concatenation adaptation).
+# The grade is a compound term built from the score.
 
 @prefix math: <http://www.w3.org/2000/10/swap/math#>.
 @prefix : <https://eyereasoner.github.io/eyepl/examples/assignment#>.

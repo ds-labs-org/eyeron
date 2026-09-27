@@ -1,13 +1,11 @@
 # N3 example: modular-exponentiation.
-# Companion to modular-exponentiation.srl: repeated-squaring modular
-# exponentiation via N3 backward chaining, mirroring the eye source's own
-# even/odd case split. N3's arithmetic is IEEE double precision, not
-# loses exactness once it exceeds 2^53; this uses a modulus small enough
-# (1,000,003, so modulus^2 ~ 1e12) that every intermediate squared value
-# stays exact, rather than the eye/srl companions' full 1,000,000,007
-# (whose square would exceed 2^53). The exponent stays a genuinely large
-# 1,000,000,000, since repeated squaring only needs about log2(e) ~ 30
-# recursive steps regardless of how large e is.
+# Repeated-squaring modular exponentiation via N3 backward chaining,
+# mirroring the eye source's own even/odd case split. N3's arithmetic is
+# IEEE double precision, so a product loses exactness once it exceeds
+# 2^53; this uses a modulus small enough (1,000,003, so modulus^2 ~ 1e12)
+# that every intermediate squared value stays exact. The exponent stays a
+# genuinely large 1,000,000,000, since repeated squaring only needs about
+# log2(e) ~ 30 recursive steps regardless of how large e is.
 
 @prefix math: <http://www.w3.org/2000/10/swap/math#>.
 @prefix : <http://example.org/modular-exponentiation#>.

@@ -2,34 +2,36 @@
 
 **Eyeron** combines **Eye** with the sound of **iron**, reflecting explainable reasoning and its place in the Eyereasoner family.
 
-Eyeron is a Rust reasoner for **Notation3 (N3)** and **SPARQL 1.2 RL**, turning facts and rules into conclusions with verifiable proofs. It can be used as a command-line program, embedded as a Rust library, or run in a browser through WebAssembly.
+Eyeron is a Rust reasoner for **Notation3 (N3)**, turning facts and rules into conclusions with verifiable proofs. It can be used as a command-line program, embedded as a Rust library, or run in a browser through WebAssembly.
 
 > [!TIP]
 > [Try Eyeron in the browser](https://eyereasoner.github.io/eyeron/playground).
 
-Read [how Eyeron reasons](docs/reasoning.md) for what each language's evaluator actually does, and the
-[Eyeron guide](docs/guide.md) for choosing a language, building, embedding, testing, and the code layout.
+Read [how Eyeron reasons](docs/reasoning.md) for what the evaluator actually does, and the
+[Eyeron guide](docs/guide.md) for building, embedding, testing, and the code layout.
 
-## Two formats, one tool
+## Input syntaxes
 
-| Format | File extension | Documentation |
-| --- | --- | --- |
-| Notation3 (N3) | `.n3` | [`docs/n3.md`](docs/n3.md) |
-| SPARQL 1.2 RL ("SRL") | `.srl` | [`docs/sparql-rl.md`](docs/sparql-rl.md) |
+| Syntax | File extension |
+| --- | --- |
+| Notation3 (N3) | `.n3` |
+| Turtle, TriG | `.ttl`, `.trig` |
+| N-Triples, N-Quads | `.nt`, `.nq` |
+| RDF Message Log | any, recognized by its `VERSION "*-messages"` directive |
 
-Eyeron dispatches on a file's extension or by content sniffing (`RULE`/`DATA` blocks for SPARQL-RL, otherwise N3). Each doc above covers that format's syntax, semantics, CLI flags, internals, and known limitations in depth.
+Rules are written in N3; the RDF syntaxes carry the data those rules reason over, and any mixture of them can be given in one run. Eyeron dispatches on a file's extension or by content sniffing. [`docs/n3.md`](docs/n3.md) covers the syntax, semantics, CLI flags, internals, and known limitations in depth.
 
 ```bash
 cargo build --release
-./target/release/eyeron examples/socrates.n3    # N3: forward/backward Horn rules over an RDF graph
-./target/release/eyeron examples/family.srl     # SPARQL 1.2 RL: RULE { head } WHERE [DATA] { body }
+./target/release/eyeron examples/socrates.n3               # forward/backward Horn rules over an RDF graph
+./target/release/eyeron examples/rdf-messages.n3 examples/input/rdf-messages.trig
 ```
 
 ## Documentation
 
-- [`docs/n3.md`](docs/n3.md), [`docs/sparql-rl.md`](docs/sparql-rl.md) — per-format syntax, semantics, CLI flags, internals, and known limitations.
-- [`docs/reasoning.md`](docs/reasoning.md) — how N3 and SRL evaluate rules, and what each prints and records in proofs.
-- [`docs/guide.md`](docs/guide.md) — choosing a language, building and running, proofs, the Rust library and browser APIs, testing, and the architecture.
+- [`docs/n3.md`](docs/n3.md) — syntax, semantics, resource limits, CLI flags, internals, and known limitations.
+- [`docs/reasoning.md`](docs/reasoning.md) — how Eyeron evaluates rules, and what it prints and records in proofs.
+- [`docs/guide.md`](docs/guide.md) — building and running, proofs, the Rust library and browser APIs, testing, and the architecture.
 - [`docs/proof-checking.md`](docs/proof-checking.md) — what makes a proof document valid for a program, and what `--check-proof` verifies.
 
 ## License

@@ -3,21 +3,21 @@
 > This is the normative description of what it means for an eyeron proof
 > document to be **valid for a source program**, and of what a conforming
 > proof checker must do. `src/proof/` is the reference implementation and
-> `eyeron --check-proof` runs it. For how each front end *writes* a proof,
-> see [`n3.md`](n3.md) and [`sparql-rl.md`](sparql-rl.md).
+> `eyeron --check-proof` runs it. For how a proof is *written*, see
+> [`n3.md`](n3.md).
 
 ## 1. Why this document exists
 
-eyeron's two front ends write proofs in two syntaxes but in one shape:
+eyeron writes a proof in one shape:
 a list of **steps**, each naming a conclusion, the single reason it holds,
 the bindings that reason used, and what it used. Until now that shape was
 described as "an inspectable explanation graph, not an independently
 verified proof certificate" — a reader could follow it, but nothing checked
 that it held together.
 
-This specification closes that gap. It defines checking **once**, over an
-abstract proof model, and then binds each of the two syntaxes to that
-model. A checker therefore has one set of rules to implement and two
+This specification closes that gap. It defines checking over an
+abstract proof model, and then binds the concrete syntax to that
+model. A checker therefore has one set of rules to implement and one
 syntax readers.
 
 The keywords **MUST**, **MUST NOT**, **SHOULD** and **MAY** are to be read
@@ -47,8 +47,7 @@ NOT be read as asserting:
 
 ## 3. The abstract proof model
 
-A **statement** is whatever the front end concludes: an RDF triple for N3
-and SPARQL 1.2 RL.
+A **statement** is whatever the reasoner concludes: an RDF triple.
 
 A **step** is a quadruple:
 
@@ -169,9 +168,7 @@ chain is broken.
 A checker MUST treat `unproven` as a failure of (C3). A document
 containing one is invalid.
 
-## 8. Syntax bindings
-
-### 8.1 Notation3 (`.n3`)
+## 8. Syntax binding: Notation3 (`.n3`)
 
 | model | document |
 | --- | --- |
@@ -186,27 +183,6 @@ containing one is invalid.
 
 Given statements are the source document's own triples.
 
-### 8.2 SPARQL 1.2 RL (`.srl`)
-
-| model | document |
-| --- | --- |
-| claims | the triples asserted in the proof's `DATA` block |
-| step | a `_:stepN` node reifying its conclusion |
-| `conclusion` | `rdf:reifies <<(s p o)>>` |
-| `bindings` | `pe:binding [ pe:var "N"; pe:value V ]` |
-| `uses` | `pe:uses`, naming either a `_:stepK` or a triple term |
-| `rule N` | `pe:rule N` |
-
-A `pe:uses` naming a triple term rather than a step node resolves under
-(C1) against the source's given statements: SPARQL-RL writes no step for a
-statement given in `DATA` or in the base graph.
-
-Only the positive body patterns of a rule are reified as premises. A
-`FILTER`, `NOT` or `SET` clause is not a premise and has no `uses` entry;
-a checker MUST still evaluate every such clause of rule `N` under the
-step's bindings as part of (C3), because a step that satisfies the rule's
-patterns but violates its `FILTER` has not established anything.
-
 ## 9. Reporting
 
 A checker MUST report, per document: the verdict, the number of steps
@@ -219,4 +195,4 @@ establishes.
 
 ## 10. What eyeron's own proofs establish
 
-`tests/proof_checking.rs` checks every packaged N3 and SRL proof against the program that produced it. It re-performs rule steps, checks premises, and detects cycles. The suite covers examples with derived rules, property paths, built-ins, and shared proof steps.
+`tests/proof_checking.rs` checks every packaged proof against the program that produced it. It re-performs rule steps, checks premises, and detects cycles. The suite covers examples with derived rules, property paths, built-ins, and shared proof steps.

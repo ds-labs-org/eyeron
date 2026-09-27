@@ -1,9 +1,6 @@
 # N3 example: backward-recursion.
-# Companion to backward-recursion.srl: recursive ancestor relation
-# defined via N3 backward chaining (<=), ported from
-# ../eyeling/examples/backward-recursion.n3, extended with the same
-# three-generation parent chain (:a -> :b -> :c -> :d) as the .srl
-# companions.
+# Recursive ancestor relation defined via N3 backward chaining (<=), over
+# a three-generation parent chain (:a -> :b -> :c -> :d).
 
 @prefix : <urn:example#>.
 

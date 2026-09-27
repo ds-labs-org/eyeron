@@ -4,7 +4,7 @@
   "collaborators": [
     "Jos De Roo"
   ],
-  "description": "A native Rust Notation3 and SPARQL 1.2 RL reasoner.",
+  "description": "A native Rust Notation3 reasoner.",
   "version": "0.6.13",
   "license": "MIT",
   "repository": {

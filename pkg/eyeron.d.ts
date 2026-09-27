@@ -25,46 +25,11 @@ export class EyeronSession {
 
 export function reason(input: string): string;
 
-/**
- * Run a SPARQL 1.2 RL rule set (`.srl` syntax) and return its inference
- * graph (SPARQL 1.2 RL §6.5's `GI`), or — when `query` is non-blank —
- * the bindings for that query body pattern matched against the completed
- * closure (forward query mode; there is no browser-side backward mode
- * yet).
- */
-export function reasonSrl(input: string, query: string): string;
-
-/**
- * As `reasonSrl`, but also merges in `imported_source` (the playground's
- * own concatenation of every `IMPORTS` target's fetched text — see
- * `srlImportTargets`), loads `data` as a `--data` base graph (content-
- * sniffed exactly like a `.n3`/RDF-message-log input, so `rdf-messages.srl`
- * can load `rdf-messages.trig` as-is), and — when `proof` is set — returns
- * proof output instead of the inference graph, matching `--proof`'s CLI
- * behavior. `imported_source`/`data` are the empty string when an example
- * needs neither, so the playground can call this unconditionally instead
- * of choosing between it and `reasonSrl`.
- */
-export function reasonSrlWithImports(main_source: string, imported_source: string, data: string, proof: boolean, query: string): string;
-
 export function reasonWithData(program: string, data: string, proof: boolean, rdf: boolean, rdf_format: string): string;
 
 export function reasonWithDataReport(program: string, data: string, proof: boolean, rdf: boolean, rdf_format: string): string;
 
 export function reasonWithOptions(input: string, proof: boolean, rdf: boolean, rdf_format: string): string;
-
-/**
- * `input`'s own `IMPORTS <iri>` targets, resolved against `base` (an
- * absolute URL the playground can `fetch()` each one from directly, e.g.
- * the page's own URL for the example being loaded) — lets the playground
- * discover what a rule set like `import-main.srl` needs before running
- * it, the same CLI capability `resolve_sparql_rl_imports` (`main.rs`)
- * otherwise has no browser-side counterpart for (`ureq`/`fs` are not
- * available in Wasm). Returns an empty list on a parse error rather than
- * surfacing it here; the real parse error resurfaces from
- * `reasonSrlWithImports` once the caller actually runs the program.
- */
-export function srlImportTargets(input: string, base: string): any[];
 
 export function version(): string;
 
@@ -79,12 +44,9 @@ export interface InitOutput {
     readonly eyeronsession_reason: (a: number, b: number, c: number, d: number, e: number, f: number, g: number) => void;
     readonly eyeronsession_reasonReport: (a: number, b: number, c: number, d: number, e: number, f: number, g: number) => void;
     readonly reason: (a: number, b: number, c: number) => void;
-    readonly reasonSrl: (a: number, b: number, c: number, d: number, e: number) => void;
-    readonly reasonSrlWithImports: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number, i: number, j: number) => void;
     readonly reasonWithData: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number, i: number) => void;
     readonly reasonWithDataReport: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number, i: number) => void;
     readonly reasonWithOptions: (a: number, b: number, c: number, d: number, e: number, f: number, g: number) => void;
-    readonly srlImportTargets: (a: number, b: number, c: number, d: number, e: number) => void;
     readonly version: (a: number) => void;
     readonly __wbindgen_add_to_stack_pointer: (a: number) => number;
     readonly __wbindgen_export: (a: number, b: number) => number;

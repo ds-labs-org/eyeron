@@ -1,5 +1,4 @@
 # N3 example: if-then.
-# Companion to if-then.srl.
 
 @prefix : <https://eyereasoner.github.io/eyepl/examples/if-then#>.
 

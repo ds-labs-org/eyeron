@@ -1,6 +1,0 @@
-@prefix : <http://example/> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-
-:alice :score 7 .
-:bob :score 3 .
-:alice :grade "pass-7" .

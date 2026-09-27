@@ -1270,15 +1270,11 @@ fn absurdly_nested_terms_are_a_parse_error_rather_than_a_stack_overflow() {
     let err = parse_n3(&n3, None).unwrap_err().to_string();
     assert!(err.contains("nested more than"), "{err}");
 
-    let collection = format!("PREFIX : <http://e/>\nDATA {{ :a :b {}{} }}\n", "(".repeat(5_000), ")".repeat(5_000));
-    let err = eyeron::srl::parse_sparql_rl(&collection, None).unwrap_err().to_string();
+    let collection = format!("@prefix : <http://e/> .\n:a :b {}{} .\n", "(".repeat(5_000), ")".repeat(5_000));
+    let err = parse_n3(&collection, None).unwrap_err().to_string();
     assert!(err.contains("nested more than"), "{err}");
 
-    let expression = format!(
-        "PREFIX : <http://e/>\nRULE {{ ?s :p ?o }} WHERE {{ ?s :q ?o . FILTER({}1{} = 1) }}\n",
-        "(".repeat(5_000),
-        ")".repeat(5_000),
-    );
-    let err = eyeron::srl::parse_sparql_rl(&expression, None).unwrap_err().to_string();
+    let turtle = format!("@prefix : <http://e/> .\n:a :b {}:c{} .\n", "[ :p ".repeat(5_000), " ]".repeat(5_000));
+    let err = parse_rdf12(&turtle, None, RdfFormat::Turtle).unwrap_err().to_string();
     assert!(err.contains("nested more than"), "{err}");
 }

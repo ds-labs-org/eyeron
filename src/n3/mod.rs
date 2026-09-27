@@ -1,9 +1,8 @@
 //! The N3 (Notation3) front end: lexer, parser, forward/backward reasoner,
-//! and output (printing/proof). This is the original, primary front end;
-//! `crate::srl` is the sibling SPARQL 1.2 RL front end, which reuses the
-//! shared `crate::ast::{Term, Triple, Literal}` types plus several of this
-//! module's matching/unification primitives (see `crate::srl`'s module
-//! doc for which ones and why).
+//! and output (printing/proof). It is built on the shared
+//! `crate::ast::{Term, Triple, Literal}` types, and `rdf_compat` reads the
+//! RDF syntaxes — Turtle, TriG, N-Triples and N-Quads — through the same
+//! parser, so RDF data and N3 rules meet in one document.
 
 pub mod lexer;
 pub mod parser;

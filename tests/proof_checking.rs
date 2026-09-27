@@ -32,12 +32,12 @@ fn manifest_dir() -> &'static Path {
     Path::new(env!("CARGO_MANIFEST_DIR"))
 }
 
-fn sorted_proofs(extension: &str) -> Vec<PathBuf> {
+fn sorted_proofs() -> Vec<PathBuf> {
     let mut paths: Vec<PathBuf> = fs::read_dir(manifest_dir().join("examples/proof"))
         .expect("read examples/proof")
         .filter_map(|entry| entry.ok())
         .map(|entry| entry.path())
-        .filter(|path| path.extension().and_then(|e| e.to_str()) == Some(extension))
+        .filter(|path| path.extension().and_then(|e| e.to_str()) == Some("n3"))
         .collect();
     paths.sort();
     paths
@@ -45,44 +45,25 @@ fn sorted_proofs(extension: &str) -> Vec<PathBuf> {
 
 /// The program a proof was produced from, assembled the way the example
 /// suites assemble it.
-fn check(extension: &str, name: &str) -> Result<Report, String> {
+fn check(name: &str) -> Result<Report, String> {
     let examples = manifest_dir().join("examples");
-    let source_path = examples.join(format!("{name}.{extension}"));
-    let source = fs::read_to_string(&source_path).map_err(|e| e.to_string())?;
-    let proof = fs::read_to_string(examples.join(format!("proof/{name}.{extension}"))).map_err(|e| e.to_string())?;
+    let source = fs::read_to_string(examples.join(format!("{name}.n3"))).map_err(|e| e.to_string())?;
+    let proof = fs::read_to_string(examples.join(format!("proof/{name}.n3"))).map_err(|e| e.to_string())?;
 
-    match extension {
-        "srl" => {
-            // `IMPORTS` brings in rules the checker has to number too, so
-            // resolve it the way the CLI does before checking.
-            let mut program = eyeron::srl::parse_sparql_rl(&source, None).map_err(|e| e.message)?;
-            let mut pending = std::mem::take(&mut program.imports);
-            while let Some(target) = pending.pop() {
-                let file = target.rsplit('/').next().unwrap_or(&target);
-                let text = fs::read_to_string(examples.join(file)).map_err(|e| e.to_string())?;
-                let parsed = eyeron::srl::parse_sparql_rl(&text, Some(&target)).map_err(|e| e.message)?;
-                pending.extend(parsed.imports.clone());
-                eyeron::srl::merge_programs(&mut program, parsed);
-            }
-            eyeron::proof::srl::check_proof_program(&program, &proof).map_err(|e| e.message)
+    let mut document =
+        eyeron::parse_n3_with_source(&source, None, Some(&format!("{name}.n3"))).map_err(|e| e.message)?;
+    let companion = examples.join(format!("input/{name}.trig"));
+    if companion.exists() {
+        let text = fs::read_to_string(&companion).unwrap();
+        let parsed = if eyeron::is_rdf_message_log(&text) {
+            eyeron::parse_rdf_message_log(&text, None)
+        } else {
+            eyeron::parse_n3_with_source(&text, None, Some(&format!("input/{name}.trig")))
         }
-        _ => {
-            let mut document =
-                eyeron::parse_n3_with_source(&source, None, Some(&format!("{name}.n3"))).map_err(|e| e.message)?;
-            let companion = examples.join(format!("input/{name}.trig"));
-            if companion.exists() {
-                let text = fs::read_to_string(&companion).unwrap();
-                let parsed = if eyeron::is_rdf_message_log(&text) {
-                    eyeron::parse_rdf_message_log(&text, None)
-                } else {
-                    eyeron::parse_n3_with_source(&text, None, Some(&format!("input/{name}.trig")))
-                }
-                .map_err(|e| e.message)?;
-                document.merge(parsed);
-            }
-            eyeron::proof::n3::check_proof_document(&document, &proof).map_err(|e| e.message)
-        }
+        .map_err(|e| e.message)?;
+        document.merge(parsed);
     }
+    eyeron::proof::n3::check_proof_document(&document, &proof).map_err(|e| e.message)
 }
 
 fn main() {
@@ -94,12 +75,12 @@ fn main() {
     let mut trusted = 0usize;
     let mut gaps_seen: Vec<&str> = Vec::new();
 
-    for extension in ["n3", "srl"] {
-        for path in sorted_proofs(extension) {
+    {
+        for path in sorted_proofs() {
             let name = path.file_stem().and_then(|s| s.to_str()).expect("utf8 name").to_string();
-            let key = format!("{extension}/{name}");
+            let key = format!("n3/{name}");
             let expected_gap = KNOWN_GAPS.iter().find(|(entry, _)| *entry == key);
-            let outcome = check(extension, &name);
+            let outcome = check(&name);
             let (valid, summary) = match &outcome {
                 Ok(report) => {
                     steps += report.steps;

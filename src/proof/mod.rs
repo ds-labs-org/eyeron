@@ -1,16 +1,14 @@
 //! Proof checking: `docs/proof-checking.md`'s reference implementation.
 //!
 //! The four validity conditions are checked *here*, once, over an abstract
-//! view of a proof document (`Document`). Each front end supplies a reader
-//! that presents its own syntax through that view and re-performs its own
-//! inferences. So there is one checker with two readers, one for each syntax.
+//! view of a proof document (`Document`). A reader presents N3 proof syntax
+//! through that view and re-performs the document's own inferences.
 //!
 //! Nothing in this module reasons. It never searches for a derivation, only
 //! re-performs the ones the document recorded — which is what keeps a
 //! checker small enough to be worth trusting (specification §2).
 
 pub mod n3;
-pub mod srl;
 
 use std::collections::BTreeMap;
 
