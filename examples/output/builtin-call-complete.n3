@@ -2,6 +2,6 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 :summary :absolute 3.7 .
-:summary :root 3.0 .
+:summary :root "3"^^xsd:decimal .
 :summary :count 3 .
 :summary :sorted (-3.7 2 7) .

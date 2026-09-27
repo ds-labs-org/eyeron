@@ -78,7 +78,7 @@ _:b8_42ddfe93373cb402 :md2 5.967987380277233 .
     [ pe:var "ssXX"; pe:value 223.4285714285714 ],
     [ pe:var "ssXY"; pe:value -71.35714285714285 ],
     [ pe:var "ssYY"; pe:value 159.8542857142857 ],
-    [ pe:var "sumX"; pe:value 47.0 ],
+    [ pe:var "sumX"; pe:value "47"^^xsd:decimal ],
     [ pe:var "sumY"; pe:value 29.200000000000003 ],
     [ pe:var "xs"; pe:value (2.0 3.0 4.0 5.0 6.0 7.0 20.0) ],
     [ pe:var "ys"; pe:value (1.0 2.0 3.2 5.1 7.9 13.0 -3.0) ];
@@ -97,9 +97,9 @@ _:b8_42ddfe93373cb402 :md2 5.967987380277233 .
             ?p :y ?y .
         } (1.0 2.0 3.2 5.1 7.9 13.0 -3.0)) log:collectAllIn ?_:m1 .
     },
-    { (2.0 3.0 4.0 5.0 6.0 7.0 20.0) math:sum 47.0 . },
+    { (2.0 3.0 4.0 5.0 6.0 7.0 20.0) math:sum "47"^^xsd:decimal . },
     { (1.0 2.0 3.2 5.1 7.9 13.0 -3.0) math:sum 29.200000000000003 . },
-    { (47.0 7) math:quotient 6.714285714285714 . },
+    { ("47"^^xsd:decimal 7) math:quotient 6.714285714285714 . },
     { (29.200000000000003 7) math:quotient 4.171428571428572 . },
     {
         (?dx2 {
@@ -156,13 +156,13 @@ _:b8_42ddfe93373cb402 :md2 5.967987380277233 .
 }
   pe:builtin log:collectAllIn.
 
-{ (2.0 3.0 4.0 5.0 6.0 7.0 20.0) math:sum 47.0 . }
+{ (2.0 3.0 4.0 5.0 6.0 7.0 20.0) math:sum "47"^^xsd:decimal . }
   pe:builtin math:sum.
 
 { (1.0 2.0 3.2 5.1 7.9 13.0 -3.0) math:sum 29.200000000000003 . }
   pe:builtin math:sum.
 
-{ (47.0 7) math:quotient 6.714285714285714 . }
+{ ("47"^^xsd:decimal 7) math:quotient 6.714285714285714 . }
   pe:builtin math:quotient.
 
 { (29.200000000000003 7) math:quotient 4.171428571428572 . }
@@ -234,7 +234,7 @@ _:b8_42ddfe93373cb402 :md2 5.967987380277233 .
     [ pe:var "ssXX"; pe:value 223.4285714285714 ],
     [ pe:var "ssXY"; pe:value -71.35714285714285 ],
     [ pe:var "ssYY"; pe:value 159.8542857142857 ],
-    [ pe:var "sumX"; pe:value 47.0 ],
+    [ pe:var "sumX"; pe:value "47"^^xsd:decimal ],
     [ pe:var "sumY"; pe:value 29.200000000000003 ],
     [ pe:var "xs"; pe:value (2.0 3.0 4.0 5.0 6.0 7.0 20.0) ],
     [ pe:var "ys"; pe:value (1.0 2.0 3.2 5.1 7.9 13.0 -3.0) ];
@@ -253,9 +253,9 @@ _:b8_42ddfe93373cb402 :md2 5.967987380277233 .
             ?p :y ?y .
         } (1.0 2.0 3.2 5.1 7.9 13.0 -3.0)) log:collectAllIn ?_:m1 .
     },
-    { (2.0 3.0 4.0 5.0 6.0 7.0 20.0) math:sum 47.0 . },
+    { (2.0 3.0 4.0 5.0 6.0 7.0 20.0) math:sum "47"^^xsd:decimal . },
     { (1.0 2.0 3.2 5.1 7.9 13.0 -3.0) math:sum 29.200000000000003 . },
-    { (47.0 7) math:quotient 6.714285714285714 . },
+    { ("47"^^xsd:decimal 7) math:quotient 6.714285714285714 . },
     { (29.200000000000003 7) math:quotient 4.171428571428572 . },
     {
         (?dx2 {
@@ -306,7 +306,7 @@ _:b8_42ddfe93373cb402 :md2 5.967987380277233 .
     [ pe:var "ssXX"; pe:value 223.4285714285714 ],
     [ pe:var "ssXY"; pe:value -71.35714285714285 ],
     [ pe:var "ssYY"; pe:value 159.8542857142857 ],
-    [ pe:var "sumX"; pe:value 47.0 ],
+    [ pe:var "sumX"; pe:value "47"^^xsd:decimal ],
     [ pe:var "sumY"; pe:value 29.200000000000003 ],
     [ pe:var "xs"; pe:value (2.0 3.0 4.0 5.0 6.0 7.0 20.0) ],
     [ pe:var "ys"; pe:value (1.0 2.0 3.2 5.1 7.9 13.0 -3.0) ];
@@ -325,9 +325,9 @@ _:b8_42ddfe93373cb402 :md2 5.967987380277233 .
             ?p :y ?y .
         } (1.0 2.0 3.2 5.1 7.9 13.0 -3.0)) log:collectAllIn ?_:m1 .
     },
-    { (2.0 3.0 4.0 5.0 6.0 7.0 20.0) math:sum 47.0 . },
+    { (2.0 3.0 4.0 5.0 6.0 7.0 20.0) math:sum "47"^^xsd:decimal . },
     { (1.0 2.0 3.2 5.1 7.9 13.0 -3.0) math:sum 29.200000000000003 . },
-    { (47.0 7) math:quotient 6.714285714285714 . },
+    { ("47"^^xsd:decimal 7) math:quotient 6.714285714285714 . },
     { (29.200000000000003 7) math:quotient 4.171428571428572 . },
     {
         (?dx2 {
@@ -378,7 +378,7 @@ _:b8_42ddfe93373cb402 :md2 5.967987380277233 .
     [ pe:var "ssXX"; pe:value 223.4285714285714 ],
     [ pe:var "ssXY"; pe:value -71.35714285714285 ],
     [ pe:var "ssYY"; pe:value 159.8542857142857 ],
-    [ pe:var "sumX"; pe:value 47.0 ],
+    [ pe:var "sumX"; pe:value "47"^^xsd:decimal ],
     [ pe:var "sumY"; pe:value 29.200000000000003 ],
     [ pe:var "xs"; pe:value (2.0 3.0 4.0 5.0 6.0 7.0 20.0) ],
     [ pe:var "ys"; pe:value (1.0 2.0 3.2 5.1 7.9 13.0 -3.0) ];
@@ -397,9 +397,9 @@ _:b8_42ddfe93373cb402 :md2 5.967987380277233 .
             ?p :y ?y .
         } (1.0 2.0 3.2 5.1 7.9 13.0 -3.0)) log:collectAllIn ?_:m1 .
     },
-    { (2.0 3.0 4.0 5.0 6.0 7.0 20.0) math:sum 47.0 . },
+    { (2.0 3.0 4.0 5.0 6.0 7.0 20.0) math:sum "47"^^xsd:decimal . },
     { (1.0 2.0 3.2 5.1 7.9 13.0 -3.0) math:sum 29.200000000000003 . },
-    { (47.0 7) math:quotient 6.714285714285714 . },
+    { ("47"^^xsd:decimal 7) math:quotient 6.714285714285714 . },
     { (29.200000000000003 7) math:quotient 4.171428571428572 . },
     {
         (?dx2 {
@@ -450,7 +450,7 @@ _:b8_42ddfe93373cb402 :md2 5.967987380277233 .
     [ pe:var "ssXX"; pe:value 223.4285714285714 ],
     [ pe:var "ssXY"; pe:value -71.35714285714285 ],
     [ pe:var "ssYY"; pe:value 159.8542857142857 ],
-    [ pe:var "sumX"; pe:value 47.0 ],
+    [ pe:var "sumX"; pe:value "47"^^xsd:decimal ],
     [ pe:var "sumY"; pe:value 29.200000000000003 ],
     [ pe:var "xs"; pe:value (2.0 3.0 4.0 5.0 6.0 7.0 20.0) ],
     [ pe:var "ys"; pe:value (1.0 2.0 3.2 5.1 7.9 13.0 -3.0) ];
@@ -469,9 +469,9 @@ _:b8_42ddfe93373cb402 :md2 5.967987380277233 .
             ?p :y ?y .
         } (1.0 2.0 3.2 5.1 7.9 13.0 -3.0)) log:collectAllIn ?_:m1 .
     },
-    { (2.0 3.0 4.0 5.0 6.0 7.0 20.0) math:sum 47.0 . },
+    { (2.0 3.0 4.0 5.0 6.0 7.0 20.0) math:sum "47"^^xsd:decimal . },
     { (1.0 2.0 3.2 5.1 7.9 13.0 -3.0) math:sum 29.200000000000003 . },
-    { (47.0 7) math:quotient 6.714285714285714 . },
+    { ("47"^^xsd:decimal 7) math:quotient 6.714285714285714 . },
     { (29.200000000000003 7) math:quotient 4.171428571428572 . },
     {
         (?dx2 {
@@ -522,7 +522,7 @@ _:b8_42ddfe93373cb402 :md2 5.967987380277233 .
     [ pe:var "ssXX"; pe:value 223.4285714285714 ],
     [ pe:var "ssXY"; pe:value -71.35714285714285 ],
     [ pe:var "ssYY"; pe:value 159.8542857142857 ],
-    [ pe:var "sumX"; pe:value 47.0 ],
+    [ pe:var "sumX"; pe:value "47"^^xsd:decimal ],
     [ pe:var "sumY"; pe:value 29.200000000000003 ],
     [ pe:var "xs"; pe:value (2.0 3.0 4.0 5.0 6.0 7.0 20.0) ],
     [ pe:var "ys"; pe:value (1.0 2.0 3.2 5.1 7.9 13.0 -3.0) ];
@@ -541,9 +541,9 @@ _:b8_42ddfe93373cb402 :md2 5.967987380277233 .
             ?p :y ?y .
         } (1.0 2.0 3.2 5.1 7.9 13.0 -3.0)) log:collectAllIn ?_:m1 .
     },
-    { (2.0 3.0 4.0 5.0 6.0 7.0 20.0) math:sum 47.0 . },
+    { (2.0 3.0 4.0 5.0 6.0 7.0 20.0) math:sum "47"^^xsd:decimal . },
     { (1.0 2.0 3.2 5.1 7.9 13.0 -3.0) math:sum 29.200000000000003 . },
-    { (47.0 7) math:quotient 6.714285714285714 . },
+    { ("47"^^xsd:decimal 7) math:quotient 6.714285714285714 . },
     { (29.200000000000003 7) math:quotient 4.171428571428572 . },
     {
         (?dx2 {

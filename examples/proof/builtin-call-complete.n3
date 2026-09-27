@@ -4,7 +4,7 @@
 @prefix pe: <https://eyereasoner.github.io/pe#> .
 
 :summary :absolute 3.7 .
-:summary :root 3.0 .
+:summary :root "3"^^xsd:decimal .
 :summary :count 3 .
 :summary :sorted (-3.7 2 7) .
 
@@ -13,13 +13,13 @@
   pe:binding
     [ pe:var "absolute"; pe:value 3.7 ],
     [ pe:var "count"; pe:value 3 ],
-    [ pe:var "root"; pe:value 3.0 ],
+    [ pe:var "root"; pe:value "3"^^xsd:decimal ],
     [ pe:var "sorted"; pe:value (-3.7 2 7) ],
     [ pe:var "values"; pe:value (-3.7 7 2) ];
   pe:uses
     { :numbers :values (-3.7 7 2) . },
     { -3.7 math:absoluteValue 3.7 . },
-    { (9 0.5) math:exponentiation 3.0 . },
+    { (9 0.5) math:exponentiation "3"^^xsd:decimal . },
     { (-3.7 7 2) list:length 3 . },
     { (-3.7 7 2) list:sort (-3.7 2 7) . }.
 
@@ -29,7 +29,7 @@
 { -3.7 math:absoluteValue 3.7 . }
   pe:builtin math:absoluteValue.
 
-{ (9 0.5) math:exponentiation 3.0 . }
+{ (9 0.5) math:exponentiation "3"^^xsd:decimal . }
   pe:builtin math:exponentiation.
 
 { (-3.7 7 2) list:length 3 . }
@@ -38,18 +38,18 @@
 { (-3.7 7 2) list:sort (-3.7 2 7) . }
   pe:builtin list:sort.
 
-{ :summary :root 3.0 . }
+{ :summary :root "3"^^xsd:decimal . }
   pe:rule 1;
   pe:binding
     [ pe:var "absolute"; pe:value 3.7 ],
     [ pe:var "count"; pe:value 3 ],
-    [ pe:var "root"; pe:value 3.0 ],
+    [ pe:var "root"; pe:value "3"^^xsd:decimal ],
     [ pe:var "sorted"; pe:value (-3.7 2 7) ],
     [ pe:var "values"; pe:value (-3.7 7 2) ];
   pe:uses
     { :numbers :values (-3.7 7 2) . },
     { -3.7 math:absoluteValue 3.7 . },
-    { (9 0.5) math:exponentiation 3.0 . },
+    { (9 0.5) math:exponentiation "3"^^xsd:decimal . },
     { (-3.7 7 2) list:length 3 . },
     { (-3.7 7 2) list:sort (-3.7 2 7) . }.
 
@@ -58,13 +58,13 @@
   pe:binding
     [ pe:var "absolute"; pe:value 3.7 ],
     [ pe:var "count"; pe:value 3 ],
-    [ pe:var "root"; pe:value 3.0 ],
+    [ pe:var "root"; pe:value "3"^^xsd:decimal ],
     [ pe:var "sorted"; pe:value (-3.7 2 7) ],
     [ pe:var "values"; pe:value (-3.7 7 2) ];
   pe:uses
     { :numbers :values (-3.7 7 2) . },
     { -3.7 math:absoluteValue 3.7 . },
-    { (9 0.5) math:exponentiation 3.0 . },
+    { (9 0.5) math:exponentiation "3"^^xsd:decimal . },
     { (-3.7 7 2) list:length 3 . },
     { (-3.7 7 2) list:sort (-3.7 2 7) . }.
 
@@ -73,12 +73,12 @@
   pe:binding
     [ pe:var "absolute"; pe:value 3.7 ],
     [ pe:var "count"; pe:value 3 ],
-    [ pe:var "root"; pe:value 3.0 ],
+    [ pe:var "root"; pe:value "3"^^xsd:decimal ],
     [ pe:var "sorted"; pe:value (-3.7 2 7) ],
     [ pe:var "values"; pe:value (-3.7 7 2) ];
   pe:uses
     { :numbers :values (-3.7 7 2) . },
     { -3.7 math:absoluteValue 3.7 . },
-    { (9 0.5) math:exponentiation 3.0 . },
+    { (9 0.5) math:exponentiation "3"^^xsd:decimal . },
     { (-3.7 7 2) list:length 3 . },
     { (-3.7 7 2) list:sort (-3.7 2 7) . }.

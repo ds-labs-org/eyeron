@@ -1286,8 +1286,10 @@ fn same_variant(a: &TokenKind, b: &TokenKind) -> bool {
 pub(crate) fn number_literal(mut value: String) -> Term {
     if value.starts_with('+') { value.remove(0); }
     let datatype = if value.contains('e') || value.contains('E') {
-        let parsed = value.parse::<f64>().unwrap_or(0.0);
-        value = trim_numeric_lexical(parsed, true);
+        // Keep the lexical form as written. Rewriting `6.123233995736766e-17`
+        // into its positional spelling loses the form the document used, and
+        // makes eyeron's own printed output read back as a different literal
+        // than the one it printed.
         "http://www.w3.org/2001/XMLSchema#double"
     } else if value.contains('.') {
         if value.starts_with('.') { value.insert(0, '0'); }
@@ -1300,18 +1302,6 @@ pub(crate) fn number_literal(mut value: String) -> Term {
     Term::Literal(Literal { value, datatype: Some(datatype.to_string()), language: None })
 }
 
-fn trim_numeric_lexical(value: f64, decimal: bool) -> String {
-    if value.is_nan() { return "NaN".to_string(); }
-    if value.is_infinite() { return if value.is_sign_negative() { "-INF" } else { "INF" }.to_string(); }
-    let mut s = value.to_string();
-    if s.contains('.') {
-        while s.ends_with('0') { s.pop(); }
-        if s.ends_with('.') { s.push('0'); }
-    } else if decimal {
-        s.push_str(".0");
-    }
-    s
-}
 
 pub(crate) fn boolean_literal(value: bool) -> Term {
     Term::Literal(Literal {

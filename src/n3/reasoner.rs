@@ -299,9 +299,19 @@ impl Shape {
 fn hash_key(key: Key<'_>) -> u64 {
     use std::hash::{Hash, Hasher};
     let mut hasher = std::collections::hash_map::DefaultHasher::new();
-    key.0.hash(&mut hasher);
-    key.1.hash(&mut hasher);
+    index_form(key.0).hash(&mut hasher);
+    key.1.map(index_form).hash(&mut hasher);
     hasher.finish()
+}
+
+/// Whether two keys select the same bucket: the terms as an index sees them.
+fn keys_equal(a: Key<'_>, b: Key<'_>) -> bool {
+    index_form(a.0) == index_form(b.0)
+        && match (a.1, b.1) {
+            (Some(x), Some(y)) => index_form(x) == index_form(y),
+            (None, None) => true,
+            _ => false,
+        }
 }
 
 /// Fact positions grouped by the terms at some of a triple's positions,
@@ -328,7 +338,7 @@ impl ShapeIndex {
         let key = self.shape.key_of(&facts[idx]);
         let chain = self.chains.entry(hash_key(key)).or_default();
         for bucket in chain.iter_mut() {
-            if self.shape.key_of(&facts[bucket[0]]) == key {
+            if keys_equal(self.shape.key_of(&facts[bucket[0]]), key) {
                 bucket.push(idx);
                 return;
             }
@@ -340,7 +350,7 @@ impl ShapeIndex {
         self.chains
             .get(&hash_key(key))?
             .iter()
-            .find(|bucket| self.shape.key_of(&facts[bucket[0]]) == key)
+            .find(|bucket| keys_equal(self.shape.key_of(&facts[bucket[0]]), key))
     }
 }
 
@@ -537,14 +547,15 @@ impl AgendaIndex {
     fn insert(&mut self, entry: AgendaEntry) {
         let pos = self.entries.len();
         self.indexed.insert(entry.rule_index);
+        let p = index_form(&entry.p_ground).into_owned();
         if entry.s_ground.is_none() && entry.o_ground.is_none() {
-            self.by_p.entry(entry.p_ground.clone()).or_default().push(pos);
+            self.by_p.entry(p.clone()).or_default().push(pos);
         }
         if let Some(s) = &entry.s_ground {
-            self.by_sp.entry((s.clone(), entry.p_ground.clone())).or_default().push(pos);
+            self.by_sp.entry((index_form(s).into_owned(), p.clone())).or_default().push(pos);
         }
         if let Some(o) = &entry.o_ground {
-            self.by_po.entry((entry.p_ground.clone(), o.clone())).or_default().push(pos);
+            self.by_po.entry((p, index_form(o).into_owned())).or_default().push(pos);
         }
         self.entries.push(entry);
     }
@@ -552,15 +563,16 @@ impl AgendaIndex {
     fn candidates(&self, fact: &Triple) -> Vec<usize> {
         let mut out = Vec::<usize>::new();
 
-        if let Some(entries) = self.by_p.get(&fact.p) {
+        let p = index_form(&fact.p);
+        if let Some(entries) = self.by_p.get(p.as_ref()) {
             out.extend(entries.iter().copied());
         }
-        if let Some(entries) = self.by_sp.get(&(fact.s.clone(), fact.p.clone())) {
+        if let Some(entries) = self.by_sp.get(&(index_form(&fact.s).into_owned(), p.clone().into_owned())) {
             for pos in entries {
                 if !out.contains(pos) { out.push(*pos); }
             }
         }
-        if let Some(entries) = self.by_po.get(&(fact.p.clone(), fact.o.clone())) {
+        if let Some(entries) = self.by_po.get(&(p.into_owned(), index_form(&fact.o).into_owned())) {
             for pos in entries {
                 if !out.contains(pos) { out.push(*pos); }
             }
@@ -2840,7 +2852,10 @@ fn match_term(pattern: &Term, value: &Term, bindings: &mut Bindings) -> bool {
             }
             _ => false,
         },
-        other => other == value,
+        // The same test `unify_term` ends on: `0.0` and `"0"^^xsd:decimal`
+        // are one number written two ways, and a rule premise that spells it
+        // the second way has to match a fact that spells it the first.
+        other => terms_equal_semantic(&other, &value),
     }
 }
 
@@ -3471,7 +3486,16 @@ fn eval_log_dtlit(subject: &Term, object: &Term, bindings: &Bindings, facts: &[T
     let s = rdf_or_native_list(subject, bindings, facts).map(Term::List).unwrap_or_else(|| resolve_pattern(subject, bindings));
     let o = resolve_pattern(object, bindings);
     match (&s, &o) {
-        (Term::List(parts), Term::Literal(lit)) if parts.len() == 2 => {
+        // A subject that spells out both a lexical form and a datatype builds
+        // the literal itself, and the comparison with the object is then the
+        // ordinary semantic one. Taking the object apart instead would compare
+        // the two lexical forms as plain strings, and
+        // `("1.0" xsd:double) log:dtlit 1.0e0` is one value written two ways.
+        (Term::List(parts), Term::Literal(lit))
+            if parts.len() == 2
+                && !(string_value(&resolve(&parts[0], bindings)).is_some()
+                    && matches!(resolve(&parts[1], bindings), Term::Iri(_))) =>
+        {
             let pair = dtlit_pair(lit);
             let mut b = bindings.clone();
             if unify_term(&s, &pair, &mut b) { vec![canonicalize_bindings(&b)] } else { Vec::new() }
@@ -4331,16 +4355,16 @@ fn eval_math_operator(pred: &str, left: &Term, right: &Term, bindings: &Bindings
         MATH_ABSOLUTE_VALUE => eval_unary_numeric(left, right, bindings, |x| x.abs(), num_traits::Signed::abs, true, false),
         // An integer is already rounded.
         MATH_ROUNDED => eval_unary_numeric(left, right, bindings, |x| (x + 0.5).floor(), BigInt::clone, true, false),
-        MATH_SIN => eval_unary_numeric_with_inverse(left, right, bindings, f64::sin, f64::asin, false),
-        MATH_COS => eval_unary_numeric_with_inverse(left, right, bindings, f64::cos, f64::acos, false),
-        MATH_TAN => eval_unary_numeric_with_inverse(left, right, bindings, f64::tan, f64::atan, false),
-        MATH_ASIN => eval_unary_numeric_with_inverse(left, right, bindings, f64::asin, f64::sin, false),
-        MATH_ACOS => eval_unary_numeric_with_inverse(left, right, bindings, f64::acos, f64::cos, false),
-        MATH_ATAN => eval_unary_numeric_with_inverse(left, right, bindings, f64::atan, f64::tan, false),
-        MATH_SINH => eval_unary_numeric_with_inverse(left, right, bindings, f64::sinh, f64::asinh, false),
-        MATH_COSH => eval_unary_numeric_with_inverse(left, right, bindings, f64::cosh, f64::acosh, false),
-        MATH_TANH => eval_unary_numeric_with_inverse(left, right, bindings, f64::tanh, f64::atanh, false),
-        MATH_DEGREES => eval_unary_numeric_with_inverse(left, right, bindings, f64::to_degrees, f64::to_radians, false),
+        MATH_SIN => eval_unary_numeric_with_inverse(left, right, bindings, f64::sin, f64::asin),
+        MATH_COS => eval_unary_numeric_with_inverse(left, right, bindings, f64::cos, f64::acos),
+        MATH_TAN => eval_unary_numeric_with_inverse(left, right, bindings, f64::tan, f64::atan),
+        MATH_ASIN => eval_unary_numeric_with_inverse(left, right, bindings, f64::asin, f64::sin),
+        MATH_ACOS => eval_unary_numeric_with_inverse(left, right, bindings, f64::acos, f64::cos),
+        MATH_ATAN => eval_unary_numeric_with_inverse(left, right, bindings, f64::atan, f64::tan),
+        MATH_SINH => eval_unary_numeric_with_inverse(left, right, bindings, f64::sinh, f64::asinh),
+        MATH_COSH => eval_unary_numeric_with_inverse(left, right, bindings, f64::cosh, f64::acosh),
+        MATH_TANH => eval_unary_numeric_with_inverse(left, right, bindings, f64::tanh, f64::atanh),
+        MATH_DEGREES => eval_unary_numeric_with_inverse(left, right, bindings, f64::to_degrees, f64::to_radians),
         _ => Vec::new(),
     }
 }
@@ -4415,15 +4439,19 @@ where
     }
 }
 
-fn eval_unary_numeric_with_inverse<F, G>(left: &Term, right: &Term, bindings: &Bindings, forward: F, inverse: G, integer_if_integral: bool) -> Vec<Bindings>
+/// The result keeps the operand's datatype when it can: `1 math:acos 0`, not
+/// `1 math:acos "0"^^xsd:decimal`. A result that is not a whole number
+/// promotes to decimal on its own, in `numeric_literal`.
+fn eval_unary_numeric_with_inverse<F, G>(left: &Term, right: &Term, bindings: &Bindings, forward: F, inverse: G) -> Vec<Bindings>
 where
     F: Fn(f64) -> f64,
     G: Fn(f64) -> f64,
 {
     let l = resolve(left, bindings);
     let r = resolve(right, bindings);
-    let zero = numeric_literal(0.0, integer_if_integral);
-    let inverse_zero = numeric_literal(inverse(0.0), integer_if_integral);
+    let integral = |term: &Term| numeric_value(term).is_some_and(|n| n.integer);
+    let zero = numeric_literal(0.0, integral(&l));
+    let inverse_zero = numeric_literal(inverse(0.0), integral(&r));
 
     match (&l, &r) {
         (Term::Var(_), Term::Var(_)) => vec![bindings.clone()],
@@ -4438,7 +4466,7 @@ where
             let Some(n) = numeric_value(&r) else { return Vec::new(); };
             let computed = inverse(n.value);
             if !computed.is_finite() && !computed.is_infinite() { return Vec::new(); }
-            let value = numeric_literal(computed, integer_if_integral);
+            let value = numeric_literal(computed, n.integer);
             bind_one(bindings, name, value).into_iter().map(|b| canonicalize_bindings(&b)).collect()
         }
         (Term::Blank(_), _) => {
@@ -4446,7 +4474,7 @@ where
         }
         (_, Term::Var(name)) => {
             let Some(n) = numeric_value(&l) else { return Vec::new(); };
-            let value = numeric_literal(forward(n.value), integer_if_integral);
+            let value = numeric_literal(forward(n.value), n.integer);
             bind_one(bindings, name, value).into_iter().map(|b| canonicalize_bindings(&b)).collect()
         }
         (_, Term::Blank(_)) => {
@@ -4454,7 +4482,7 @@ where
         }
         (_, _) => {
             let Some(n) = numeric_value(&l) else { return Vec::new(); };
-            let value = numeric_literal(forward(n.value), integer_if_integral);
+            let value = numeric_literal(forward(n.value), n.integer);
             let mut out = bindings.clone();
             if unify_term_loose_numeric(right, &value, &mut out) { vec![canonicalize_bindings(&out)] } else { Vec::new() }
         }
@@ -5158,7 +5186,14 @@ pub(crate) struct Numeric {
 
 pub(crate) fn numeric_value(term: &Term) -> Option<Numeric> {
     match term {
-        Term::Literal(lit) => {
+        Term::Literal(lit) => numeric_literal_value(lit),
+        _ => None,
+    }
+}
+
+fn numeric_literal_value(lit: &Literal) -> Option<Numeric> {
+    {
+        {
             let dt = lit.datatype.as_deref();
             let is_integer = matches!(dt, Some("http://www.w3.org/2001/XMLSchema#integer"));
             let is_numeric = matches!(
@@ -5172,7 +5207,45 @@ pub(crate) fn numeric_value(term: &Term) -> Option<Numeric> {
             let exact = if is_integer { lit.value.parse::<BigInt>().ok() } else { None };
             parse_numeric_lexical(&lit.value).map(|value| Numeric { value, integer: is_integer, exact })
         }
-        _ => None,
+    }
+}
+
+/// The one lexical form a number is indexed under. `0.0` and
+/// `"0"^^xsd:decimal` are the same number, and the matcher treats them as
+/// equal, so an index that keys on the written form has to fold them
+/// together or it will simply fail to find the fact.
+fn canonical_numeric_lexical(lit: &Literal) -> Option<String> {
+    let numeric = numeric_literal_value(lit)?;
+    Some(match &numeric.exact {
+        Some(exact) => exact.to_string(),
+        None => trim_float(numeric.value),
+    })
+}
+
+/// A term as an index keys it: the term itself, unless it spells a number
+/// some other way than `canonical_numeric_lexical` would.
+fn index_form(term: &Term) -> std::borrow::Cow<'_, Term> {
+    use std::borrow::Cow;
+    match term {
+        Term::Literal(lit) => match canonical_numeric_lexical(lit) {
+            Some(value) if value != lit.value => {
+                Cow::Owned(Term::Literal(Literal { value, ..lit.clone() }))
+            }
+            _ => Cow::Borrowed(term),
+        },
+        Term::List(items) => {
+            let mut canonical: Option<Vec<Term>> = None;
+            for (idx, item) in items.iter().enumerate() {
+                if let Cow::Owned(owned) = index_form(item) {
+                    canonical.get_or_insert_with(|| items.clone())[idx] = owned;
+                }
+            }
+            match canonical {
+                Some(items) => Cow::Owned(Term::List(items)),
+                None => Cow::Borrowed(term),
+            }
+        }
+        _ => Cow::Borrowed(term),
     }
 }
 
@@ -5207,18 +5280,21 @@ fn exact_power(base: &Numeric, exponent: &Numeric) -> Option<Term> {
 
 pub(crate) fn numeric_literal(value: f64, prefer_integer: bool) -> Term {
     if prefer_integer && value.fract() == 0.0 {
-        Term::Literal(Literal {
+        return Term::Literal(Literal {
             value: format!("{:.0}", value),
             datatype: Some("http://www.w3.org/2001/XMLSchema#integer".to_string()),
             language: None,
-        })
-    } else {
-        Term::Literal(Literal {
-            value: trim_float(value),
-            datatype: Some("http://www.w3.org/2001/XMLSchema#decimal".to_string()),
-            language: None,
-        })
+        });
     }
+    // `xsd:decimal` has no exponential lexical form, so a magnitude that only
+    // writes as one is an `xsd:double`.
+    let value = trim_float(value);
+    let datatype = if value.contains('e') {
+        "http://www.w3.org/2001/XMLSchema#double"
+    } else {
+        "http://www.w3.org/2001/XMLSchema#decimal"
+    };
+    Term::Literal(Literal { value, datatype: Some(datatype.to_string()), language: None })
 }
 
 fn numeric_terms_equal(a: &Term, b: &Term) -> bool {
@@ -5482,17 +5558,40 @@ fn stable_binding_suffix(bindings: &Bindings) -> String {
 }
 
 
+/// A computed number's lexical form, the way ECMA-262 defines `String(n)`:
+/// the shortest digits that read back as the same `f64`, written positionally
+/// while the decimal point sits within (-6, 21] of the first digit, and in
+/// exponential form outside that. Eyeling is JavaScript and prints its
+/// numbers this way, so this is what the two engines have to agree on:
+/// `1e-20`, not `0.00000000000000000001`, and `3`, not `3.0`.
 fn trim_float(value: f64) -> String {
     if value.is_nan() { return "NaN".to_string(); }
     if value.is_infinite() { return if value.is_sign_negative() { "-INF" } else { "INF" }.to_string(); }
-    let mut s = value.to_string();
-    if s.contains('.') {
-        while s.ends_with('0') { s.pop(); }
-        if s.ends_with('.') { s.push('0'); }
+    if value == 0.0 { return "0".to_string(); }
+
+    // `{:e}` gives the same shortest round-trip digits, already split into a
+    // mantissa and a power of ten.
+    let exponential = format!("{:e}", value.abs());
+    let (mantissa, exponent) = exponential.split_once('e').expect("{:e} writes an exponent");
+    let exponent: i32 = exponent.parse().expect("{:e} writes an integer exponent");
+    let digits: String = mantissa.chars().filter(|c| *c != '.').collect();
+    let count = digits.len() as i32;
+    // `value` is `0.<digits> * 10^point`: where the decimal point falls.
+    let point = exponent + 1;
+
+    let body = if point >= count && point <= 21 {
+        format!("{digits}{}", "0".repeat((point - count) as usize))
+    } else if point > 0 && point <= 21 {
+        format!("{}.{}", &digits[..point as usize], &digits[point as usize..])
+    } else if point > -6 && point <= 0 {
+        format!("0.{}{digits}", "0".repeat((-point) as usize))
     } else {
-        s.push_str(".0");
-    }
-    s
+        let tail = if count == 1 { String::new() } else { format!(".{}", &digits[1..]) };
+        let sign = if point > 1 { "+" } else { "-" };
+        format!("{}{tail}e{sign}{}", &digits[..1], (point - 1).abs())
+    };
+
+    if value.is_sign_negative() { format!("-{body}") } else { body }
 }
 
 fn parse_numeric_lexical(value: &str) -> Option<f64> {

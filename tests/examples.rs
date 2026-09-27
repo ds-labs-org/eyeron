@@ -43,6 +43,8 @@ const NO_PROOF_EXAMPLES: &[(&str, &str)] = &[
     ("annotation", "its printed result comes from a log:query goal, not a forward-derived fact --proof tracks"),
     ("builtin-coverage", "its printed result comes from a log:query goal, not a forward-derived fact --proof tracks"),
     ("check-unsafe", "deliberately derives nothing: its head variable is unsafe/unbound by design"),
+    ("fft32-numeric", "its printed result comes from a log:query goal, not a forward-derived fact --proof tracks"),
+    ("fft8-numeric", "its printed result comes from a log:query goal, not a forward-derived fact --proof tracks"),
     ("fft8-symbolic", "its printed result comes from a log:query goal, not a forward-derived fact --proof tracks"),
     ("kaprekar-6174", "its printed result comes from a log:query goal, not a forward-derived fact --proof tracks"),
     ("monoid-identity-uniqueness", "its printed result comes from a log:query goal, not a forward-derived fact --proof tracks"),

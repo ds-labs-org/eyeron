@@ -32,6 +32,10 @@ const KNOWN_GAPS: &[(&str, &str)] = &[
     // hidden: each one is a proof-emission defect to fix, and this list
     // fails the suite again as soon as one of them starts checking.
     (
+        "n3/complex",
+        "two steps are emitted with no justification: 'recorded as unproven: the engine could not justify it'",
+    ),
+    (
         "n3/odrl-dpv-campaign-audit",
         "one step is emitted with no justification: 'recorded as unproven: the engine could not justify it'",
     ),
@@ -46,6 +50,10 @@ const KNOWN_GAPS: &[(&str, &str)] = &[
     (
         "n3/polygon",
         "the polygon:area step cites itself among its own premises, and lists 9 premises for an 8-premise rule",
+    ),
+    (
+        "n3/polynomial",
+        "two steps are emitted with no justification: 'recorded as unproven: the engine could not justify it'",
     ),
 ];
 

@@ -62,15 +62,15 @@ _:b12_6aed1dff21be3630 :l2ToUniform 0.2115715410426617 .
     [ pe:var "b"; pe:value 0.15 ],
     [ pe:var "c"; pe:value 0.05 ],
     [ pe:var "r"; pe:value _:b1 ],
-    [ pe:var "sum"; pe:value 1.0 ];
+    [ pe:var "sum"; pe:value "1"^^xsd:decimal ];
   pe:uses
     { :MC1 :row _:b1 . },
     { _:b1 :pA 0.80 . },
     { _:b1 :pB 0.15 . },
     { _:b1 :pC 0.05 . },
     { (0.80 0.15) math:sum 0.9500000000000001 . },
-    { (0.9500000000000001 0.05) math:sum 1.0 . },
-    { 1.0 math:equalTo 1.0 . }.
+    { (0.9500000000000001 0.05) math:sum "1"^^xsd:decimal . },
+    { "1"^^xsd:decimal math:equalTo 1.0 . }.
 
 { :MC1 :row _:b1 . }
   pe:fact "topaz-markov-mill.n3".
@@ -87,10 +87,10 @@ _:b12_6aed1dff21be3630 :l2ToUniform 0.2115715410426617 .
 { (0.80 0.15) math:sum 0.9500000000000001 . }
   pe:builtin math:sum.
 
-{ (0.9500000000000001 0.05) math:sum 1.0 . }
+{ (0.9500000000000001 0.05) math:sum "1"^^xsd:decimal . }
   pe:builtin math:sum.
 
-{ 1.0 math:equalTo 1.0 . }
+{ "1"^^xsd:decimal math:equalTo 1.0 . }
   pe:builtin math:equalTo.
 
 { :MC1 :pi1 _:b5_8ddd2e8043c6d8bd . }
@@ -1402,20 +1402,20 @@ _:b12_6aed1dff21be3630 :l2ToUniform 0.2115715410426617 .
     [ pe:var "b"; pe:value 0.70 ],
     [ pe:var "c"; pe:value 0.20 ],
     [ pe:var "r"; pe:value _:b2 ],
-    [ pe:var "sum"; pe:value 1.0 ];
+    [ pe:var "sum"; pe:value "1"^^xsd:decimal ];
   pe:uses
     { :MC1 :row _:b2 . },
     { _:b2 :pA 0.10 . },
     { _:b2 :pB 0.70 . },
     { _:b2 :pC 0.20 . },
     { (0.10 0.70) math:sum 0.7999999999999999 . },
-    { (0.7999999999999999 0.20) math:sum 1.0 . },
-    { 1.0 math:equalTo 1.0 . }.
+    { (0.7999999999999999 0.20) math:sum "1"^^xsd:decimal . },
+    { "1"^^xsd:decimal math:equalTo 1.0 . }.
 
 { (0.10 0.70) math:sum 0.7999999999999999 . }
   pe:builtin math:sum.
 
-{ (0.7999999999999999 0.20) math:sum 1.0 . }
+{ (0.7999999999999999 0.20) math:sum "1"^^xsd:decimal . }
   pe:builtin math:sum.
 
 { :MC1 :rowOk _:b3 . }
@@ -1426,20 +1426,20 @@ _:b12_6aed1dff21be3630 :l2ToUniform 0.2115715410426617 .
     [ pe:var "b"; pe:value 0.25 ],
     [ pe:var "c"; pe:value 0.50 ],
     [ pe:var "r"; pe:value _:b3 ],
-    [ pe:var "sum"; pe:value 1.0 ];
+    [ pe:var "sum"; pe:value "1"^^xsd:decimal ];
   pe:uses
     { :MC1 :row _:b3 . },
     { _:b3 :pA 0.25 . },
     { _:b3 :pB 0.25 . },
     { _:b3 :pC 0.50 . },
     { (0.25 0.25) math:sum 0.5 . },
-    { (0.5 0.50) math:sum 1.0 . },
-    { 1.0 math:equalTo 1.0 . }.
+    { (0.5 0.50) math:sum "1"^^xsd:decimal . },
+    { "1"^^xsd:decimal math:equalTo 1.0 . }.
 
 { (0.25 0.25) math:sum 0.5 . }
   pe:builtin math:sum.
 
-{ (0.5 0.50) math:sum 1.0 . }
+{ (0.5 0.50) math:sum "1"^^xsd:decimal . }
   pe:builtin math:sum.
 
 { :MC1 :metrics _:b9_d25605357e338c47 . }

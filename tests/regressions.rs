@@ -1380,3 +1380,72 @@ fn an_exact_power_too_large_to_materialise_is_refused_rather_than_attempted() {
     let output = reason(source).unwrap();
     assert!(output.contains("INF"), "{output}");
 }
+
+#[test]
+fn a_computed_number_is_written_the_way_ecma_262_writes_it() {
+    // Eyeling is JavaScript and prints a computed number with `String(n)`.
+    // Eyeron wrote its own positional spelling, so the two engines disagreed
+    // on every example that computes a decimal: `3.0` against `"3"`, and
+    // `0.00000000000000006123233995736766` against `"6.123...e-17"`.
+    let source = r#"
+        @prefix : <http://example.org/>.
+        @prefix math: <http://www.w3.org/2000/10/swap/math#>.
+
+        { (1.0 2) math:sum ?X } => { :a :whole ?X }.
+        { (1.0 0.0000001) math:product ?X } => { :a :small ?X }.
+        { (1.0 0.000001) math:product ?X } => { :a :not-quite-small ?X }.
+        { (1.0 1000000000000000000000.0) math:product ?X } => { :a :large ?X }.
+        { 1 math:acos ?X } => { :a :acos-of-one ?X }.
+    "#;
+
+    let output = reason(source).unwrap();
+    // A whole decimal keeps its datatype but loses the invented ".0", so it
+    // can no longer be written as the bare `3`.
+    assert!(output.contains(r#":whole "3"^^xsd:decimal"#), "{output}");
+    // Outside (-6, 21] the form is exponential, and xsd:decimal has no
+    // exponential lexical form, so the result is an xsd:double.
+    assert!(output.contains(":small 1e-7"), "{output}");
+    // Printed bare, which reads back as exactly that xsd:decimal.
+    assert!(output.contains(":not-quite-small 0.000001 "), "{output}");
+    assert!(output.contains(":large 1e+21"), "{output}");
+    // A trig result keeps the operand's datatype when it stays whole.
+    assert!(output.contains(":acos-of-one 0 "), "{output}");
+}
+
+#[test]
+fn one_number_written_two_ways_matches_itself() {
+    // `0.0` and `"0"^^xsd:decimal` are the same number. Eyeron compared the
+    // written form, so a premise spelling it one way missed a fact spelling
+    // it the other -- which stayed hidden only while every computed number
+    // happened to come out in the same spelling as the data.
+    let source = r#"
+        @prefix : <http://example.org/>.
+        @prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+
+        :a :value 0.0 .
+        :b :value "0"^^xsd:decimal .
+        { :a :value "0"^^xsd:decimal } => { :result :quoted-finds-bare true }.
+        { :b :value 0.0 } => { :result :bare-finds-quoted true }.
+        { ?S :value 0.0 } => { ?S :open-match true }.
+    "#;
+
+    let output = reason(source).unwrap();
+    assert!(output.contains(":quoted-finds-bare true"), "{output}");
+    assert!(output.contains(":bare-finds-quoted true"), "{output}");
+    assert_eq!(output.matches(":open-match true").count(), 2, "{output}");
+}
+
+#[test]
+fn an_exponential_literal_keeps_the_lexical_form_it_was_written_with() {
+    // The parser rewrote `6.1e-17` into its positional spelling, so eyeron's
+    // own printed output read back as a different literal than the one it
+    // printed.
+    let source = r#"
+        @prefix : <http://example.org/>.
+        :a :value 6.123233995736766e-17 .
+        { :a :value ?X } => { :b :value ?X }.
+    "#;
+
+    let output = reason(source).unwrap();
+    assert!(output.contains(":b :value 6.123233995736766e-17"), "{output}");
+}
