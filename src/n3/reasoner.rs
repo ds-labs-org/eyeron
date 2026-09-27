@@ -132,6 +132,10 @@ impl SearchBudget {
             max_term_bytes: self.max_term_bytes,
             trace: false,
             proof: false,
+            // `eval_log_conclusion` (the only caller) reads only
+            // `result.derived`/`.is_complete()`/`.errors` off this nested
+            // run's result -- never `.explicit`/`.explicit_sources`.
+            include_explicit: false,
         }
     }
 
@@ -664,6 +668,18 @@ pub struct ReasonerOptions {
     pub max_term_bytes: usize,
     pub trace: bool,
     pub proof: bool,
+    /// Whether `ReasonerResult.explicit`/`.explicit_sources` should be
+    /// populated at all. Both are a copy of every fact in `Document.facts`/
+    /// `.fact_sources` (the caller already has that data -- `reason` only
+    /// borrows it), needed for proof reconstruction (`proof/n3.rs`) and for
+    /// callers who want to distinguish explicit from derived facts without
+    /// keeping their own copy of the input around. A caller that only reads
+    /// `.derived` (`eyeron::reason(&str)`, the `log:conclusion` builtin's
+    /// nested call) can set this to `false` to skip that clone entirely.
+    /// Forced back on whenever `proof` is set, regardless of this field,
+    /// since proof reconstruction needs it -- never silently produces a
+    /// proof that can't find its own explicit support.
+    pub include_explicit: bool,
 }
 
 impl Default for ReasonerOptions {
@@ -685,6 +701,7 @@ impl Default for ReasonerOptions {
             max_term_bytes: DEFAULT_MAX_TERM_BYTES,
             trace: false,
             proof: false,
+            include_explicit: true,
         }
     }
 }
@@ -1132,13 +1149,21 @@ fn reason_with_plan(
     } else {
         CompletionStatus::Incomplete
     };
+    // Proof reconstruction needs `explicit`/`explicit_sources` regardless of
+    // what the caller passed: never silently produce a proof that can't find
+    // its own explicit support.
+    let (explicit, explicit_sources) = if options.include_explicit || options.proof {
+        (doc.facts.clone(), doc.fact_sources.clone())
+    } else {
+        (Vec::new(), BTreeMap::new())
+    };
     ReasonerResult {
         status,
         limits_reached,
         errors: report.errors,
         statistics: ReasonerStatistics { iterations: iteration, match_steps: report.match_steps },
-        explicit: doc.facts.clone(),
-        explicit_sources: doc.fact_sources.clone(),
+        explicit,
+        explicit_sources,
         derived,
         closure,
         proofs,
