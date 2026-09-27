@@ -3510,29 +3510,66 @@ fn rdf_or_native_list(term: &Term, bindings: &Bindings, facts: &[Triple]) -> Opt
     rdf_or_native_list_resolved(&resolved, facts, &mut HashSet::new())
 }
 
+/// Walks an RDF list encoded as `rdf:first`/`rdf:rest` triples (or a native
+/// `Term::List`, or `rdf:nil`).  Iterative, not recursive: the earlier
+/// recursive version used one stack frame per list cell with no depth bound,
+/// so a chain of ordinary Turtle triples -- no nesting, nothing hostile,
+/// just a moderately long list -- could overflow the stack (measured:
+/// ~3,000 cells on a 1 MiB thread stack, ~27,000 on an 8 MB one), which
+/// aborts the process and cannot be caught.
+///
+/// Also builds one first/rest lookup ([`rdf_list_links`]) instead of
+/// `rdf_list_object` scanning the whole fact list per cell, which made a
+/// chain of length L cost O(L x len(facts)) (measured: 8,000 cells 1.9 s,
+/// 16,000 cells 6.5 s -- quadratic, not linear). The native-list and
+/// `rdf:nil` cases below return before touching `facts` at all, so this
+/// costs nothing extra for the common case of a parsed `( ... )` list.
 fn rdf_or_native_list_resolved(term: &Term, facts: &[Triple], seen: &mut HashSet<Term>) -> Option<Vec<Term>> {
     match term {
-        Term::List(items) => Some(items.clone()),
-        Term::Iri(iri) if iri == RDF_NIL => Some(Vec::new()),
-        Term::Blank(_) | Term::Iri(_) => {
-            if !seen.insert(term.clone()) { return None; }
-            let first = rdf_list_object(facts, term, RDF_FIRST)?;
-            let rest_term = rdf_list_object(facts, term, RDF_REST)?;
-            let mut rest = rdf_or_native_list_resolved(&rest_term, facts, seen)?;
-            let mut out = Vec::with_capacity(rest.len() + 1);
-            out.push(first);
-            out.append(&mut rest);
-            Some(out)
+        Term::List(items) => return Some(items.clone()),
+        Term::Iri(iri) if iri == RDF_NIL => return Some(Vec::new()),
+        Term::Blank(_) | Term::Iri(_) => {}
+        _ => return None,
+    }
+    let (first_of, rest_of) = rdf_list_links(facts);
+    let mut out = Vec::new();
+    let mut current = term.clone();
+    loop {
+        match &current {
+            Term::Iri(iri) if iri == RDF_NIL => return Some(out),
+            // A rest pointing at a native (already-parenthesised) list tail:
+            // append it and stop, matching the prior recursive base case.
+            Term::List(items) => {
+                out.extend(items.iter().cloned());
+                return Some(out);
+            }
+            Term::Blank(_) | Term::Iri(_) => {
+                if !seen.insert(current.clone()) { return None; }
+                out.push(first_of.get(&current)?.clone());
+                current = rest_of.get(&current)?.clone();
+            }
+            _ => return None,
         }
-        _ => None,
     }
 }
 
-fn rdf_list_object(facts: &[Triple], subject: &Term, pred: &str) -> Option<Term> {
-    let p = Term::Iri(pred.to_string());
-    facts.iter()
-        .find(|t| &t.s == subject && t.p == p)
-        .map(|t| t.o.clone())
+/// One O(len(facts)) pass building `rdf:first`/`rdf:rest` lookup maps, so a
+/// list of length L costs one scan plus L O(1) lookups instead of L scans.
+/// "First matching triple wins" when a subject has more than one `rdf:first`
+/// or `rdf:rest` triple, matching the linear-scan `.find()` this replaces.
+fn rdf_list_links(facts: &[Triple]) -> (HashMap<Term, Term>, HashMap<Term, Term>) {
+    let first_pred = Term::Iri(RDF_FIRST.to_string());
+    let rest_pred = Term::Iri(RDF_REST.to_string());
+    let mut first_of = HashMap::new();
+    let mut rest_of = HashMap::new();
+    for t in facts {
+        if t.p == first_pred {
+            first_of.entry(t.s.clone()).or_insert_with(|| t.o.clone());
+        } else if t.p == rest_pred {
+            rest_of.entry(t.s.clone()).or_insert_with(|| t.o.clone());
+        }
+    }
+    (first_of, rest_of)
 }
 
 fn unify_listish(term: &Term, items: Vec<Term>, bindings: &mut Bindings, facts: &[Triple]) -> bool {
