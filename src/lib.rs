@@ -32,7 +32,10 @@ pub fn reason(input: &str) -> Result<String> {
     } else {
         parse_n3(input, None)?
     };
-    let result = reason_document(&doc, &ReasonerOptions::default());
+    // Only `.derived` is read below: skip the `.explicit`/`.explicit_sources`
+    // clone of every fact in `doc` that this function has no use for.
+    let options = ReasonerOptions { include_explicit: false, ..ReasonerOptions::default() };
+    let result = reason_document(&doc, &options);
     if let Some(summary) = result.incomplete_summary() {
         return Err(EyeronError::new(summary));
     }
