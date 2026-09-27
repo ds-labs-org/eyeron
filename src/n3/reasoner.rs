@@ -2247,8 +2247,12 @@ fn solve_backward_goal(
     // goals are deliberately excluded, matching Eyeling's conservative
     // completed-table semantics.
     if budget.limits_reached.len() == limits_before && budget.errors.len() == errors_before {
+        // Every answer, including the repeats: a goal with two derivations
+        // has two solutions, and `log:collectAllIn` counts solutions. Folding
+        // the repeats away here made a cached goal answer differently from
+        // the same goal solved afresh, so a rule that collected over it
+        // derived one fact per count it happened to see.
         let mut answers = Vec::new();
-        let mut answer_seen = HashSet::new();
         let mut cacheable = true;
         for solution in &out {
             let answer = resolve_triple(&goal, solution);
@@ -2256,9 +2260,7 @@ fn solve_backward_goal(
                 cacheable = false;
                 break;
             }
-            if answer_seen.insert(answer.clone()) {
-                answers.push(answer);
-            }
+            answers.push(answer);
         }
         if cacheable {
             budget.completed_backward_goals.insert(table_key, answers);
