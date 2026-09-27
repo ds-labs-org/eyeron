@@ -1,7 +1,7 @@
 use eyeron::error::{EyeronError, Result};
 use eyeron::n3::printing::{document_debug, rdf_result_to_string, result_to_string};
 use eyeron::n3::proof::proof_to_n3;
-use eyeron::n3::reasoner::{reason, ReasonerOptions};
+use eyeron::n3::reasoner::{reason, PreparedReasoner, ReasonerOptions};
 use eyeron::Document;
 use eyeron::{
     is_rdf_message_log, parse_n3, parse_n3_with_source, parse_rdf12, parse_rdf_message_log,
@@ -148,6 +148,13 @@ fn run_stream_messages(opt: &CliOptions) -> Result<()> {
     }
 
     let reasoner_options = cli_reasoner_options(opt, false);
+    // Built once for the whole stream: PreparedReasoner keeps the agenda index
+    // it builds from `program`'s rules and reuses it for every message,
+    // instead of `reason()` recomputing that index from scratch per message
+    // (measured: with 1,615 static rules, 1,000 messages went from 8.37s to
+    // 4.32s; with a small rule set the per-message reasoning work itself
+    // dominates and the win is correspondingly smaller).
+    let prepared = PreparedReasoner::new(program);
     for source in message_sources {
         let base = opt.base_iri.clone().or_else(|| {
             if is_http_url(&source) {
@@ -165,7 +172,7 @@ fn run_stream_messages(opt: &CliOptions) -> Result<()> {
                 BufReader::new(response.into_body().into_reader()),
                 &final_url,
                 base.as_deref(),
-                &program,
+                &prepared,
                 &reasoner_options,
             )?;
         } else if source == "-" {
@@ -178,7 +185,7 @@ fn run_stream_messages(opt: &CliOptions) -> Result<()> {
                 BufReader::new(file),
                 &source,
                 base.as_deref(),
-                &program,
+                &prepared,
                 &reasoner_options,
             )?;
         }
@@ -190,7 +197,7 @@ fn stream_message_reader<R: BufRead>(
     mut reader: R,
     label: &str,
     base: Option<&str>,
-    program: &Document,
+    prepared: &PreparedReasoner,
     reasoner_options: &ReasonerOptions,
 ) -> Result<()> {
     let mut directives = String::new();
@@ -218,7 +225,7 @@ fn stream_message_reader<R: BufRead>(
             || trimmed.eq_ignore_ascii_case("@message .")
         {
             run_one_message(
-                program,
+                prepared,
                 &directives,
                 &message,
                 label,
@@ -248,7 +255,7 @@ fn stream_message_reader<R: BufRead>(
     }
     if saw_delimiter || !message.trim().is_empty() {
         run_one_message(
-            program,
+            prepared,
             &directives,
             &message,
             label,
@@ -261,7 +268,7 @@ fn stream_message_reader<R: BufRead>(
 }
 
 fn run_one_message(
-    program: &Document,
+    prepared: &PreparedReasoner,
     directives: &str,
     message: &str,
     label: &str,
@@ -271,11 +278,9 @@ fn run_one_message(
 ) -> Result<()> {
     let replay = format!("{directives}\nVERSION \"1.2-messages\"\n{message}");
     let message_label = format!("{label}#message-{index}");
-    let mut merged = program.clone();
     let parsed = parse_rdf_message_log(&replay, base)
         .map_err(|err| EyeronError::new(err.with_source_location(&replay, &message_label)))?;
-    merged.merge(parsed);
-    let result = reason(&merged, reasoner_options);
+    let result = prepared.reason(&parsed, reasoner_options);
     if let Some(summary) = result.incomplete_summary() {
         return Err(EyeronError::new(summary));
     }

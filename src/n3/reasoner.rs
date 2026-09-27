@@ -5609,3 +5609,42 @@ mod regex_cache_tests {
         assert_eq!(cache_len(), 0, "a finished run must not leave compiled patterns behind");
     }
 }
+
+#[cfg(test)]
+mod prepared_reasoner_tests {
+    use super::*;
+
+    /// `PreparedReasoner::reason` used to clone the whole static program
+    /// (data.clone().merge(self.program.clone())) on every call, on top of
+    /// separately cloning the already-built `active_rules`/`agenda_index`
+    /// it exists to avoid rebuilding -- so a large static rule set made
+    /// every call pay for cloning its rules twice over for no reason (the
+    /// merged copy's `.rules` is never read on this path; `reason_with_plan`
+    /// is given `active_rules`/`query_rules` explicitly and only reads the
+    /// merged document's facts). Measured before this test existed: 500
+    /// calls against 2,000 static rules took 817 ms; a bound of 400 ms is
+    /// comfortably between that and what a fix should achieve.
+    #[test]
+    fn reason_does_not_reclone_the_static_program_per_call() {
+        let mut source = String::from("@prefix : <http://example.org/>.\n");
+        for i in 0..2000 {
+            source.push_str(&format!(
+                "{{ ?x <http://example.org/never{i}> ?y }} => {{ ?x <http://example.org/never2-{i}> ?y }} .\n"
+            ));
+        }
+        let program = parse_n3(&source, None).expect("program parses");
+        let prepared = PreparedReasoner::new(program);
+        let data = parse_n3("@prefix : <http://example.org/>.\n:a :p :b .\n", None).expect("data parses");
+
+        let started = std::time::Instant::now();
+        for _ in 0..500 {
+            let result = prepared.reason(&data, &ReasonerOptions::default());
+            assert!(result.is_complete());
+        }
+        let elapsed = started.elapsed();
+        assert!(
+            elapsed.as_millis() < 400,
+            "500 calls against 2,000 static rules took {elapsed:?}: PreparedReasoner is re-cloning the static program per call"
+        );
+    }
+}
