@@ -924,6 +924,9 @@ fn reason_with_plan(
     let mut report = RunReport::default();
     let mut closure_saturated = false;
     let mut fuse = None;
+    // Per rule, the (closure length, rule count, saturated) the rule was last
+    // matched against, for the loop below.
+    let mut last_slow_run = vec![None::<(usize, usize, bool)>; active_rules.len()];
 
     'fixpoint: loop {
         if iteration >= options.max_iterations {
@@ -1055,6 +1058,8 @@ fn reason_with_plan(
         // be represented safely by the agenda above.
         let rule_count_at_start = active_rules.len();
         let mut pending_rules = Vec::<Rule>::new();
+        // A rule promoted from data mid-run extends the rule set.
+        last_slow_run.resize(active_rules.len(), None);
         for idx in 0..rule_count_at_start {
             if agenda_index.indexed.contains(&idx) { continue; }
             let rule = active_rules[idx].clone();
@@ -1062,6 +1067,15 @@ fn reason_with_plan(
             if !closure_saturated && rule.premise.iter().any(is_deferred_scoped_premise) {
                 continue;
             }
+            // Matching a rule body is a function of the closure, the rule set
+            // and whether the closure is saturated. Re-running one against the
+            // same three answers the same question again and derives nothing
+            // but duplicates -- and the question is not cheap: kaprekar-6174's
+            // digit rule joins ten thousand solutions, and used to do it three
+            // more times against a closure that had stopped growing.
+            let state = (closure.len(), active_rules.len(), closure_saturated);
+            if last_slow_run[idx] == Some(state) { continue; }
+            last_slow_run[idx] = Some(state);
 
             let matches = match_premises(
                 &rule.premise,
@@ -1759,7 +1773,7 @@ fn match_premise_remaining(
         }
         order
     };
-    for broad_scan_pass in [false, true] {
+    'select: for broad_scan_pass in [false, true] {
         for idx in visit_order.iter().copied() {
             let premise = &premises[idx];
             if premise_is_speculative_builtin(premise, &bindings)
@@ -1799,9 +1813,20 @@ fn match_premise_remaining(
             // Visit order is by estimate, so break count ties by source index
             // to pick the same premise a source-order scan would.
             if progresses {
+                let only_one = candidates.len() == 1;
                 if best_index.is_none_or(|b| (candidates.len(), idx) < (best_candidates.len(), b)) {
                     best_index = Some(idx);
                     best_candidates = candidates;
+                }
+                // Nothing can beat one candidate. A premise with none is never
+                // selected (it is skipped above), so one is the smallest count
+                // there is, and two premises with one candidate each add one
+                // branch each whichever order they are taken in -- the same
+                // solutions, in the same order. Stopping here is what keeps a
+                // rule body of ready arithmetic from costing a probe of every
+                // remaining premise at every level of the search.
+                if only_one && best_index == Some(idx) {
+                    break 'select;
                 }
             } else if fallback_index.is_none_or(|f| (candidates.len(), idx) < (fallback_candidates.len(), f)) {
                 fallback_index = Some(idx);
@@ -1988,9 +2013,17 @@ fn premise_is_speculative_builtin(premise: &Triple, bindings: &Bindings) -> bool
     let right = resolve(&premise.o, bindings);
 
     if is_math_operator(&iri) || iri == MATH_SUM || iri == MATH_DIFFERENCE {
-        return term_has_unresolved_var(&left) || term_has_unresolved_var(&right);
+        // The object is what these compute, so an unbound one is the ordinary
+        // forward mode, not a guess: `(?d 1000) math:product ?p` is ready the
+        // moment `?d` is. Calling it speculative left every piece of ready
+        // arithmetic to the permissive fallback, which re-probes every
+        // remaining premise from scratch at every level of the search.
+        return term_has_unresolved_var(&left);
     }
-    if is_math_comparison(&iri) {
+    // Tests, not generators: there is nothing for one to compute, so until
+    // both sides are ground it cannot run and probing it at every level of
+    // the search only costs the probe.
+    if is_math_comparison(&iri) || iri == LOG_EQUAL_TO || iri == LOG_NOT_EQUAL_TO {
         return term_has_unresolved_var(&left) || term_has_unresolved_var(&right);
     }
     if matches!(iri.as_str(), LOG_DTLIT | LOG_LANGLIT | LOG_URI

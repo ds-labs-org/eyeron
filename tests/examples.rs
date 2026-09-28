@@ -271,13 +271,17 @@ fn run_case(case: &Case) {
         })
         .expect("spawn example golden-test worker");
 
-    let timeout = if name.starts_with("deep-taxonomy-")
+    let timeout = if name == "kaprekar-6174" {
+        // Searches every 4-digit number for its Kaprekar chain: about 22s on a
+        // developer machine against eyeling's 3.6s, and roughly three times
+        // that on a CI runner, which is why it needs more room than the others.
+        // The remaining gap is the seven unrolled chain rules, each re-joined
+        // by the agenda for every one of the 10,000 kap:step facts; that is
+        // worth closing, not a reason to leave the example out.
+        std::time::Duration::from_secs(240)
+    } else if name.starts_with("deep-taxonomy-")
         || name.starts_with("rdf-message-")
         || name == "dining-philosophers"
-        // Searches every 4-digit number for its Kaprekar chain. It takes about
-        // 30s here against eyeling's 3s, which is a gap worth closing, not a
-        // reason to leave the example out.
-        || name == "kaprekar-6174"
     {
         std::time::Duration::from_secs(90)
     } else {
