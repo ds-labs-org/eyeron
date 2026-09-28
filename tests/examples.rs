@@ -282,6 +282,10 @@ fn run_case(case: &Case) {
     } else if name.starts_with("deep-taxonomy-")
         || name.starts_with("rdf-message-")
         || name == "dining-philosophers"
+        // Takeuchi's function, checked with a proof: about 8s here and so
+        // around 25s on a CI runner, which is too close to the 30s the rest
+        // of the examples get.
+        || name == "takeuchi"
     {
         std::time::Duration::from_secs(90)
     } else {

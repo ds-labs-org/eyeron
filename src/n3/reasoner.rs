@@ -186,7 +186,34 @@ fn blank_binding_name(name: &str) -> String {
     format!("_:{}", name)
 }
 
+/// Whether substitution could change this term at all. Almost every term the
+/// matcher resolves is already ground, and walking one to find that out is far
+/// cheaper than the rebuild below, which allocates a fresh copy of every node
+/// and clones the cycle-guard set once per branch.
+fn term_has_var(term: &Term) -> bool {
+    match term {
+        Term::Var(_) => true,
+        Term::List(items) => items.iter().any(term_has_var),
+        Term::Formula(triples) => triples.iter().any(|t| term_has_var(&t.s) || term_has_var(&t.p) || term_has_var(&t.o)),
+        _ => false,
+    }
+}
+
+/// As `term_has_var`, for the pattern side, where a blank node is a local
+/// existential variable rather than a value.
+fn term_has_var_or_blank(term: &Term) -> bool {
+    match term {
+        Term::Var(_) | Term::Blank(_) => true,
+        Term::List(items) => items.iter().any(term_has_var_or_blank),
+        Term::Formula(triples) => triples
+            .iter()
+            .any(|t| term_has_var_or_blank(&t.s) || term_has_var_or_blank(&t.p) || term_has_var_or_blank(&t.o)),
+        _ => false,
+    }
+}
+
 pub(crate) fn resolve_pattern(term: &Term, bindings: &Bindings) -> Term {
+    if !term_has_var_or_blank(term) { return term.clone(); }
     resolve_pattern_with_seen(term, bindings, &mut HashSet::new())
 }
 
@@ -220,6 +247,7 @@ fn resolve_pattern_with_seen(term: &Term, bindings: &Bindings, seen: &mut HashSe
             }
         }
         Term::List(items) => Term::List(items.iter().map(|item| {
+            if !term_has_var_or_blank(item) { return item.clone(); }
             let mut branch_seen = seen.clone();
             resolve_pattern_with_seen(item, bindings, &mut branch_seen)
         }).collect()),
@@ -999,9 +1027,8 @@ fn reason_with_plan(
                     continue;
                 }
 
-                let mut rest = rule.premise.clone();
-                if premise_index >= rest.len() { continue; }
-                rest.remove(premise_index);
+                if premise_index >= rule.premise.len() { continue; }
+                let rest: Vec<usize> = (0..rule.premise.len()).filter(|&i| i != premise_index).collect();
                 let mut rule_bindings = Vec::<Bindings>::new();
                 let mut backward_stack = HashSet::<String>::new();
                 let mut budget = SearchBudget::new(
@@ -1009,6 +1036,7 @@ fn reason_with_plan(
                     std::mem::take(&mut report.completed_backward_goals),
                 );
                 match_premise_remaining(
+                    &rule.premise,
                     rest,
                     &closure,
                     Some(&fact_index),
@@ -1672,7 +1700,8 @@ fn match_premises(
         std::mem::take(&mut report.completed_backward_goals),
     );
     match_premise_remaining(
-        premises.to_vec(),
+        premises,
+        (0..premises.len()).collect(),
         facts,
         fact_index,
         rules,
@@ -1698,11 +1727,16 @@ fn match_premise_at(
     budget: &mut SearchBudget,
     out: &mut Vec<Bindings>,
 ) {
-    match_premise_remaining(premises[index..].to_vec(), facts, fact_index, rules, bindings, depth, backward_stack, budget, out);
+    match_premise_remaining(premises, (index..premises.len()).collect(), facts, fact_index, rules, bindings, depth, backward_stack, budget, out);
 }
 
+/// `remaining` names the premises still to satisfy, as positions in
+/// `premises`. Carrying indices rather than a shrinking `Vec<Triple>` is what
+/// keeps the recursion cheap: a triple is 216 bytes and three heap strings, so
+/// cloning the list at every node of the search cost more than the search.
 fn match_premise_remaining(
-    premises: Vec<Triple>,
+    premises: &[Triple],
+    remaining: Vec<usize>,
     facts: &[Triple],
     fact_index: Option<&FactIndex>,
     rules: &[Rule],
@@ -1713,7 +1747,7 @@ fn match_premise_remaining(
     out: &mut Vec<Bindings>,
 ) {
     if !budget.tick() { return; }
-    if premises.is_empty() {
+    if remaining.is_empty() {
         out.push(canonicalize_owned(bindings));
         return;
     }
@@ -1728,8 +1762,8 @@ fn match_premise_remaining(
     // This matters for recursive examples such as hanoi.n3.  Without the early
     // failure check, the matcher can bind `?N1` with math:difference even when
     // `?N math:greaterThan 1` is already false, then recursively try 0, -1, ... .
-    for premise in &premises {
-        if premise_is_definitively_false(premise, facts, fact_index, rules, &bindings) {
+    for &i in &remaining {
+        if premise_is_definitively_false(&premises[i], facts, fact_index, rules, &bindings) {
             return;
         }
     }
@@ -1764,10 +1798,21 @@ fn match_premise_remaining(
     // Visit ordinary indexed fact premises cheapest-bucket-first (builtins keep
     // their slots), so the estimate-based skip below prunes the big buckets.
     let visit_order: Vec<usize> = {
-        let mut order: Vec<usize> = (0..premises.len()).collect();
+        let mut order: Vec<usize> = remaining.clone();
         if let Some(index) = fact_index {
-            let slots: Vec<usize> = order.iter().copied().filter(|&i| !is_builtin_premise(&premises[i]) && !may_match_rule_fact(&premises[i], &bindings)).collect();
-            let mut keyed: Vec<(usize, usize)> = slots.iter().map(|&i| (index.estimate(facts, &premises[i], &bindings).map_or(usize::MAX, |e| e.0), i)).collect();
+            let slots: Vec<usize> = (0..order.len())
+                .filter(|&slot| {
+                    let i = order[slot];
+                    !is_builtin_premise(&premises[i]) && !may_match_rule_fact(&premises[i], &bindings)
+                })
+                .collect();
+            let mut keyed: Vec<(usize, usize)> = slots
+                .iter()
+                .map(|&slot| {
+                    let i = order[slot];
+                    (index.estimate(facts, &premises[i], &bindings).map_or(usize::MAX, |e| e.0), i)
+                })
+                .collect();
             keyed.sort_by_key(|k| k.0);
             for (slot, (_, i)) in slots.iter().zip(keyed) { order[*slot] = i; }
         }
@@ -1777,7 +1822,7 @@ fn match_premise_remaining(
         for idx in visit_order.iter().copied() {
             let premise = &premises[idx];
             if premise_is_speculative_builtin(premise, &bindings)
-                || aggregate_waits_for_sibling_binding(premise, &premises, idx, &bindings)
+                || aggregate_waits_for_sibling_binding(premise, premises, &remaining, idx, &bindings)
             {
                 continue;
             }
@@ -1849,8 +1894,9 @@ fn match_premise_remaining(
     }
 
     if best_index.is_none() {
-        for (idx, premise) in premises.iter().enumerate() {
-            if aggregate_waits_for_sibling_binding(premise, &premises, idx, &bindings) {
+        for &idx in &remaining {
+            let premise = &premises[idx];
+            if aggregate_waits_for_sibling_binding(premise, premises, &remaining, idx, &bindings) {
                 continue;
             }
             let candidates = match_one_premise(premise, facts, fact_index, rules, &bindings, depth, backward_stack, budget, true);
@@ -1877,10 +1923,10 @@ fn match_premise_remaining(
             best_candidates,
         );
     }
-    let mut rest = premises;
-    rest.remove(idx);
+    let mut rest = remaining;
+    rest.retain(|&i| i != idx);
     for b in best_candidates {
-        match_premise_remaining(rest.clone(), facts, fact_index, rules, b, depth, backward_stack, budget, out);
+        match_premise_remaining(premises, rest.clone(), facts, fact_index, rules, b, depth, backward_stack, budget, out);
     }
 }
 
@@ -1914,7 +1960,8 @@ fn premise_needs_broad_fact_scan(
 
 fn aggregate_waits_for_sibling_binding(
     premise: &Triple,
-    all_premises: &[Triple],
+    premises: &[Triple],
+    remaining: &[usize],
     premise_index: usize,
     bindings: &Bindings,
 ) -> bool {
@@ -1979,11 +2026,11 @@ fn aggregate_waits_for_sibling_binding(
     }
 
     let mut sibling_vars = HashSet::<String>::new();
-    for (idx, other) in all_premises.iter().enumerate() {
+    for &idx in remaining {
         if idx == premise_index {
             continue;
         }
-        collect_sibling_context_var_names(other, bindings, &mut sibling_vars);
+        collect_sibling_context_var_names(&premises[idx], bindings, &mut sibling_vars);
     }
 
     aggregate_formula_vars
@@ -2227,7 +2274,7 @@ fn match_one_premise(
             let rule_fact = rule_to_triple(rule, &format!("__rulefact_{}__", rule_idx));
             let mut b = bindings.clone();
             if match_triple(premise, &rule_fact, &mut b) {
-                out.push(canonicalize_bindings(&b));
+                out.push(canonicalize_owned(b));
             }
         }
     }
@@ -2351,7 +2398,7 @@ fn solve_backward_goal(
         for answer in answers {
             let mut b = bindings.clone();
             if unify_triple(&goal, answer, &mut b) {
-                replayed.push(canonicalize_bindings(&b));
+                replayed.push(canonicalize_owned(b));
             }
         }
         return replayed;
@@ -3138,8 +3185,8 @@ fn eval_equal(left: &Term, right: &Term, bindings: &Bindings, facts: &[Triple]) 
     let r = normalize_for_builtin_equality(resolve_pattern(right, bindings), facts);
     match (&l, &r) {
         (Term::Var(a), Term::Var(b)) if a == b => vec![bindings.clone()],
-        (Term::Var(a), other) => bind_one(bindings, a, other.clone()).into_iter().map(|b| canonicalize_bindings(&b)).collect(),
-        (other, Term::Var(b)) => bind_one(bindings, b, other.clone()).into_iter().map(|b| canonicalize_bindings(&b)).collect(),
+        (Term::Var(a), other) => bind_one(bindings, a, other.clone()).into_iter().map(canonicalize_owned).collect(),
+        (other, Term::Var(b)) => bind_one(bindings, b, other.clone()).into_iter().map(canonicalize_owned).collect(),
         (a, b) if terms_equal_semantic(a, b) => vec![bindings.clone()],
         _ => Vec::new(),
     }
@@ -3247,7 +3294,7 @@ fn eval_collect_all_in(
     let mut out = bindings.clone();
     let mut results = Vec::new();
     if unify_term(&result_template, &collected_list, &mut out) {
-        results.push(canonicalize_bindings(&out));
+        results.push(canonicalize_owned(out));
     }
     results
 }
@@ -3332,7 +3379,7 @@ fn eval_for_all_in(
         Term::Formula(_) => {}
         _ => {}
     }
-    vec![canonicalize_bindings(&b)]
+    vec![canonicalize_owned(b)]
 }
 
 fn eval_log_conclusion(
@@ -3357,7 +3404,7 @@ fn eval_log_conclusion(
 
     let mut b = bindings.clone();
     let value = Term::Formula(closure);
-    if unify_term(object, &value, &mut b) { vec![canonicalize_bindings(&b)] } else { Vec::new() }
+    if unify_term(object, &value, &mut b) { vec![canonicalize_owned(b)] } else { Vec::new() }
 }
 
 fn eval_log_conjunction(subject: &Term, object: &Term, bindings: &Bindings, facts: &[Triple]) -> Vec<Bindings> {
@@ -3389,7 +3436,7 @@ fn eval_log_conjunction(subject: &Term, object: &Term, bindings: &Bindings, fact
         }
     }
     let mut b = bindings.clone();
-    if unify_term(object, &Term::Formula(deduped), &mut b) { vec![canonicalize_bindings(&b)] } else { Vec::new() }
+    if unify_term(object, &Term::Formula(deduped), &mut b) { vec![canonicalize_owned(b)] } else { Vec::new() }
 }
 
 
@@ -3414,7 +3461,7 @@ fn eval_log_includes(subject: &Term, object: &Term, bindings: &Bindings, facts: 
     let Term::Formula(pattern) = resolve(object, bindings) else { return Vec::new(); };
     let mut out = Vec::new();
     match_formula_subset(&scope, &pattern, bindings, &mut out);
-    out.into_iter().map(|b| canonicalize_bindings(&b)).collect()
+    out.into_iter().map(canonicalize_owned).collect()
 }
 
 fn match_formula_subset(scope: &[Triple], pattern: &[Triple], bindings: &Bindings, out: &mut Vec<Bindings>) {
@@ -3493,7 +3540,7 @@ fn eval_log_not_includes(
             )]);
             let mut b = bindings.clone();
             if bind_one_mut(&mut b, &name, witness) {
-                vec![canonicalize_bindings(&b)]
+                vec![canonicalize_owned(b)]
             } else {
                 Vec::new()
             }
@@ -3593,7 +3640,7 @@ fn eval_log_raw_type(subject: &Term, object: &Term, bindings: &Bindings) -> Vec<
     };
     let value = Term::Iri(iri.to_string());
     let mut b = bindings.clone();
-    if unify_term(object, &value, &mut b) { vec![canonicalize_bindings(&b)] } else { Vec::new() }
+    if unify_term(object, &value, &mut b) { vec![canonicalize_owned(b)] } else { Vec::new() }
 }
 
 fn eval_datatype_inspection(
@@ -3644,7 +3691,7 @@ fn eval_log_dtlit(subject: &Term, object: &Term, bindings: &Bindings, facts: &[T
         {
             let pair = dtlit_pair(lit);
             let mut b = bindings.clone();
-            if unify_term(&s, &pair, &mut b) { vec![canonicalize_bindings(&b)] } else { Vec::new() }
+            if unify_term(&s, &pair, &mut b) { vec![canonicalize_owned(b)] } else { Vec::new() }
         }
         (Term::List(parts), _) if parts.len() == 2 => {
             let Some(lex) = string_value(&resolve(&parts[0], bindings)) else { return Vec::new(); };
@@ -3661,11 +3708,11 @@ fn eval_log_dtlit(subject: &Term, object: &Term, bindings: &Bindings, facts: &[T
                 Term::Literal(Literal { value: lex, datatype: Some(dt), language: None })
             };
             let mut b = bindings.clone();
-            if unify_term(object, &lit, &mut b) { vec![canonicalize_bindings(&b)] } else { Vec::new() }
+            if unify_term(object, &lit, &mut b) { vec![canonicalize_owned(b)] } else { Vec::new() }
         }
         (Term::Var(name), Term::Literal(lit)) => {
             let pair = dtlit_pair(lit);
-            bind_one(bindings, name, pair).into_iter().map(|b| canonicalize_bindings(&b)).collect()
+            bind_one(bindings, name, pair).into_iter().map(canonicalize_owned).collect()
         }
         (Term::Var(_), Term::Var(_)) => vec![bindings.clone()],
         _ => Vec::new(),
@@ -3694,11 +3741,11 @@ fn eval_log_langlit(subject: &Term, object: &Term, bindings: &Bindings, facts: &
             if lang.is_empty() { return Vec::new(); }
             let lit = Term::Literal(Literal { value: text, datatype: None, language: Some(lang) });
             let mut b = bindings.clone();
-            if unify_term(object, &lit, &mut b) { vec![canonicalize_bindings(&b)] } else { Vec::new() }
+            if unify_term(object, &lit, &mut b) { vec![canonicalize_owned(b)] } else { Vec::new() }
         }
         (Term::Var(name), Term::Literal(lit)) if lit.language.is_some() => {
             let pair = Term::List(vec![Term::Literal(Literal::plain(lit.value.clone())), Term::Literal(Literal::plain(lit.language.clone().unwrap()))]);
-            bind_one(bindings, name, pair).into_iter().map(|b| canonicalize_bindings(&b)).collect()
+            bind_one(bindings, name, pair).into_iter().map(canonicalize_owned).collect()
         }
         (Term::Var(_), Term::Var(_)) => vec![bindings.clone()],
         _ => Vec::new(),
@@ -3735,7 +3782,7 @@ fn eval_log_semantics(subject: &Term, object: &Term, bindings: &Bindings) -> Vec
     let Some(value) = hello_semantics_formula() else { return Vec::new(); };
     let mut b = bindings.clone();
     if unify_term(object, &value, &mut b) {
-        vec![canonicalize_bindings(&b)]
+        vec![canonicalize_owned(b)]
     } else {
         Vec::new()
     }
@@ -3752,7 +3799,7 @@ fn eval_log_semantics_or_error(subject: &Term, object: &Term, bindings: &Binding
     };
     let mut b = bindings.clone();
     if unify_term(object, &value, &mut b) {
-        vec![canonicalize_bindings(&b)]
+        vec![canonicalize_owned(b)]
     } else {
         Vec::new()
     }
@@ -3763,7 +3810,7 @@ fn eval_log_parsed_as_n3(subject: &Term, object: &Term, bindings: &Bindings) -> 
     let parsed = match parse_n3(&text, Some("http://example.org/")) { Ok(doc) => doc, Err(_) => return Vec::new() };
     let value = Term::Formula(parsed.facts);
     let mut b = bindings.clone();
-    if unify_term(object, &value, &mut b) { vec![canonicalize_bindings(&b)] } else { Vec::new() }
+    if unify_term(object, &value, &mut b) { vec![canonicalize_owned(b)] } else { Vec::new() }
 }
 
 fn eval_log_skolem(subject: &Term, object: &Term, bindings: &Bindings) -> Vec<Bindings> {
@@ -3771,7 +3818,7 @@ fn eval_log_skolem(subject: &Term, object: &Term, bindings: &Bindings) -> Vec<Bi
     if matches!(s, Term::Var(_)) { return Vec::new(); }
     let skolem = Term::Iri(format!("https://eyereasoner.github.io/.well-known/genid/{}", stable_term_hash(&s)));
     let mut b = bindings.clone();
-    if unify_term(object, &skolem, &mut b) { vec![canonicalize_bindings(&b)] } else { Vec::new() }
+    if unify_term(object, &skolem, &mut b) { vec![canonicalize_owned(b)] } else { Vec::new() }
 }
 
 /// `?x log:uuid ?u`: a deterministic UUID-shaped string for a bound term.
@@ -4004,7 +4051,7 @@ fn eval_list_append(left: &Term, right: &Term, bindings: &Bindings, facts: &[Tri
     if all_parts_resolved {
         let mut b = bindings.clone();
         return if unify_listish_loose_numeric(right, concatenated, &mut b, facts) {
-            vec![canonicalize_bindings(&b)]
+            vec![canonicalize_owned(b)]
         } else {
             Vec::new()
         };
@@ -4115,7 +4162,7 @@ fn eval_list_iterate(left: &Term, right: &Term, bindings: &Bindings, facts: &[Tr
         let pair = Term::List(vec![numeric_literal(idx as f64, true), value]);
         let mut b = bindings.clone();
         if unify_term_list_builtin_facts(right, &pair, &mut b, facts) {
-            out.push(canonicalize_bindings(&b));
+            out.push(canonicalize_owned(b));
         }
     }
     out
@@ -4163,7 +4210,7 @@ fn eval_list_map(
 
     let result = Term::List(mapped);
     let mut b = bindings.clone();
-    if unify_term(right, &result, &mut b) { vec![canonicalize_bindings(&b)] } else { Vec::new() }
+    if unify_term(right, &result, &mut b) { vec![canonicalize_owned(b)] } else { Vec::new() }
 }
 
 fn eval_list_first_rest(left: &Term, right: &Term, bindings: &Bindings, facts: &[Triple]) -> Vec<Bindings> {
@@ -4171,7 +4218,7 @@ fn eval_list_first_rest(left: &Term, right: &Term, bindings: &Bindings, facts: &
         if items.is_empty() { return Vec::new(); }
         let pair = Term::List(vec![items[0].clone(), Term::List(items[1..].to_vec())]);
         let mut b = bindings.clone();
-        return if unify_term(right, &pair, &mut b) { vec![canonicalize_bindings(&b)] } else { Vec::new() };
+        return if unify_term(right, &pair, &mut b) { vec![canonicalize_owned(b)] } else { Vec::new() };
     }
 
     let right_value = resolve(right, bindings);
@@ -4182,19 +4229,19 @@ fn eval_list_first_rest(left: &Term, right: &Term, bindings: &Bindings, facts: &
     items.push(pair[0].clone());
     items.extend(rest);
     let mut b = bindings.clone();
-    if unify_listish(left, items, &mut b, facts) { vec![canonicalize_bindings(&b)] } else { Vec::new() }
+    if unify_listish(left, items, &mut b, facts) { vec![canonicalize_owned(b)] } else { Vec::new() }
 }
 
 fn eval_list_reverse(left: &Term, right: &Term, bindings: &Bindings, facts: &[Triple]) -> Vec<Bindings> {
     if let Some(mut items) = rdf_or_native_list(left, bindings, facts) {
         items.reverse();
         let mut b = bindings.clone();
-        return if unify_listish(right, items, &mut b, facts) { vec![canonicalize_bindings(&b)] } else { Vec::new() };
+        return if unify_listish(right, items, &mut b, facts) { vec![canonicalize_owned(b)] } else { Vec::new() };
     }
     if let Some(mut items) = rdf_or_native_list(right, bindings, facts) {
         items.reverse();
         let mut b = bindings.clone();
-        return if unify_listish(left, items, &mut b, facts) { vec![canonicalize_bindings(&b)] } else { Vec::new() };
+        return if unify_listish(left, items, &mut b, facts) { vec![canonicalize_owned(b)] } else { Vec::new() };
     }
     Vec::new()
 }
@@ -4212,7 +4259,7 @@ fn eval_list_sort(left: &Term, right: &Term, bindings: &Bindings, facts: &[Tripl
     } else {
         unify_listish(left, items, &mut out, facts)
     };
-    if ok { vec![canonicalize_bindings(&out)] } else { Vec::new() }
+    if ok { vec![canonicalize_owned(out)] } else { Vec::new() }
 }
 
 fn compare_terms_for_list_sort(a: &Term, b: &Term) -> std::cmp::Ordering {
@@ -4316,20 +4363,20 @@ fn eval_list_builtin(pred: &str, left: &Term, right: &Term, bindings: &Bindings,
             let Some(items) = rdf_or_native_list(left, bindings, facts) else { return Vec::new(); };
             let Some(last) = items.last().cloned() else { return Vec::new(); };
             let mut b = bindings.clone();
-            if unify_term_list_builtin_facts(right, &last, &mut b, facts) { vec![canonicalize_bindings(&b)] } else { Vec::new() }
+            if unify_term_list_builtin_facts(right, &last, &mut b, facts) { vec![canonicalize_owned(b)] } else { Vec::new() }
         }
         LIST_LENGTH => {
             let Some(items) = rdf_or_native_list(left, bindings, facts) else { return Vec::new(); };
             let value = numeric_literal(items.len() as f64, true);
             let mut b = bindings.clone();
-            if unify_term_list_builtin_facts(right, &value, &mut b, facts) { vec![canonicalize_bindings(&b)] } else { Vec::new() }
+            if unify_term_list_builtin_facts(right, &value, &mut b, facts) { vec![canonicalize_owned(b)] } else { Vec::new() }
         }
         LIST_MEMBER => {
             let Some(items) = rdf_or_native_list(left, bindings, facts) else { return Vec::new(); };
             let mut out = Vec::new();
             for item in items {
                 let mut b = bindings.clone();
-                if unify_term_list_builtin_facts(right, &item, &mut b, facts) { out.push(canonicalize_bindings(&b)); }
+                if unify_term_list_builtin_facts(right, &item, &mut b, facts) { out.push(canonicalize_owned(b)); }
             }
             out
         }
@@ -4339,7 +4386,7 @@ fn eval_list_builtin(pred: &str, left: &Term, right: &Term, bindings: &Bindings,
             let mut out = Vec::new();
             for candidate in items {
                 let mut b = bindings.clone();
-                if unify_term_list_builtin_facts(&item, &candidate, &mut b, facts) { out.push(canonicalize_bindings(&b)); }
+                if unify_term_list_builtin_facts(&item, &candidate, &mut b, facts) { out.push(canonicalize_owned(b)); }
             }
             out
         }
@@ -4351,7 +4398,7 @@ fn eval_list_builtin(pred: &str, left: &Term, right: &Term, bindings: &Bindings,
             if idx.value < 0.0 || idx.value.fract() != 0.0 { return Vec::new(); }
             let Some(value) = items.get(idx.value as usize).cloned() else { return Vec::new(); };
             let mut b = bindings.clone();
-            if unify_term_list_builtin_facts(right, &value, &mut b, facts) { vec![canonicalize_bindings(&b)] } else { Vec::new() }
+            if unify_term_list_builtin_facts(right, &value, &mut b, facts) { vec![canonicalize_owned(b)] } else { Vec::new() }
         }
         LIST_REMOVE => {
             let Some(parts) = rdf_or_native_list(left, bindings, facts) else { return Vec::new(); };
@@ -4360,7 +4407,7 @@ fn eval_list_builtin(pred: &str, left: &Term, right: &Term, bindings: &Bindings,
             let remove = resolve(&parts[1], bindings);
             let kept = items.into_iter().filter(|item| !terms_equal_for_remove(item, &remove)).collect::<Vec<_>>();
             let mut b = bindings.clone();
-            if unify_listish(right, kept, &mut b, facts) { vec![canonicalize_bindings(&b)] } else { Vec::new() }
+            if unify_listish(right, kept, &mut b, facts) { vec![canonicalize_owned(b)] } else { Vec::new() }
         }
         _ => Vec::new(),
     }
@@ -4370,7 +4417,7 @@ fn eval_rdf_first(left: &Term, right: &Term, bindings: &Bindings, facts: &[Tripl
     if let Some(items) = rdf_or_native_list(left, bindings, facts) {
         let Some(first) = items.first().cloned() else { return Vec::new(); };
         let mut b = bindings.clone();
-        return if unify_term_list_builtin_facts(right, &first, &mut b, facts) { vec![canonicalize_bindings(&b)] } else { Vec::new() };
+        return if unify_term_list_builtin_facts(right, &first, &mut b, facts) { vec![canonicalize_owned(b)] } else { Vec::new() };
     }
 
     // Virtual RDF list matching: a native list term used as a subject behaves as
@@ -4391,7 +4438,7 @@ fn eval_rdf_first(left: &Term, right: &Term, bindings: &Bindings, facts: &[Tripl
             let Some(first) = items.first().cloned() else { continue; };
             let mut b = bindings.clone();
             if unify_term(left, &candidate, &mut b) && unify_term_list_builtin_facts(right, &first, &mut b, facts) {
-                out.push(canonicalize_bindings(&b));
+                out.push(canonicalize_owned(b));
             }
         }
         return out;
@@ -4404,7 +4451,7 @@ fn eval_rdf_rest(left: &Term, right: &Term, bindings: &Bindings, facts: &[Triple
         if items.is_empty() { return Vec::new(); }
         let rest = items[1..].to_vec();
         let mut b = bindings.clone();
-        return if unify_listish(right, rest, &mut b, facts) { vec![canonicalize_bindings(&b)] } else { Vec::new() };
+        return if unify_listish(right, rest, &mut b, facts) { vec![canonicalize_owned(b)] } else { Vec::new() };
     }
 
     if matches!(resolve_pattern(left, bindings), Term::Var(_)) {
@@ -4423,7 +4470,7 @@ fn eval_rdf_rest(left: &Term, right: &Term, bindings: &Bindings, facts: &[Triple
             let rest = items[1..].to_vec();
             let mut b = bindings.clone();
             if unify_term(left, &candidate, &mut b) && unify_listish(right, rest, &mut b, facts) {
-                out.push(canonicalize_bindings(&b));
+                out.push(canonicalize_owned(b));
             }
         }
         return out;
@@ -4440,7 +4487,7 @@ fn eval_math_difference(left: &Term, right: &Term, bindings: &Bindings, facts: &
     if let (Some(a), Some(b)) = (datetime_seconds(&first), datetime_seconds(&second)) {
         let result = typed_literal(format_duration_seconds(a - b), XSD_DURATION);
         let mut out = bindings.clone();
-        return if unify_term(right, &result, &mut out) { vec![canonicalize_bindings(&out)] } else { Vec::new() };
+        return if unify_term(right, &result, &mut out) { vec![canonicalize_owned(out)] } else { Vec::new() };
     }
     let Some(a) = numeric_value(&first) else { return Vec::new(); };
     let Some(b) = numeric_value(&second) else { return Vec::new(); };
@@ -4450,7 +4497,7 @@ fn eval_math_difference(left: &Term, right: &Term, bindings: &Bindings, facts: &
     };
     if matches!(resolve(right, bindings), Term::Blank(_)) { return vec![bindings.clone()]; }
     let mut out = bindings.clone();
-    if unify_term_loose_numeric(right, &result, &mut out) { vec![canonicalize_bindings(&out)] } else { Vec::new() }
+    if unify_term_loose_numeric(right, &result, &mut out) { vec![canonicalize_owned(out)] } else { Vec::new() }
 }
 
 fn is_math_operator(iri: &str) -> bool {
@@ -4540,7 +4587,7 @@ where
     let Some(value) = op(nums) else { return Vec::new(); };
     if matches!(resolve(right, bindings), Term::Blank(_)) { return vec![bindings.clone()]; }
     let mut out = bindings.clone();
-    if unify_term_loose_numeric(right, &value, &mut out) { vec![canonicalize_bindings(&out)] } else { Vec::new() }
+    if unify_term_loose_numeric(right, &value, &mut out) { vec![canonicalize_owned(out)] } else { Vec::new() }
 }
 
 /// `op` is the floating-point operation; `exact_op` is the same operation on
@@ -4562,7 +4609,7 @@ where
         (Term::Var(name), _) if allow_inverse => {
             let Some(n) = numeric_value(&r) else { return Vec::new(); };
             let value = apply(&n);
-            bind_one(bindings, name, value).into_iter().map(|b| canonicalize_bindings(&b)).collect()
+            bind_one(bindings, name, value).into_iter().map(canonicalize_owned).collect()
         }
         (Term::Blank(_), _) if allow_inverse => {
             if matches!(r, Term::Blank(_)) || numeric_value(&r).is_some() { vec![bindings.clone()] } else { Vec::new() }
@@ -4571,7 +4618,7 @@ where
         (_, Term::Var(name)) => {
             let Some(n) = numeric_value(&l) else { return Vec::new(); };
             let value = apply(&n);
-            bind_one(bindings, name, value).into_iter().map(|b| canonicalize_bindings(&b)).collect()
+            bind_one(bindings, name, value).into_iter().map(canonicalize_owned).collect()
         }
         (_, Term::Blank(_)) => {
             if numeric_value(&l).is_some() { vec![bindings.clone()] } else { Vec::new() }
@@ -4580,7 +4627,7 @@ where
             let Some(n) = numeric_value(&l) else { return Vec::new(); };
             let value = apply(&n);
             let mut out = bindings.clone();
-            if unify_term_loose_numeric(right, &value, &mut out) { vec![canonicalize_bindings(&out)] } else { Vec::new() }
+            if unify_term_loose_numeric(right, &value, &mut out) { vec![canonicalize_owned(out)] } else { Vec::new() }
         }
     }
 }
@@ -4602,10 +4649,10 @@ where
     match (&l, &r) {
         (Term::Var(_), Term::Var(_)) => vec![bindings.clone()],
         (Term::Var(a), Term::Blank(_)) => {
-            bind_one(bindings, a, inverse_zero).into_iter().map(|b| canonicalize_bindings(&b)).collect()
+            bind_one(bindings, a, inverse_zero).into_iter().map(canonicalize_owned).collect()
         }
         (Term::Blank(_), Term::Var(b)) => {
-            bind_one(bindings, b, zero).into_iter().map(|b| canonicalize_bindings(&b)).collect()
+            bind_one(bindings, b, zero).into_iter().map(canonicalize_owned).collect()
         }
         (Term::Blank(_), Term::Blank(_)) => vec![bindings.clone()],
         (Term::Var(name), _) => {
@@ -4613,7 +4660,7 @@ where
             let computed = inverse(n.value);
             if !computed.is_finite() && !computed.is_infinite() { return Vec::new(); }
             let value = numeric_literal(computed, n.integer);
-            bind_one(bindings, name, value).into_iter().map(|b| canonicalize_bindings(&b)).collect()
+            bind_one(bindings, name, value).into_iter().map(canonicalize_owned).collect()
         }
         (Term::Blank(_), _) => {
             if numeric_value(&r).is_some() { vec![bindings.clone()] } else { Vec::new() }
@@ -4621,7 +4668,7 @@ where
         (_, Term::Var(name)) => {
             let Some(n) = numeric_value(&l) else { return Vec::new(); };
             let value = numeric_literal(forward(n.value), n.integer);
-            bind_one(bindings, name, value).into_iter().map(|b| canonicalize_bindings(&b)).collect()
+            bind_one(bindings, name, value).into_iter().map(canonicalize_owned).collect()
         }
         (_, Term::Blank(_)) => {
             if numeric_value(&l).is_some() { vec![bindings.clone()] } else { Vec::new() }
@@ -4630,7 +4677,7 @@ where
             let Some(n) = numeric_value(&l) else { return Vec::new(); };
             let value = numeric_literal(forward(n.value), n.integer);
             let mut out = bindings.clone();
-            if unify_term_loose_numeric(right, &value, &mut out) { vec![canonicalize_bindings(&out)] } else { Vec::new() }
+            if unify_term_loose_numeric(right, &value, &mut out) { vec![canonicalize_owned(out)] } else { Vec::new() }
         }
     }
 }
@@ -4648,7 +4695,7 @@ fn eval_exponentiation(left: &Term, right: &Term, bindings: &Bindings, facts: &[
             if b.value <= 0.0 || r.value <= 0.0 { return Vec::new(); }
             let e = r.value.ln() / b.value.ln();
             let value = numeric_literal(e, true);
-            bind_one(bindings, name, value).into_iter().map(|b| canonicalize_bindings(&b)).collect()
+            bind_one(bindings, name, value).into_iter().map(canonicalize_owned).collect()
         }
         _ => {
             let Some(b) = numeric_value(&base) else { return Vec::new(); };
@@ -4657,7 +4704,7 @@ fn eval_exponentiation(left: &Term, right: &Term, bindings: &Bindings, facts: &[
                 .unwrap_or_else(|| numeric_literal(b.value.powf(e.value), b.integer && e.integer));
             if matches!(resolve(right, bindings), Term::Blank(_)) { return vec![bindings.clone()]; }
             let mut out = bindings.clone();
-            if unify_term_loose_numeric(right, &value, &mut out) { vec![canonicalize_bindings(&out)] } else { Vec::new() }
+            if unify_term_loose_numeric(right, &value, &mut out) { vec![canonicalize_owned(out)] } else { Vec::new() }
         }
     }
 }
@@ -5026,7 +5073,7 @@ fn bind_string_result(right: &Term, text: String, bindings: &Bindings) -> Vec<Bi
     }
     let value = Term::Literal(Literal::plain(text));
     let mut b = bindings.clone();
-    if unify_term(right, &value, &mut b) { vec![canonicalize_bindings(&b)] } else { Vec::new() }
+    if unify_term(right, &value, &mut b) { vec![canonicalize_owned(b)] } else { Vec::new() }
 }
 
 fn simple_format(fmt: &str, args: &[String]) -> Option<String> {
@@ -5104,7 +5151,7 @@ fn eval_time_builtin(pred: &str, left: &Term, right: &Term, bindings: &Bindings)
         let Some((seconds, millis)) = current_unix_time() else { return Vec::new(); };
         let value = typed_literal(format_datetime_utc(seconds, millis), XSD_DATE_TIME);
         let mut b = bindings.clone();
-        return if unify_term(right, &value, &mut b) { vec![canonicalize_bindings(&b)] } else { Vec::new() };
+        return if unify_term(right, &value, &mut b) { vec![canonicalize_owned(b)] } else { Vec::new() };
     }
     let Some(dt) = string_value(&resolve(left, bindings)) else { return Vec::new(); };
     let Some(parts) = parse_datetime_parts(&dt) else { return Vec::new(); };
@@ -5119,7 +5166,7 @@ fn eval_time_builtin(pred: &str, left: &Term, right: &Term, bindings: &Bindings)
         _ => return Vec::new(),
     };
     let mut b = bindings.clone();
-    if unify_term(right, &value, &mut b) { vec![canonicalize_bindings(&b)] } else { Vec::new() }
+    if unify_term(right, &value, &mut b) { vec![canonicalize_owned(b)] } else { Vec::new() }
 }
 
 struct DateTimeParts {
@@ -5807,6 +5854,7 @@ fn occurs_in_with_seen(
 }
 
 fn resolve(term: &Term, bindings: &Bindings) -> Term {
+    if !term_has_var(term) { return term.clone(); }
     resolve_with_seen(term, bindings, &mut HashSet::new())
 }
 
@@ -5820,6 +5868,7 @@ fn resolve_with_seen(term: &Term, bindings: &Bindings, seen: &mut HashSet<String
             }
         }
         Term::List(items) => Term::List(items.iter().map(|item| {
+            if !term_has_var(item) { return item.clone(); }
             let mut branch_seen = seen.clone();
             resolve_with_seen(item, bindings, &mut branch_seen)
         }).collect()),
