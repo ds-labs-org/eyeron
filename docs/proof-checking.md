@@ -2,7 +2,7 @@
 
 > This is the normative description of what it means for an eyeron proof
 > document to be **valid for a source program**, and of what a conforming
-> proof checker must do. `src/proof/` is the reference implementation and
+> proof checker must do. `src/proof_check.rs` is the reference implementation and
 > `eyeron --check-proof` runs it. For how a proof is *written*, see
 > [`n3.md`](n3.md).
 

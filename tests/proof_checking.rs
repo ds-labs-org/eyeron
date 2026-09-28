@@ -14,7 +14,7 @@
 #[path = "support/report.rs"]
 mod report;
 
-use eyeron::proof::Report;
+use eyeron::proof_check::Report;
 use report::{green, progress_line, red};
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -97,7 +97,7 @@ fn check(name: &str) -> Result<Report, String> {
         .map_err(|e| e.message)?;
         document.merge(parsed);
     }
-    eyeron::proof::n3::check_proof_document(&document, &proof).map_err(|e| e.message)
+    eyeron::proof_check_n3::check_proof_document(&document, &proof).map_err(|e| e.message)
 }
 
 fn main() {

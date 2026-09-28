@@ -1,7 +1,7 @@
 use crate::ast::*;
 use crate::error::{EyeronError, Result};
-use crate::n3::lexer::{lex, Token, TokenKind};
-use crate::n3::rdf_compat::RdfFormat;
+use crate::lexer::{lex, Token, TokenKind};
+use crate::rdf_compat::RdfFormat;
 
 /// How deeply terms may nest, both in input and in anything reasoning derives.
 ///
@@ -12,7 +12,7 @@ use crate::n3::rdf_compat::RdfFormat;
 /// ordinary parse error keeps a hostile input from taking the process down.
 /// The deepest nesting in the example and conformance corpora is 14 levels,
 /// and 64 stays well inside the 1 MiB stacks that debug and WebAssembly
-/// builds run on.  `crate::n3::reasoner` holds derived terms to the same
+/// builds run on.  `crate::reasoner` holds derived terms to the same
 /// bound, so no term anywhere in the system can outgrow the stack.
 pub(crate) const MAX_TERM_NESTING_DEPTH: usize = 64;
 

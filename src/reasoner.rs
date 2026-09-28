@@ -3,7 +3,7 @@
 #![allow(clippy::too_many_arguments)]
 
 use crate::ast::*;
-use crate::n3::parser::{parse_n3, MAX_TERM_NESTING_DEPTH};
+use crate::parser::{parse_n3, MAX_TERM_NESTING_DEPTH};
 use num_bigint::BigInt;
 use regex::Regex;
 use std::borrow::Cow;

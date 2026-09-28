@@ -1,4 +1,4 @@
-use crate::n3::reasoner::FiredFuse;
+use crate::reasoner::FiredFuse;
 use crate::ast::*;
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -177,14 +177,14 @@ fn is_implication_triple(t: &Triple) -> bool {
     match (&t.s, &t.p, &t.o) {
         (Term::Formula(_), Term::Iri(p), Term::Formula(_)) => p == LOG_IMPLIES || p == LOG_IMPLIED_BY,
         // An inference fuse concludes `false`, and reads back as one.
-        (Term::Formula(_), Term::Iri(p), o) => p == LOG_IMPLIES && crate::n3::reasoner::is_boolean_false(o),
+        (Term::Formula(_), Term::Iri(p), o) => p == LOG_IMPLIES && crate::reasoner::is_boolean_false(o),
         _ => false,
     }
 }
 
 fn implication_to_n3(t: &Triple, prefixes: &BTreeMap<String, String>) -> String {
     match (&t.s, &t.o) {
-        (Term::Formula(lhs), o) if crate::n3::reasoner::is_boolean_false(o) => {
+        (Term::Formula(lhs), o) if crate::reasoner::is_boolean_false(o) => {
             format!("{} => false .\n", formula_to_n3(lhs, prefixes, 0))
         }
         (Term::Formula(lhs), Term::Formula(rhs)) => {

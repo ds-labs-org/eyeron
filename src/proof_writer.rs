@@ -1,6 +1,6 @@
 use crate::ast::*;
-use crate::n3::printing::{term_to_n3_object, triple_to_n3};
-use crate::n3::reasoner::{explain_backward, BackwardStep, DerivedFact, ReasonerResult};
+use crate::printing::{term_to_n3_object, triple_to_n3};
+use crate::reasoner::{explain_backward, BackwardStep, DerivedFact, ReasonerResult};
 use std::collections::{BTreeMap, BTreeSet, HashSet};
 use std::path::Path;
 
@@ -201,7 +201,7 @@ impl<'a> ProofCollector<'a, '_> {
         // equals it.
         for candidate in self.explicit_facts.iter().filter(|fact| !fact.is_ground()) {
             let mut bindings = BTreeMap::new();
-            if crate::n3::reasoner::match_triple(candidate, premise, &mut bindings) {
+            if crate::reasoner::match_triple(candidate, premise, &mut bindings) {
                 let source = self.explicit_sources.get(candidate).cloned();
                 self.remember_entry(ProofEntry::Fact { fact: premise.clone(), source });
                 return;
@@ -213,7 +213,7 @@ impl<'a> ProofCollector<'a, '_> {
         // how `{ ?A => ?B } => { ... }` fires — is given, not unproven.
         for rule in self.rules.iter().filter(|rule| rule.source.is_some()) {
             let mut bindings = BTreeMap::new();
-            if crate::n3::reasoner::match_triple(&rule_statement(rule), premise, &mut bindings) {
+            if crate::reasoner::match_triple(&rule_statement(rule), premise, &mut bindings) {
                 self.remember_entry(ProofEntry::Fact { fact: premise.clone(), source: rule.source.clone() });
                 return;
             }

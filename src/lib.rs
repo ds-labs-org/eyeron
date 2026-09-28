@@ -6,8 +6,17 @@
 
 pub mod ast;
 pub mod error;
-pub mod n3;
-pub mod proof;
+pub mod lexer;
+pub mod parser;
+pub mod printing;
+/// Writing an N3 proof document for what the reasoner derived.
+pub mod proof_writer;
+/// Checking a proof document: `docs/proof-checking.md`'s reference
+/// implementation, and its N3 reader.
+pub mod proof_check;
+pub mod proof_check_n3;
+pub mod rdf_compat;
+pub mod reasoner;
 pub mod sudoku;
 
 #[cfg(target_arch = "wasm32")]
@@ -15,11 +24,11 @@ pub mod wasm;
 
 pub use ast::{Document, Literal, Rule, SourceRef, Term, Triple};
 pub use error::{EyeronError, Result};
-pub use n3::parser::{is_rdf_message_log, parse_n3, parse_n3_with_source, parse_rdf_message_log};
-pub use n3::rdf_compat::{parse_rdf12, RdfFormat};
-pub use n3::printing::{document_debug, fuse_report, rdf12_json, rdf_result_to_string, result_to_string, triples_to_n3, triples_to_trig};
-pub use n3::proof::proof_to_n3;
-pub use n3::reasoner::{
+pub use parser::{is_rdf_message_log, parse_n3, parse_n3_with_source, parse_rdf_message_log};
+pub use rdf_compat::{parse_rdf12, RdfFormat};
+pub use printing::{document_debug, fuse_report, rdf12_json, rdf_result_to_string, result_to_string, triples_to_n3, triples_to_trig};
+pub use proof_writer::proof_to_n3;
+pub use reasoner::{
     reason as reason_document, CompletionStatus, FiredFuse, ReasonerError, ReasonerLimit, ReasonerOptions,
     PreparedReasoner, ReasonerResult, ReasonerStatistics,
 };

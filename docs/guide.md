@@ -78,8 +78,11 @@ The example suite reasons over each example once and checks that single run agai
 | Path | Responsibility |
 | --- | --- |
 | `src/ast.rs` | Shared terms, triples, rules, and documents |
-| `src/n3/` | N3 parser, reasoner, printing, and proofs |
-| `src/proof/` | Proof checker |
+| `src/lexer.rs`, `src/parser.rs`, `src/rdf_compat.rs` | N3, Turtle, TriG and N-Triples/N-Quads front end |
+| `src/reasoner.rs` | Forward and backward reasoning |
+| `src/printing.rs` | N3, TriG and JSON output |
+| `src/proof_writer.rs` | Writes an N3 proof of what was derived |
+| `src/proof_check.rs`, `src/proof_check_n3.rs` | Proof checker and its N3 reader |
 | `src/main.rs` | Native CLI |
 | `src/wasm.rs` | Browser interface |
 | `examples/` | Inputs with expected outputs and proofs |

@@ -1,7 +1,7 @@
 use eyeron::error::{EyeronError, Result};
-use eyeron::n3::printing::{document_debug, rdf_result_to_string, result_to_string};
-use eyeron::n3::proof::proof_to_n3;
-use eyeron::n3::reasoner::{reason, PreparedReasoner, ReasonerOptions};
+use eyeron::printing::{document_debug, rdf_result_to_string, result_to_string};
+use eyeron::proof_writer::proof_to_n3;
+use eyeron::reasoner::{reason, PreparedReasoner, ReasonerOptions};
 use eyeron::Document;
 use eyeron::{
     fuse_report, is_rdf_message_log, parse_n3, parse_n3_with_source, parse_rdf12, parse_rdf_message_log,
@@ -337,7 +337,7 @@ fn run_check_proof(path: &str, sources: &[(String, String)]) -> Result<()> {
     let source: String = sources.iter().map(|(_, text)| text.as_str()).collect::<Vec<_>>().join("\n");
     let label = sources.first().map(|(label, _)| label.clone()).unwrap_or_else(|| "<input>".to_string());
 
-    let report = eyeron::proof::n3::check_proof(&source, &proof, &label)?;
+    let report = eyeron::proof_check_n3::check_proof(&source, &proof, &label)?;
 
     println!("{}", report.verdict());
     for (kind, count) in &report.counts {

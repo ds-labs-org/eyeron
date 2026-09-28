@@ -8,7 +8,6 @@
 //! re-performs the ones the document recorded — which is what keeps a
 //! checker small enough to be worth trusting (specification §2).
 
-pub mod n3;
 
 use std::collections::BTreeMap;
 

@@ -11,9 +11,9 @@ use std::collections::{BTreeMap, BTreeSet};
 
 use crate::ast::{Term, Triple};
 use crate::error::Result;
-use crate::n3::reasoner::Bindings;
+use crate::reasoner::Bindings;
 
-use super::{check, Checked, Document as ProofDocument, Kind, Report, Resolution};
+use crate::proof_check::{check, Checked, Document as ProofDocument, Kind, Report, Resolution};
 
 const PE: &str = "https://eyereasoner.github.io/pe#";
 
@@ -96,7 +96,7 @@ pub struct N3Proof {
 /// Read `proof` as a proof document for the program in `source`, and check
 /// it.
 pub fn check_proof(source: &str, proof: &str, label: &str) -> Result<Report> {
-    let document = crate::n3::parser::parse_n3_with_source(source, None, Some(label))?;
+    let document = crate::parser::parse_n3_with_source(source, None, Some(label))?;
     check_proof_document(&document, proof)
 }
 
@@ -115,11 +115,11 @@ impl N3Proof {
         // N3 treats a rule as data, so a rule written in the document is
         // itself a statement the document gives.
         let mut given: BTreeSet<Triple> = document.facts.iter().cloned().collect();
-        let rule_statements: Vec<Triple> = rules.iter().map(crate::n3::proof::rule_statement).collect();
+        let rule_statements: Vec<Triple> = rules.iter().map(crate::proof_writer::rule_statement).collect();
         given.extend(rule_statements.iter().cloned());
         let general: Vec<Triple> = document.facts.iter().filter(|fact| !fact.is_ground()).cloned().collect();
 
-        let parsed = crate::n3::parser::parse_n3(proof, None)?;
+        let parsed = crate::parser::parse_n3(proof, None)?;
         // A step is a formula subject carrying the `pe:` vocabulary; what
         // the document claims is written plainly alongside.
         let steps = read_steps(&parsed.facts);
@@ -251,7 +251,7 @@ impl N3Proof {
         if IMPURE_BUILTINS.contains(&name.as_str()) {
             return Ok(Checked::Trusted("impure built-in"));
         }
-        if crate::n3::reasoner::verify_builtin_triple(&step.conclusion) {
+        if crate::reasoner::verify_builtin_triple(&step.conclusion) {
             Ok(Checked::Verified)
         } else {
             Err(format!("re-evaluating {} did not hold", name))
@@ -319,7 +319,7 @@ struct RuleView<'a> {
 }
 
 fn describe(triple: &Triple) -> String {
-    crate::n3::printing::triples_to_n3(&BTreeMap::new(), std::slice::from_ref(triple)).trim().to_string()
+    crate::printing::triples_to_n3(&BTreeMap::new(), std::slice::from_ref(triple)).trim().to_string()
 }
 
 /// Lift a proof document's triples into steps, grouping by the
@@ -470,9 +470,9 @@ mod tests {
     const SOURCE: &str = "@prefix : <http://example.org/> .\n@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n:Socrates a :Human .\n:Human rdfs:subClassOf :Mortal .\n{ ?S a ?A . ?A rdfs:subClassOf ?B . } => { ?S a ?B . } .\n";
 
     fn proof_of(source: &str) -> String {
-        let document = crate::n3::parser::parse_n3_with_source(source, None, Some("test.n3")).unwrap();
-        let result = crate::n3::reasoner::reason(&document, &crate::n3::reasoner::ReasonerOptions { proof: true, ..Default::default() });
-        crate::n3::proof::proof_to_n3(&document.prefixes, &result)
+        let document = crate::parser::parse_n3_with_source(source, None, Some("test.n3")).unwrap();
+        let result = crate::reasoner::reason(&document, &crate::reasoner::ReasonerOptions { proof: true, ..Default::default() });
+        crate::proof_writer::proof_to_n3(&document.prefixes, &result)
     }
 
     #[test]
