@@ -2584,6 +2584,32 @@ pub enum BackwardStep {
 /// premise derived along the way is available the way it was when the rule
 /// fired. `given` is the subset the document actually asserts: only those
 /// are reported as facts, and anything else has to be explained by a rule.
+/// As `explain_backward`, against an index the caller has already built.
+/// Explaining a whole proof asks this once per premise, and building the
+/// index costs one pass over every fact -- so building it per call made
+/// writing a proof cost the product of the two.
+pub(crate) fn explain_backward_indexed(
+    goal: &Triple,
+    facts: &[Triple],
+    fact_index: &FactIndex,
+    given: &BTreeSet<Triple>,
+    rules: &[Rule],
+    max_depth: usize,
+    emit: &mut dyn FnMut(BackwardStep),
+) -> bool {
+    let mut state = ExplainState { visited: HashSet::new(), done: HashSet::new(), budget: SearchBudget::for_proof(max_depth) };
+    explain_backward_inner(goal, facts, fact_index, given, rules, 0, max_depth, &mut state, emit)
+}
+
+/// The index every fact in `facts` belongs to, for `explain_backward_indexed`.
+pub(crate) fn index_of_facts(facts: &[Triple]) -> FactIndex {
+    let mut fact_index = FactIndex::default();
+    for idx in 0..facts.len() {
+        fact_index.insert(facts, idx);
+    }
+    fact_index
+}
+
 pub fn explain_backward(
     goal: &Triple,
     facts: &[Triple],
@@ -2592,12 +2618,8 @@ pub fn explain_backward(
     max_depth: usize,
     emit: &mut dyn FnMut(BackwardStep),
 ) -> bool {
-    let mut fact_index = FactIndex::default();
-    for idx in 0..facts.len() {
-        fact_index.insert(facts, idx);
-    }
-    let mut state = ExplainState { visited: HashSet::new(), done: HashSet::new(), budget: SearchBudget::for_proof(max_depth) };
-    explain_backward_inner(goal, facts, &fact_index, given, rules, 0, max_depth, &mut state, emit)
+    let fact_index = index_of_facts(facts);
+    explain_backward_indexed(goal, facts, &fact_index, given, rules, max_depth, emit)
 }
 
 struct ExplainState {

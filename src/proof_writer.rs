@@ -1,6 +1,6 @@
 use crate::ast::*;
 use crate::printing::{term_to_n3_object, triple_to_n3};
-use crate::reasoner::{explain_backward, BackwardStep, DerivedFact, ReasonerResult};
+use crate::reasoner::{explain_backward_indexed, index_of_facts, BackwardStep, DerivedFact, FactIndex, ReasonerResult};
 use std::collections::{BTreeMap, BTreeSet, HashSet};
 use std::path::Path;
 
@@ -112,6 +112,7 @@ pub(crate) fn collect_all_proof_entries<'a>(
         explicit_facts,
         explicit_sources,
         base_facts,
+        base_index: index_of_facts(base_facts),
         rules,
         seen: HashSet::new(),
         entries: Vec::new(),
@@ -127,6 +128,9 @@ struct ProofCollector<'a, 'b> {
     explicit_facts: &'a BTreeSet<Triple>,
     explicit_sources: &'a BTreeMap<Triple, SourceRef>,
     base_facts: &'a [Triple],
+    /// Built once: `explain_backward_indexed` is asked for every premise in
+    /// the proof, and each call would otherwise index every fact again.
+    base_index: FactIndex,
     rules: &'a [Rule],
     seen: HashSet<String>,
     entries: Vec<ProofEntry<'a>>,
@@ -187,7 +191,7 @@ impl<'a> ProofCollector<'a, '_> {
         // The explanation comes back as a flat set of steps rather than a
         // tree, so a premise used more than once is explained once.
         let mut steps = Vec::new();
-        if explain_backward(premise, self.base_facts, self.explicit_facts, self.rules, 4096, &mut |step| steps.push(step)) {
+        if explain_backward_indexed(premise, self.base_facts, &self.base_index, self.explicit_facts, self.rules, 4096, &mut |step| steps.push(step)) {
             for step in steps {
                 self.remember_backward_step(step);
             }

@@ -1585,3 +1585,61 @@ fn the_reason_str_convenience_wrapper_still_derives_correctly_without_explicit()
     let output = reason(source).unwrap();
     assert!(output.contains(":a :q :b"), "{output}");
 }
+
+#[test]
+fn writing_a_proof_is_linear_in_the_number_of_steps_it_explains() {
+    // `explain_backward` built a fact index from scratch on every call, and
+    // writing a proof calls it once per premise it has to justify -- so the
+    // cost was the number of premises times the number of facts. Measured on
+    // kaprekar-6174 at that version: 8 minutes without finishing, against
+    // eyeling's 8.7s; reduced to a six-digit alphabet it took 46.5s, and
+    // halving the alphabet again took 7.7s -- quadratic, not linear. With the
+    // index built once per proof the same two take 0.57s and 0.29s, and the
+    // full example 14.8s.
+    //
+    // This program derives ~1,100 facts, each justified by ten built-in
+    // premises, which is the shape that made the product large. Measured
+    // here: 0.30s with the index built once, 18.4s with it rebuilt per
+    // premise. The bound is 5s -- well above what a linear walk costs even on
+    // a CI runner a few times slower than this, and well under the quadratic.
+    let source = r#"
+        @prefix : <http://e/>.
+        @prefix list: <http://www.w3.org/2000/10/swap/list#>.
+        @prefix math: <http://www.w3.org/2000/10/swap/math#>.
+
+        :d :items (0 1 2 3 4 5 6 7 8 9 10).
+
+        {
+            :d :items ?L.
+            ?L list:member ?a.
+            ?L list:member ?b.
+            ?L list:member ?c.
+            (?a 100) math:product ?x.
+            (?b 10) math:product ?y.
+            (?x ?y ?c) math:sum ?n.
+            (?n 1) math:sum ?n1.
+            (?n1 1) math:sum ?n2.
+            (?n2 1) math:sum ?n3.
+            (?n3 1) math:sum ?n4.
+            (?n4 1) math:sum ?n5.
+            (?n5 1) math:sum ?n6.
+        } => {
+            ?n :reached ?n6.
+        }.
+    "#;
+
+    let doc = parse_n3(source, None).unwrap();
+    let started = std::time::Instant::now();
+    let result = reason_document(&doc, &ReasonerOptions { proof: true, ..ReasonerOptions::default() });
+    let proof = proof_to_n3(&doc.prefixes, &result);
+    let elapsed = started.elapsed();
+
+    // 100a + 10b + c over 0..=10 collides, so the distinct results are fewer
+    // than the 1,331 triples the rule fires for.
+    assert_eq!(result.derived.len(), 1111);
+    assert!(!proof.is_empty());
+    assert!(
+        elapsed.as_secs() < 5,
+        "writing the proof took {elapsed:?}: explain_backward is indexing every fact per premise again"
+    );
+}
