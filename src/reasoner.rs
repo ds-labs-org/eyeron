@@ -21,7 +21,7 @@ extern "C" {
 
 use std::sync::Arc;
 
-pub type Bindings = BTreeMap<String, Term>;
+pub type Bindings = BTreeMap<Name, Term>;
 
 #[cfg(test)]
 std::thread_local! {
@@ -182,8 +182,8 @@ impl RunReport {
 }
 
 
-fn blank_binding_name(name: &str) -> String {
-    format!("_:{}", name)
+fn blank_binding_name(name: &str) -> Name {
+    format!("_:{}", name).into()
 }
 
 /// Whether substitution could change this term at all. Almost every term the
@@ -217,7 +217,7 @@ pub(crate) fn resolve_pattern(term: &Term, bindings: &Bindings) -> Term {
     resolve_pattern_with_seen(term, bindings, &mut HashSet::new())
 }
 
-fn resolve_pattern_with_seen(term: &Term, bindings: &Bindings, seen: &mut HashSet<String>) -> Term {
+fn resolve_pattern_with_seen(term: &Term, bindings: &Bindings, seen: &mut HashSet<Name>) -> Term {
     match term {
         Term::Var(name) => {
             if !seen.insert(name.clone()) { return term.clone(); }
@@ -801,7 +801,7 @@ pub struct DerivedFact {
     /// of these per derived fact, and a rule binds a handful of variables,
     /// so a map's node -- sized for eleven entries whether it holds one or
     /// eleven -- costs more than the bindings themselves.
-    pub bindings: Vec<(String, Term)>,
+    pub bindings: Vec<(Name, Term)>,
 }
 
 #[derive(Debug, Clone)]
@@ -994,7 +994,7 @@ fn reason_with_plan(
                 };
                 if rule_index >= active_rules.len() { continue; }
                 let rule = active_rules[rule_index].clone();
-                let mut trigger_bindings = BTreeMap::<String, Term>::new();
+                let mut trigger_bindings = BTreeMap::<Name, Term>::new();
                 if !match_triple(&goal, &fact, &mut trigger_bindings) { continue; }
 
                 if rule.premise.len() == 1 {
@@ -1236,7 +1236,7 @@ fn evaluate_query_rules(
     for rule in query_rules {
         let matches = match_premises(&rule.premise, closure, fact_index, rules, options, report);
         for bindings in matches {
-            let mut blank_map = BTreeMap::<String, Term>::new();
+            let mut blank_map = BTreeMap::<Name, Term>::new();
             for head in &rule.conclusion {
                 let Some(t) = instantiate_triple(head, &bindings, &mut blank_map) else { continue; };
                 if is_unquote_instruction(&t) {
@@ -1278,7 +1278,7 @@ fn emit_conclusions(
     // rule with several conclusions derives several facts at once, and a
     // copy of the rule in each was the largest thing a proof held.
     let shared_rule = capture_proof.then(|| Arc::new(rule.clone()));
-    let mut blank_map = BTreeMap::<String, Term>::new();
+    let mut blank_map = BTreeMap::<Name, Term>::new();
 
     for head in &rule.conclusion {
         let Some(t) = instantiate_triple(head, bindings, &mut blank_map) else { continue; };
@@ -1635,8 +1635,8 @@ fn rule_to_triple(rule: &Rule, prefix: &str) -> Triple {
 
 pub(crate) fn boolean_false() -> Term {
     Term::Literal(Literal {
-        value: "false".to_string(),
-        datatype: Some("http://www.w3.org/2001/XMLSchema#boolean".to_string()),
+        value: "false".to_string().into(),
+        datatype: Some("http://www.w3.org/2001/XMLSchema#boolean".to_string().into()),
         language: None,
     })
 }
@@ -1659,7 +1659,7 @@ fn fired_fuse(
     for rule in rules.iter().filter(|rule| rule.is_fuse) {
         let matches = match_premises(&rule.premise, closure, Some(fact_index), rules, options, report);
         let Some(bindings) = matches.into_iter().next() else { continue; };
-        let mut blank_map = BTreeMap::<String, Term>::new();
+        let mut blank_map = BTreeMap::<Name, Term>::new();
         let instance = rule
             .premise
             .iter()
@@ -2035,7 +2035,7 @@ fn aggregate_waits_for_sibling_binding(
 
     aggregate_formula_vars
         .into_iter()
-        .any(|var| sibling_vars.contains(&var) && !bindings.contains_key(&var))
+        .any(|var| sibling_vars.contains(&var) && !bindings.contains_key(var.as_str()))
 }
 
 fn collect_sibling_context_var_names(triple: &Triple, bindings: &Bindings, out: &mut HashSet<String>) {
@@ -2350,11 +2350,11 @@ fn backward_goal_key(goal: &Triple) -> String {
     fn term_key(term: &Term, vars: &mut BTreeMap<String, usize>) -> String {
         match term {
             Term::Var(name) => {
-                let n = if let Some(n) = vars.get(name) {
+                let n = if let Some(n) = vars.get(name.as_str()) {
                     *n
                 } else {
                     let n = vars.len();
-                    vars.insert(name.clone(), n);
+                    vars.insert(name.clone().to_string(), n);
                     n
                 };
                 format!("?{}", n)
@@ -2979,7 +2979,7 @@ fn collect_var_names_triple(triple: &Triple, out: &mut HashSet<String>) {
 
 fn collect_var_names_term(term: &Term, out: &mut HashSet<String>) {
     match term {
-        Term::Var(name) => { out.insert(name.clone()); }
+        Term::Var(name) => { out.insert(name.clone().to_string()); }
         Term::List(items) => {
             for item in items { collect_var_names_term(item, out); }
         }
@@ -3000,7 +3000,7 @@ fn rename_triple(t: &Triple, prefix: &str) -> Triple {
 
 fn rename_term(term: &Term, prefix: &str) -> Term {
     match term {
-        Term::Var(name) => Term::Var(format!("{}{}", prefix, name)),
+        Term::Var(name) => Term::Var(format!("{}{}", prefix, name).into()),
         Term::List(items) => Term::List(items.iter().map(|item| rename_term(item, prefix)).collect()),
         Term::Formula(triples) => Term::Formula(triples.iter().map(|t| rename_triple(t, prefix)).collect()),
         other => other.clone(),
@@ -3248,7 +3248,7 @@ fn eval_collect_all_in(
     // `parts` above is already substituted, so it cannot tell them apart. When
     // the list only arrives through a variable there is nothing syntactic to
     // consult and every blank stays a pattern (the previous behaviour).
-    let mut initial_bindings = BTreeMap::new();
+    let mut initial_bindings = Bindings::new();
     if let Term::List(raw_parts) = subject {
         if let Some(Term::Formula(raw_clause)) = raw_parts.get(1) {
             let mut template_blanks = HashSet::<String>::new();
@@ -3264,7 +3264,7 @@ fn eval_collect_all_in(
                 collect_blank_labels(&triple.o, &mut goal_blanks);
             }
             for label in goal_blanks.difference(&template_blanks) {
-                initial_bindings.insert(blank_binding_name(label), Term::Blank(label.clone()));
+                initial_bindings.insert(blank_binding_name(label), Term::Blank(label.clone().into()));
             }
         }
     }
@@ -3302,7 +3302,7 @@ fn eval_collect_all_in(
 fn collect_blank_labels(term: &Term, out: &mut HashSet<String>) {
     match term {
         Term::Blank(label) => {
-            out.insert(label.clone());
+            out.insert(label.clone().to_string());
         }
         Term::List(items) => items.iter().for_each(|item| collect_blank_labels(item, out)),
         Term::Formula(triples) => triples.iter().for_each(|t| {
@@ -3373,7 +3373,7 @@ fn eval_for_all_in(
     let mut b = bindings.clone();
     match resolve_pattern(object, bindings) {
         Term::Var(name) => {
-            if !bind_one_mut(&mut b, &name, Term::Blank("forAllIn".to_string())) { return Vec::new(); }
+            if !bind_one_mut(&mut b, &name, Term::Blank("forAllIn".to_string().into())) { return Vec::new(); }
         }
         Term::Blank(_) => {}
         Term::Formula(_) => {}
@@ -3534,9 +3534,9 @@ fn eval_log_not_includes(
                 return Vec::new();
             }
             let witness = Term::Formula(vec![Triple::new(
-                Term::Iri("http://example.org/a".to_string()),
-                Term::Iri("http://example.org/b".to_string()),
-                Term::Iri("http://example.org/c".to_string()),
+                Term::Iri("http://example.org/a".to_string().into()),
+                Term::Iri("http://example.org/b".to_string().into()),
+                Term::Iri("http://example.org/c".to_string().into()),
             )]);
             let mut b = bindings.clone();
             if bind_one_mut(&mut b, &name, witness) {
@@ -3638,7 +3638,7 @@ fn eval_log_raw_type(subject: &Term, object: &Term, bindings: &Bindings) -> Vec<
         Term::List(_) => RDF_LIST_IRI,
         _ => LOG_OTHER_IRI,
     };
-    let value = Term::Iri(iri.to_string());
+    let value = Term::Iri(iri.to_string().into());
     let mut b = bindings.clone();
     if unify_term(object, &value, &mut b) { vec![canonicalize_owned(b)] } else { Vec::new() }
 }
@@ -3652,9 +3652,9 @@ fn eval_datatype_inspection(
     let Term::Literal(lit) = resolve_pattern(subject, bindings) else { return Vec::new(); };
     let value = if datatype {
         let iri = if lit.language.is_some() {
-            RDF_LANG_STRING_IRI.to_string()
+            Name::from(RDF_LANG_STRING_IRI)
         } else {
-            lit.datatype.unwrap_or_else(|| XSD_STRING_IRI.to_string())
+            lit.datatype.unwrap_or_else(|| XSD_STRING_IRI.into())
         };
         Term::Iri(iri)
     } else {
@@ -3703,9 +3703,9 @@ fn eval_log_dtlit(subject: &Term, object: &Term, bindings: &Bindings, facts: &[T
                     _ => return Vec::new(),
                 }
             } else if dt == XSD_STRING_IRI {
-                Term::Literal(Literal { value: lex, datatype: None, language: None })
+                Term::Literal(Literal { value: lex.into(), datatype: None, language: None })
             } else {
-                Term::Literal(Literal { value: lex, datatype: Some(dt), language: None })
+                Term::Literal(Literal { value: lex.into(), datatype: Some(dt), language: None })
             };
             let mut b = bindings.clone();
             if unify_term(object, &lit, &mut b) { vec![canonicalize_owned(b)] } else { Vec::new() }
@@ -3721,9 +3721,9 @@ fn eval_log_dtlit(subject: &Term, object: &Term, bindings: &Bindings, facts: &[T
 
 fn dtlit_pair(lit: &Literal) -> Term {
     let datatype = if lit.language.is_some() {
-        RDF_LANG_STRING_IRI.to_string()
+        Name::from(RDF_LANG_STRING_IRI)
     } else {
-        lit.datatype.clone().unwrap_or_else(|| XSD_STRING_IRI.to_string())
+        lit.datatype.clone().unwrap_or_else(|| XSD_STRING_IRI.into())
     };
     Term::List(vec![
         Term::Literal(Literal::plain(lit.value.clone())),
@@ -3739,7 +3739,7 @@ fn eval_log_langlit(subject: &Term, object: &Term, bindings: &Bindings, facts: &
             let Some(text) = string_value(&resolve(&parts[0], bindings)) else { return Vec::new(); };
             let Some(lang) = string_value(&resolve(&parts[1], bindings)) else { return Vec::new(); };
             if lang.is_empty() { return Vec::new(); }
-            let lit = Term::Literal(Literal { value: text, datatype: None, language: Some(lang) });
+            let lit = Term::Literal(Literal { value: text.into(), datatype: None, language: Some(lang.into()) });
             let mut b = bindings.clone();
             if unify_term(object, &lit, &mut b) { vec![canonicalize_owned(b)] } else { Vec::new() }
         }
@@ -3816,7 +3816,7 @@ fn eval_log_parsed_as_n3(subject: &Term, object: &Term, bindings: &Bindings) -> 
 fn eval_log_skolem(subject: &Term, object: &Term, bindings: &Bindings) -> Vec<Bindings> {
     let s = resolve(subject, bindings);
     if matches!(s, Term::Var(_)) { return Vec::new(); }
-    let skolem = Term::Iri(format!("https://eyereasoner.github.io/.well-known/genid/{}", stable_term_hash(&s)));
+    let skolem = Term::Iri(format!("https://eyereasoner.github.io/.well-known/genid/{}", stable_term_hash(&s)).into());
     let mut b = bindings.clone();
     if unify_term(object, &skolem, &mut b) { vec![canonicalize_owned(b)] } else { Vec::new() }
 }
@@ -3830,7 +3830,7 @@ fn eval_log_uuid(subject: &Term, object: &Term, bindings: &Bindings) -> Vec<Bind
         Term::Var(_) => return Vec::new(),
         Term::Iri(iri) => iri.clone(),
         Term::Literal(lit) => lit.value.clone(),
-        other => format!("{:?}", other),
+        other => format!("{:?}", other).into(),
     };
     let hex = sha1_hex(name.as_bytes());
     let mut bytes = [0u8; 16];
@@ -3955,8 +3955,8 @@ fn rdf_or_native_list_resolved(term: &Term, facts: &[Triple], seen: &mut HashSet
 /// "First matching triple wins" when a subject has more than one `rdf:first`
 /// or `rdf:rest` triple, matching the linear-scan `.find()` this replaces.
 fn rdf_list_links(facts: &[Triple]) -> (HashMap<Term, Term>, HashMap<Term, Term>) {
-    let first_pred = Term::Iri(RDF_FIRST.to_string());
-    let rest_pred = Term::Iri(RDF_REST.to_string());
+    let first_pred = Term::Iri(RDF_FIRST.to_string().into());
+    let rest_pred = Term::Iri(RDF_REST.to_string().into());
     let mut first_of = HashMap::new();
     let mut rest_of = HashMap::new();
     for t in facts {
@@ -3980,7 +3980,7 @@ fn unify_listish(term: &Term, items: Vec<Term>, bindings: &mut Bindings, facts: 
         }
     }
     if items.is_empty() {
-        return unify_term(term, &Term::Iri(RDF_NIL.to_string()), bindings);
+        return unify_term(term, &Term::Iri(RDF_NIL.to_string().into()), bindings);
     }
     false
 }
@@ -3999,7 +3999,7 @@ fn unify_listish_loose_numeric(term: &Term, items: Vec<Term>, bindings: &mut Bin
         }
     }
     if items.is_empty() {
-        return unify_term(term, &Term::Iri(RDF_NIL.to_string()), bindings);
+        return unify_term(term, &Term::Iri(RDF_NIL.to_string().into()), bindings);
     }
     false
 }
@@ -4188,7 +4188,7 @@ fn eval_list_map(
     let mut mapped = Vec::new();
     for input in inputs {
         if !input.is_ground() { return Vec::new(); }
-        let goal = Triple::new(input, Term::Iri(pred.clone()), Term::Var(y.clone()));
+        let goal = Triple::new(input, Term::Iri(pred.clone()), Term::Var(y.clone().into()));
         let mut sols = Vec::new();
         match_premise_at(
             &[goal],
@@ -4203,7 +4203,7 @@ fn eval_list_map(
             &mut sols,
         );
         for sol in sols {
-            let value = resolve(&Term::Var(y.clone()), &sol);
+            let value = resolve(&Term::Var(y.clone().into()), &sol);
             if !matches!(value, Term::Var(_)) { mapped.push(value); }
         }
     }
@@ -5198,8 +5198,8 @@ fn parse_datetime_parts(value: &str) -> Option<DateTimeParts> {
 
 fn string_value(term: &Term) -> Option<String> {
     match term {
-        Term::Literal(lit) => Some(lit.value.clone()),
-        Term::Iri(iri) => Some(iri.clone()),
+        Term::Literal(lit) => Some(lit.value.clone().to_string()),
+        Term::Iri(iri) => Some(iri.clone().to_string()),
         _ => None,
     }
 }
@@ -5269,7 +5269,7 @@ const XSD_DATE_TIME: &str = "http://www.w3.org/2001/XMLSchema#dateTime";
 const XSD_DURATION: &str = "http://www.w3.org/2001/XMLSchema#duration";
 
 fn typed_literal(value: String, datatype: &str) -> Term {
-    Term::Literal(Literal { value, datatype: Some(datatype.to_string()), language: None })
+    Term::Literal(Literal { value: value.into(), datatype: Some(datatype.into()), language: None })
 }
 
 fn comparable_number(term: &Term) -> Option<Numeric> {
@@ -5422,7 +5422,7 @@ fn index_form(term: &Term) -> std::borrow::Cow<'_, Term> {
     match term {
         Term::Literal(lit) => match canonical_numeric_lexical(lit) {
             Some(value) if value != lit.value => {
-                Cow::Owned(Term::Literal(Literal { value, ..lit.clone() }))
+                Cow::Owned(Term::Literal(Literal { value: value.into(), ..lit.clone() }))
             }
             _ => Cow::Borrowed(term),
         },
@@ -5448,8 +5448,8 @@ const MAX_EXACT_POWER_BITS: u64 = 2_000_000;
 
 pub(crate) fn integer_literal(value: BigInt) -> Term {
     Term::Literal(Literal {
-        value: value.to_string(),
-        datatype: Some("http://www.w3.org/2001/XMLSchema#integer".to_string()),
+        value: value.to_string().into(),
+        datatype: Some("http://www.w3.org/2001/XMLSchema#integer".to_string().into()),
         language: None,
     })
 }
@@ -5474,8 +5474,8 @@ fn exact_power(base: &Numeric, exponent: &Numeric) -> Option<Term> {
 pub(crate) fn numeric_literal(value: f64, prefer_integer: bool) -> Term {
     if prefer_integer && value.fract() == 0.0 {
         return Term::Literal(Literal {
-            value: format!("{:.0}", value),
-            datatype: Some("http://www.w3.org/2001/XMLSchema#integer".to_string()),
+            value: format!("{:.0}", value).into(),
+            datatype: Some("http://www.w3.org/2001/XMLSchema#integer".to_string().into()),
             language: None,
         });
     }
@@ -5487,7 +5487,7 @@ pub(crate) fn numeric_literal(value: f64, prefer_integer: bool) -> Term {
     } else {
         "http://www.w3.org/2001/XMLSchema#decimal"
     };
-    Term::Literal(Literal { value, datatype: Some(datatype.to_string()), language: None })
+    Term::Literal(Literal { value: value.into(), datatype: Some(datatype.into()), language: None })
 }
 
 fn numeric_terms_equal(a: &Term, b: &Term) -> bool {
@@ -5619,7 +5619,7 @@ fn canonicalize_bindings(bindings: &Bindings) -> Bindings {
 pub(crate) fn instantiate_triple(
     t: &Triple,
     bindings: &Bindings,
-    blank_map: &mut BTreeMap<String, Term>,
+    blank_map: &mut BTreeMap<Name, Term>,
 ) -> Option<Triple> {
     Some(Triple::new(
         instantiate_term(&t.s, bindings, blank_map)?,
@@ -5631,13 +5631,13 @@ pub(crate) fn instantiate_triple(
 fn instantiate_term(
     term: &Term,
     bindings: &Bindings,
-    blank_map: &mut BTreeMap<String, Term>,
+    blank_map: &mut BTreeMap<Name, Term>,
 ) -> Option<Term> {
     match term {
         Term::Var(name) => bindings.get(name).map(|value| resolve(value, bindings)),
         Term::Blank(name) => {
             if let Some(existing) = blank_map.get(name) { return Some(existing.clone()); }
-            let fresh = Term::Blank(format!("{}_{}", name, stable_binding_suffix(bindings)));
+            let fresh = Term::Blank(format!("{}_{}", name, stable_binding_suffix(bindings)).into());
             blank_map.insert(name.clone(), fresh.clone());
             Some(fresh)
         }
@@ -5648,7 +5648,7 @@ fn instantiate_term(
         }
         Term::Formula(triples) => {
             let mut out = Vec::with_capacity(triples.len());
-            let mut formula_blank_map = BTreeMap::<String, Term>::new();
+            let mut formula_blank_map = BTreeMap::<Name, Term>::new();
             let salt = stable_formula_suffix(bindings, triples);
             for triple in triples {
                 out.push(instantiate_formula_triple(triple, bindings, &mut formula_blank_map, &salt));
@@ -5662,7 +5662,7 @@ fn instantiate_term(
 fn instantiate_formula_triple(
     t: &Triple,
     bindings: &Bindings,
-    blank_map: &mut BTreeMap<String, Term>,
+    blank_map: &mut BTreeMap<Name, Term>,
     salt: &str,
 ) -> Triple {
     Triple::new(
@@ -5675,21 +5675,21 @@ fn instantiate_formula_triple(
 fn instantiate_formula_term(
     term: &Term,
     bindings: &Bindings,
-    blank_map: &mut BTreeMap<String, Term>,
+    blank_map: &mut BTreeMap<Name, Term>,
     salt: &str,
 ) -> Term {
     match term {
         Term::Var(name) => bindings.get(name).map(|value| resolve(value, bindings)).unwrap_or_else(|| term.clone()),
         Term::Blank(name) => {
             if let Some(existing) = blank_map.get(name) { return existing.clone(); }
-            let fresh = Term::Blank(format!("{}_{}", name, salt));
+            let fresh = Term::Blank(format!("{}_{}", name, salt).into());
             blank_map.insert(name.clone(), fresh.clone());
             fresh
         }
         Term::List(items) => Term::List(items.iter().map(|item| instantiate_formula_term(item, bindings, blank_map, salt)).collect()),
         Term::Formula(triples) => {
             let nested_salt = stable_formula_suffix(bindings, triples);
-            let mut nested_blank_map = BTreeMap::<String, Term>::new();
+            let mut nested_blank_map = BTreeMap::<Name, Term>::new();
             Term::Formula(triples.iter().map(|t| instantiate_formula_triple(t, bindings, &mut nested_blank_map, &nested_salt)).collect())
         }
         other => other.clone(),
@@ -5815,7 +5815,7 @@ fn bind_one_mut(bindings: &mut Bindings, name: &str, value: Term) -> bool {
         return false;
     }
 
-    bindings.insert(name.to_string(), value);
+    bindings.insert(name.to_string().into(), value);
     true
 }
 
@@ -5832,7 +5832,7 @@ fn occurs_in_with_seen(
     match term {
         Term::Var(var) if var == name => true,
         Term::Var(var) => {
-            if !seen.insert(var.clone()) { return false; }
+            if !seen.insert(var.clone().to_string()) { return false; }
             bindings
                 .get(var)
                 .is_some_and(|bound| occurs_in_with_seen(name, bound, bindings, seen))
@@ -5858,7 +5858,7 @@ fn resolve(term: &Term, bindings: &Bindings) -> Term {
     resolve_with_seen(term, bindings, &mut HashSet::new())
 }
 
-fn resolve_with_seen(term: &Term, bindings: &Bindings, seen: &mut HashSet<String>) -> Term {
+fn resolve_with_seen(term: &Term, bindings: &Bindings, seen: &mut HashSet<Name>) -> Term {
     match term {
         Term::Var(name) => {
             if !seen.insert(name.clone()) { return term.clone(); }
@@ -5892,14 +5892,14 @@ mod reasoner_index_regression_tests {
 
     #[test]
     fn fully_bound_goal_uses_the_more_selective_fact_index_bucket() {
-        let rdf_type = Term::Iri(RDF_TYPE.to_string());
-        let class = Term::Iri("http://example.org/C".to_string());
+        let rdf_type = Term::Iri(RDF_TYPE.to_string().into());
+        let class = Term::Iri("http://example.org/C".to_string().into());
         let mut facts = Vec::<Triple>::new();
         let mut index = FactIndex::default();
 
         for n in 0..512 {
             let fact = Triple::new(
-                Term::Iri(format!("http://example.org/item/{n}")),
+                Term::Iri(format!("http://example.org/item/{n}").into()),
                 rdf_type.clone(),
                 class.clone(),
             );
@@ -5909,7 +5909,7 @@ mod reasoner_index_regression_tests {
         }
 
         let goal = Triple::new(
-            Term::Iri("http://example.org/item/257".to_string()),
+            Term::Iri("http://example.org/item/257".to_string().into()),
             rdf_type,
             class,
         );
@@ -5922,17 +5922,17 @@ mod reasoner_index_regression_tests {
     #[test]
     fn wildcard_predicate_join_is_deferred_until_predicate_is_bound() {
         let premise = Triple::new(
-            Term::Var("X".to_string()),
-            Term::Var("P".to_string()),
-            Term::Var("Y".to_string()),
+            Term::Var("X".to_string().into()),
+            Term::Var("P".to_string().into()),
+            Term::Var("Y".to_string().into()),
         );
         let index = FactIndex::default();
         let mut bindings = Bindings::new();
-        bindings.insert("Y".to_string(), Term::Iri("http://example.org/y".to_string()));
+        bindings.insert("Y".to_string().into(), Term::Iri("http://example.org/y".to_string().into()));
 
         assert!(premise_needs_broad_fact_scan(&premise, Some(&index), &bindings));
 
-        bindings.insert("P".to_string(), Term::Iri("http://example.org/p".to_string()));
+        bindings.insert("P".to_string().into(), Term::Iri("http://example.org/p".to_string().into()));
         assert!(!premise_needs_broad_fact_scan(&premise, Some(&index), &bindings));
     }
 
@@ -5964,8 +5964,8 @@ mod reasoner_index_regression_tests {
 
         assert!(result.is_complete(), "reasoning should complete: {:?}", result.errors);
         let derived_restrictions = result.derived.iter().filter(|triple| {
-            triple.p == Term::Iri(RDF_TYPE.to_string())
-                && triple.o == Term::Iri("http://example.org/R".to_string())
+            triple.p == Term::Iri(RDF_TYPE.to_string().into())
+                && triple.o == Term::Iri("http://example.org/R".to_string().into())
         }).count();
         assert_eq!(derived_restrictions, 128);
         assert_eq!(
@@ -6035,7 +6035,7 @@ mod regex_cache_tests {
         let document = parse_n3(source, None).expect("fixture parses");
         let result = reason(&document, &ReasonerOptions::default());
         assert!(result.is_complete());
-        let ok = Term::Iri("http://example.org/ok".to_string());
+        let ok = Term::Iri("http://example.org/ok".to_string().into());
         assert_eq!(result.derived.iter().filter(|t| t.p == ok).count(), 1, "only :a matches");
         assert_eq!(cache_len(), 0, "a finished run must not leave compiled patterns behind");
     }

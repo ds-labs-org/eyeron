@@ -6,7 +6,7 @@
 //! report;` without also compiling — and getting "never used" warnings
 //! for — this N3-only comparison logic.
 
-use eyeron::{parse_n3, Document, Rule, Term, Triple};
+use eyeron::{parse_n3, Document, Name, Rule, Term, Triple};
 use std::collections::BTreeMap;
 
 const LOG_IMPLIES: &str = "http://www.w3.org/2000/10/swap/log#implies";
@@ -67,7 +67,7 @@ fn graphs_isomorphic(actual: &[Triple], expected: &[Triple]) -> bool {
     match_triples(actual, expected, 0, &mut used, &mut BTreeMap::new(), &mut BTreeMap::new())
 }
 
-fn match_triples(actual: &[Triple], expected: &[Triple], index: usize, used: &mut [bool], blanks: &mut BTreeMap<String, String>, reverse_blanks: &mut BTreeMap<String, String>) -> bool {
+fn match_triples(actual: &[Triple], expected: &[Triple], index: usize, used: &mut [bool], blanks: &mut BTreeMap<Name, Name>, reverse_blanks: &mut BTreeMap<Name, Name>) -> bool {
     if index == actual.len() {
         return true;
     }
@@ -88,11 +88,11 @@ fn match_triples(actual: &[Triple], expected: &[Triple], index: usize, used: &mu
     false
 }
 
-fn triple_matches(actual: &Triple, expected: &Triple, blanks: &mut BTreeMap<String, String>, reverse_blanks: &mut BTreeMap<String, String>) -> bool {
+fn triple_matches(actual: &Triple, expected: &Triple, blanks: &mut BTreeMap<Name, Name>, reverse_blanks: &mut BTreeMap<Name, Name>) -> bool {
     term_matches(&actual.s, &expected.s, blanks, reverse_blanks) && term_matches(&actual.p, &expected.p, blanks, reverse_blanks) && term_matches(&actual.o, &expected.o, blanks, reverse_blanks)
 }
 
-fn term_matches(actual: &Term, expected: &Term, blanks: &mut BTreeMap<String, String>, reverse_blanks: &mut BTreeMap<String, String>) -> bool {
+fn term_matches(actual: &Term, expected: &Term, blanks: &mut BTreeMap<Name, Name>, reverse_blanks: &mut BTreeMap<Name, Name>) -> bool {
     match (actual, expected) {
         (Term::Blank(a), Term::Blank(e)) => match (blanks.get(a), reverse_blanks.get(e)) {
             (Some(mapped), _) => mapped == e,

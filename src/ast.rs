@@ -1,5 +1,7 @@
 use std::collections::BTreeMap;
 use std::fmt;
+use std::ops::Deref;
+use std::sync::Arc;
 
 pub const RDF_TYPE: &str = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
 pub const RDF_FIRST: &str = "http://www.w3.org/1999/02/22-rdf-syntax-ns#first";
@@ -109,34 +111,112 @@ pub const TIME_SECOND: &str = "http://www.w3.org/2000/10/swap/time#second";
 pub const TIME_TIME_ZONE: &str = "http://www.w3.org/2000/10/swap/time#timeZone";
 pub const TIME_LOCAL_TIME: &str = "http://www.w3.org/2000/10/swap/time#localTime";
 
+/// The text of an IRI, a variable, a blank node label or a literal.
+///
+/// A term's text never changes once it is read, so cloning a term should not
+/// copy it: this is a shared, immutable string, and cloning one is a refcount
+/// bump rather than an allocation. Profiling the reasoner found about 60% of
+/// its instructions inside malloc and free, a third of the total in
+/// `Term::clone` alone.
+///
+/// It derefs to `str` and compares with `str`, so it reads like the `String`
+/// it replaced.
+#[derive(Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct Name(Arc<str>);
+
+impl Name {
+    pub fn as_str(&self) -> &str { &self.0 }
+}
+
+impl Default for Name {
+    fn default() -> Self { Self(Arc::from("")) }
+}
+
+impl Deref for Name {
+    type Target = str;
+    fn deref(&self) -> &str { &self.0 }
+}
+
+impl AsRef<str> for Name {
+    fn as_ref(&self) -> &str { &self.0 }
+}
+
+impl std::borrow::Borrow<str> for Name {
+    fn borrow(&self) -> &str { &self.0 }
+}
+
+impl PartialEq<str> for Name {
+    fn eq(&self, other: &str) -> bool { &*self.0 == other }
+}
+
+impl PartialEq<Name> for str {
+    fn eq(&self, other: &Name) -> bool { self == &*other.0 }
+}
+
+impl PartialEq<&str> for Name {
+    fn eq(&self, other: &&str) -> bool { &*self.0 == *other }
+}
+
+impl PartialEq<Name> for String {
+    fn eq(&self, other: &Name) -> bool { self.as_str() == &*other.0 }
+}
+
+impl PartialEq<String> for Name {
+    fn eq(&self, other: &String) -> bool { &*self.0 == other.as_str() }
+}
+
+impl From<&str> for Name {
+    fn from(value: &str) -> Self { Self(Arc::from(value)) }
+}
+
+impl From<String> for Name {
+    fn from(value: String) -> Self { Self(Arc::from(value)) }
+}
+
+impl From<&String> for Name {
+    fn from(value: &String) -> Self { Self(Arc::from(value.as_str())) }
+}
+
+impl From<Name> for String {
+    fn from(value: Name) -> Self { value.0.to_string() }
+}
+
+impl fmt::Display for Name {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result { f.write_str(&self.0) }
+}
+
+impl fmt::Debug for Name {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result { fmt::Debug::fmt(&*self.0, f) }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Literal {
-    pub value: String,
-    pub datatype: Option<String>,
-    pub language: Option<String>,
+    pub value: Name,
+    pub datatype: Option<Name>,
+    pub language: Option<Name>,
 }
 
 impl Literal {
-    pub fn plain(value: impl Into<String>) -> Self {
+    pub fn plain(value: impl Into<Name>) -> Self {
         Self { value: value.into(), datatype: None, language: None }
     }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum Term {
-    Iri(String),
-    Var(String),
-    Blank(String),
+    Iri(Name),
+    Var(Name),
+    Blank(Name),
     Literal(Literal),
     List(Vec<Term>),
     Formula(Vec<Triple>),
 }
 
 impl Term {
-    pub fn iri(value: impl Into<String>) -> Self { Self::Iri(value.into()) }
-    pub fn var(value: impl Into<String>) -> Self { Self::Var(value.into()) }
-    pub fn blank(value: impl Into<String>) -> Self { Self::Blank(value.into()) }
-    pub fn literal(value: impl Into<String>) -> Self { Self::Literal(Literal::plain(value)) }
+    pub fn iri(value: impl Into<Name>) -> Self { Self::Iri(value.into()) }
+    pub fn var(value: impl Into<Name>) -> Self { Self::Var(value.into()) }
+    pub fn blank(value: impl Into<Name>) -> Self { Self::Blank(value.into()) }
+    pub fn literal(value: impl Into<Name>) -> Self { Self::Literal(Literal::plain(value)) }
     pub fn list(items: Vec<Term>) -> Self { Self::List(items) }
     pub fn formula(triples: Vec<Triple>) -> Self { Self::Formula(triples) }
 

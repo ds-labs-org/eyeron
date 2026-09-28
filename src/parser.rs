@@ -1051,11 +1051,11 @@ impl Parser {
                 let (clean, dir) = validate_lang_or_lang_dir(&lang, self.peek().offset)?;
                 let clean = clean.to_ascii_lowercase();
                 lit.language = Some(match dir {
-                    Some(dir) => format!("{}--{}", clean, dir),
-                    None => clean,
+                    Some(dir) => format!("{}--{}", clean, dir).into(),
+                    None => clean.into(),
                 });
             } else {
-                lit.language = Some(lang);
+                lit.language = Some(lang.into());
             }
         }
         if self.profile.is_rdf12()
@@ -1299,14 +1299,14 @@ pub(crate) fn number_literal(mut value: String) -> Term {
     } else {
         "http://www.w3.org/2001/XMLSchema#integer"
     };
-    Term::Literal(Literal { value, datatype: Some(datatype.to_string()), language: None })
+    Term::Literal(Literal { value: value.into(), datatype: Some(datatype.into()), language: None })
 }
 
 
 pub(crate) fn boolean_literal(value: bool) -> Term {
     Term::Literal(Literal {
-        value: if value { "true" } else { "false" }.to_string(),
-        datatype: Some("http://www.w3.org/2001/XMLSchema#boolean".to_string()),
+        value: if value { "true" } else { "false" }.to_string().into(),
+        datatype: Some("http://www.w3.org/2001/XMLSchema#boolean".to_string().into()),
         language: None,
     })
 }
@@ -1546,7 +1546,7 @@ fn rdf_number_literal(value: String, offset: usize) -> Result<Term> {
     } else {
         return Err(EyeronError::at("invalid numeric literal", offset));
     };
-    Ok(Term::Literal(Literal { value, datatype: Some(datatype.to_string()), language: None }))
+    Ok(Term::Literal(Literal { value: value.into(), datatype: Some(datatype.into()), language: None }))
 }
 
 fn is_integer_lexical(s: &str) -> bool {

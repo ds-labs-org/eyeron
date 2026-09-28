@@ -201,7 +201,7 @@ fn run_one(path: &Path) -> Score {
     score
 }
 
-fn iri(value: &str) -> Term { Term::Iri(value.to_string()) }
+fn iri(value: &str) -> Term { Term::Iri(value.to_string().into()) }
 
 fn find_tests(facts: &[eyeron::Triple]) -> Vec<Term> {
     let s = iri(&format!("{}test", EX));
@@ -233,8 +233,8 @@ fn has_test_boolean(facts: &[eyeron::Triple], value: &str) -> bool {
 fn local_name(term: &Term) -> String {
     match term {
         Term::Iri(iri) => iri.rsplit(['/', '#']).next().unwrap_or(iri).to_string(),
-        Term::Blank(id) => id.clone(),
-        Term::Literal(lit) => lit.value.clone(),
+        Term::Blank(id) => id.clone().to_string(),
+        Term::Literal(lit) => lit.value.clone().to_string(),
         other => format!("{:?}", other),
     }
 }

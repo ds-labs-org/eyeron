@@ -29,7 +29,8 @@ fn a_hundred_thousand_facts_do_not_cost_two_kilobytes_each() {
     // copies of every triple. Measured on that version: 262 MB resident,
     // about 2.6 kB for a 21-byte line of Turtle. With the closure the only
     // owner, and membership and the index buckets holding positions into it,
-    // the same run takes 149 MB.
+    // the same run takes 119 MB -- 149 MB before a term's text became a
+    // shared `Arc<str>` that cloning does not copy.
     //
     // The bound is 200 MB: far enough above the current figure to survive an
     // allocator that trims less eagerly, and far enough below the old one to

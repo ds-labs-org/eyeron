@@ -436,7 +436,7 @@ fn objects<'a>(doc: &'a Document, subject: Option<&Term>, predicate: &str) -> Ve
 }
 
 fn iri_value(term: &Term) -> Option<String> {
-    match term { Term::Iri(iri) => Some(iri.clone()), _ => None }
+    match term { Term::Iri(iri) => Some(iri.clone().to_string()), _ => None }
 }
 
 fn first_iri_object(doc: &Document, subject: &Term, predicate: &str) -> Option<String> {
@@ -445,8 +445,8 @@ fn first_iri_object(doc: &Document, subject: &Term, predicate: &str) -> Option<S
 
 fn first_literal_object(doc: &Document, subject: &Term, predicate: &str) -> Option<String> {
     objects(doc, Some(subject), predicate).into_iter().find_map(|term| match term {
-        Term::Literal(lit) => Some(lit.value.clone()),
-        Term::Iri(iri) => Some(iri.clone()),
+        Term::Literal(lit) => Some(lit.value.to_string()),
+        Term::Iri(iri) => Some(iri.to_string()),
         _ => None,
     })
 }
@@ -460,7 +460,7 @@ fn first_list_iri_objects(doc: &Document, subject: &Term, predicate: &str) -> Ve
 fn result_object(doc: &Document, subject: &Term) -> (Option<String>, ResultKind) {
     for term in objects(doc, Some(subject), MF_RESULT) {
         match term {
-            Term::Iri(iri) => return (Some(iri.clone()), ResultKind::Resource),
+            Term::Iri(iri) => return (Some(iri.clone().to_string()), ResultKind::Resource),
             Term::Literal(lit) if lit.value == "false" => return (None, ResultKind::False),
             _ => {}
         }
@@ -474,9 +474,9 @@ fn list_items(term: &Term) -> Vec<&Term> {
 
 fn term_label(term: &Term) -> String {
     match term {
-        Term::Iri(iri) => iri.clone(),
+        Term::Iri(iri) => iri.clone().to_string(),
         Term::Blank(id) => format!("_:{id}"),
-        Term::Literal(lit) => lit.value.clone(),
+        Term::Literal(lit) => lit.value.clone().to_string(),
         Term::List(items) => format!("list({})", items.len()),
         Term::Formula(_) => "formula".to_string(),
         Term::Var(name) => format!("?{name}"),
@@ -552,8 +552,8 @@ impl DatasetBuilder {
 
     fn term(&mut self, term: &Term, graph: &CTerm) -> CTerm {
         match term {
-            Term::Iri(iri) => CTerm::Iri(iri.clone()),
-            Term::Blank(id) => CTerm::Blank(id.clone()),
+            Term::Iri(iri) => CTerm::Iri(iri.clone().to_string()),
+            Term::Blank(id) => CTerm::Blank(id.clone().to_string()),
             Term::Literal(lit) => canonical_literal(lit),
             Term::List(items) => self.list_term(items, graph),
             Term::Formula(triples) if triples.len() == 1 => {
@@ -586,8 +586,8 @@ impl DatasetBuilder {
 
 fn canonical_literal(lit: &Literal) -> CTerm {
     let language = lit.language.clone().unwrap_or_default().to_ascii_lowercase();
-    let datatype = if !language.is_empty() { RDF_LANG_STRING.to_string() } else { lit.datatype.clone().unwrap_or_else(|| XSD_STRING.to_string()) };
-    CTerm::Literal { value: lit.value.clone(), datatype, language }
+    let datatype = if !language.is_empty() { RDF_LANG_STRING.to_string() } else { lit.datatype.as_deref().unwrap_or(XSD_STRING).to_string() };
+    CTerm::Literal { value: lit.value.clone().to_string(), datatype, language }
 }
 
 fn graphs_isomorphic(actual: &[CQuad], expected: &[CQuad]) -> bool {

@@ -6,7 +6,7 @@ pub fn result_to_string(prefixes: &BTreeMap<String, String>, triples: &[Triple])
     let output_strings: Vec<String> = triples
         .iter()
         .filter_map(|t| match (&t.p, &t.o) {
-            (Term::Iri(p), Term::Literal(l)) if p.as_str() == LOG_OUTPUT_STRING => Some(l.value.clone()),
+            (Term::Iri(p), Term::Literal(l)) if p.as_str() == LOG_OUTPUT_STRING => Some(l.value.to_string()),
             _ => None,
         })
         .collect();
@@ -19,7 +19,7 @@ pub fn rdf_result_to_string(prefixes: &BTreeMap<String, String>, triples: &[Trip
     let output_strings: Vec<String> = triples
         .iter()
         .filter_map(|t| match (&t.p, &t.o) {
-            (Term::Iri(p), Term::Literal(l)) if p.as_str() == LOG_OUTPUT_STRING => Some(l.value.clone()),
+            (Term::Iri(p), Term::Literal(l)) if p.as_str() == LOG_OUTPUT_STRING => Some(l.value.to_string()),
             _ => None,
         })
         .collect();
@@ -288,8 +288,8 @@ fn numeric_shorthand_round_trips(datatype: &str, value: &str) -> bool {
 
 fn literal_to_n3(lit: &Literal, prefixes: &BTreeMap<String, String>) -> String {
     match lit.datatype.as_deref() {
-        Some(dt) if numeric_shorthand_round_trips(dt, &lit.value) => lit.value.clone(),
-        Some("http://www.w3.org/2001/XMLSchema#boolean") if lit.value == "true" || lit.value == "false" => lit.value.clone(),
+        Some(dt) if numeric_shorthand_round_trips(dt, &lit.value) => lit.value.clone().to_string(),
+        Some("http://www.w3.org/2001/XMLSchema#boolean") if lit.value == "true" || lit.value == "false" => lit.value.clone().to_string(),
         Some(dt) => format!("\"{}\"^^{}", escape_string(&lit.value), compact_iri(dt, prefixes).unwrap_or_else(|| format!("<{}>", dt))),
         None => match &lit.language {
             Some(lang) => format!("\"{}\"@{}", escape_string(&lit.value), lang),

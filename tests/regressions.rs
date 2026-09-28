@@ -162,8 +162,8 @@ fn age_example_supports_current_time_date_difference_and_duration_comparison() {
     );
 
     assert!(result.derived.iter().any(|triple| {
-        triple.s == eyeron::Term::Iri("https://example.org/#test".to_string())
-            && triple.p == eyeron::Term::Iri("https://example.org/#is".to_string())
+        triple.s == eyeron::Term::Iri("https://example.org/#test".to_string().into())
+            && triple.p == eyeron::Term::Iri("https://example.org/#is".to_string().into())
     }));
     let proof = proof_to_n3(&doc.prefixes, &result);
     assert!(proof.contains("pe:builtin time:localTime"), "{proof}");

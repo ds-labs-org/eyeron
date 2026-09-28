@@ -47,17 +47,17 @@ fn skipping_explicit_saves_a_real_fraction_of_the_hundred_thousand_fact_baseline
     assert!(result.explicit_sources.is_empty());
 
     let peak = peak_resident_bytes().unwrap();
-    // Measured: 116 MB, down from tests/memory.rs's ~149 MB -- a ~33 MB
+    // Measured: 102 MB, down from tests/memory.rs's ~119 MB -- a ~17 MB
     // saving on this shape, matching eyereasoner/eyeron#20's own estimate of
-    // "~32 MB of the remaining 149 MB" almost exactly. 130 MB leaves
+    // saving on this shape. 130 MB leaves
     // headroom for a less eager allocator while still failing if the skip
-    // stops actually skipping (back to ~149 MB).
+    // stops actually skipping (back to ~119 MB).
     assert!(
         peak < 130 * 1024 * 1024,
         "100,000 facts with include_explicit: false reached {} MB resident \
          (was {} MB before parsing): skipping .explicit/.explicit_sources \
          should measurably undercut the include_explicit: true baseline \
-         (tests/memory.rs's ~149 MB), not just avoid growing past it",
+         (tests/memory.rs's ~119 MB), not just avoid growing past it",
         peak / (1024 * 1024),
         before / (1024 * 1024),
     );

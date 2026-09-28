@@ -50,7 +50,7 @@ const IMPURE_BUILTINS: &[&str] = &[
 type Verdict = std::result::Result<Checked, String>;
 
 fn pe(name: &str) -> Term {
-    Term::Iri(format!("{}{}", PE, name))
+    Term::Iri(format!("{}{}", PE, name).into())
 }
 
 /// True iff `predicate` is one of the step vocabulary's own terms, which
@@ -198,7 +198,7 @@ impl N3Proof {
         let mut bindings = Bindings::new();
         for (name, value) in &step.bindings {
             let internal = source_names.get(name.as_str()).copied().unwrap_or(name.as_str());
-            bindings.insert(internal.to_string(), value.clone());
+            bindings.insert(internal.to_string().into(), value.clone());
         }
 
         // `{ :a :b ?C. } => ?C.` takes its conclusion from a term resolved
@@ -266,7 +266,7 @@ impl N3Proof {
 pub(crate) fn match_term(pattern: &Term, target: &Term, bindings: &mut Bindings) -> bool {
     let key = match pattern {
         Term::Var(name) => Some(name.clone()),
-        Term::Blank(label) => Some(format!("_:{}", label)),
+        Term::Blank(label) => Some(format!("_:{}", label)).map(Into::into),
         _ => None,
     };
     if let Some(key) = key {
@@ -298,7 +298,7 @@ pub(crate) fn match_triple(pattern: &Triple, target: &Triple, bindings: &mut Bin
 /// conclusion in the ordinary way.
 fn unquoted_conclusion(conclusion: &[Triple], bindings: &Bindings) -> Option<Vec<Triple>> {
     let [only] = conclusion else { return None };
-    let unquote = Term::Iri(crate::ast::EYERON_UNQUOTE.to_string());
+    let unquote = Term::Iri(crate::ast::EYERON_UNQUOTE.to_string().into());
     if only.s != unquote || only.p != unquote {
         return None;
     }
@@ -332,7 +332,7 @@ fn read_steps(body: &[Triple]) -> Vec<Step> {
     for triple in body {
         if triple.p == pe("var") {
             if let Term::Literal(literal) = &triple.o {
-                variable.insert(&triple.s, literal.value.clone());
+                variable.insert(&triple.s, literal.value.clone().to_string());
             }
         } else if triple.p == pe("value") {
             value.insert(&triple.s, triple.o.clone());
@@ -410,8 +410,8 @@ fn carried_rule(term: &Term) -> Option<(Vec<Triple>, Vec<Triple>, Triple)> {
     let statement = formula_triple(term)?;
     // A forward rule reads `{premises} => {conclusion}`, a backward one
     // `{conclusion} <= {premises}`.
-    let forward = statement.p == Term::Iri(crate::ast::LOG_IMPLIES.to_string());
-    let backward = statement.p == Term::Iri(crate::ast::LOG_IMPLIED_BY.to_string());
+    let forward = statement.p == Term::Iri(crate::ast::LOG_IMPLIES.to_string().into());
+    let backward = statement.p == Term::Iri(crate::ast::LOG_IMPLIED_BY.to_string().into());
     match (&statement.s, &statement.o) {
         (Term::Formula(left), Term::Formula(right)) if forward => Some((left.clone(), right.clone(), statement.clone())),
         (Term::Formula(left), Term::Formula(right)) if backward => Some((right.clone(), left.clone(), statement.clone())),

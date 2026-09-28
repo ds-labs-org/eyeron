@@ -343,10 +343,10 @@ fn render_binding_items(proof: &DerivedFact, prefixes: &BTreeMap<String, String>
     let mut items = proof
         .bindings
         .iter()
-        .filter(|(name, _)| rule_vars.contains(name))
+        .filter(|(name, _)| rule_vars.contains(name.as_str()))
         .map(|(name, value)| {
-            let display = proof.rule.proof_var_source_names.get(name).unwrap_or(name);
-            (display.clone(), format!("[ pe:var {}; pe:value {} ]", quoted_string(display), term_to_n3_object(value, prefixes)))
+            let display = proof.rule.proof_var_source_names.get(name.as_str()).map(String::as_str).unwrap_or(name.as_str());
+            (display.to_string(), format!("[ pe:var {}; pe:value {} ]", quoted_string(display), term_to_n3_object(value, prefixes)))
         })
         .collect::<Vec<_>>();
     items.sort();
@@ -415,9 +415,9 @@ pub(crate) fn generated_rule_term(rule: &Rule) -> Term {
 /// rule.
 pub fn rule_statement(rule: &Rule) -> Triple {
     if rule.is_forward {
-        Triple::new(Term::Formula(rule.premise.clone()), Term::Iri(LOG_IMPLIES.to_string()), Term::Formula(rule.conclusion.clone()))
+        Triple::new(Term::Formula(rule.premise.clone()), Term::Iri(LOG_IMPLIES.to_string().into()), Term::Formula(rule.conclusion.clone()))
     } else {
-        Triple::new(Term::Formula(rule.conclusion.clone()), Term::Iri(LOG_IMPLIED_BY.to_string()), Term::Formula(rule.premise.clone()))
+        Triple::new(Term::Formula(rule.conclusion.clone()), Term::Iri(LOG_IMPLIED_BY.to_string().into()), Term::Formula(rule.premise.clone()))
     }
 }
 
@@ -454,7 +454,7 @@ fn collect_vars_triple(triple: &Triple, out: &mut BTreeSet<String>) {
 
 fn collect_vars_term(term: &Term, out: &mut BTreeSet<String>) {
     match term {
-        Term::Var(name) => { out.insert(name.clone()); }
+        Term::Var(name) => { out.insert(name.clone().to_string()); }
         Term::List(items) => {
             for item in items { collect_vars_term(item, out); }
         }
