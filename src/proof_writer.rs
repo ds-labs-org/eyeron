@@ -140,7 +140,16 @@ impl<'a> ProofCollector<'a, '_> {
     fn visit_derived_fact(&mut self, proof: &'a DerivedFact) {
         let key = format!("rule:{}:{}", triple_key(&proof.fact), source_key(proof.rule.source.as_ref()));
         if !self.seen.insert(key) { return; }
-        self.entries.push(ProofEntry::Rule(std::borrow::Cow::Borrowed(proof)));
+        // A rule that concludes one of its own premises -- polygon.n3's
+        // `{ (..) polygon:area ?A } => { (..) polygon:area ?A }`, which exists
+        // to force a backward goal to be evaluated -- is what puts the fact in
+        // the closure, so the fact stays a claim the proof makes. But writing
+        // the rule application as its step would say the fact holds because it
+        // holds. What actually holds it up is whatever proved the premise, so
+        // that is what the step below records.
+        if !proof.premises.contains(&proof.fact) {
+            self.entries.push(ProofEntry::Rule(std::borrow::Cow::Borrowed(proof)));
+        }
 
         for premise in &proof.premises {
             self.visit_premise(premise, Some(proof));

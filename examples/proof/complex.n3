@@ -468,7 +468,94 @@
   pe:builtin math:product.
 
 { (2 0) complex:asin (1.5707963267948966 1.3169578969248166) . }
-  pe:unproven "no explicit fact, verified builtin, or backward proof was found".
+  pe:rule 2;
+  pe:binding
+    [ pe:var "A"; pe:value 2 ],
+    [ pe:var "B"; pe:value 0 ],
+    [ pe:var "C"; pe:value 1.5707963267948966 ],
+    [ pe:var "D"; pe:value 1.3169578969248166 ],
+    [ pe:var "E"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "F"; pe:value "2"^^xsd:decimal ],
+    [ pe:var "Z1"; pe:value 3 ],
+    [ pe:var "Z10"; pe:value "2"^^xsd:decimal ],
+    [ pe:var "Z11"; pe:value "4"^^xsd:decimal ],
+    [ pe:var "Z12"; pe:value "4"^^xsd:decimal ],
+    [ pe:var "Z13"; pe:value "3"^^xsd:decimal ],
+    [ pe:var "Z14"; pe:value 1.7320508075688772 ],
+    [ pe:var "Z15"; pe:value 3.732050807568877 ],
+    [ pe:var "Z2"; pe:value 9 ],
+    [ pe:var "Z3"; pe:value 0 ],
+    [ pe:var "Z4"; pe:value 9 ],
+    [ pe:var "Z5"; pe:value "3"^^xsd:decimal ],
+    [ pe:var "Z6"; pe:value -1 ],
+    [ pe:var "Z7"; pe:value 1 ],
+    [ pe:var "Z8"; pe:value 1 ],
+    [ pe:var "Z9"; pe:value "1"^^xsd:decimal ];
+  pe:uses
+    { (1 2) math:sum 3 . },
+    { (3 2) math:exponentiation 9 . },
+    { (0 2) math:exponentiation 0 . },
+    { (9 0) math:sum 9 . },
+    { (9 0.5) math:exponentiation "3"^^xsd:decimal . },
+    { (1 2) math:difference -1 . },
+    { (-1 2) math:exponentiation 1 . },
+    { (1 0) math:sum 1 . },
+    { (1 0.5) math:exponentiation "1"^^xsd:decimal . },
+    { ("3"^^xsd:decimal "1"^^xsd:decimal) math:difference "2"^^xsd:decimal . },
+    { ("2"^^xsd:decimal 2) math:quotient "1"^^xsd:decimal . },
+    { ("3"^^xsd:decimal "1"^^xsd:decimal) math:sum "4"^^xsd:decimal . },
+    { ("4"^^xsd:decimal 2) math:quotient "2"^^xsd:decimal . },
+    { "1"^^xsd:decimal math:asin 1.5707963267948966 . },
+    { ("2"^^xsd:decimal 2) math:exponentiation "4"^^xsd:decimal . },
+    { ("4"^^xsd:decimal 1) math:difference "3"^^xsd:decimal . },
+    { ("3"^^xsd:decimal 0.5) math:exponentiation 1.7320508075688772 . },
+    { ("2"^^xsd:decimal 1.7320508075688772) math:sum 3.732050807568877 . },
+    { (2.718281828459045 1.3169578969248166) math:exponentiation 3.732050807568877 . }.
+
+{ (1 2) math:sum 3 . }
+  pe:builtin math:sum.
+
+{ (3 2) math:exponentiation 9 . }
+  pe:builtin math:exponentiation.
+
+{ (9 0) math:sum 9 . }
+  pe:builtin math:sum.
+
+{ (9 0.5) math:exponentiation "3"^^xsd:decimal . }
+  pe:builtin math:exponentiation.
+
+{ (1 2) math:difference -1 . }
+  pe:builtin math:difference.
+
+{ ("3"^^xsd:decimal "1"^^xsd:decimal) math:difference "2"^^xsd:decimal . }
+  pe:builtin math:difference.
+
+{ ("2"^^xsd:decimal 2) math:quotient "1"^^xsd:decimal . }
+  pe:builtin math:quotient.
+
+{ ("3"^^xsd:decimal "1"^^xsd:decimal) math:sum "4"^^xsd:decimal . }
+  pe:builtin math:sum.
+
+{ ("4"^^xsd:decimal 2) math:quotient "2"^^xsd:decimal . }
+  pe:builtin math:quotient.
+
+{ "1"^^xsd:decimal math:asin 1.5707963267948966 . }
+  pe:builtin math:asin.
+
+{ ("2"^^xsd:decimal 2) math:exponentiation "4"^^xsd:decimal . }
+  pe:builtin math:exponentiation.
+
+{ ("4"^^xsd:decimal 1) math:difference "3"^^xsd:decimal . }
+  pe:builtin math:difference.
+
+{ ("3"^^xsd:decimal 0.5) math:exponentiation 1.7320508075688772 . }
+  pe:builtin math:exponentiation.
+
+{ ("2"^^xsd:decimal 1.7320508075688772) math:sum 3.732050807568877 . }
+  pe:builtin math:sum.
+
+{ (2.718281828459045 1.3169578969248166) math:exponentiation 3.732050807568877 . }
+  pe:builtin math:exponentiation.
 
 { (2 0) complex:acos ("0"^^xsd:decimal -1.3169578969248166) . }
   pe:rule 3;
@@ -516,48 +603,6 @@
     { ("2"^^xsd:decimal 1.7320508075688772) math:sum 3.732050807568877 . },
     { (2.718281828459045 1.3169578969248166) math:exponentiation 3.732050807568877 . },
     { 1.3169578969248166 math:negation -1.3169578969248166 . }.
-
-{ (1 2) math:sum 3 . }
-  pe:builtin math:sum.
-
-{ (3 2) math:exponentiation 9 . }
-  pe:builtin math:exponentiation.
-
-{ (9 0) math:sum 9 . }
-  pe:builtin math:sum.
-
-{ (9 0.5) math:exponentiation "3"^^xsd:decimal . }
-  pe:builtin math:exponentiation.
-
-{ (1 2) math:difference -1 . }
-  pe:builtin math:difference.
-
-{ ("3"^^xsd:decimal "1"^^xsd:decimal) math:difference "2"^^xsd:decimal . }
-  pe:builtin math:difference.
-
-{ ("2"^^xsd:decimal 2) math:quotient "1"^^xsd:decimal . }
-  pe:builtin math:quotient.
-
-{ ("3"^^xsd:decimal "1"^^xsd:decimal) math:sum "4"^^xsd:decimal . }
-  pe:builtin math:sum.
-
-{ ("4"^^xsd:decimal 2) math:quotient "2"^^xsd:decimal . }
-  pe:builtin math:quotient.
-
-{ ("2"^^xsd:decimal 2) math:exponentiation "4"^^xsd:decimal . }
-  pe:builtin math:exponentiation.
-
-{ ("4"^^xsd:decimal 1) math:difference "3"^^xsd:decimal . }
-  pe:builtin math:difference.
-
-{ ("3"^^xsd:decimal 0.5) math:exponentiation 1.7320508075688772 . }
-  pe:builtin math:exponentiation.
-
-{ ("2"^^xsd:decimal 1.7320508075688772) math:sum 3.732050807568877 . }
-  pe:builtin math:sum.
-
-{ (2.718281828459045 1.3169578969248166) math:exponentiation 3.732050807568877 . }
-  pe:unproven "builtin evaluation did not verify this premise".
 
 { 1.3169578969248166 math:negation -1.3169578969248166 . }
   pe:builtin math:negation.

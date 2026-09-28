@@ -1694,3 +1694,49 @@ fn a_query_that_hands_back_its_own_premise_records_no_step() {
     assert!(proof.contains(":a :q :b"), "{proof}");
     assert!(!proof.contains("log:query"), "{proof}");
 }
+
+#[test]
+fn a_float_relation_checked_the_other_way_round_is_still_the_same_number() {
+    // `(10 ?e) math:exponentiation 35766` is solved by logarithm, and raising
+    // 10 to that exponent gives 35765.999999999956 -- six units in the last
+    // place short. Comparing against `f64::EPSILON` is a test for bit-identity
+    // at any magnitude above 1, so re-checking the premise the other way round
+    // failed and control-system.n3's proof recorded the step as unproven.
+    let source = r#"
+        @prefix : <http://e/>.
+        @prefix math: <http://www.w3.org/2000/10/swap/math#>.
+        :d :measure 35766.
+        { :d :measure ?D. (10 ?E) math:exponentiation ?D } => { :d :exponent ?E }.
+    "#;
+
+    let doc = parse_n3(source, None).unwrap();
+    let result = reason_document(&doc, &ReasonerOptions { proof: true, ..ReasonerOptions::default() });
+    let output = result_to_string(&doc.prefixes, &result.derived);
+    assert!(output.contains(":d :exponent 4.553470372213121"), "{output}");
+
+    // The proof re-checks that premise forward, which is where it used to fail.
+    let proof = proof_to_n3(&doc.prefixes, &result);
+    assert!(!proof.contains("pe:unproven"), "{proof}");
+}
+
+#[test]
+fn a_rule_that_concludes_its_own_premise_is_not_its_own_justification() {
+    // polygon.n3 forces a backward goal to be evaluated with
+    // `{ (..) polygon:area ?A } => { (..) polygon:area ?A }`. That rule is
+    // what puts the fact in the closure, so the fact stays a claim the proof
+    // makes -- but writing the rule application as its step would say the
+    // fact holds because it holds, which the checker rejects as self-support.
+    let source = r#"
+        @prefix : <http://e/>.
+        { :a :size 3 } <= true.
+        { :a :size ?S } => { :a :size ?S }.
+    "#;
+
+    let doc = parse_n3(source, None).unwrap();
+    let result = reason_document(&doc, &ReasonerOptions { proof: true, ..ReasonerOptions::default() });
+    let proof = proof_to_n3(&doc.prefixes, &result);
+
+    // The fact is claimed, and justified by the backward rule, not by itself.
+    assert!(proof.contains(":a :size 3"), "{proof}");
+    assert!(!proof.contains("pe:unproven"), "{proof}");
+}

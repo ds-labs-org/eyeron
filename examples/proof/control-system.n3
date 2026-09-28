@@ -183,7 +183,7 @@
   pe:fact "control-system.n3".
 
 { (10 4.553470372213121) math:exponentiation 35766 . }
-  pe:unproven "builtin evaluation did not verify this premise".
+  pe:builtin math:exponentiation.
 
 { (43.82693235899588 4.553470372213121) math:difference 39.27346198678276 . }
   pe:builtin math:difference.

@@ -1242,17 +1242,6 @@ fn evaluate_query_rules(
     for rule in query_rules {
         let shared_rule = options.proof.then(|| Arc::new(rule.clone()));
         let matches = match_premises(&rule.premise, closure, fact_index, rules, options, report);
-        // A query that hands back one of its own premises -- `{ ?S ?P ?O }
-        // log:query { ?S ?P ?O }` is the common shape -- selects a fact
-        // rather than inferring one. Recording a step for it would say the
-        // fact holds because it holds, which is the circularity a proof
-        // checker exists to reject; whatever really derived the fact has its
-        // own step already.
-        let record = |answer: &Triple, bindings: &Bindings| -> bool {
-            rule.premise
-                .iter()
-                .all(|premise| resolve_pattern_triple(premise, bindings) != *answer)
-        };
         for bindings in matches {
             let mut blank_map = BTreeMap::<Name, Term>::new();
             for head in &rule.conclusion {
@@ -1262,7 +1251,7 @@ fn evaluate_query_rules(
                         for expanded in triples {
                             if admissible_fact(&expanded) && seen.insert(expanded.clone()) {
                                 if let Some(rule) = &shared_rule {
-                                    if record(&expanded, &bindings) {
+                                    if concludes_more_than_a_premise(rule, &expanded, &bindings) {
                                         proofs.push(derived_fact_record(expanded.clone(), rule, &bindings));
                                     }
                                 }
@@ -1274,7 +1263,7 @@ fn evaluate_query_rules(
                 }
                 if admissible_fact(&t) && seen.insert(t.clone()) {
                     if let Some(rule) = &shared_rule {
-                        if record(&t, &bindings) {
+                        if concludes_more_than_a_premise(rule, &t, &bindings) {
                             proofs.push(derived_fact_record(t.clone(), rule, &bindings));
                         }
                     }
@@ -1356,6 +1345,19 @@ fn emit_conclusions(
     rules_changed
 }
 
+
+/// Whether a query answer is worth recording a step for.
+///
+/// `{ ?S ?P ?O } log:query { ?S ?P ?O }` selects a fact rather than inferring
+/// one: the answer is already in the closure with a derivation of its own, and
+/// a step for it would say the fact holds because it holds. A forward rule of
+/// the same shape is different -- it is what puts the fact in the closure at
+/// all -- and is handled where the proof is written.
+fn concludes_more_than_a_premise(rule: &Rule, conclusion: &Triple, bindings: &Bindings) -> bool {
+    rule.premise
+        .iter()
+        .all(|premise| resolve_pattern_triple(premise, bindings) != *conclusion)
+}
 
 fn derived_fact_record(fact: Triple, rule: &Arc<Rule>, bindings: &Bindings) -> DerivedFact {
     DerivedFact {
@@ -5540,6 +5542,21 @@ pub(crate) fn numeric_literal(value: f64, prefer_integer: bool) -> Term {
     Term::Literal(Literal { value: value.into(), datatype: Some(datatype.into()), language: None })
 }
 
+/// Whether two computed floats are the same number.
+///
+/// `f64::EPSILON` is the gap between 1.0 and the next float, so comparing
+/// against it is a test for bit-identity at any magnitude above 1 -- at
+/// 35,766 the neighbouring float is already 7e-12 away. A relation computed
+/// one way and checked the other cannot round-trip bit-exactly: eyeron
+/// solves `(10 ?e) math:exponentiation 35766` by logarithm, and raising 10
+/// to that exponent gives 35765.999999999956, six units in the last place
+/// short. The tolerance therefore scales with the magnitude being compared,
+/// and stays at a few units in the last place.
+fn floats_equal(x: f64, y: f64) -> bool {
+    let scale = x.abs().max(y.abs()).max(1.0);
+    (x - y).abs() <= 16.0 * f64::EPSILON * scale
+}
+
 fn numeric_terms_equal(a: &Term, b: &Term) -> bool {
     match (numeric_value(a), numeric_value(b)) {
         (Some(x), Some(y)) => {
@@ -5550,7 +5567,7 @@ fn numeric_terms_equal(a: &Term, b: &Term) -> bool {
             } else if x.value.is_infinite() || y.value.is_infinite() {
                 x.value == y.value
             } else {
-                (x.value - y.value).abs() <= f64::EPSILON
+                floats_equal(x.value, y.value)
             }
         },
         _ => false,

@@ -6,11 +6,6 @@
 ((4 2) (6 2) (7 6) (4 6) (5 5) (5 3) (4 2)) polygon:area 7 .
 
 { ((4 2) (6 2) (7 6) (4 6) (5 5) (5 3) (4 2)) polygon:area 7 . }
-  pe:rule 3;
-  pe:binding [ pe:var "AREA"; pe:value 7 ];
-  pe:uses { ((4 2) (6 2) (7 6) (4 6) (5 5) (5 3) (4 2)) polygon:area 7 . }.
-
-{ ((4 2) (6 2) (7 6) (4 6) (5 5) (5 3) (4 2)) polygon:area 7 . }
   pe:rule 2;
   pe:binding
     [ pe:var "AREA"; pe:value 7 ],
