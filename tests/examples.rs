@@ -262,10 +262,12 @@ fn run_case(case: &Case) {
         })
         .expect("spawn example golden-test worker");
 
+    // A CI runner measures about four times slower than a developer machine
+    // here, so an example needs its limit set against that, not against the
+    // local number.
     let timeout = if name == "kaprekar-6174" {
-        // Searches every 4-digit number for its Kaprekar chain: about 22s on a
-        // developer machine against eyeling's 3.6s, and roughly three times
-        // that on a CI runner, which is why it needs more room than the others.
+        // Searches every 4-digit number for its Kaprekar chain, and writes a
+        // proof of all 10,000 of them: about 16s here against eyeling's 3.6s.
         // The remaining gap is the seven unrolled chain rules, each re-joined
         // by the agenda for every one of the 10,000 kap:step facts; that is
         // worth closing, not a reason to leave the example out.
@@ -273,10 +275,12 @@ fn run_case(case: &Case) {
     } else if name.starts_with("deep-taxonomy-")
         || name.starts_with("rdf-message-")
         || name == "dining-philosophers"
-        // Takeuchi's function, checked with a proof: about 8s here and so
-        // around 25s on a CI runner, which is too close to the 30s the rest
-        // of the examples get.
+        // Takeuchi's function, checked with a proof: about 1.5s here.
         || name == "takeuchi"
+        // Proving its answer means re-deriving it: the fact comes from a
+        // backward rule with 2,000 premises, and nothing forward-chained it,
+        // so the proof walk has to run that search again. About 7.7s here.
+        || name == "relational-cube-lookup"
     {
         std::time::Duration::from_secs(90)
     } else {
