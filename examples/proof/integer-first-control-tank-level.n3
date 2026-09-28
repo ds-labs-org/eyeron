@@ -149,6 +149,74 @@
 :trialNominal :valveAt (8 2) .
 :trialNominal :errorAt (8 0) .
 :trialNominal :sideAt (8 :aboveOrOn) .
+:result :trace (:trialLow 0 12 4 8) .
+:result :trace (:trialHigh 0 28 0 8) .
+:result :trace (:trialNominal 0 20 2 0) .
+:result :trace (:trialLow 1 14 4 6) .
+:result :trace (:trialHigh 1 26 0 6) .
+:result :trace (:trialNominal 1 20 2 0) .
+:result :trace (:trialLow 2 16 3 4) .
+:result :trace (:trialHigh 2 24 1 4) .
+:result :trace (:trialNominal 2 20 2 0) .
+:result :trace (:trialLow 3 17 3 3) .
+:result :trace (:trialHigh 3 23 1 3) .
+:result :trace (:trialNominal 3 20 2 0) .
+:result :trace (:trialLow 4 18 3 2) .
+:result :trace (:trialHigh 4 22 1 2) .
+:result :trace (:trialNominal 4 20 2 0) .
+:result :trace (:trialLow 5 19 2 1) .
+:result :trace (:trialHigh 5 21 2 1) .
+:result :trace (:trialNominal 5 20 2 0) .
+:result :trace (:trialLow 6 19 2 1) .
+:result :trace (:trialHigh 6 21 2 1) .
+:result :trace (:trialNominal 6 20 2 0) .
+:result :trace (:trialLow 7 19 2 1) .
+:result :trace (:trialHigh 7 21 2 1) .
+:result :trace (:trialNominal 7 20 2 0) .
+:result :trace (:trialLow 8 19 2 1) .
+:result :trace (:trialHigh 8 21 2 1) .
+:result :trace (:trialNominal 8 20 2 0) .
+:result :strictImprovement (:trialLow 0 true) .
+:result :strictImprovement (:trialHigh 0 true) .
+:result :strictImprovement (:trialLow 1 true) .
+:result :strictImprovement (:trialHigh 1 true) .
+:result :strictImprovement (:trialLow 2 true) .
+:result :strictImprovement (:trialHigh 2 true) .
+:result :strictImprovement (:trialLow 3 true) .
+:result :strictImprovement (:trialHigh 3 true) .
+:result :strictImprovement (:trialLow 4 true) .
+:result :strictImprovement (:trialHigh 4 true) .
+:result :holdBand (:trialNominal 0 true) .
+:result :holdBand (:trialNominal 1 true) .
+:result :holdBand (:trialNominal 2 true) .
+:result :holdBand (:trialNominal 3 true) .
+:result :holdBand (:trialNominal 4 true) .
+:result :holdBand (:trialLow 5 true) .
+:result :holdBand (:trialHigh 5 true) .
+:result :holdBand (:trialNominal 5 true) .
+:result :holdBand (:trialLow 6 true) .
+:result :holdBand (:trialHigh 6 true) .
+:result :holdBand (:trialNominal 6 true) .
+:result :holdBand (:trialLow 7 true) .
+:result :holdBand (:trialHigh 7 true) .
+:result :holdBand (:trialNominal 7 true) .
+:result :insideBand (:trialNominal 0 20) .
+:result :insideBand (:trialNominal 1 20) .
+:result :insideBand (:trialNominal 2 20) .
+:result :insideBand (:trialNominal 3 20) .
+:result :insideBand (:trialNominal 4 20) .
+:result :insideBand (:trialLow 5 19) .
+:result :insideBand (:trialHigh 5 21) .
+:result :insideBand (:trialNominal 5 20) .
+:result :insideBand (:trialLow 6 19) .
+:result :insideBand (:trialHigh 6 21) .
+:result :insideBand (:trialNominal 6 20) .
+:result :insideBand (:trialLow 7 19) .
+:result :insideBand (:trialHigh 7 21) .
+:result :insideBand (:trialNominal 7 20) .
+:result :insideBand (:trialLow 8 19) .
+:result :insideBand (:trialHigh 8 21) .
+:result :insideBand (:trialNominal 8 20) .
 
 { :trialLow :levelAt (0 12) . }
   pe:rule 1;
@@ -2730,3 +2798,1273 @@
     { :trialNominal :levelAt (8 20) . },
     { 20 math:notLessThan 20 . },
     { (20 20) math:difference 0 . }.
+
+{ :result :trace (:trialLow 0 12 4 8) . }
+  pe:rule
+    {
+        {
+            ?trial :levelAt (?k ?level) .
+            ?trial :valveAt (?k ?valve) .
+            ?trial :errorAt (?k ?error) .
+        } => {
+            :result :trace (?trial ?k ?level ?valve ?error) .
+        } .
+    };
+  pe:binding
+    [ pe:var "error"; pe:value 8 ],
+    [ pe:var "k"; pe:value 0 ],
+    [ pe:var "level"; pe:value 12 ],
+    [ pe:var "trial"; pe:value :trialLow ],
+    [ pe:var "valve"; pe:value 4 ];
+  pe:uses
+    { :trialLow :levelAt (0 12) . },
+    { :trialLow :valveAt (0 4) . },
+    { :trialLow :errorAt (0 8) . }.
+
+{ :result :trace (:trialHigh 0 28 0 8) . }
+  pe:rule
+    {
+        {
+            ?trial :levelAt (?k ?level) .
+            ?trial :valveAt (?k ?valve) .
+            ?trial :errorAt (?k ?error) .
+        } => {
+            :result :trace (?trial ?k ?level ?valve ?error) .
+        } .
+    };
+  pe:binding
+    [ pe:var "error"; pe:value 8 ],
+    [ pe:var "k"; pe:value 0 ],
+    [ pe:var "level"; pe:value 28 ],
+    [ pe:var "trial"; pe:value :trialHigh ],
+    [ pe:var "valve"; pe:value 0 ];
+  pe:uses
+    { :trialHigh :levelAt (0 28) . },
+    { :trialHigh :valveAt (0 0) . },
+    { :trialHigh :errorAt (0 8) . }.
+
+{ :result :trace (:trialNominal 0 20 2 0) . }
+  pe:rule
+    {
+        {
+            ?trial :levelAt (?k ?level) .
+            ?trial :valveAt (?k ?valve) .
+            ?trial :errorAt (?k ?error) .
+        } => {
+            :result :trace (?trial ?k ?level ?valve ?error) .
+        } .
+    };
+  pe:binding
+    [ pe:var "error"; pe:value 0 ],
+    [ pe:var "k"; pe:value 0 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ],
+    [ pe:var "valve"; pe:value 2 ];
+  pe:uses
+    { :trialNominal :levelAt (0 20) . },
+    { :trialNominal :valveAt (0 2) . },
+    { :trialNominal :errorAt (0 0) . }.
+
+{ :result :trace (:trialLow 1 14 4 6) . }
+  pe:rule
+    {
+        {
+            ?trial :levelAt (?k ?level) .
+            ?trial :valveAt (?k ?valve) .
+            ?trial :errorAt (?k ?error) .
+        } => {
+            :result :trace (?trial ?k ?level ?valve ?error) .
+        } .
+    };
+  pe:binding
+    [ pe:var "error"; pe:value 6 ],
+    [ pe:var "k"; pe:value 1 ],
+    [ pe:var "level"; pe:value 14 ],
+    [ pe:var "trial"; pe:value :trialLow ],
+    [ pe:var "valve"; pe:value 4 ];
+  pe:uses
+    { :trialLow :levelAt (1 14) . },
+    { :trialLow :valveAt (1 4) . },
+    { :trialLow :errorAt (1 6) . }.
+
+{ :result :trace (:trialHigh 1 26 0 6) . }
+  pe:rule
+    {
+        {
+            ?trial :levelAt (?k ?level) .
+            ?trial :valveAt (?k ?valve) .
+            ?trial :errorAt (?k ?error) .
+        } => {
+            :result :trace (?trial ?k ?level ?valve ?error) .
+        } .
+    };
+  pe:binding
+    [ pe:var "error"; pe:value 6 ],
+    [ pe:var "k"; pe:value 1 ],
+    [ pe:var "level"; pe:value 26 ],
+    [ pe:var "trial"; pe:value :trialHigh ],
+    [ pe:var "valve"; pe:value 0 ];
+  pe:uses
+    { :trialHigh :levelAt (1 26) . },
+    { :trialHigh :valveAt (1 0) . },
+    { :trialHigh :errorAt (1 6) . }.
+
+{ :result :trace (:trialNominal 1 20 2 0) . }
+  pe:rule
+    {
+        {
+            ?trial :levelAt (?k ?level) .
+            ?trial :valveAt (?k ?valve) .
+            ?trial :errorAt (?k ?error) .
+        } => {
+            :result :trace (?trial ?k ?level ?valve ?error) .
+        } .
+    };
+  pe:binding
+    [ pe:var "error"; pe:value 0 ],
+    [ pe:var "k"; pe:value 1 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ],
+    [ pe:var "valve"; pe:value 2 ];
+  pe:uses
+    { :trialNominal :levelAt (1 20) . },
+    { :trialNominal :valveAt (1 2) . },
+    { :trialNominal :errorAt (1 0) . }.
+
+{ :result :trace (:trialLow 2 16 3 4) . }
+  pe:rule
+    {
+        {
+            ?trial :levelAt (?k ?level) .
+            ?trial :valveAt (?k ?valve) .
+            ?trial :errorAt (?k ?error) .
+        } => {
+            :result :trace (?trial ?k ?level ?valve ?error) .
+        } .
+    };
+  pe:binding
+    [ pe:var "error"; pe:value 4 ],
+    [ pe:var "k"; pe:value 2 ],
+    [ pe:var "level"; pe:value 16 ],
+    [ pe:var "trial"; pe:value :trialLow ],
+    [ pe:var "valve"; pe:value 3 ];
+  pe:uses
+    { :trialLow :levelAt (2 16) . },
+    { :trialLow :valveAt (2 3) . },
+    { :trialLow :errorAt (2 4) . }.
+
+{ :result :trace (:trialHigh 2 24 1 4) . }
+  pe:rule
+    {
+        {
+            ?trial :levelAt (?k ?level) .
+            ?trial :valveAt (?k ?valve) .
+            ?trial :errorAt (?k ?error) .
+        } => {
+            :result :trace (?trial ?k ?level ?valve ?error) .
+        } .
+    };
+  pe:binding
+    [ pe:var "error"; pe:value 4 ],
+    [ pe:var "k"; pe:value 2 ],
+    [ pe:var "level"; pe:value 24 ],
+    [ pe:var "trial"; pe:value :trialHigh ],
+    [ pe:var "valve"; pe:value 1 ];
+  pe:uses
+    { :trialHigh :levelAt (2 24) . },
+    { :trialHigh :valveAt (2 1) . },
+    { :trialHigh :errorAt (2 4) . }.
+
+{ :result :trace (:trialNominal 2 20 2 0) . }
+  pe:rule
+    {
+        {
+            ?trial :levelAt (?k ?level) .
+            ?trial :valveAt (?k ?valve) .
+            ?trial :errorAt (?k ?error) .
+        } => {
+            :result :trace (?trial ?k ?level ?valve ?error) .
+        } .
+    };
+  pe:binding
+    [ pe:var "error"; pe:value 0 ],
+    [ pe:var "k"; pe:value 2 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ],
+    [ pe:var "valve"; pe:value 2 ];
+  pe:uses
+    { :trialNominal :levelAt (2 20) . },
+    { :trialNominal :valveAt (2 2) . },
+    { :trialNominal :errorAt (2 0) . }.
+
+{ :result :trace (:trialLow 3 17 3 3) . }
+  pe:rule
+    {
+        {
+            ?trial :levelAt (?k ?level) .
+            ?trial :valveAt (?k ?valve) .
+            ?trial :errorAt (?k ?error) .
+        } => {
+            :result :trace (?trial ?k ?level ?valve ?error) .
+        } .
+    };
+  pe:binding
+    [ pe:var "error"; pe:value 3 ],
+    [ pe:var "k"; pe:value 3 ],
+    [ pe:var "level"; pe:value 17 ],
+    [ pe:var "trial"; pe:value :trialLow ],
+    [ pe:var "valve"; pe:value 3 ];
+  pe:uses
+    { :trialLow :levelAt (3 17) . },
+    { :trialLow :valveAt (3 3) . },
+    { :trialLow :errorAt (3 3) . }.
+
+{ :result :trace (:trialHigh 3 23 1 3) . }
+  pe:rule
+    {
+        {
+            ?trial :levelAt (?k ?level) .
+            ?trial :valveAt (?k ?valve) .
+            ?trial :errorAt (?k ?error) .
+        } => {
+            :result :trace (?trial ?k ?level ?valve ?error) .
+        } .
+    };
+  pe:binding
+    [ pe:var "error"; pe:value 3 ],
+    [ pe:var "k"; pe:value 3 ],
+    [ pe:var "level"; pe:value 23 ],
+    [ pe:var "trial"; pe:value :trialHigh ],
+    [ pe:var "valve"; pe:value 1 ];
+  pe:uses
+    { :trialHigh :levelAt (3 23) . },
+    { :trialHigh :valveAt (3 1) . },
+    { :trialHigh :errorAt (3 3) . }.
+
+{ :result :trace (:trialNominal 3 20 2 0) . }
+  pe:rule
+    {
+        {
+            ?trial :levelAt (?k ?level) .
+            ?trial :valveAt (?k ?valve) .
+            ?trial :errorAt (?k ?error) .
+        } => {
+            :result :trace (?trial ?k ?level ?valve ?error) .
+        } .
+    };
+  pe:binding
+    [ pe:var "error"; pe:value 0 ],
+    [ pe:var "k"; pe:value 3 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ],
+    [ pe:var "valve"; pe:value 2 ];
+  pe:uses
+    { :trialNominal :levelAt (3 20) . },
+    { :trialNominal :valveAt (3 2) . },
+    { :trialNominal :errorAt (3 0) . }.
+
+{ :result :trace (:trialLow 4 18 3 2) . }
+  pe:rule
+    {
+        {
+            ?trial :levelAt (?k ?level) .
+            ?trial :valveAt (?k ?valve) .
+            ?trial :errorAt (?k ?error) .
+        } => {
+            :result :trace (?trial ?k ?level ?valve ?error) .
+        } .
+    };
+  pe:binding
+    [ pe:var "error"; pe:value 2 ],
+    [ pe:var "k"; pe:value 4 ],
+    [ pe:var "level"; pe:value 18 ],
+    [ pe:var "trial"; pe:value :trialLow ],
+    [ pe:var "valve"; pe:value 3 ];
+  pe:uses
+    { :trialLow :levelAt (4 18) . },
+    { :trialLow :valveAt (4 3) . },
+    { :trialLow :errorAt (4 2) . }.
+
+{ :result :trace (:trialHigh 4 22 1 2) . }
+  pe:rule
+    {
+        {
+            ?trial :levelAt (?k ?level) .
+            ?trial :valveAt (?k ?valve) .
+            ?trial :errorAt (?k ?error) .
+        } => {
+            :result :trace (?trial ?k ?level ?valve ?error) .
+        } .
+    };
+  pe:binding
+    [ pe:var "error"; pe:value 2 ],
+    [ pe:var "k"; pe:value 4 ],
+    [ pe:var "level"; pe:value 22 ],
+    [ pe:var "trial"; pe:value :trialHigh ],
+    [ pe:var "valve"; pe:value 1 ];
+  pe:uses
+    { :trialHigh :levelAt (4 22) . },
+    { :trialHigh :valveAt (4 1) . },
+    { :trialHigh :errorAt (4 2) . }.
+
+{ :result :trace (:trialNominal 4 20 2 0) . }
+  pe:rule
+    {
+        {
+            ?trial :levelAt (?k ?level) .
+            ?trial :valveAt (?k ?valve) .
+            ?trial :errorAt (?k ?error) .
+        } => {
+            :result :trace (?trial ?k ?level ?valve ?error) .
+        } .
+    };
+  pe:binding
+    [ pe:var "error"; pe:value 0 ],
+    [ pe:var "k"; pe:value 4 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ],
+    [ pe:var "valve"; pe:value 2 ];
+  pe:uses
+    { :trialNominal :levelAt (4 20) . },
+    { :trialNominal :valveAt (4 2) . },
+    { :trialNominal :errorAt (4 0) . }.
+
+{ :result :trace (:trialLow 5 19 2 1) . }
+  pe:rule
+    {
+        {
+            ?trial :levelAt (?k ?level) .
+            ?trial :valveAt (?k ?valve) .
+            ?trial :errorAt (?k ?error) .
+        } => {
+            :result :trace (?trial ?k ?level ?valve ?error) .
+        } .
+    };
+  pe:binding
+    [ pe:var "error"; pe:value 1 ],
+    [ pe:var "k"; pe:value 5 ],
+    [ pe:var "level"; pe:value 19 ],
+    [ pe:var "trial"; pe:value :trialLow ],
+    [ pe:var "valve"; pe:value 2 ];
+  pe:uses
+    { :trialLow :levelAt (5 19) . },
+    { :trialLow :valveAt (5 2) . },
+    { :trialLow :errorAt (5 1) . }.
+
+{ :result :trace (:trialHigh 5 21 2 1) . }
+  pe:rule
+    {
+        {
+            ?trial :levelAt (?k ?level) .
+            ?trial :valveAt (?k ?valve) .
+            ?trial :errorAt (?k ?error) .
+        } => {
+            :result :trace (?trial ?k ?level ?valve ?error) .
+        } .
+    };
+  pe:binding
+    [ pe:var "error"; pe:value 1 ],
+    [ pe:var "k"; pe:value 5 ],
+    [ pe:var "level"; pe:value 21 ],
+    [ pe:var "trial"; pe:value :trialHigh ],
+    [ pe:var "valve"; pe:value 2 ];
+  pe:uses
+    { :trialHigh :levelAt (5 21) . },
+    { :trialHigh :valveAt (5 2) . },
+    { :trialHigh :errorAt (5 1) . }.
+
+{ :result :trace (:trialNominal 5 20 2 0) . }
+  pe:rule
+    {
+        {
+            ?trial :levelAt (?k ?level) .
+            ?trial :valveAt (?k ?valve) .
+            ?trial :errorAt (?k ?error) .
+        } => {
+            :result :trace (?trial ?k ?level ?valve ?error) .
+        } .
+    };
+  pe:binding
+    [ pe:var "error"; pe:value 0 ],
+    [ pe:var "k"; pe:value 5 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ],
+    [ pe:var "valve"; pe:value 2 ];
+  pe:uses
+    { :trialNominal :levelAt (5 20) . },
+    { :trialNominal :valveAt (5 2) . },
+    { :trialNominal :errorAt (5 0) . }.
+
+{ :result :trace (:trialLow 6 19 2 1) . }
+  pe:rule
+    {
+        {
+            ?trial :levelAt (?k ?level) .
+            ?trial :valveAt (?k ?valve) .
+            ?trial :errorAt (?k ?error) .
+        } => {
+            :result :trace (?trial ?k ?level ?valve ?error) .
+        } .
+    };
+  pe:binding
+    [ pe:var "error"; pe:value 1 ],
+    [ pe:var "k"; pe:value 6 ],
+    [ pe:var "level"; pe:value 19 ],
+    [ pe:var "trial"; pe:value :trialLow ],
+    [ pe:var "valve"; pe:value 2 ];
+  pe:uses
+    { :trialLow :levelAt (6 19) . },
+    { :trialLow :valveAt (6 2) . },
+    { :trialLow :errorAt (6 1) . }.
+
+{ :result :trace (:trialHigh 6 21 2 1) . }
+  pe:rule
+    {
+        {
+            ?trial :levelAt (?k ?level) .
+            ?trial :valveAt (?k ?valve) .
+            ?trial :errorAt (?k ?error) .
+        } => {
+            :result :trace (?trial ?k ?level ?valve ?error) .
+        } .
+    };
+  pe:binding
+    [ pe:var "error"; pe:value 1 ],
+    [ pe:var "k"; pe:value 6 ],
+    [ pe:var "level"; pe:value 21 ],
+    [ pe:var "trial"; pe:value :trialHigh ],
+    [ pe:var "valve"; pe:value 2 ];
+  pe:uses
+    { :trialHigh :levelAt (6 21) . },
+    { :trialHigh :valveAt (6 2) . },
+    { :trialHigh :errorAt (6 1) . }.
+
+{ :result :trace (:trialNominal 6 20 2 0) . }
+  pe:rule
+    {
+        {
+            ?trial :levelAt (?k ?level) .
+            ?trial :valveAt (?k ?valve) .
+            ?trial :errorAt (?k ?error) .
+        } => {
+            :result :trace (?trial ?k ?level ?valve ?error) .
+        } .
+    };
+  pe:binding
+    [ pe:var "error"; pe:value 0 ],
+    [ pe:var "k"; pe:value 6 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ],
+    [ pe:var "valve"; pe:value 2 ];
+  pe:uses
+    { :trialNominal :levelAt (6 20) . },
+    { :trialNominal :valveAt (6 2) . },
+    { :trialNominal :errorAt (6 0) . }.
+
+{ :result :trace (:trialLow 7 19 2 1) . }
+  pe:rule
+    {
+        {
+            ?trial :levelAt (?k ?level) .
+            ?trial :valveAt (?k ?valve) .
+            ?trial :errorAt (?k ?error) .
+        } => {
+            :result :trace (?trial ?k ?level ?valve ?error) .
+        } .
+    };
+  pe:binding
+    [ pe:var "error"; pe:value 1 ],
+    [ pe:var "k"; pe:value 7 ],
+    [ pe:var "level"; pe:value 19 ],
+    [ pe:var "trial"; pe:value :trialLow ],
+    [ pe:var "valve"; pe:value 2 ];
+  pe:uses
+    { :trialLow :levelAt (7 19) . },
+    { :trialLow :valveAt (7 2) . },
+    { :trialLow :errorAt (7 1) . }.
+
+{ :result :trace (:trialHigh 7 21 2 1) . }
+  pe:rule
+    {
+        {
+            ?trial :levelAt (?k ?level) .
+            ?trial :valveAt (?k ?valve) .
+            ?trial :errorAt (?k ?error) .
+        } => {
+            :result :trace (?trial ?k ?level ?valve ?error) .
+        } .
+    };
+  pe:binding
+    [ pe:var "error"; pe:value 1 ],
+    [ pe:var "k"; pe:value 7 ],
+    [ pe:var "level"; pe:value 21 ],
+    [ pe:var "trial"; pe:value :trialHigh ],
+    [ pe:var "valve"; pe:value 2 ];
+  pe:uses
+    { :trialHigh :levelAt (7 21) . },
+    { :trialHigh :valveAt (7 2) . },
+    { :trialHigh :errorAt (7 1) . }.
+
+{ :result :trace (:trialNominal 7 20 2 0) . }
+  pe:rule
+    {
+        {
+            ?trial :levelAt (?k ?level) .
+            ?trial :valveAt (?k ?valve) .
+            ?trial :errorAt (?k ?error) .
+        } => {
+            :result :trace (?trial ?k ?level ?valve ?error) .
+        } .
+    };
+  pe:binding
+    [ pe:var "error"; pe:value 0 ],
+    [ pe:var "k"; pe:value 7 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ],
+    [ pe:var "valve"; pe:value 2 ];
+  pe:uses
+    { :trialNominal :levelAt (7 20) . },
+    { :trialNominal :valveAt (7 2) . },
+    { :trialNominal :errorAt (7 0) . }.
+
+{ :result :trace (:trialLow 8 19 2 1) . }
+  pe:rule
+    {
+        {
+            ?trial :levelAt (?k ?level) .
+            ?trial :valveAt (?k ?valve) .
+            ?trial :errorAt (?k ?error) .
+        } => {
+            :result :trace (?trial ?k ?level ?valve ?error) .
+        } .
+    };
+  pe:binding
+    [ pe:var "error"; pe:value 1 ],
+    [ pe:var "k"; pe:value 8 ],
+    [ pe:var "level"; pe:value 19 ],
+    [ pe:var "trial"; pe:value :trialLow ],
+    [ pe:var "valve"; pe:value 2 ];
+  pe:uses
+    { :trialLow :levelAt (8 19) . },
+    { :trialLow :valveAt (8 2) . },
+    { :trialLow :errorAt (8 1) . }.
+
+{ :result :trace (:trialHigh 8 21 2 1) . }
+  pe:rule
+    {
+        {
+            ?trial :levelAt (?k ?level) .
+            ?trial :valveAt (?k ?valve) .
+            ?trial :errorAt (?k ?error) .
+        } => {
+            :result :trace (?trial ?k ?level ?valve ?error) .
+        } .
+    };
+  pe:binding
+    [ pe:var "error"; pe:value 1 ],
+    [ pe:var "k"; pe:value 8 ],
+    [ pe:var "level"; pe:value 21 ],
+    [ pe:var "trial"; pe:value :trialHigh ],
+    [ pe:var "valve"; pe:value 2 ];
+  pe:uses
+    { :trialHigh :levelAt (8 21) . },
+    { :trialHigh :valveAt (8 2) . },
+    { :trialHigh :errorAt (8 1) . }.
+
+{ :result :trace (:trialNominal 8 20 2 0) . }
+  pe:rule
+    {
+        {
+            ?trial :levelAt (?k ?level) .
+            ?trial :valveAt (?k ?valve) .
+            ?trial :errorAt (?k ?error) .
+        } => {
+            :result :trace (?trial ?k ?level ?valve ?error) .
+        } .
+    };
+  pe:binding
+    [ pe:var "error"; pe:value 0 ],
+    [ pe:var "k"; pe:value 8 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ],
+    [ pe:var "valve"; pe:value 2 ];
+  pe:uses
+    { :trialNominal :levelAt (8 20) . },
+    { :trialNominal :valveAt (8 2) . },
+    { :trialNominal :errorAt (8 0) . }.
+
+{ :result :strictImprovement (:trialLow 0 true) . }
+  pe:rule
+    {
+        {
+            ?trial :strictImprovementAt ?k .
+        } => {
+            :result :strictImprovement (?trial ?k true) .
+        } .
+    };
+  pe:binding
+    [ pe:var "k"; pe:value 0 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses { :trialLow :strictImprovementAt 0 . }.
+
+{ :result :strictImprovement (:trialHigh 0 true) . }
+  pe:rule
+    {
+        {
+            ?trial :strictImprovementAt ?k .
+        } => {
+            :result :strictImprovement (?trial ?k true) .
+        } .
+    };
+  pe:binding
+    [ pe:var "k"; pe:value 0 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses { :trialHigh :strictImprovementAt 0 . }.
+
+{ :result :strictImprovement (:trialLow 1 true) . }
+  pe:rule
+    {
+        {
+            ?trial :strictImprovementAt ?k .
+        } => {
+            :result :strictImprovement (?trial ?k true) .
+        } .
+    };
+  pe:binding
+    [ pe:var "k"; pe:value 1 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses { :trialLow :strictImprovementAt 1 . }.
+
+{ :result :strictImprovement (:trialHigh 1 true) . }
+  pe:rule
+    {
+        {
+            ?trial :strictImprovementAt ?k .
+        } => {
+            :result :strictImprovement (?trial ?k true) .
+        } .
+    };
+  pe:binding
+    [ pe:var "k"; pe:value 1 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses { :trialHigh :strictImprovementAt 1 . }.
+
+{ :result :strictImprovement (:trialLow 2 true) . }
+  pe:rule
+    {
+        {
+            ?trial :strictImprovementAt ?k .
+        } => {
+            :result :strictImprovement (?trial ?k true) .
+        } .
+    };
+  pe:binding
+    [ pe:var "k"; pe:value 2 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses { :trialLow :strictImprovementAt 2 . }.
+
+{ :result :strictImprovement (:trialHigh 2 true) . }
+  pe:rule
+    {
+        {
+            ?trial :strictImprovementAt ?k .
+        } => {
+            :result :strictImprovement (?trial ?k true) .
+        } .
+    };
+  pe:binding
+    [ pe:var "k"; pe:value 2 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses { :trialHigh :strictImprovementAt 2 . }.
+
+{ :result :strictImprovement (:trialLow 3 true) . }
+  pe:rule
+    {
+        {
+            ?trial :strictImprovementAt ?k .
+        } => {
+            :result :strictImprovement (?trial ?k true) .
+        } .
+    };
+  pe:binding
+    [ pe:var "k"; pe:value 3 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses { :trialLow :strictImprovementAt 3 . }.
+
+{ :result :strictImprovement (:trialHigh 3 true) . }
+  pe:rule
+    {
+        {
+            ?trial :strictImprovementAt ?k .
+        } => {
+            :result :strictImprovement (?trial ?k true) .
+        } .
+    };
+  pe:binding
+    [ pe:var "k"; pe:value 3 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses { :trialHigh :strictImprovementAt 3 . }.
+
+{ :result :strictImprovement (:trialLow 4 true) . }
+  pe:rule
+    {
+        {
+            ?trial :strictImprovementAt ?k .
+        } => {
+            :result :strictImprovement (?trial ?k true) .
+        } .
+    };
+  pe:binding
+    [ pe:var "k"; pe:value 4 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses { :trialLow :strictImprovementAt 4 . }.
+
+{ :result :strictImprovement (:trialHigh 4 true) . }
+  pe:rule
+    {
+        {
+            ?trial :strictImprovementAt ?k .
+        } => {
+            :result :strictImprovement (?trial ?k true) .
+        } .
+    };
+  pe:binding
+    [ pe:var "k"; pe:value 4 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses { :trialHigh :strictImprovementAt 4 . }.
+
+{ :result :holdBand (:trialNominal 0 true) . }
+  pe:rule
+    {
+        {
+            ?trial :holdBandAt ?k .
+        } => {
+            :result :holdBand (?trial ?k true) .
+        } .
+    };
+  pe:binding
+    [ pe:var "k"; pe:value 0 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses { :trialNominal :holdBandAt 0 . }.
+
+{ :result :holdBand (:trialNominal 1 true) . }
+  pe:rule
+    {
+        {
+            ?trial :holdBandAt ?k .
+        } => {
+            :result :holdBand (?trial ?k true) .
+        } .
+    };
+  pe:binding
+    [ pe:var "k"; pe:value 1 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses { :trialNominal :holdBandAt 1 . }.
+
+{ :result :holdBand (:trialNominal 2 true) . }
+  pe:rule
+    {
+        {
+            ?trial :holdBandAt ?k .
+        } => {
+            :result :holdBand (?trial ?k true) .
+        } .
+    };
+  pe:binding
+    [ pe:var "k"; pe:value 2 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses { :trialNominal :holdBandAt 2 . }.
+
+{ :result :holdBand (:trialNominal 3 true) . }
+  pe:rule
+    {
+        {
+            ?trial :holdBandAt ?k .
+        } => {
+            :result :holdBand (?trial ?k true) .
+        } .
+    };
+  pe:binding
+    [ pe:var "k"; pe:value 3 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses { :trialNominal :holdBandAt 3 . }.
+
+{ :result :holdBand (:trialNominal 4 true) . }
+  pe:rule
+    {
+        {
+            ?trial :holdBandAt ?k .
+        } => {
+            :result :holdBand (?trial ?k true) .
+        } .
+    };
+  pe:binding
+    [ pe:var "k"; pe:value 4 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses { :trialNominal :holdBandAt 4 . }.
+
+{ :result :holdBand (:trialLow 5 true) . }
+  pe:rule
+    {
+        {
+            ?trial :holdBandAt ?k .
+        } => {
+            :result :holdBand (?trial ?k true) .
+        } .
+    };
+  pe:binding
+    [ pe:var "k"; pe:value 5 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses { :trialLow :holdBandAt 5 . }.
+
+{ :result :holdBand (:trialHigh 5 true) . }
+  pe:rule
+    {
+        {
+            ?trial :holdBandAt ?k .
+        } => {
+            :result :holdBand (?trial ?k true) .
+        } .
+    };
+  pe:binding
+    [ pe:var "k"; pe:value 5 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses { :trialHigh :holdBandAt 5 . }.
+
+{ :result :holdBand (:trialNominal 5 true) . }
+  pe:rule
+    {
+        {
+            ?trial :holdBandAt ?k .
+        } => {
+            :result :holdBand (?trial ?k true) .
+        } .
+    };
+  pe:binding
+    [ pe:var "k"; pe:value 5 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses { :trialNominal :holdBandAt 5 . }.
+
+{ :result :holdBand (:trialLow 6 true) . }
+  pe:rule
+    {
+        {
+            ?trial :holdBandAt ?k .
+        } => {
+            :result :holdBand (?trial ?k true) .
+        } .
+    };
+  pe:binding
+    [ pe:var "k"; pe:value 6 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses { :trialLow :holdBandAt 6 . }.
+
+{ :result :holdBand (:trialHigh 6 true) . }
+  pe:rule
+    {
+        {
+            ?trial :holdBandAt ?k .
+        } => {
+            :result :holdBand (?trial ?k true) .
+        } .
+    };
+  pe:binding
+    [ pe:var "k"; pe:value 6 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses { :trialHigh :holdBandAt 6 . }.
+
+{ :result :holdBand (:trialNominal 6 true) . }
+  pe:rule
+    {
+        {
+            ?trial :holdBandAt ?k .
+        } => {
+            :result :holdBand (?trial ?k true) .
+        } .
+    };
+  pe:binding
+    [ pe:var "k"; pe:value 6 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses { :trialNominal :holdBandAt 6 . }.
+
+{ :result :holdBand (:trialLow 7 true) . }
+  pe:rule
+    {
+        {
+            ?trial :holdBandAt ?k .
+        } => {
+            :result :holdBand (?trial ?k true) .
+        } .
+    };
+  pe:binding
+    [ pe:var "k"; pe:value 7 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses { :trialLow :holdBandAt 7 . }.
+
+{ :result :holdBand (:trialHigh 7 true) . }
+  pe:rule
+    {
+        {
+            ?trial :holdBandAt ?k .
+        } => {
+            :result :holdBand (?trial ?k true) .
+        } .
+    };
+  pe:binding
+    [ pe:var "k"; pe:value 7 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses { :trialHigh :holdBandAt 7 . }.
+
+{ :result :holdBand (:trialNominal 7 true) . }
+  pe:rule
+    {
+        {
+            ?trial :holdBandAt ?k .
+        } => {
+            :result :holdBand (?trial ?k true) .
+        } .
+    };
+  pe:binding
+    [ pe:var "k"; pe:value 7 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses { :trialNominal :holdBandAt 7 . }.
+
+{ :result :insideBand (:trialNominal 0 20) . }
+  pe:rule
+    {
+        {
+            ?trial :levelAt (?k ?level) .
+            ?level math:notLessThan 19 .
+            ?level math:notGreaterThan 21 .
+        } => {
+            :result :insideBand (?trial ?k ?level) .
+        } .
+    };
+  pe:binding
+    [ pe:var "k"; pe:value 0 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :trialNominal :levelAt (0 20) . },
+    { 20 math:notLessThan 19 . },
+    { 20 math:notGreaterThan 21 . }.
+
+{ :result :insideBand (:trialNominal 1 20) . }
+  pe:rule
+    {
+        {
+            ?trial :levelAt (?k ?level) .
+            ?level math:notLessThan 19 .
+            ?level math:notGreaterThan 21 .
+        } => {
+            :result :insideBand (?trial ?k ?level) .
+        } .
+    };
+  pe:binding
+    [ pe:var "k"; pe:value 1 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :trialNominal :levelAt (1 20) . },
+    { 20 math:notLessThan 19 . },
+    { 20 math:notGreaterThan 21 . }.
+
+{ :result :insideBand (:trialNominal 2 20) . }
+  pe:rule
+    {
+        {
+            ?trial :levelAt (?k ?level) .
+            ?level math:notLessThan 19 .
+            ?level math:notGreaterThan 21 .
+        } => {
+            :result :insideBand (?trial ?k ?level) .
+        } .
+    };
+  pe:binding
+    [ pe:var "k"; pe:value 2 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :trialNominal :levelAt (2 20) . },
+    { 20 math:notLessThan 19 . },
+    { 20 math:notGreaterThan 21 . }.
+
+{ :result :insideBand (:trialNominal 3 20) . }
+  pe:rule
+    {
+        {
+            ?trial :levelAt (?k ?level) .
+            ?level math:notLessThan 19 .
+            ?level math:notGreaterThan 21 .
+        } => {
+            :result :insideBand (?trial ?k ?level) .
+        } .
+    };
+  pe:binding
+    [ pe:var "k"; pe:value 3 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :trialNominal :levelAt (3 20) . },
+    { 20 math:notLessThan 19 . },
+    { 20 math:notGreaterThan 21 . }.
+
+{ :result :insideBand (:trialNominal 4 20) . }
+  pe:rule
+    {
+        {
+            ?trial :levelAt (?k ?level) .
+            ?level math:notLessThan 19 .
+            ?level math:notGreaterThan 21 .
+        } => {
+            :result :insideBand (?trial ?k ?level) .
+        } .
+    };
+  pe:binding
+    [ pe:var "k"; pe:value 4 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :trialNominal :levelAt (4 20) . },
+    { 20 math:notLessThan 19 . },
+    { 20 math:notGreaterThan 21 . }.
+
+{ :result :insideBand (:trialLow 5 19) . }
+  pe:rule
+    {
+        {
+            ?trial :levelAt (?k ?level) .
+            ?level math:notLessThan 19 .
+            ?level math:notGreaterThan 21 .
+        } => {
+            :result :insideBand (?trial ?k ?level) .
+        } .
+    };
+  pe:binding
+    [ pe:var "k"; pe:value 5 ],
+    [ pe:var "level"; pe:value 19 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses
+    { :trialLow :levelAt (5 19) . },
+    { 19 math:notLessThan 19 . },
+    { 19 math:notGreaterThan 21 . }.
+
+{ :result :insideBand (:trialHigh 5 21) . }
+  pe:rule
+    {
+        {
+            ?trial :levelAt (?k ?level) .
+            ?level math:notLessThan 19 .
+            ?level math:notGreaterThan 21 .
+        } => {
+            :result :insideBand (?trial ?k ?level) .
+        } .
+    };
+  pe:binding
+    [ pe:var "k"; pe:value 5 ],
+    [ pe:var "level"; pe:value 21 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses
+    { :trialHigh :levelAt (5 21) . },
+    { 21 math:notLessThan 19 . },
+    { 21 math:notGreaterThan 21 . }.
+
+{ :result :insideBand (:trialNominal 5 20) . }
+  pe:rule
+    {
+        {
+            ?trial :levelAt (?k ?level) .
+            ?level math:notLessThan 19 .
+            ?level math:notGreaterThan 21 .
+        } => {
+            :result :insideBand (?trial ?k ?level) .
+        } .
+    };
+  pe:binding
+    [ pe:var "k"; pe:value 5 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :trialNominal :levelAt (5 20) . },
+    { 20 math:notLessThan 19 . },
+    { 20 math:notGreaterThan 21 . }.
+
+{ :result :insideBand (:trialLow 6 19) . }
+  pe:rule
+    {
+        {
+            ?trial :levelAt (?k ?level) .
+            ?level math:notLessThan 19 .
+            ?level math:notGreaterThan 21 .
+        } => {
+            :result :insideBand (?trial ?k ?level) .
+        } .
+    };
+  pe:binding
+    [ pe:var "k"; pe:value 6 ],
+    [ pe:var "level"; pe:value 19 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses
+    { :trialLow :levelAt (6 19) . },
+    { 19 math:notLessThan 19 . },
+    { 19 math:notGreaterThan 21 . }.
+
+{ :result :insideBand (:trialHigh 6 21) . }
+  pe:rule
+    {
+        {
+            ?trial :levelAt (?k ?level) .
+            ?level math:notLessThan 19 .
+            ?level math:notGreaterThan 21 .
+        } => {
+            :result :insideBand (?trial ?k ?level) .
+        } .
+    };
+  pe:binding
+    [ pe:var "k"; pe:value 6 ],
+    [ pe:var "level"; pe:value 21 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses
+    { :trialHigh :levelAt (6 21) . },
+    { 21 math:notLessThan 19 . },
+    { 21 math:notGreaterThan 21 . }.
+
+{ :result :insideBand (:trialNominal 6 20) . }
+  pe:rule
+    {
+        {
+            ?trial :levelAt (?k ?level) .
+            ?level math:notLessThan 19 .
+            ?level math:notGreaterThan 21 .
+        } => {
+            :result :insideBand (?trial ?k ?level) .
+        } .
+    };
+  pe:binding
+    [ pe:var "k"; pe:value 6 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :trialNominal :levelAt (6 20) . },
+    { 20 math:notLessThan 19 . },
+    { 20 math:notGreaterThan 21 . }.
+
+{ :result :insideBand (:trialLow 7 19) . }
+  pe:rule
+    {
+        {
+            ?trial :levelAt (?k ?level) .
+            ?level math:notLessThan 19 .
+            ?level math:notGreaterThan 21 .
+        } => {
+            :result :insideBand (?trial ?k ?level) .
+        } .
+    };
+  pe:binding
+    [ pe:var "k"; pe:value 7 ],
+    [ pe:var "level"; pe:value 19 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses
+    { :trialLow :levelAt (7 19) . },
+    { 19 math:notLessThan 19 . },
+    { 19 math:notGreaterThan 21 . }.
+
+{ :result :insideBand (:trialHigh 7 21) . }
+  pe:rule
+    {
+        {
+            ?trial :levelAt (?k ?level) .
+            ?level math:notLessThan 19 .
+            ?level math:notGreaterThan 21 .
+        } => {
+            :result :insideBand (?trial ?k ?level) .
+        } .
+    };
+  pe:binding
+    [ pe:var "k"; pe:value 7 ],
+    [ pe:var "level"; pe:value 21 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses
+    { :trialHigh :levelAt (7 21) . },
+    { 21 math:notLessThan 19 . },
+    { 21 math:notGreaterThan 21 . }.
+
+{ :result :insideBand (:trialNominal 7 20) . }
+  pe:rule
+    {
+        {
+            ?trial :levelAt (?k ?level) .
+            ?level math:notLessThan 19 .
+            ?level math:notGreaterThan 21 .
+        } => {
+            :result :insideBand (?trial ?k ?level) .
+        } .
+    };
+  pe:binding
+    [ pe:var "k"; pe:value 7 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :trialNominal :levelAt (7 20) . },
+    { 20 math:notLessThan 19 . },
+    { 20 math:notGreaterThan 21 . }.
+
+{ :result :insideBand (:trialLow 8 19) . }
+  pe:rule
+    {
+        {
+            ?trial :levelAt (?k ?level) .
+            ?level math:notLessThan 19 .
+            ?level math:notGreaterThan 21 .
+        } => {
+            :result :insideBand (?trial ?k ?level) .
+        } .
+    };
+  pe:binding
+    [ pe:var "k"; pe:value 8 ],
+    [ pe:var "level"; pe:value 19 ],
+    [ pe:var "trial"; pe:value :trialLow ];
+  pe:uses
+    { :trialLow :levelAt (8 19) . },
+    { 19 math:notLessThan 19 . },
+    { 19 math:notGreaterThan 21 . }.
+
+{ :result :insideBand (:trialHigh 8 21) . }
+  pe:rule
+    {
+        {
+            ?trial :levelAt (?k ?level) .
+            ?level math:notLessThan 19 .
+            ?level math:notGreaterThan 21 .
+        } => {
+            :result :insideBand (?trial ?k ?level) .
+        } .
+    };
+  pe:binding
+    [ pe:var "k"; pe:value 8 ],
+    [ pe:var "level"; pe:value 21 ],
+    [ pe:var "trial"; pe:value :trialHigh ];
+  pe:uses
+    { :trialHigh :levelAt (8 21) . },
+    { 21 math:notLessThan 19 . },
+    { 21 math:notGreaterThan 21 . }.
+
+{ :result :insideBand (:trialNominal 8 20) . }
+  pe:rule
+    {
+        {
+            ?trial :levelAt (?k ?level) .
+            ?level math:notLessThan 19 .
+            ?level math:notGreaterThan 21 .
+        } => {
+            :result :insideBand (?trial ?k ?level) .
+        } .
+    };
+  pe:binding
+    [ pe:var "k"; pe:value 8 ],
+    [ pe:var "level"; pe:value 20 ],
+    [ pe:var "trial"; pe:value :trialNominal ];
+  pe:uses
+    { :trialNominal :levelAt (8 20) . },
+    { 20 math:notLessThan 19 . },
+    { 20 math:notGreaterThan 21 . }.

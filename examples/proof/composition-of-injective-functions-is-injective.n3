@@ -1,4 +1,5 @@
 @prefix : <http://examples.org/#> .
+@prefix log: <http://www.w3.org/2000/10/swap/log#> .
 @prefix pe: <https://eyereasoner.github.io/pe#> .
 
 (:a :a) :sameTerm true .
@@ -16,6 +17,8 @@
 (:b :a) :sameTerm true .
 (:h :a :b) :sameInputUnderEqualCompositeOutput true .
 (:h :b :a) :sameInputUnderEqualCompositeOutput true .
+:result :sameInputByCompositeInjectivity (:h :a :b) .
+:result :sameInputByCompositeInjectivity (:h :b :a) .
 
 { (:a :a) :sameTerm true . }
   pe:rule 1;
@@ -253,3 +256,45 @@
     { (:g :p) :app :r . },
     { (:r :r) :sameTerm true . },
     { (:b :a) :sameTerm true . }.
+
+{ :result :sameInputByCompositeInjectivity (:h :a :b) . }
+  pe:rule
+    {
+        {
+            (?h ?x ?y) :sameInputUnderEqualCompositeOutput true .
+            ?x log:notEqualTo ?y .
+        } => {
+            :result :sameInputByCompositeInjectivity (?h ?x ?y) .
+        } .
+    };
+  pe:binding
+    [ pe:var "h"; pe:value :h ],
+    [ pe:var "x"; pe:value :a ],
+    [ pe:var "y"; pe:value :b ];
+  pe:uses
+    { (:h :a :b) :sameInputUnderEqualCompositeOutput true . },
+    { :a log:notEqualTo :b . }.
+
+{ :a log:notEqualTo :b . }
+  pe:builtin log:notEqualTo.
+
+{ :result :sameInputByCompositeInjectivity (:h :b :a) . }
+  pe:rule
+    {
+        {
+            (?h ?x ?y) :sameInputUnderEqualCompositeOutput true .
+            ?x log:notEqualTo ?y .
+        } => {
+            :result :sameInputByCompositeInjectivity (?h ?x ?y) .
+        } .
+    };
+  pe:binding
+    [ pe:var "h"; pe:value :h ],
+    [ pe:var "x"; pe:value :b ],
+    [ pe:var "y"; pe:value :a ];
+  pe:uses
+    { (:h :b :a) :sameInputUnderEqualCompositeOutput true . },
+    { :b log:notEqualTo :a . }.
+
+{ :b log:notEqualTo :a . }
+  pe:builtin log:notEqualTo.

@@ -149,6 +149,16 @@ _:risk1_87cd4004194bead4 dpv:hasRiskLevel risk:HighRisk .
 _:risk3_1987663455332410 :score 97 .
 _:risk3_1987663455332410 dpv:hasSeverity risk:HighSeverity .
 _:risk3_1987663455332410 dpv:hasRiskLevel risk:HighRisk .
+(:Agreement1 :ConsumerExample 0) log:outputString "# odrl-dpv-risk-ranked\n\n## Source files\n\n- [N3 rules](../odrl-dpv-risk-ranked.n3)\n\n## Ranked DPV Risk Report\n\n**Agreement:** Example Agreement\n**Profile:** Example consumer profile\n\n" .
+(:Agreement1 :ConsumerExample 1 915 "C2" 0 _:risk2_5734e39331e3eae1) log:outputString "### Clause C2 — score 85\n\n**Risk level:** `https://w3id.org/dpv/risk#HighRisk`\n**Severity:** `https://w3id.org/dpv/risk#HighSeverity`\n\nRisk: terms may change with notice (3 days) below consumer requirement (14 days). Clause C2: Provider may change terms by informing users at least 3 days in advance.\n\n" .
+(:Agreement1 :ConsumerExample 1 930 "C4" 0 _:risk4_4cf150de25434292) log:outputString "### Clause C4 — score 70\n\n**Risk level:** `https://w3id.org/dpv/risk#ModerateRisk`\n**Severity:** `https://w3id.org/dpv/risk#ModerateSeverity`\n\nRisk: portability is restricted because exporting user data is prohibited. Clause C4: Users are not permitted to export their data.\n\n" .
+(:Agreement1 :ConsumerExample 1 900 "C1" 0 _:risk1_87cd4004194bead4) log:outputString "### Clause C1 — score 100\n\n**Risk level:** `https://w3id.org/dpv/risk#HighRisk`\n**Severity:** `https://w3id.org/dpv/risk#HighSeverity`\n\nRisk: account/data removal is permitted without notice safeguards (no notice constraint and no duty to inform). Clause C1: Provider may remove the user account (and associated data) at its discretion.\n\n" .
+(:Agreement1 :ConsumerExample 1 903 "C3" 0 _:risk3_1987663455332410) log:outputString "### Clause C3 — score 97\n\n**Risk level:** `https://w3id.org/dpv/risk#HighRisk`\n**Severity:** `https://w3id.org/dpv/risk#HighSeverity`\n\nRisk: user data sharing is permitted without an explicit consent constraint. Clause C3: Provider may share user data with partners for business purposes.\n\n" .
+(:Agreement1 :ConsumerExample 1 915 "C2" 1 _:risk2_5734e39331e3eae1 _:m12_5734e39331e3eae1) log:outputString "- **Mitigation for clause C2:** Increase minimum noticeDays in the inform duty to meet the consumer requirement.\n\n" .
+(:Agreement1 :ConsumerExample 1 930 "C4" 1 _:risk4_4cf150de25434292 _:m14_4cf150de25434292) log:outputString "- **Mitigation for clause C4:** Add a permission allowing data export (or remove the prohibition) to support portability.\n\n" .
+(:Agreement1 :ConsumerExample 1 900 "C1" 1 _:risk1_87cd4004194bead4 _:m11_87cd4004194bead4) log:outputString "- **Mitigation for clause C1:** Add a notice constraint (minimum noticeDays) before account removal.\n\n" .
+(:Agreement1 :ConsumerExample 1 900 "C1" 1 _:risk1_87cd4004194bead4 _:m21_87cd4004194bead4) log:outputString "- **Mitigation for clause C1:** Add a duty to inform the consumer prior to account removal.\n\n" .
+(:Agreement1 :ConsumerExample 1 903 "C3" 1 _:risk3_1987663455332410 _:m13_1987663455332410) log:outputString "- **Mitigation for clause C3:** Add an explicit consent constraint before data sharing.\n\n" .
 
 { _:src2_5734e39331e3eae1 a risk:RiskSource . }
   pe:rule 2;
@@ -18213,3 +18223,398 @@ _:risk3_1987663455332410 dpv:hasRiskLevel risk:HighRisk .
     { _:risk3_1987663455332410 a dpv:Risk . },
     { _:risk3_1987663455332410 :score 97 . },
     { 97 math:greaterThan 79 . }.
+
+{ (:Agreement1 :ConsumerExample 0) log:outputString "# odrl-dpv-risk-ranked\n\n## Source files\n\n- [N3 rules](../odrl-dpv-risk-ranked.n3)\n\n## Ranked DPV Risk Report\n\n**Agreement:** Example Agreement\n**Profile:** Example consumer profile\n\n" . }
+  pe:rule
+    {
+        {
+            :Agreement1 dct:title ?alabel .
+            :ConsumerExample dct:title ?plabel .
+            ("# odrl-dpv-risk-ranked\n\n## Source files\n\n- [N3 rules](../odrl-dpv-risk-ranked.n3)\n\n## Ranked DPV Risk Report\n\n**Agreement:** %s\n**Profile:** %s\n\n" ?alabel ?plabel) string:format ?hdr .
+        } => {
+            (:Agreement1 :ConsumerExample 0) log:outputString ?hdr .
+        } .
+    };
+  pe:binding
+    [ pe:var "alabel"; pe:value "Example Agreement" ],
+    [ pe:var "hdr"; pe:value "# odrl-dpv-risk-ranked\n\n## Source files\n\n- [N3 rules](../odrl-dpv-risk-ranked.n3)\n\n## Ranked DPV Risk Report\n\n**Agreement:** Example Agreement\n**Profile:** Example consumer profile\n\n" ],
+    [ pe:var "plabel"; pe:value "Example consumer profile" ];
+  pe:uses
+    { :Agreement1 dct:title "Example Agreement" . },
+    { :ConsumerExample dct:title "Example consumer profile" . },
+    { ("# odrl-dpv-risk-ranked\n\n## Source files\n\n- [N3 rules](../odrl-dpv-risk-ranked.n3)\n\n## Ranked DPV Risk Report\n\n**Agreement:** %s\n**Profile:** %s\n\n" "Example Agreement" "Example consumer profile") string:format "# odrl-dpv-risk-ranked\n\n## Source files\n\n- [N3 rules](../odrl-dpv-risk-ranked.n3)\n\n## Ranked DPV Risk Report\n\n**Agreement:** Example Agreement\n**Profile:** Example consumer profile\n\n" . }.
+
+{ :Agreement1 dct:title "Example Agreement" . }
+  pe:fact "odrl-dpv-risk-ranked.n3".
+
+{ :ConsumerExample dct:title "Example consumer profile" . }
+  pe:fact "odrl-dpv-risk-ranked.n3".
+
+{ ("# odrl-dpv-risk-ranked\n\n## Source files\n\n- [N3 rules](../odrl-dpv-risk-ranked.n3)\n\n## Ranked DPV Risk Report\n\n**Agreement:** %s\n**Profile:** %s\n\n" "Example Agreement" "Example consumer profile") string:format "# odrl-dpv-risk-ranked\n\n## Source files\n\n- [N3 rules](../odrl-dpv-risk-ranked.n3)\n\n## Ranked DPV Risk Report\n\n**Agreement:** Example Agreement\n**Profile:** Example consumer profile\n\n" . }
+  pe:builtin string:format.
+
+{ (:Agreement1 :ConsumerExample 1 915 "C2" 0 _:risk2_5734e39331e3eae1) log:outputString "### Clause C2 — score 85\n\n**Risk level:** `https://w3id.org/dpv/risk#HighRisk`\n**Severity:** `https://w3id.org/dpv/risk#HighSeverity`\n\nRisk: terms may change with notice (3 days) below consumer requirement (14 days). Clause C2: Provider may change terms by informing users at least 3 days in advance.\n\n" . }
+  pe:rule
+    {
+        {
+            ?r a dpv:Risk .
+            ?r :score ?score .
+            ?r dpv:hasRiskLevel ?lvl .
+            ?r dpv:hasSeverity ?sev .
+            ?r :aboutClause ?clause .
+            ?r dct:description ?why .
+            ?clause :clauseId ?cid .
+            (1000 ?score) math:difference ?inv .
+            ("### Clause %s — score %s\n\n**Risk level:** `%s`\n**Severity:** `%s`\n\n%s\n\n" ?cid ?score ?lvl ?sev ?why) string:format ?line .
+        } => {
+            (:Agreement1 :ConsumerExample 1 ?inv ?cid 0 ?r) log:outputString ?line .
+        } .
+    };
+  pe:binding
+    [ pe:var "cid"; pe:value "C2" ],
+    [ pe:var "clause"; pe:value :ClauseC2 ],
+    [ pe:var "inv"; pe:value 915 ],
+    [ pe:var "line"; pe:value "### Clause C2 — score 85\n\n**Risk level:** `https://w3id.org/dpv/risk#HighRisk`\n**Severity:** `https://w3id.org/dpv/risk#HighSeverity`\n\nRisk: terms may change with notice (3 days) below consumer requirement (14 days). Clause C2: Provider may change terms by informing users at least 3 days in advance.\n\n" ],
+    [ pe:var "lvl"; pe:value risk:HighRisk ],
+    [ pe:var "r"; pe:value _:risk2_5734e39331e3eae1 ],
+    [ pe:var "score"; pe:value 85 ],
+    [ pe:var "sev"; pe:value risk:HighSeverity ],
+    [ pe:var "why"; pe:value "Risk: terms may change with notice (3 days) below consumer requirement (14 days). Clause C2: Provider may change terms by informing users at least 3 days in advance." ];
+  pe:uses
+    { _:risk2_5734e39331e3eae1 a dpv:Risk . },
+    { _:risk2_5734e39331e3eae1 :score 85 . },
+    { _:risk2_5734e39331e3eae1 dpv:hasRiskLevel risk:HighRisk . },
+    { _:risk2_5734e39331e3eae1 dpv:hasSeverity risk:HighSeverity . },
+    { _:risk2_5734e39331e3eae1 :aboutClause :ClauseC2 . },
+    { _:risk2_5734e39331e3eae1 dct:description "Risk: terms may change with notice (3 days) below consumer requirement (14 days). Clause C2: Provider may change terms by informing users at least 3 days in advance." . },
+    { :ClauseC2 :clauseId "C2" . },
+    { (1000 85) math:difference 915 . },
+    { ("### Clause %s — score %s\n\n**Risk level:** `%s`\n**Severity:** `%s`\n\n%s\n\n" "C2" 85 risk:HighRisk risk:HighSeverity "Risk: terms may change with notice (3 days) below consumer requirement (14 days). Clause C2: Provider may change terms by informing users at least 3 days in advance.") string:format "### Clause C2 — score 85\n\n**Risk level:** `https://w3id.org/dpv/risk#HighRisk`\n**Severity:** `https://w3id.org/dpv/risk#HighSeverity`\n\nRisk: terms may change with notice (3 days) below consumer requirement (14 days). Clause C2: Provider may change terms by informing users at least 3 days in advance.\n\n" . }.
+
+{ (1000 85) math:difference 915 . }
+  pe:builtin math:difference.
+
+{ ("### Clause %s — score %s\n\n**Risk level:** `%s`\n**Severity:** `%s`\n\n%s\n\n" "C2" 85 risk:HighRisk risk:HighSeverity "Risk: terms may change with notice (3 days) below consumer requirement (14 days). Clause C2: Provider may change terms by informing users at least 3 days in advance.") string:format "### Clause C2 — score 85\n\n**Risk level:** `https://w3id.org/dpv/risk#HighRisk`\n**Severity:** `https://w3id.org/dpv/risk#HighSeverity`\n\nRisk: terms may change with notice (3 days) below consumer requirement (14 days). Clause C2: Provider may change terms by informing users at least 3 days in advance.\n\n" . }
+  pe:builtin string:format.
+
+{ (:Agreement1 :ConsumerExample 1 930 "C4" 0 _:risk4_4cf150de25434292) log:outputString "### Clause C4 — score 70\n\n**Risk level:** `https://w3id.org/dpv/risk#ModerateRisk`\n**Severity:** `https://w3id.org/dpv/risk#ModerateSeverity`\n\nRisk: portability is restricted because exporting user data is prohibited. Clause C4: Users are not permitted to export their data.\n\n" . }
+  pe:rule
+    {
+        {
+            ?r a dpv:Risk .
+            ?r :score ?score .
+            ?r dpv:hasRiskLevel ?lvl .
+            ?r dpv:hasSeverity ?sev .
+            ?r :aboutClause ?clause .
+            ?r dct:description ?why .
+            ?clause :clauseId ?cid .
+            (1000 ?score) math:difference ?inv .
+            ("### Clause %s — score %s\n\n**Risk level:** `%s`\n**Severity:** `%s`\n\n%s\n\n" ?cid ?score ?lvl ?sev ?why) string:format ?line .
+        } => {
+            (:Agreement1 :ConsumerExample 1 ?inv ?cid 0 ?r) log:outputString ?line .
+        } .
+    };
+  pe:binding
+    [ pe:var "cid"; pe:value "C4" ],
+    [ pe:var "clause"; pe:value :ClauseC4 ],
+    [ pe:var "inv"; pe:value 930 ],
+    [ pe:var "line"; pe:value "### Clause C4 — score 70\n\n**Risk level:** `https://w3id.org/dpv/risk#ModerateRisk`\n**Severity:** `https://w3id.org/dpv/risk#ModerateSeverity`\n\nRisk: portability is restricted because exporting user data is prohibited. Clause C4: Users are not permitted to export their data.\n\n" ],
+    [ pe:var "lvl"; pe:value risk:ModerateRisk ],
+    [ pe:var "r"; pe:value _:risk4_4cf150de25434292 ],
+    [ pe:var "score"; pe:value 70 ],
+    [ pe:var "sev"; pe:value risk:ModerateSeverity ],
+    [ pe:var "why"; pe:value "Risk: portability is restricted because exporting user data is prohibited. Clause C4: Users are not permitted to export their data." ];
+  pe:uses
+    { _:risk4_4cf150de25434292 a dpv:Risk . },
+    { _:risk4_4cf150de25434292 :score 70 . },
+    { _:risk4_4cf150de25434292 dpv:hasRiskLevel risk:ModerateRisk . },
+    { _:risk4_4cf150de25434292 dpv:hasSeverity risk:ModerateSeverity . },
+    { _:risk4_4cf150de25434292 :aboutClause :ClauseC4 . },
+    { _:risk4_4cf150de25434292 dct:description "Risk: portability is restricted because exporting user data is prohibited. Clause C4: Users are not permitted to export their data." . },
+    { :ClauseC4 :clauseId "C4" . },
+    { (1000 70) math:difference 930 . },
+    { ("### Clause %s — score %s\n\n**Risk level:** `%s`\n**Severity:** `%s`\n\n%s\n\n" "C4" 70 risk:ModerateRisk risk:ModerateSeverity "Risk: portability is restricted because exporting user data is prohibited. Clause C4: Users are not permitted to export their data.") string:format "### Clause C4 — score 70\n\n**Risk level:** `https://w3id.org/dpv/risk#ModerateRisk`\n**Severity:** `https://w3id.org/dpv/risk#ModerateSeverity`\n\nRisk: portability is restricted because exporting user data is prohibited. Clause C4: Users are not permitted to export their data.\n\n" . }.
+
+{ (1000 70) math:difference 930 . }
+  pe:builtin math:difference.
+
+{ ("### Clause %s — score %s\n\n**Risk level:** `%s`\n**Severity:** `%s`\n\n%s\n\n" "C4" 70 risk:ModerateRisk risk:ModerateSeverity "Risk: portability is restricted because exporting user data is prohibited. Clause C4: Users are not permitted to export their data.") string:format "### Clause C4 — score 70\n\n**Risk level:** `https://w3id.org/dpv/risk#ModerateRisk`\n**Severity:** `https://w3id.org/dpv/risk#ModerateSeverity`\n\nRisk: portability is restricted because exporting user data is prohibited. Clause C4: Users are not permitted to export their data.\n\n" . }
+  pe:builtin string:format.
+
+{ (:Agreement1 :ConsumerExample 1 900 "C1" 0 _:risk1_87cd4004194bead4) log:outputString "### Clause C1 — score 100\n\n**Risk level:** `https://w3id.org/dpv/risk#HighRisk`\n**Severity:** `https://w3id.org/dpv/risk#HighSeverity`\n\nRisk: account/data removal is permitted without notice safeguards (no notice constraint and no duty to inform). Clause C1: Provider may remove the user account (and associated data) at its discretion.\n\n" . }
+  pe:rule
+    {
+        {
+            ?r a dpv:Risk .
+            ?r :score ?score .
+            ?r dpv:hasRiskLevel ?lvl .
+            ?r dpv:hasSeverity ?sev .
+            ?r :aboutClause ?clause .
+            ?r dct:description ?why .
+            ?clause :clauseId ?cid .
+            (1000 ?score) math:difference ?inv .
+            ("### Clause %s — score %s\n\n**Risk level:** `%s`\n**Severity:** `%s`\n\n%s\n\n" ?cid ?score ?lvl ?sev ?why) string:format ?line .
+        } => {
+            (:Agreement1 :ConsumerExample 1 ?inv ?cid 0 ?r) log:outputString ?line .
+        } .
+    };
+  pe:binding
+    [ pe:var "cid"; pe:value "C1" ],
+    [ pe:var "clause"; pe:value :ClauseC1 ],
+    [ pe:var "inv"; pe:value 900 ],
+    [ pe:var "line"; pe:value "### Clause C1 — score 100\n\n**Risk level:** `https://w3id.org/dpv/risk#HighRisk`\n**Severity:** `https://w3id.org/dpv/risk#HighSeverity`\n\nRisk: account/data removal is permitted without notice safeguards (no notice constraint and no duty to inform). Clause C1: Provider may remove the user account (and associated data) at its discretion.\n\n" ],
+    [ pe:var "lvl"; pe:value risk:HighRisk ],
+    [ pe:var "r"; pe:value _:risk1_87cd4004194bead4 ],
+    [ pe:var "score"; pe:value 100 ],
+    [ pe:var "sev"; pe:value risk:HighSeverity ],
+    [ pe:var "why"; pe:value "Risk: account/data removal is permitted without notice safeguards (no notice constraint and no duty to inform). Clause C1: Provider may remove the user account (and associated data) at its discretion." ];
+  pe:uses
+    { _:risk1_87cd4004194bead4 a dpv:Risk . },
+    { _:risk1_87cd4004194bead4 :score 100 . },
+    { _:risk1_87cd4004194bead4 dpv:hasRiskLevel risk:HighRisk . },
+    { _:risk1_87cd4004194bead4 dpv:hasSeverity risk:HighSeverity . },
+    { _:risk1_87cd4004194bead4 :aboutClause :ClauseC1 . },
+    { _:risk1_87cd4004194bead4 dct:description "Risk: account/data removal is permitted without notice safeguards (no notice constraint and no duty to inform). Clause C1: Provider may remove the user account (and associated data) at its discretion." . },
+    { :ClauseC1 :clauseId "C1" . },
+    { (1000 100) math:difference 900 . },
+    { ("### Clause %s — score %s\n\n**Risk level:** `%s`\n**Severity:** `%s`\n\n%s\n\n" "C1" 100 risk:HighRisk risk:HighSeverity "Risk: account/data removal is permitted without notice safeguards (no notice constraint and no duty to inform). Clause C1: Provider may remove the user account (and associated data) at its discretion.") string:format "### Clause C1 — score 100\n\n**Risk level:** `https://w3id.org/dpv/risk#HighRisk`\n**Severity:** `https://w3id.org/dpv/risk#HighSeverity`\n\nRisk: account/data removal is permitted without notice safeguards (no notice constraint and no duty to inform). Clause C1: Provider may remove the user account (and associated data) at its discretion.\n\n" . }.
+
+{ (1000 100) math:difference 900 . }
+  pe:builtin math:difference.
+
+{ ("### Clause %s — score %s\n\n**Risk level:** `%s`\n**Severity:** `%s`\n\n%s\n\n" "C1" 100 risk:HighRisk risk:HighSeverity "Risk: account/data removal is permitted without notice safeguards (no notice constraint and no duty to inform). Clause C1: Provider may remove the user account (and associated data) at its discretion.") string:format "### Clause C1 — score 100\n\n**Risk level:** `https://w3id.org/dpv/risk#HighRisk`\n**Severity:** `https://w3id.org/dpv/risk#HighSeverity`\n\nRisk: account/data removal is permitted without notice safeguards (no notice constraint and no duty to inform). Clause C1: Provider may remove the user account (and associated data) at its discretion.\n\n" . }
+  pe:builtin string:format.
+
+{ (:Agreement1 :ConsumerExample 1 903 "C3" 0 _:risk3_1987663455332410) log:outputString "### Clause C3 — score 97\n\n**Risk level:** `https://w3id.org/dpv/risk#HighRisk`\n**Severity:** `https://w3id.org/dpv/risk#HighSeverity`\n\nRisk: user data sharing is permitted without an explicit consent constraint. Clause C3: Provider may share user data with partners for business purposes.\n\n" . }
+  pe:rule
+    {
+        {
+            ?r a dpv:Risk .
+            ?r :score ?score .
+            ?r dpv:hasRiskLevel ?lvl .
+            ?r dpv:hasSeverity ?sev .
+            ?r :aboutClause ?clause .
+            ?r dct:description ?why .
+            ?clause :clauseId ?cid .
+            (1000 ?score) math:difference ?inv .
+            ("### Clause %s — score %s\n\n**Risk level:** `%s`\n**Severity:** `%s`\n\n%s\n\n" ?cid ?score ?lvl ?sev ?why) string:format ?line .
+        } => {
+            (:Agreement1 :ConsumerExample 1 ?inv ?cid 0 ?r) log:outputString ?line .
+        } .
+    };
+  pe:binding
+    [ pe:var "cid"; pe:value "C3" ],
+    [ pe:var "clause"; pe:value :ClauseC3 ],
+    [ pe:var "inv"; pe:value 903 ],
+    [ pe:var "line"; pe:value "### Clause C3 — score 97\n\n**Risk level:** `https://w3id.org/dpv/risk#HighRisk`\n**Severity:** `https://w3id.org/dpv/risk#HighSeverity`\n\nRisk: user data sharing is permitted without an explicit consent constraint. Clause C3: Provider may share user data with partners for business purposes.\n\n" ],
+    [ pe:var "lvl"; pe:value risk:HighRisk ],
+    [ pe:var "r"; pe:value _:risk3_1987663455332410 ],
+    [ pe:var "score"; pe:value 97 ],
+    [ pe:var "sev"; pe:value risk:HighSeverity ],
+    [ pe:var "why"; pe:value "Risk: user data sharing is permitted without an explicit consent constraint. Clause C3: Provider may share user data with partners for business purposes." ];
+  pe:uses
+    { _:risk3_1987663455332410 a dpv:Risk . },
+    { _:risk3_1987663455332410 :score 97 . },
+    { _:risk3_1987663455332410 dpv:hasRiskLevel risk:HighRisk . },
+    { _:risk3_1987663455332410 dpv:hasSeverity risk:HighSeverity . },
+    { _:risk3_1987663455332410 :aboutClause :ClauseC3 . },
+    { _:risk3_1987663455332410 dct:description "Risk: user data sharing is permitted without an explicit consent constraint. Clause C3: Provider may share user data with partners for business purposes." . },
+    { :ClauseC3 :clauseId "C3" . },
+    { (1000 97) math:difference 903 . },
+    { ("### Clause %s — score %s\n\n**Risk level:** `%s`\n**Severity:** `%s`\n\n%s\n\n" "C3" 97 risk:HighRisk risk:HighSeverity "Risk: user data sharing is permitted without an explicit consent constraint. Clause C3: Provider may share user data with partners for business purposes.") string:format "### Clause C3 — score 97\n\n**Risk level:** `https://w3id.org/dpv/risk#HighRisk`\n**Severity:** `https://w3id.org/dpv/risk#HighSeverity`\n\nRisk: user data sharing is permitted without an explicit consent constraint. Clause C3: Provider may share user data with partners for business purposes.\n\n" . }.
+
+{ (1000 97) math:difference 903 . }
+  pe:builtin math:difference.
+
+{ ("### Clause %s — score %s\n\n**Risk level:** `%s`\n**Severity:** `%s`\n\n%s\n\n" "C3" 97 risk:HighRisk risk:HighSeverity "Risk: user data sharing is permitted without an explicit consent constraint. Clause C3: Provider may share user data with partners for business purposes.") string:format "### Clause C3 — score 97\n\n**Risk level:** `https://w3id.org/dpv/risk#HighRisk`\n**Severity:** `https://w3id.org/dpv/risk#HighSeverity`\n\nRisk: user data sharing is permitted without an explicit consent constraint. Clause C3: Provider may share user data with partners for business purposes.\n\n" . }
+  pe:builtin string:format.
+
+{ (:Agreement1 :ConsumerExample 1 915 "C2" 1 _:risk2_5734e39331e3eae1 _:m12_5734e39331e3eae1) log:outputString "- **Mitigation for clause C2:** Increase minimum noticeDays in the inform duty to meet the consumer requirement.\n\n" . }
+  pe:rule
+    {
+        {
+            ?r a dpv:Risk .
+            ?r :score ?score .
+            ?r dpv:isMitigatedByMeasure ?m .
+            ?r :aboutClause ?clause .
+            ?clause :clauseId ?cid .
+            ?m dct:description ?md .
+            (1000 ?score) math:difference ?inv .
+            ("- **Mitigation for clause %s:** %s\n\n" ?cid ?md) string:format ?mline .
+        } => {
+            (:Agreement1 :ConsumerExample 1 ?inv ?cid 1 ?r ?m) log:outputString ?mline .
+        } .
+    };
+  pe:binding
+    [ pe:var "cid"; pe:value "C2" ],
+    [ pe:var "clause"; pe:value :ClauseC2 ],
+    [ pe:var "inv"; pe:value 915 ],
+    [ pe:var "m"; pe:value _:m12_5734e39331e3eae1 ],
+    [ pe:var "md"; pe:value "Increase minimum noticeDays in the inform duty to meet the consumer requirement." ],
+    [ pe:var "mline"; pe:value "- **Mitigation for clause C2:** Increase minimum noticeDays in the inform duty to meet the consumer requirement.\n\n" ],
+    [ pe:var "r"; pe:value _:risk2_5734e39331e3eae1 ],
+    [ pe:var "score"; pe:value 85 ];
+  pe:uses
+    { _:risk2_5734e39331e3eae1 a dpv:Risk . },
+    { _:risk2_5734e39331e3eae1 :score 85 . },
+    { _:risk2_5734e39331e3eae1 dpv:isMitigatedByMeasure _:m12_5734e39331e3eae1 . },
+    { _:risk2_5734e39331e3eae1 :aboutClause :ClauseC2 . },
+    { :ClauseC2 :clauseId "C2" . },
+    { _:m12_5734e39331e3eae1 dct:description "Increase minimum noticeDays in the inform duty to meet the consumer requirement." . },
+    { (1000 85) math:difference 915 . },
+    { ("- **Mitigation for clause %s:** %s\n\n" "C2" "Increase minimum noticeDays in the inform duty to meet the consumer requirement.") string:format "- **Mitigation for clause C2:** Increase minimum noticeDays in the inform duty to meet the consumer requirement.\n\n" . }.
+
+{ ("- **Mitigation for clause %s:** %s\n\n" "C2" "Increase minimum noticeDays in the inform duty to meet the consumer requirement.") string:format "- **Mitigation for clause C2:** Increase minimum noticeDays in the inform duty to meet the consumer requirement.\n\n" . }
+  pe:builtin string:format.
+
+{ (:Agreement1 :ConsumerExample 1 930 "C4" 1 _:risk4_4cf150de25434292 _:m14_4cf150de25434292) log:outputString "- **Mitigation for clause C4:** Add a permission allowing data export (or remove the prohibition) to support portability.\n\n" . }
+  pe:rule
+    {
+        {
+            ?r a dpv:Risk .
+            ?r :score ?score .
+            ?r dpv:isMitigatedByMeasure ?m .
+            ?r :aboutClause ?clause .
+            ?clause :clauseId ?cid .
+            ?m dct:description ?md .
+            (1000 ?score) math:difference ?inv .
+            ("- **Mitigation for clause %s:** %s\n\n" ?cid ?md) string:format ?mline .
+        } => {
+            (:Agreement1 :ConsumerExample 1 ?inv ?cid 1 ?r ?m) log:outputString ?mline .
+        } .
+    };
+  pe:binding
+    [ pe:var "cid"; pe:value "C4" ],
+    [ pe:var "clause"; pe:value :ClauseC4 ],
+    [ pe:var "inv"; pe:value 930 ],
+    [ pe:var "m"; pe:value _:m14_4cf150de25434292 ],
+    [ pe:var "md"; pe:value "Add a permission allowing data export (or remove the prohibition) to support portability." ],
+    [ pe:var "mline"; pe:value "- **Mitigation for clause C4:** Add a permission allowing data export (or remove the prohibition) to support portability.\n\n" ],
+    [ pe:var "r"; pe:value _:risk4_4cf150de25434292 ],
+    [ pe:var "score"; pe:value 70 ];
+  pe:uses
+    { _:risk4_4cf150de25434292 a dpv:Risk . },
+    { _:risk4_4cf150de25434292 :score 70 . },
+    { _:risk4_4cf150de25434292 dpv:isMitigatedByMeasure _:m14_4cf150de25434292 . },
+    { _:risk4_4cf150de25434292 :aboutClause :ClauseC4 . },
+    { :ClauseC4 :clauseId "C4" . },
+    { _:m14_4cf150de25434292 dct:description "Add a permission allowing data export (or remove the prohibition) to support portability." . },
+    { (1000 70) math:difference 930 . },
+    { ("- **Mitigation for clause %s:** %s\n\n" "C4" "Add a permission allowing data export (or remove the prohibition) to support portability.") string:format "- **Mitigation for clause C4:** Add a permission allowing data export (or remove the prohibition) to support portability.\n\n" . }.
+
+{ ("- **Mitigation for clause %s:** %s\n\n" "C4" "Add a permission allowing data export (or remove the prohibition) to support portability.") string:format "- **Mitigation for clause C4:** Add a permission allowing data export (or remove the prohibition) to support portability.\n\n" . }
+  pe:builtin string:format.
+
+{ (:Agreement1 :ConsumerExample 1 900 "C1" 1 _:risk1_87cd4004194bead4 _:m11_87cd4004194bead4) log:outputString "- **Mitigation for clause C1:** Add a notice constraint (minimum noticeDays) before account removal.\n\n" . }
+  pe:rule
+    {
+        {
+            ?r a dpv:Risk .
+            ?r :score ?score .
+            ?r dpv:isMitigatedByMeasure ?m .
+            ?r :aboutClause ?clause .
+            ?clause :clauseId ?cid .
+            ?m dct:description ?md .
+            (1000 ?score) math:difference ?inv .
+            ("- **Mitigation for clause %s:** %s\n\n" ?cid ?md) string:format ?mline .
+        } => {
+            (:Agreement1 :ConsumerExample 1 ?inv ?cid 1 ?r ?m) log:outputString ?mline .
+        } .
+    };
+  pe:binding
+    [ pe:var "cid"; pe:value "C1" ],
+    [ pe:var "clause"; pe:value :ClauseC1 ],
+    [ pe:var "inv"; pe:value 900 ],
+    [ pe:var "m"; pe:value _:m11_87cd4004194bead4 ],
+    [ pe:var "md"; pe:value "Add a notice constraint (minimum noticeDays) before account removal." ],
+    [ pe:var "mline"; pe:value "- **Mitigation for clause C1:** Add a notice constraint (minimum noticeDays) before account removal.\n\n" ],
+    [ pe:var "r"; pe:value _:risk1_87cd4004194bead4 ],
+    [ pe:var "score"; pe:value 100 ];
+  pe:uses
+    { _:risk1_87cd4004194bead4 a dpv:Risk . },
+    { _:risk1_87cd4004194bead4 :score 100 . },
+    { _:risk1_87cd4004194bead4 dpv:isMitigatedByMeasure _:m11_87cd4004194bead4 . },
+    { _:risk1_87cd4004194bead4 :aboutClause :ClauseC1 . },
+    { :ClauseC1 :clauseId "C1" . },
+    { _:m11_87cd4004194bead4 dct:description "Add a notice constraint (minimum noticeDays) before account removal." . },
+    { (1000 100) math:difference 900 . },
+    { ("- **Mitigation for clause %s:** %s\n\n" "C1" "Add a notice constraint (minimum noticeDays) before account removal.") string:format "- **Mitigation for clause C1:** Add a notice constraint (minimum noticeDays) before account removal.\n\n" . }.
+
+{ ("- **Mitigation for clause %s:** %s\n\n" "C1" "Add a notice constraint (minimum noticeDays) before account removal.") string:format "- **Mitigation for clause C1:** Add a notice constraint (minimum noticeDays) before account removal.\n\n" . }
+  pe:builtin string:format.
+
+{ (:Agreement1 :ConsumerExample 1 900 "C1" 1 _:risk1_87cd4004194bead4 _:m21_87cd4004194bead4) log:outputString "- **Mitigation for clause C1:** Add a duty to inform the consumer prior to account removal.\n\n" . }
+  pe:rule
+    {
+        {
+            ?r a dpv:Risk .
+            ?r :score ?score .
+            ?r dpv:isMitigatedByMeasure ?m .
+            ?r :aboutClause ?clause .
+            ?clause :clauseId ?cid .
+            ?m dct:description ?md .
+            (1000 ?score) math:difference ?inv .
+            ("- **Mitigation for clause %s:** %s\n\n" ?cid ?md) string:format ?mline .
+        } => {
+            (:Agreement1 :ConsumerExample 1 ?inv ?cid 1 ?r ?m) log:outputString ?mline .
+        } .
+    };
+  pe:binding
+    [ pe:var "cid"; pe:value "C1" ],
+    [ pe:var "clause"; pe:value :ClauseC1 ],
+    [ pe:var "inv"; pe:value 900 ],
+    [ pe:var "m"; pe:value _:m21_87cd4004194bead4 ],
+    [ pe:var "md"; pe:value "Add a duty to inform the consumer prior to account removal." ],
+    [ pe:var "mline"; pe:value "- **Mitigation for clause C1:** Add a duty to inform the consumer prior to account removal.\n\n" ],
+    [ pe:var "r"; pe:value _:risk1_87cd4004194bead4 ],
+    [ pe:var "score"; pe:value 100 ];
+  pe:uses
+    { _:risk1_87cd4004194bead4 a dpv:Risk . },
+    { _:risk1_87cd4004194bead4 :score 100 . },
+    { _:risk1_87cd4004194bead4 dpv:isMitigatedByMeasure _:m21_87cd4004194bead4 . },
+    { _:risk1_87cd4004194bead4 :aboutClause :ClauseC1 . },
+    { :ClauseC1 :clauseId "C1" . },
+    { _:m21_87cd4004194bead4 dct:description "Add a duty to inform the consumer prior to account removal." . },
+    { (1000 100) math:difference 900 . },
+    { ("- **Mitigation for clause %s:** %s\n\n" "C1" "Add a duty to inform the consumer prior to account removal.") string:format "- **Mitigation for clause C1:** Add a duty to inform the consumer prior to account removal.\n\n" . }.
+
+{ ("- **Mitigation for clause %s:** %s\n\n" "C1" "Add a duty to inform the consumer prior to account removal.") string:format "- **Mitigation for clause C1:** Add a duty to inform the consumer prior to account removal.\n\n" . }
+  pe:builtin string:format.
+
+{ (:Agreement1 :ConsumerExample 1 903 "C3" 1 _:risk3_1987663455332410 _:m13_1987663455332410) log:outputString "- **Mitigation for clause C3:** Add an explicit consent constraint before data sharing.\n\n" . }
+  pe:rule
+    {
+        {
+            ?r a dpv:Risk .
+            ?r :score ?score .
+            ?r dpv:isMitigatedByMeasure ?m .
+            ?r :aboutClause ?clause .
+            ?clause :clauseId ?cid .
+            ?m dct:description ?md .
+            (1000 ?score) math:difference ?inv .
+            ("- **Mitigation for clause %s:** %s\n\n" ?cid ?md) string:format ?mline .
+        } => {
+            (:Agreement1 :ConsumerExample 1 ?inv ?cid 1 ?r ?m) log:outputString ?mline .
+        } .
+    };
+  pe:binding
+    [ pe:var "cid"; pe:value "C3" ],
+    [ pe:var "clause"; pe:value :ClauseC3 ],
+    [ pe:var "inv"; pe:value 903 ],
+    [ pe:var "m"; pe:value _:m13_1987663455332410 ],
+    [ pe:var "md"; pe:value "Add an explicit consent constraint before data sharing." ],
+    [ pe:var "mline"; pe:value "- **Mitigation for clause C3:** Add an explicit consent constraint before data sharing.\n\n" ],
+    [ pe:var "r"; pe:value _:risk3_1987663455332410 ],
+    [ pe:var "score"; pe:value 97 ];
+  pe:uses
+    { _:risk3_1987663455332410 a dpv:Risk . },
+    { _:risk3_1987663455332410 :score 97 . },
+    { _:risk3_1987663455332410 dpv:isMitigatedByMeasure _:m13_1987663455332410 . },
+    { _:risk3_1987663455332410 :aboutClause :ClauseC3 . },
+    { :ClauseC3 :clauseId "C3" . },
+    { _:m13_1987663455332410 dct:description "Add an explicit consent constraint before data sharing." . },
+    { (1000 97) math:difference 903 . },
+    { ("- **Mitigation for clause %s:** %s\n\n" "C3" "Add an explicit consent constraint before data sharing.") string:format "- **Mitigation for clause C3:** Add an explicit consent constraint before data sharing.\n\n" . }.
+
+{ ("- **Mitigation for clause %s:** %s\n\n" "C3" "Add an explicit consent constraint before data sharing.") string:format "- **Mitigation for clause C3:** Add an explicit consent constraint before data sharing.\n\n" . }
+  pe:builtin string:format.

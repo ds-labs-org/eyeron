@@ -113,9 +113,13 @@ impl N3Proof {
         // rules; a checker must number them the same way (§5.1).
         let rules: Vec<crate::ast::Rule> = document.rules.iter().filter(|rule| !rule.is_query).cloned().collect();
         // N3 treats a rule as data, so a rule written in the document is
-        // itself a statement the document gives.
+        // itself a statement the document gives. That includes the query
+        // rules left out of the numbering above: a `log:query` answer is
+        // derived by its query rule, and a step recording one carries that
+        // rule rather than citing a number, so the rule it carries has to be
+        // findable among what the document gives.
         let mut given: BTreeSet<Triple> = document.facts.iter().cloned().collect();
-        let rule_statements: Vec<Triple> = rules.iter().map(crate::proof_writer::rule_statement).collect();
+        let rule_statements: Vec<Triple> = document.rules.iter().map(crate::proof_writer::rule_statement).collect();
         given.extend(rule_statements.iter().cloned());
         let general: Vec<Triple> = document.facts.iter().filter(|fact| !fact.is_ground()).cloned().collect();
 

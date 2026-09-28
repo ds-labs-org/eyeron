@@ -1182,6 +1182,7 @@ fn reason_with_plan(
             &active_rules,
             options,
             &mut report,
+            &mut proofs,
         );
     }
 
@@ -1222,6 +1223,10 @@ fn is_deferred_scoped_premise(premise: &Triple) -> bool {
     )
 }
 
+/// A `log:query` answer is derived too -- by the query rule, from the
+/// premises that matched -- so it is recorded the same way a forward
+/// conclusion is. Without this, an example whose whole printed result comes
+/// from a query had nothing to write a proof from.
 fn evaluate_query_rules(
     query_rules: &[Rule],
     closure: &[Triple],
@@ -1229,12 +1234,25 @@ fn evaluate_query_rules(
     rules: &[Rule],
     options: &ReasonerOptions,
     report: &mut RunReport,
+    proofs: &mut Vec<DerivedFact>,
 ) -> Vec<Triple> {
     let mut out = Vec::<Triple>::new();
     let mut seen = HashSet::<Triple>::new();
 
     for rule in query_rules {
+        let shared_rule = options.proof.then(|| Arc::new(rule.clone()));
         let matches = match_premises(&rule.premise, closure, fact_index, rules, options, report);
+        // A query that hands back one of its own premises -- `{ ?S ?P ?O }
+        // log:query { ?S ?P ?O }` is the common shape -- selects a fact
+        // rather than inferring one. Recording a step for it would say the
+        // fact holds because it holds, which is the circularity a proof
+        // checker exists to reject; whatever really derived the fact has its
+        // own step already.
+        let record = |answer: &Triple, bindings: &Bindings| -> bool {
+            rule.premise
+                .iter()
+                .all(|premise| resolve_pattern_triple(premise, bindings) != *answer)
+        };
         for bindings in matches {
             let mut blank_map = BTreeMap::<Name, Term>::new();
             for head in &rule.conclusion {
@@ -1243,6 +1261,11 @@ fn evaluate_query_rules(
                     if let Term::Formula(triples) = t.o {
                         for expanded in triples {
                             if admissible_fact(&expanded) && seen.insert(expanded.clone()) {
+                                if let Some(rule) = &shared_rule {
+                                    if record(&expanded, &bindings) {
+                                        proofs.push(derived_fact_record(expanded.clone(), rule, &bindings));
+                                    }
+                                }
                                 out.push(expanded);
                             }
                         }
@@ -1250,6 +1273,11 @@ fn evaluate_query_rules(
                     continue;
                 }
                 if admissible_fact(&t) && seen.insert(t.clone()) {
+                    if let Some(rule) = &shared_rule {
+                        if record(&t, &bindings) {
+                            proofs.push(derived_fact_record(t.clone(), rule, &bindings));
+                        }
+                    }
                     out.push(t);
                 }
             }

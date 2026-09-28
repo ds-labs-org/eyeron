@@ -1,4 +1,5 @@
 @prefix : <http://example.org/#> .
+@prefix log: <http://www.w3.org/2000/10/swap/log#> .
 @prefix pe: <https://eyereasoner.github.io/pe#> .
 
 (:e :x) :mul :x .
@@ -22,6 +23,8 @@
 (:x :i :j) :sameInverse true .
 (:x :j :i) :sameInverse true .
 (:x :j :j) :sameInverse true .
+:result :sameInverse (:x :i :j) .
+:result :sameInverse (:x :j :i) .
 
 { (:e :x) :mul :x . }
   pe:rule 3;
@@ -255,3 +258,45 @@
     { :j :inverseOf :x . },
     { :j :inverseOf :x . },
     { (:j :j) :sameTerm true . }.
+
+{ :result :sameInverse (:x :i :j) . }
+  pe:rule
+    {
+        {
+            (?x ?y ?z) :sameInverse true .
+            ?y log:notEqualTo ?z .
+        } => {
+            :result :sameInverse (?x ?y ?z) .
+        } .
+    };
+  pe:binding
+    [ pe:var "x"; pe:value :x ],
+    [ pe:var "y"; pe:value :i ],
+    [ pe:var "z"; pe:value :j ];
+  pe:uses
+    { (:x :i :j) :sameInverse true . },
+    { :i log:notEqualTo :j . }.
+
+{ :i log:notEqualTo :j . }
+  pe:builtin log:notEqualTo.
+
+{ :result :sameInverse (:x :j :i) . }
+  pe:rule
+    {
+        {
+            (?x ?y ?z) :sameInverse true .
+            ?y log:notEqualTo ?z .
+        } => {
+            :result :sameInverse (?x ?y ?z) .
+        } .
+    };
+  pe:binding
+    [ pe:var "x"; pe:value :x ],
+    [ pe:var "y"; pe:value :j ],
+    [ pe:var "z"; pe:value :i ];
+  pe:uses
+    { (:x :j :i) :sameInverse true . },
+    { :j log:notEqualTo :i . }.
+
+{ :j log:notEqualTo :i . }
+  pe:builtin log:notEqualTo.

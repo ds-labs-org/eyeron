@@ -1,4 +1,5 @@
 @prefix : <http://example.org/#> .
+@prefix log: <http://www.w3.org/2000/10/swap/log#> .
 @prefix pe: <https://eyereasoner.github.io/pe#> .
 
 :a :leq :a .
@@ -23,6 +24,8 @@
 (:a :b :g2 :g2) :sameGlb true .
 (:a :b :g1 :g2) :sameGlb true .
 (:a :b :g2 :g1) :sameGlb true .
+:result :sameGreatestLowerBound (:a :b :g1 :g2) .
+:result :sameGreatestLowerBound (:a :b :g2 :g1) .
 
 { :a :leq :a . }
   pe:rule 1;
@@ -233,3 +236,47 @@
     { :g2 :glbOf (:a :b) . },
     { :g1 :glbOf (:a :b) . },
     { (:g2 :g1) :sameTerm true . }.
+
+{ :result :sameGreatestLowerBound (:a :b :g1 :g2) . }
+  pe:rule
+    {
+        {
+            (?a ?b ?m ?n) :sameGlb true .
+            ?m log:notEqualTo ?n .
+        } => {
+            :result :sameGreatestLowerBound (?a ?b ?m ?n) .
+        } .
+    };
+  pe:binding
+    [ pe:var "a"; pe:value :a ],
+    [ pe:var "b"; pe:value :b ],
+    [ pe:var "m"; pe:value :g1 ],
+    [ pe:var "n"; pe:value :g2 ];
+  pe:uses
+    { (:a :b :g1 :g2) :sameGlb true . },
+    { :g1 log:notEqualTo :g2 . }.
+
+{ :g1 log:notEqualTo :g2 . }
+  pe:builtin log:notEqualTo.
+
+{ :result :sameGreatestLowerBound (:a :b :g2 :g1) . }
+  pe:rule
+    {
+        {
+            (?a ?b ?m ?n) :sameGlb true .
+            ?m log:notEqualTo ?n .
+        } => {
+            :result :sameGreatestLowerBound (?a ?b ?m ?n) .
+        } .
+    };
+  pe:binding
+    [ pe:var "a"; pe:value :a ],
+    [ pe:var "b"; pe:value :b ],
+    [ pe:var "m"; pe:value :g2 ],
+    [ pe:var "n"; pe:value :g1 ];
+  pe:uses
+    { (:a :b :g2 :g1) :sameGlb true . },
+    { :g2 log:notEqualTo :g1 . }.
+
+{ :g2 log:notEqualTo :g1 . }
+  pe:builtin log:notEqualTo.

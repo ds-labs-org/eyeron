@@ -20,6 +20,34 @@ id:eve foaf:name "Eve" .
 id:eve :memberOf :eng .
 id:eve :canRead :buildReport .
 id:eve :canRead :roadmap .
+:report :trusts <https://root.example/policy.n3> .
+:report :trusts <https://hr.example/policy.n3> .
+:report :trusts <https://team.example/members.n3> .
+:report :trusts <https://interns.example/members.n3> .
+:report :entails {
+    id:alice :canRead :buildReport .
+} .
+:report :entails {
+    id:alice :canRead :roadmap .
+} .
+:report :entails {
+    id:eve :canRead :buildReport .
+} .
+:report :entails {
+    id:eve :canRead :roadmap .
+} .
+{
+    id:alice :memberOf :eng .
+} :assertedBy <https://team.example/members.n3> .
+{
+    :eng :mayRead :buildReport .
+} :assertedBy <https://hr.example/policy.n3> .
+{
+    :eng :mayRead :roadmap .
+} :assertedBy <https://hr.example/policy.n3> .
+{
+    id:eve :memberOf :eng .
+} :assertedBy <https://interns.example/members.n3> .
 
 { :policy :trusts <https://hr.example/policy.n3> . }
   pe:rule 1;
@@ -531,3 +559,456 @@ id:eve :canRead :roadmap .
   pe:uses
     { id:eve :memberOf :eng . },
     { :eng :mayRead :roadmap . }.
+
+{ :report :trusts <https://root.example/policy.n3> . }
+  pe:rule
+    {
+        {
+            :policy :trusts ?Doc .
+        } => {
+            :report :trusts ?Doc .
+        } .
+    };
+  pe:binding [ pe:var "Doc"; pe:value <https://root.example/policy.n3> ];
+  pe:uses { :policy :trusts <https://root.example/policy.n3> . }.
+
+{ :report :trusts <https://hr.example/policy.n3> . }
+  pe:rule
+    {
+        {
+            :policy :trusts ?Doc .
+        } => {
+            :report :trusts ?Doc .
+        } .
+    };
+  pe:binding [ pe:var "Doc"; pe:value <https://hr.example/policy.n3> ];
+  pe:uses { :policy :trusts <https://hr.example/policy.n3> . }.
+
+{ :report :trusts <https://team.example/members.n3> . }
+  pe:rule
+    {
+        {
+            :policy :trusts ?Doc .
+        } => {
+            :report :trusts ?Doc .
+        } .
+    };
+  pe:binding [ pe:var "Doc"; pe:value <https://team.example/members.n3> ];
+  pe:uses { :policy :trusts <https://team.example/members.n3> . }.
+
+{ :report :trusts <https://interns.example/members.n3> . }
+  pe:rule
+    {
+        {
+            :policy :trusts ?Doc .
+        } => {
+            :report :trusts ?Doc .
+        } .
+    };
+  pe:binding [ pe:var "Doc"; pe:value <https://interns.example/members.n3> ];
+  pe:uses { :policy :trusts <https://interns.example/members.n3> . }.
+
+{
+  :report :entails {
+      id:alice :canRead :buildReport .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?U :canRead ?R .
+        } => {
+            :report :entails {
+            ?U :canRead ?R .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "R"; pe:value :buildReport ],
+    [ pe:var "U"; pe:value id:alice ];
+  pe:uses { id:alice :canRead :buildReport . }.
+
+{
+  :report :entails {
+      id:alice :canRead :roadmap .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?U :canRead ?R .
+        } => {
+            :report :entails {
+            ?U :canRead ?R .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "R"; pe:value :roadmap ],
+    [ pe:var "U"; pe:value id:alice ];
+  pe:uses { id:alice :canRead :roadmap . }.
+
+{
+  :report :entails {
+      id:eve :canRead :buildReport .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?U :canRead ?R .
+        } => {
+            :report :entails {
+            ?U :canRead ?R .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "R"; pe:value :buildReport ],
+    [ pe:var "U"; pe:value id:eve ];
+  pe:uses { id:eve :canRead :buildReport . }.
+
+{
+  :report :entails {
+      id:eve :canRead :roadmap .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?U :canRead ?R .
+        } => {
+            :report :entails {
+            ?U :canRead ?R .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "R"; pe:value :roadmap ],
+    [ pe:var "U"; pe:value id:eve ];
+  pe:uses { id:eve :canRead :roadmap . }.
+
+{
+  {
+      id:alice :memberOf :eng .
+  } :assertedBy <https://team.example/members.n3> .
+}
+  pe:rule
+    {
+        {
+            ?U :canRead ?R .
+            ?U :memberOf ?G .
+            ?G :mayRead ?R .
+            :policy :trusts ?DocM .
+            ?DocM :says ?FM .
+            ?FM log:includes {
+            ?U :memberOf ?G .
+        } .
+            :policy :trusts ?DocP .
+            ?DocP :says ?FP .
+            ?FP log:includes {
+            ?G :mayRead ?R .
+        } .
+        } => {
+            {
+            ?U :memberOf ?G .
+        } :assertedBy ?DocM .
+            {
+            ?G :mayRead ?R .
+        } :assertedBy ?DocP .
+        } .
+    };
+  pe:binding
+    [ pe:var "DocM"; pe:value <https://team.example/members.n3> ],
+    [ pe:var "DocP"; pe:value <https://hr.example/policy.n3> ],
+    [ pe:var "FM"; pe:value {
+        id:alice foaf:name "Alice" .
+        id:alice :memberOf :eng .
+        :policy :delegatesTo <https://interns.example/members.n3> .
+    } ],
+    [ pe:var "FP"; pe:value {
+        :eng :mayRead :buildReport .
+        :eng :mayRead :roadmap .
+    } ],
+    [ pe:var "G"; pe:value :eng ],
+    [ pe:var "R"; pe:value :buildReport ],
+    [ pe:var "U"; pe:value id:alice ];
+  pe:uses
+    { id:alice :canRead :buildReport . },
+    { id:alice :memberOf :eng . },
+    { :eng :mayRead :buildReport . },
+    { :policy :trusts <https://team.example/members.n3> . },
+    {
+        <https://team.example/members.n3> :says {
+            id:alice foaf:name "Alice" .
+            id:alice :memberOf :eng .
+            :policy :delegatesTo <https://interns.example/members.n3> .
+        } .
+    },
+    {
+        {
+            id:alice foaf:name "Alice" .
+            id:alice :memberOf :eng .
+            :policy :delegatesTo <https://interns.example/members.n3> .
+        } log:includes {
+            id:alice :memberOf :eng .
+        } .
+    },
+    { :policy :trusts <https://hr.example/policy.n3> . },
+    {
+        <https://hr.example/policy.n3> :says {
+            :eng :mayRead :buildReport .
+            :eng :mayRead :roadmap .
+        } .
+    },
+    {
+        {
+            :eng :mayRead :buildReport .
+            :eng :mayRead :roadmap .
+        } log:includes {
+            :eng :mayRead :buildReport .
+        } .
+    }.
+
+{
+  {
+      :eng :mayRead :buildReport .
+  } :assertedBy <https://hr.example/policy.n3> .
+}
+  pe:rule
+    {
+        {
+            ?U :canRead ?R .
+            ?U :memberOf ?G .
+            ?G :mayRead ?R .
+            :policy :trusts ?DocM .
+            ?DocM :says ?FM .
+            ?FM log:includes {
+            ?U :memberOf ?G .
+        } .
+            :policy :trusts ?DocP .
+            ?DocP :says ?FP .
+            ?FP log:includes {
+            ?G :mayRead ?R .
+        } .
+        } => {
+            {
+            ?U :memberOf ?G .
+        } :assertedBy ?DocM .
+            {
+            ?G :mayRead ?R .
+        } :assertedBy ?DocP .
+        } .
+    };
+  pe:binding
+    [ pe:var "DocM"; pe:value <https://team.example/members.n3> ],
+    [ pe:var "DocP"; pe:value <https://hr.example/policy.n3> ],
+    [ pe:var "FM"; pe:value {
+        id:alice foaf:name "Alice" .
+        id:alice :memberOf :eng .
+        :policy :delegatesTo <https://interns.example/members.n3> .
+    } ],
+    [ pe:var "FP"; pe:value {
+        :eng :mayRead :buildReport .
+        :eng :mayRead :roadmap .
+    } ],
+    [ pe:var "G"; pe:value :eng ],
+    [ pe:var "R"; pe:value :buildReport ],
+    [ pe:var "U"; pe:value id:alice ];
+  pe:uses
+    { id:alice :canRead :buildReport . },
+    { id:alice :memberOf :eng . },
+    { :eng :mayRead :buildReport . },
+    { :policy :trusts <https://team.example/members.n3> . },
+    {
+        <https://team.example/members.n3> :says {
+            id:alice foaf:name "Alice" .
+            id:alice :memberOf :eng .
+            :policy :delegatesTo <https://interns.example/members.n3> .
+        } .
+    },
+    {
+        {
+            id:alice foaf:name "Alice" .
+            id:alice :memberOf :eng .
+            :policy :delegatesTo <https://interns.example/members.n3> .
+        } log:includes {
+            id:alice :memberOf :eng .
+        } .
+    },
+    { :policy :trusts <https://hr.example/policy.n3> . },
+    {
+        <https://hr.example/policy.n3> :says {
+            :eng :mayRead :buildReport .
+            :eng :mayRead :roadmap .
+        } .
+    },
+    {
+        {
+            :eng :mayRead :buildReport .
+            :eng :mayRead :roadmap .
+        } log:includes {
+            :eng :mayRead :buildReport .
+        } .
+    }.
+
+{
+  {
+      :eng :mayRead :roadmap .
+  } :assertedBy <https://hr.example/policy.n3> .
+}
+  pe:rule
+    {
+        {
+            ?U :canRead ?R .
+            ?U :memberOf ?G .
+            ?G :mayRead ?R .
+            :policy :trusts ?DocM .
+            ?DocM :says ?FM .
+            ?FM log:includes {
+            ?U :memberOf ?G .
+        } .
+            :policy :trusts ?DocP .
+            ?DocP :says ?FP .
+            ?FP log:includes {
+            ?G :mayRead ?R .
+        } .
+        } => {
+            {
+            ?U :memberOf ?G .
+        } :assertedBy ?DocM .
+            {
+            ?G :mayRead ?R .
+        } :assertedBy ?DocP .
+        } .
+    };
+  pe:binding
+    [ pe:var "DocM"; pe:value <https://team.example/members.n3> ],
+    [ pe:var "DocP"; pe:value <https://hr.example/policy.n3> ],
+    [ pe:var "FM"; pe:value {
+        id:alice foaf:name "Alice" .
+        id:alice :memberOf :eng .
+        :policy :delegatesTo <https://interns.example/members.n3> .
+    } ],
+    [ pe:var "FP"; pe:value {
+        :eng :mayRead :buildReport .
+        :eng :mayRead :roadmap .
+    } ],
+    [ pe:var "G"; pe:value :eng ],
+    [ pe:var "R"; pe:value :roadmap ],
+    [ pe:var "U"; pe:value id:alice ];
+  pe:uses
+    { id:alice :canRead :roadmap . },
+    { id:alice :memberOf :eng . },
+    { :eng :mayRead :roadmap . },
+    { :policy :trusts <https://team.example/members.n3> . },
+    {
+        <https://team.example/members.n3> :says {
+            id:alice foaf:name "Alice" .
+            id:alice :memberOf :eng .
+            :policy :delegatesTo <https://interns.example/members.n3> .
+        } .
+    },
+    {
+        {
+            id:alice foaf:name "Alice" .
+            id:alice :memberOf :eng .
+            :policy :delegatesTo <https://interns.example/members.n3> .
+        } log:includes {
+            id:alice :memberOf :eng .
+        } .
+    },
+    { :policy :trusts <https://hr.example/policy.n3> . },
+    {
+        <https://hr.example/policy.n3> :says {
+            :eng :mayRead :buildReport .
+            :eng :mayRead :roadmap .
+        } .
+    },
+    {
+        {
+            :eng :mayRead :buildReport .
+            :eng :mayRead :roadmap .
+        } log:includes {
+            :eng :mayRead :roadmap .
+        } .
+    }.
+
+{
+  {
+      id:eve :memberOf :eng .
+  } :assertedBy <https://interns.example/members.n3> .
+}
+  pe:rule
+    {
+        {
+            ?U :canRead ?R .
+            ?U :memberOf ?G .
+            ?G :mayRead ?R .
+            :policy :trusts ?DocM .
+            ?DocM :says ?FM .
+            ?FM log:includes {
+            ?U :memberOf ?G .
+        } .
+            :policy :trusts ?DocP .
+            ?DocP :says ?FP .
+            ?FP log:includes {
+            ?G :mayRead ?R .
+        } .
+        } => {
+            {
+            ?U :memberOf ?G .
+        } :assertedBy ?DocM .
+            {
+            ?G :mayRead ?R .
+        } :assertedBy ?DocP .
+        } .
+    };
+  pe:binding
+    [ pe:var "DocM"; pe:value <https://interns.example/members.n3> ],
+    [ pe:var "DocP"; pe:value <https://hr.example/policy.n3> ],
+    [ pe:var "FM"; pe:value {
+        id:eve foaf:name "Eve" .
+        id:eve :memberOf :eng .
+    } ],
+    [ pe:var "FP"; pe:value {
+        :eng :mayRead :buildReport .
+        :eng :mayRead :roadmap .
+    } ],
+    [ pe:var "G"; pe:value :eng ],
+    [ pe:var "R"; pe:value :buildReport ],
+    [ pe:var "U"; pe:value id:eve ];
+  pe:uses
+    { id:eve :canRead :buildReport . },
+    { id:eve :memberOf :eng . },
+    { :eng :mayRead :buildReport . },
+    { :policy :trusts <https://interns.example/members.n3> . },
+    {
+        <https://interns.example/members.n3> :says {
+            id:eve foaf:name "Eve" .
+            id:eve :memberOf :eng .
+        } .
+    },
+    {
+        {
+            id:eve foaf:name "Eve" .
+            id:eve :memberOf :eng .
+        } log:includes {
+            id:eve :memberOf :eng .
+        } .
+    },
+    { :policy :trusts <https://hr.example/policy.n3> . },
+    {
+        <https://hr.example/policy.n3> :says {
+            :eng :mayRead :buildReport .
+            :eng :mayRead :roadmap .
+        } .
+    },
+    {
+        {
+            :eng :mayRead :buildReport .
+            :eng :mayRead :roadmap .
+        } log:includes {
+            :eng :mayRead :buildReport .
+        } .
+    }.

@@ -1,4 +1,5 @@
 @prefix : <https://example.org/transcendental#> .
+@prefix log: <http://www.w3.org/2000/10/swap/log#> .
 @prefix pe: <https://eyereasoner.github.io/pe#> .
 
 :e_plus_1 :kind :Transcendental .
@@ -123,6 +124,265 @@
 :pow2sqrt2_plus_1 :provedBy :TransImpliesIrrational .
 :pow2sqrt2_plus_1 :kind :NotStraightedgeCompassConstructible .
 :pow2sqrt2_plus_1 :provedBy :TransImpliesNotConstructible .
+:report :transcendental :e .
+:report :transcendental :pi .
+:report :transcendental :e_plus_1 .
+:report :transcendental :pi_plus_1 .
+:report :transcendental :pow_2_sqrt2 .
+:report :transcendental :e_plus_2 .
+:report :transcendental :two_times_pi .
+:report :transcendental :two_times_e .
+:report :transcendental :two_times_pow2sqrt2 .
+:report :transcendental :e_div_2 .
+:report :transcendental :pi_div_2 .
+:report :transcendental :pow2sqrt2_div_2 .
+:report :transcendental :half_times_pi .
+:report :transcendental :half_times_e .
+:report :transcendental :pow_minus1_minusI .
+:report :transcendental :exp_sqrt2 .
+:report :transcendental :pi_plus_sqrt2 .
+:report :transcendental :pow_i_i .
+:report :transcendental :pow_e_pi .
+:report :transcendental :exp_minus_pi_over_2 .
+:report :transcendental :pow2sqrt2_plus_1 .
+:report :irrational :e .
+:report :irrational :pi .
+:report :irrational :e_plus_1 .
+:report :irrational :pi_plus_1 .
+:report :irrational :pow_2_sqrt2 .
+:report :irrational :e_plus_2 .
+:report :irrational :two_times_pi .
+:report :irrational :two_times_e .
+:report :irrational :two_times_pow2sqrt2 .
+:report :irrational :e_div_2 .
+:report :irrational :pi_div_2 .
+:report :irrational :pow2sqrt2_div_2 .
+:report :irrational :half_times_pi .
+:report :irrational :half_times_e .
+:report :irrational :pow_minus1_minusI .
+:report :irrational :exp_sqrt2 .
+:report :irrational :pi_plus_sqrt2 .
+:report :irrational :pow_i_i .
+:report :irrational :pow_e_pi .
+:report :irrational :exp_minus_pi_over_2 .
+:report :irrational :pow2sqrt2_plus_1 .
+:report :notConstructible :e .
+:report :notConstructible :pi .
+:report :notConstructible :e_plus_1 .
+:report :notConstructible :pi_plus_1 .
+:report :notConstructible :pow_2_sqrt2 .
+:report :notConstructible :e_plus_2 .
+:report :notConstructible :two_times_pi .
+:report :notConstructible :two_times_e .
+:report :notConstructible :two_times_pow2sqrt2 .
+:report :notConstructible :e_div_2 .
+:report :notConstructible :pi_div_2 .
+:report :notConstructible :pow2sqrt2_div_2 .
+:report :notConstructible :half_times_pi .
+:report :notConstructible :half_times_e .
+:report :notConstructible :pow_minus1_minusI .
+:report :notConstructible :exp_sqrt2 .
+:report :notConstructible :pi_plus_sqrt2 .
+:report :notConstructible :pow_i_i .
+:report :notConstructible :pow_e_pi .
+:report :notConstructible :exp_minus_pi_over_2 .
+:report :notConstructible :pow2sqrt2_plus_1 .
+:report :proof {
+    :e :provedBy :Hermite1873 .
+} .
+:report :proof {
+    :e :provedBy :TransImpliesIrrational .
+} .
+:report :proof {
+    :e :provedBy :TransImpliesNotConstructible .
+} .
+:report :proof {
+    :pi :provedBy :Lindemann1882 .
+} .
+:report :proof {
+    :pi :provedBy :TransImpliesIrrational .
+} .
+:report :proof {
+    :pi :provedBy :TransImpliesNotConstructible .
+} .
+:report :proof {
+    :e_plus_1 :provedBy :TransPlusAlg .
+} .
+:report :proof {
+    :e_plus_1 :provedBy :TransImpliesIrrational .
+} .
+:report :proof {
+    :e_plus_1 :provedBy :TransImpliesNotConstructible .
+} .
+:report :proof {
+    :pi_plus_1 :provedBy :TransPlusAlg .
+} .
+:report :proof {
+    :pi_plus_1 :provedBy :TransImpliesIrrational .
+} .
+:report :proof {
+    :pi_plus_1 :provedBy :TransImpliesNotConstructible .
+} .
+:report :proof {
+    :pow_2_sqrt2 :provedBy :GelfondSchneider .
+} .
+:report :proof {
+    :pow_2_sqrt2 :provedBy :TransImpliesIrrational .
+} .
+:report :proof {
+    :pow_2_sqrt2 :provedBy :TransImpliesNotConstructible .
+} .
+:report :proof {
+    :e_plus_2 :provedBy :TransPlusAlg .
+} .
+:report :proof {
+    :e_plus_2 :provedBy :TransImpliesIrrational .
+} .
+:report :proof {
+    :e_plus_2 :provedBy :TransImpliesNotConstructible .
+} .
+:report :proof {
+    :two_times_pi :provedBy :TransTimesAlg .
+} .
+:report :proof {
+    :two_times_pi :provedBy :TransImpliesIrrational .
+} .
+:report :proof {
+    :two_times_pi :provedBy :TransImpliesNotConstructible .
+} .
+:report :proof {
+    :two_times_e :provedBy :TransTimesAlg .
+} .
+:report :proof {
+    :two_times_e :provedBy :TransImpliesIrrational .
+} .
+:report :proof {
+    :two_times_e :provedBy :TransImpliesNotConstructible .
+} .
+:report :proof {
+    :two_times_pow2sqrt2 :provedBy :TransTimesAlg .
+} .
+:report :proof {
+    :two_times_pow2sqrt2 :provedBy :TransImpliesIrrational .
+} .
+:report :proof {
+    :two_times_pow2sqrt2 :provedBy :TransImpliesNotConstructible .
+} .
+:report :proof {
+    :e_div_2 :provedBy :TransDivAlg .
+} .
+:report :proof {
+    :e_div_2 :provedBy :TransImpliesIrrational .
+} .
+:report :proof {
+    :e_div_2 :provedBy :TransImpliesNotConstructible .
+} .
+:report :proof {
+    :pi_div_2 :provedBy :TransDivAlg .
+} .
+:report :proof {
+    :pi_div_2 :provedBy :TransImpliesIrrational .
+} .
+:report :proof {
+    :pi_div_2 :provedBy :TransImpliesNotConstructible .
+} .
+:report :proof {
+    :pow2sqrt2_div_2 :provedBy :TransDivAlg .
+} .
+:report :proof {
+    :pow2sqrt2_div_2 :provedBy :TransImpliesIrrational .
+} .
+:report :proof {
+    :pow2sqrt2_div_2 :provedBy :TransImpliesNotConstructible .
+} .
+:report :proof {
+    :half_times_pi :provedBy :TransTimesAlg .
+} .
+:report :proof {
+    :half_times_pi :provedBy :TransImpliesIrrational .
+} .
+:report :proof {
+    :half_times_pi :provedBy :TransImpliesNotConstructible .
+} .
+:report :proof {
+    :half_times_e :provedBy :TransTimesAlg .
+} .
+:report :proof {
+    :half_times_e :provedBy :TransImpliesIrrational .
+} .
+:report :proof {
+    :half_times_e :provedBy :TransImpliesNotConstructible .
+} .
+:report :proof {
+    :pow_minus1_minusI :provedBy :GelfondSchneider .
+} .
+:report :proof {
+    :pow_minus1_minusI :provedBy :TransImpliesIrrational .
+} .
+:report :proof {
+    :pow_minus1_minusI :provedBy :TransImpliesNotConstructible .
+} .
+:report :proof {
+    :exp_sqrt2 :provedBy :LindemannWeierstrass .
+} .
+:report :proof {
+    :exp_sqrt2 :provedBy :TransImpliesIrrational .
+} .
+:report :proof {
+    :exp_sqrt2 :provedBy :TransImpliesNotConstructible .
+} .
+:report :proof {
+    :pi_plus_sqrt2 :provedBy :TransPlusAlg .
+} .
+:report :proof {
+    :pi_plus_sqrt2 :provedBy :TransImpliesIrrational .
+} .
+:report :proof {
+    :pi_plus_sqrt2 :provedBy :TransImpliesNotConstructible .
+} .
+:report :proof {
+    :pow_i_i :provedBy :GelfondSchneider .
+} .
+:report :proof {
+    :pow_i_i :provedBy :TransImpliesIrrational .
+} .
+:report :proof {
+    :pow_i_i :provedBy :TransImpliesNotConstructible .
+} .
+:report :proof {
+    :pow_e_pi :provedBy :GelfondSchneider .
+} .
+:report :proof {
+    :pow_e_pi :provedBy :TransImpliesIrrational .
+} .
+:report :proof {
+    :pow_e_pi :provedBy :TransImpliesNotConstructible .
+} .
+:report :proof {
+    :exp_minus_pi_over_2 :provedBy :GelfondSchneider .
+} .
+:report :proof {
+    :exp_minus_pi_over_2 :provedBy :TransImpliesIrrational .
+} .
+:report :proof {
+    :exp_minus_pi_over_2 :provedBy :TransImpliesNotConstructible .
+} .
+:report :proof {
+    :pow2sqrt2_plus_1 :provedBy :TransPlusAlg .
+} .
+:report :proof {
+    :pow2sqrt2_plus_1 :provedBy :TransImpliesIrrational .
+} .
+:report :proof {
+    :pow2sqrt2_plus_1 :provedBy :TransImpliesNotConstructible .
+} .
+:report :unknown :sum_e_pi .
+:report :unknown :prod_e_pi .
+:report :unknown :pow_pi_e .
+:report :headline :quadraticTrick .
+:report :concerns :sum_e_pi .
+:report :concerns :prod_e_pi .
+:__md_output log:outputString "# transcendental-numbers-stretched\n\n## Source files\n\n- [N3 rules](../transcendental-numbers-stretched.n3)\n\n@prefix : <https://example.org/transcendental#> .\n\n:report :concerns :prod_e_pi .\n:report :concerns :sum_e_pi .\n:report :headline :quadraticTrick .\n:report :irrational :e .\n:report :irrational :e_div_2 .\n:report :irrational :e_plus_1 .\n:report :irrational :e_plus_2 .\n:report :irrational :exp_minus_pi_over_2 .\n:report :irrational :exp_sqrt2 .\n:report :irrational :half_times_e .\n:report :irrational :half_times_pi .\n:report :irrational :pi .\n:report :irrational :pi_div_2 .\n:report :irrational :pi_plus_1 .\n:report :irrational :pi_plus_sqrt2 .\n:report :irrational :pow_2_sqrt2 .\n:report :irrational :pow_e_pi .\n:report :irrational :pow_i_i .\n:report :irrational :pow_minus1_minusI .\n:report :irrational :pow2sqrt2_div_2 .\n:report :irrational :pow2sqrt2_plus_1 .\n:report :irrational :two_times_e .\n:report :irrational :two_times_pi .\n:report :irrational :two_times_pow2sqrt2 .\n:report :notConstructible :e .\n:report :notConstructible :e_div_2 .\n:report :notConstructible :e_plus_1 .\n:report :notConstructible :e_plus_2 .\n:report :notConstructible :exp_minus_pi_over_2 .\n:report :notConstructible :exp_sqrt2 .\n:report :notConstructible :half_times_e .\n:report :notConstructible :half_times_pi .\n:report :notConstructible :pi .\n:report :notConstructible :pi_div_2 .\n:report :notConstructible :pi_plus_1 .\n:report :notConstructible :pi_plus_sqrt2 .\n:report :notConstructible :pow_2_sqrt2 .\n:report :notConstructible :pow_e_pi .\n:report :notConstructible :pow_i_i .\n:report :notConstructible :pow_minus1_minusI .\n:report :notConstructible :pow2sqrt2_div_2 .\n:report :notConstructible :pow2sqrt2_plus_1 .\n:report :notConstructible :two_times_e .\n:report :notConstructible :two_times_pi .\n:report :notConstructible :two_times_pow2sqrt2 .\n:report :proof {\n    :e :provedBy :Hermite1873 .\n} .\n:report :proof {\n    :e :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :e :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :e_div_2 :provedBy :TransDivAlg .\n} .\n:report :proof {\n    :e_div_2 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :e_div_2 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :e_plus_1 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :e_plus_1 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :e_plus_1 :provedBy :TransPlusAlg .\n} .\n:report :proof {\n    :e_plus_2 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :e_plus_2 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :e_plus_2 :provedBy :TransPlusAlg .\n} .\n:report :proof {\n    :exp_minus_pi_over_2 :provedBy :GelfondSchneider .\n} .\n:report :proof {\n    :exp_minus_pi_over_2 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :exp_minus_pi_over_2 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :exp_sqrt2 :provedBy :LindemannWeierstrass .\n} .\n:report :proof {\n    :exp_sqrt2 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :exp_sqrt2 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :half_times_e :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :half_times_e :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :half_times_e :provedBy :TransTimesAlg .\n} .\n:report :proof {\n    :half_times_pi :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :half_times_pi :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :half_times_pi :provedBy :TransTimesAlg .\n} .\n:report :proof {\n    :pi :provedBy :Lindemann1882 .\n} .\n:report :proof {\n    :pi :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :pi :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :pi_div_2 :provedBy :TransDivAlg .\n} .\n:report :proof {\n    :pi_div_2 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :pi_div_2 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :pi_plus_1 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :pi_plus_1 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :pi_plus_1 :provedBy :TransPlusAlg .\n} .\n:report :proof {\n    :pi_plus_sqrt2 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :pi_plus_sqrt2 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :pi_plus_sqrt2 :provedBy :TransPlusAlg .\n} .\n:report :proof {\n    :pow_2_sqrt2 :provedBy :GelfondSchneider .\n} .\n:report :proof {\n    :pow_2_sqrt2 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :pow_2_sqrt2 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :pow_e_pi :provedBy :GelfondSchneider .\n} .\n:report :proof {\n    :pow_e_pi :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :pow_e_pi :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :pow_i_i :provedBy :GelfondSchneider .\n} .\n:report :proof {\n    :pow_i_i :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :pow_i_i :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :pow_minus1_minusI :provedBy :GelfondSchneider .\n} .\n:report :proof {\n    :pow_minus1_minusI :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :pow_minus1_minusI :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :pow2sqrt2_div_2 :provedBy :TransDivAlg .\n} .\n:report :proof {\n    :pow2sqrt2_div_2 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :pow2sqrt2_div_2 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :pow2sqrt2_plus_1 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :pow2sqrt2_plus_1 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :pow2sqrt2_plus_1 :provedBy :TransPlusAlg .\n} .\n:report :proof {\n    :two_times_e :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :two_times_e :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :two_times_e :provedBy :TransTimesAlg .\n} .\n:report :proof {\n    :two_times_pi :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :two_times_pi :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :two_times_pi :provedBy :TransTimesAlg .\n} .\n:report :proof {\n    :two_times_pow2sqrt2 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :two_times_pow2sqrt2 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :two_times_pow2sqrt2 :provedBy :TransTimesAlg .\n} .\n:report :transcendental :e .\n:report :transcendental :e_div_2 .\n:report :transcendental :e_plus_1 .\n:report :transcendental :e_plus_2 .\n:report :transcendental :exp_minus_pi_over_2 .\n:report :transcendental :exp_sqrt2 .\n:report :transcendental :half_times_e .\n:report :transcendental :half_times_pi .\n:report :transcendental :pi .\n:report :transcendental :pi_div_2 .\n:report :transcendental :pi_plus_1 .\n:report :transcendental :pi_plus_sqrt2 .\n:report :transcendental :pow_2_sqrt2 .\n:report :transcendental :pow_e_pi .\n:report :transcendental :pow_i_i .\n:report :transcendental :pow_minus1_minusI .\n:report :transcendental :pow2sqrt2_div_2 .\n:report :transcendental :pow2sqrt2_plus_1 .\n:report :transcendental :two_times_e .\n:report :transcendental :two_times_pi .\n:report :transcendental :two_times_pow2sqrt2 .\n:report :unknown :pow_pi_e .\n:report :unknown :prod_e_pi .\n:report :unknown :sum_e_pi .\n" .
 
 { :e_plus_1 :kind :Transcendental . }
   pe:rule 5;
@@ -1172,3 +1432,2337 @@
   pe:rule 10;
   pe:binding [ pe:var "X"; pe:value :pow2sqrt2_plus_1 ];
   pe:uses { :pow2sqrt2_plus_1 :kind :Transcendental . }.
+
+{ :report :transcendental :e . }
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+        } => {
+            :report :transcendental ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :e ];
+  pe:uses { :e :kind :Transcendental . }.
+
+{ :report :transcendental :pi . }
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+        } => {
+            :report :transcendental ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :pi ];
+  pe:uses { :pi :kind :Transcendental . }.
+
+{ :report :transcendental :e_plus_1 . }
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+        } => {
+            :report :transcendental ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :e_plus_1 ];
+  pe:uses { :e_plus_1 :kind :Transcendental . }.
+
+{ :report :transcendental :pi_plus_1 . }
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+        } => {
+            :report :transcendental ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :pi_plus_1 ];
+  pe:uses { :pi_plus_1 :kind :Transcendental . }.
+
+{ :report :transcendental :pow_2_sqrt2 . }
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+        } => {
+            :report :transcendental ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :pow_2_sqrt2 ];
+  pe:uses { :pow_2_sqrt2 :kind :Transcendental . }.
+
+{ :report :transcendental :e_plus_2 . }
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+        } => {
+            :report :transcendental ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :e_plus_2 ];
+  pe:uses { :e_plus_2 :kind :Transcendental . }.
+
+{ :report :transcendental :two_times_pi . }
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+        } => {
+            :report :transcendental ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :two_times_pi ];
+  pe:uses { :two_times_pi :kind :Transcendental . }.
+
+{ :report :transcendental :two_times_e . }
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+        } => {
+            :report :transcendental ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :two_times_e ];
+  pe:uses { :two_times_e :kind :Transcendental . }.
+
+{ :report :transcendental :two_times_pow2sqrt2 . }
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+        } => {
+            :report :transcendental ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :two_times_pow2sqrt2 ];
+  pe:uses { :two_times_pow2sqrt2 :kind :Transcendental . }.
+
+{ :report :transcendental :e_div_2 . }
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+        } => {
+            :report :transcendental ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :e_div_2 ];
+  pe:uses { :e_div_2 :kind :Transcendental . }.
+
+{ :report :transcendental :pi_div_2 . }
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+        } => {
+            :report :transcendental ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :pi_div_2 ];
+  pe:uses { :pi_div_2 :kind :Transcendental . }.
+
+{ :report :transcendental :pow2sqrt2_div_2 . }
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+        } => {
+            :report :transcendental ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :pow2sqrt2_div_2 ];
+  pe:uses { :pow2sqrt2_div_2 :kind :Transcendental . }.
+
+{ :report :transcendental :half_times_pi . }
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+        } => {
+            :report :transcendental ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :half_times_pi ];
+  pe:uses { :half_times_pi :kind :Transcendental . }.
+
+{ :report :transcendental :half_times_e . }
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+        } => {
+            :report :transcendental ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :half_times_e ];
+  pe:uses { :half_times_e :kind :Transcendental . }.
+
+{ :report :transcendental :pow_minus1_minusI . }
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+        } => {
+            :report :transcendental ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :pow_minus1_minusI ];
+  pe:uses { :pow_minus1_minusI :kind :Transcendental . }.
+
+{ :report :transcendental :exp_sqrt2 . }
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+        } => {
+            :report :transcendental ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :exp_sqrt2 ];
+  pe:uses { :exp_sqrt2 :kind :Transcendental . }.
+
+{ :report :transcendental :pi_plus_sqrt2 . }
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+        } => {
+            :report :transcendental ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :pi_plus_sqrt2 ];
+  pe:uses { :pi_plus_sqrt2 :kind :Transcendental . }.
+
+{ :report :transcendental :pow_i_i . }
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+        } => {
+            :report :transcendental ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :pow_i_i ];
+  pe:uses { :pow_i_i :kind :Transcendental . }.
+
+{ :report :transcendental :pow_e_pi . }
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+        } => {
+            :report :transcendental ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :pow_e_pi ];
+  pe:uses { :pow_e_pi :kind :Transcendental . }.
+
+{ :report :transcendental :exp_minus_pi_over_2 . }
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+        } => {
+            :report :transcendental ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :exp_minus_pi_over_2 ];
+  pe:uses { :exp_minus_pi_over_2 :kind :Transcendental . }.
+
+{ :report :transcendental :pow2sqrt2_plus_1 . }
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+        } => {
+            :report :transcendental ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :pow2sqrt2_plus_1 ];
+  pe:uses { :pow2sqrt2_plus_1 :kind :Transcendental . }.
+
+{ :report :irrational :e . }
+  pe:rule
+    {
+        {
+            ?X :kind :Irrational .
+        } => {
+            :report :irrational ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :e ];
+  pe:uses { :e :kind :Irrational . }.
+
+{ :report :irrational :pi . }
+  pe:rule
+    {
+        {
+            ?X :kind :Irrational .
+        } => {
+            :report :irrational ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :pi ];
+  pe:uses { :pi :kind :Irrational . }.
+
+{ :report :irrational :e_plus_1 . }
+  pe:rule
+    {
+        {
+            ?X :kind :Irrational .
+        } => {
+            :report :irrational ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :e_plus_1 ];
+  pe:uses { :e_plus_1 :kind :Irrational . }.
+
+{ :report :irrational :pi_plus_1 . }
+  pe:rule
+    {
+        {
+            ?X :kind :Irrational .
+        } => {
+            :report :irrational ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :pi_plus_1 ];
+  pe:uses { :pi_plus_1 :kind :Irrational . }.
+
+{ :report :irrational :pow_2_sqrt2 . }
+  pe:rule
+    {
+        {
+            ?X :kind :Irrational .
+        } => {
+            :report :irrational ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :pow_2_sqrt2 ];
+  pe:uses { :pow_2_sqrt2 :kind :Irrational . }.
+
+{ :report :irrational :e_plus_2 . }
+  pe:rule
+    {
+        {
+            ?X :kind :Irrational .
+        } => {
+            :report :irrational ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :e_plus_2 ];
+  pe:uses { :e_plus_2 :kind :Irrational . }.
+
+{ :report :irrational :two_times_pi . }
+  pe:rule
+    {
+        {
+            ?X :kind :Irrational .
+        } => {
+            :report :irrational ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :two_times_pi ];
+  pe:uses { :two_times_pi :kind :Irrational . }.
+
+{ :report :irrational :two_times_e . }
+  pe:rule
+    {
+        {
+            ?X :kind :Irrational .
+        } => {
+            :report :irrational ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :two_times_e ];
+  pe:uses { :two_times_e :kind :Irrational . }.
+
+{ :report :irrational :two_times_pow2sqrt2 . }
+  pe:rule
+    {
+        {
+            ?X :kind :Irrational .
+        } => {
+            :report :irrational ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :two_times_pow2sqrt2 ];
+  pe:uses { :two_times_pow2sqrt2 :kind :Irrational . }.
+
+{ :report :irrational :e_div_2 . }
+  pe:rule
+    {
+        {
+            ?X :kind :Irrational .
+        } => {
+            :report :irrational ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :e_div_2 ];
+  pe:uses { :e_div_2 :kind :Irrational . }.
+
+{ :report :irrational :pi_div_2 . }
+  pe:rule
+    {
+        {
+            ?X :kind :Irrational .
+        } => {
+            :report :irrational ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :pi_div_2 ];
+  pe:uses { :pi_div_2 :kind :Irrational . }.
+
+{ :report :irrational :pow2sqrt2_div_2 . }
+  pe:rule
+    {
+        {
+            ?X :kind :Irrational .
+        } => {
+            :report :irrational ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :pow2sqrt2_div_2 ];
+  pe:uses { :pow2sqrt2_div_2 :kind :Irrational . }.
+
+{ :report :irrational :half_times_pi . }
+  pe:rule
+    {
+        {
+            ?X :kind :Irrational .
+        } => {
+            :report :irrational ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :half_times_pi ];
+  pe:uses { :half_times_pi :kind :Irrational . }.
+
+{ :report :irrational :half_times_e . }
+  pe:rule
+    {
+        {
+            ?X :kind :Irrational .
+        } => {
+            :report :irrational ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :half_times_e ];
+  pe:uses { :half_times_e :kind :Irrational . }.
+
+{ :report :irrational :pow_minus1_minusI . }
+  pe:rule
+    {
+        {
+            ?X :kind :Irrational .
+        } => {
+            :report :irrational ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :pow_minus1_minusI ];
+  pe:uses { :pow_minus1_minusI :kind :Irrational . }.
+
+{ :report :irrational :exp_sqrt2 . }
+  pe:rule
+    {
+        {
+            ?X :kind :Irrational .
+        } => {
+            :report :irrational ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :exp_sqrt2 ];
+  pe:uses { :exp_sqrt2 :kind :Irrational . }.
+
+{ :report :irrational :pi_plus_sqrt2 . }
+  pe:rule
+    {
+        {
+            ?X :kind :Irrational .
+        } => {
+            :report :irrational ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :pi_plus_sqrt2 ];
+  pe:uses { :pi_plus_sqrt2 :kind :Irrational . }.
+
+{ :report :irrational :pow_i_i . }
+  pe:rule
+    {
+        {
+            ?X :kind :Irrational .
+        } => {
+            :report :irrational ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :pow_i_i ];
+  pe:uses { :pow_i_i :kind :Irrational . }.
+
+{ :report :irrational :pow_e_pi . }
+  pe:rule
+    {
+        {
+            ?X :kind :Irrational .
+        } => {
+            :report :irrational ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :pow_e_pi ];
+  pe:uses { :pow_e_pi :kind :Irrational . }.
+
+{ :report :irrational :exp_minus_pi_over_2 . }
+  pe:rule
+    {
+        {
+            ?X :kind :Irrational .
+        } => {
+            :report :irrational ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :exp_minus_pi_over_2 ];
+  pe:uses { :exp_minus_pi_over_2 :kind :Irrational . }.
+
+{ :report :irrational :pow2sqrt2_plus_1 . }
+  pe:rule
+    {
+        {
+            ?X :kind :Irrational .
+        } => {
+            :report :irrational ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :pow2sqrt2_plus_1 ];
+  pe:uses { :pow2sqrt2_plus_1 :kind :Irrational . }.
+
+{ :report :notConstructible :e . }
+  pe:rule
+    {
+        {
+            ?X :kind :NotStraightedgeCompassConstructible .
+        } => {
+            :report :notConstructible ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :e ];
+  pe:uses { :e :kind :NotStraightedgeCompassConstructible . }.
+
+{ :report :notConstructible :pi . }
+  pe:rule
+    {
+        {
+            ?X :kind :NotStraightedgeCompassConstructible .
+        } => {
+            :report :notConstructible ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :pi ];
+  pe:uses { :pi :kind :NotStraightedgeCompassConstructible . }.
+
+{ :report :notConstructible :e_plus_1 . }
+  pe:rule
+    {
+        {
+            ?X :kind :NotStraightedgeCompassConstructible .
+        } => {
+            :report :notConstructible ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :e_plus_1 ];
+  pe:uses { :e_plus_1 :kind :NotStraightedgeCompassConstructible . }.
+
+{ :report :notConstructible :pi_plus_1 . }
+  pe:rule
+    {
+        {
+            ?X :kind :NotStraightedgeCompassConstructible .
+        } => {
+            :report :notConstructible ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :pi_plus_1 ];
+  pe:uses { :pi_plus_1 :kind :NotStraightedgeCompassConstructible . }.
+
+{ :report :notConstructible :pow_2_sqrt2 . }
+  pe:rule
+    {
+        {
+            ?X :kind :NotStraightedgeCompassConstructible .
+        } => {
+            :report :notConstructible ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :pow_2_sqrt2 ];
+  pe:uses { :pow_2_sqrt2 :kind :NotStraightedgeCompassConstructible . }.
+
+{ :report :notConstructible :e_plus_2 . }
+  pe:rule
+    {
+        {
+            ?X :kind :NotStraightedgeCompassConstructible .
+        } => {
+            :report :notConstructible ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :e_plus_2 ];
+  pe:uses { :e_plus_2 :kind :NotStraightedgeCompassConstructible . }.
+
+{ :report :notConstructible :two_times_pi . }
+  pe:rule
+    {
+        {
+            ?X :kind :NotStraightedgeCompassConstructible .
+        } => {
+            :report :notConstructible ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :two_times_pi ];
+  pe:uses { :two_times_pi :kind :NotStraightedgeCompassConstructible . }.
+
+{ :report :notConstructible :two_times_e . }
+  pe:rule
+    {
+        {
+            ?X :kind :NotStraightedgeCompassConstructible .
+        } => {
+            :report :notConstructible ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :two_times_e ];
+  pe:uses { :two_times_e :kind :NotStraightedgeCompassConstructible . }.
+
+{ :report :notConstructible :two_times_pow2sqrt2 . }
+  pe:rule
+    {
+        {
+            ?X :kind :NotStraightedgeCompassConstructible .
+        } => {
+            :report :notConstructible ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :two_times_pow2sqrt2 ];
+  pe:uses { :two_times_pow2sqrt2 :kind :NotStraightedgeCompassConstructible . }.
+
+{ :report :notConstructible :e_div_2 . }
+  pe:rule
+    {
+        {
+            ?X :kind :NotStraightedgeCompassConstructible .
+        } => {
+            :report :notConstructible ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :e_div_2 ];
+  pe:uses { :e_div_2 :kind :NotStraightedgeCompassConstructible . }.
+
+{ :report :notConstructible :pi_div_2 . }
+  pe:rule
+    {
+        {
+            ?X :kind :NotStraightedgeCompassConstructible .
+        } => {
+            :report :notConstructible ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :pi_div_2 ];
+  pe:uses { :pi_div_2 :kind :NotStraightedgeCompassConstructible . }.
+
+{ :report :notConstructible :pow2sqrt2_div_2 . }
+  pe:rule
+    {
+        {
+            ?X :kind :NotStraightedgeCompassConstructible .
+        } => {
+            :report :notConstructible ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :pow2sqrt2_div_2 ];
+  pe:uses { :pow2sqrt2_div_2 :kind :NotStraightedgeCompassConstructible . }.
+
+{ :report :notConstructible :half_times_pi . }
+  pe:rule
+    {
+        {
+            ?X :kind :NotStraightedgeCompassConstructible .
+        } => {
+            :report :notConstructible ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :half_times_pi ];
+  pe:uses { :half_times_pi :kind :NotStraightedgeCompassConstructible . }.
+
+{ :report :notConstructible :half_times_e . }
+  pe:rule
+    {
+        {
+            ?X :kind :NotStraightedgeCompassConstructible .
+        } => {
+            :report :notConstructible ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :half_times_e ];
+  pe:uses { :half_times_e :kind :NotStraightedgeCompassConstructible . }.
+
+{ :report :notConstructible :pow_minus1_minusI . }
+  pe:rule
+    {
+        {
+            ?X :kind :NotStraightedgeCompassConstructible .
+        } => {
+            :report :notConstructible ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :pow_minus1_minusI ];
+  pe:uses { :pow_minus1_minusI :kind :NotStraightedgeCompassConstructible . }.
+
+{ :report :notConstructible :exp_sqrt2 . }
+  pe:rule
+    {
+        {
+            ?X :kind :NotStraightedgeCompassConstructible .
+        } => {
+            :report :notConstructible ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :exp_sqrt2 ];
+  pe:uses { :exp_sqrt2 :kind :NotStraightedgeCompassConstructible . }.
+
+{ :report :notConstructible :pi_plus_sqrt2 . }
+  pe:rule
+    {
+        {
+            ?X :kind :NotStraightedgeCompassConstructible .
+        } => {
+            :report :notConstructible ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :pi_plus_sqrt2 ];
+  pe:uses { :pi_plus_sqrt2 :kind :NotStraightedgeCompassConstructible . }.
+
+{ :report :notConstructible :pow_i_i . }
+  pe:rule
+    {
+        {
+            ?X :kind :NotStraightedgeCompassConstructible .
+        } => {
+            :report :notConstructible ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :pow_i_i ];
+  pe:uses { :pow_i_i :kind :NotStraightedgeCompassConstructible . }.
+
+{ :report :notConstructible :pow_e_pi . }
+  pe:rule
+    {
+        {
+            ?X :kind :NotStraightedgeCompassConstructible .
+        } => {
+            :report :notConstructible ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :pow_e_pi ];
+  pe:uses { :pow_e_pi :kind :NotStraightedgeCompassConstructible . }.
+
+{ :report :notConstructible :exp_minus_pi_over_2 . }
+  pe:rule
+    {
+        {
+            ?X :kind :NotStraightedgeCompassConstructible .
+        } => {
+            :report :notConstructible ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :exp_minus_pi_over_2 ];
+  pe:uses { :exp_minus_pi_over_2 :kind :NotStraightedgeCompassConstructible . }.
+
+{ :report :notConstructible :pow2sqrt2_plus_1 . }
+  pe:rule
+    {
+        {
+            ?X :kind :NotStraightedgeCompassConstructible .
+        } => {
+            :report :notConstructible ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :pow2sqrt2_plus_1 ];
+  pe:uses { :pow2sqrt2_plus_1 :kind :NotStraightedgeCompassConstructible . }.
+
+{
+  :report :proof {
+      :e :provedBy :Hermite1873 .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :Hermite1873 ],
+    [ pe:var "X"; pe:value :e ];
+  pe:uses
+    { :e :kind :Transcendental . },
+    { :e :provedBy :Hermite1873 . }.
+
+{ :e :provedBy :Hermite1873 . }
+  pe:fact "transcendental-numbers-stretched.n3".
+
+{
+  :report :proof {
+      :e :provedBy :TransImpliesIrrational .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransImpliesIrrational ],
+    [ pe:var "X"; pe:value :e ];
+  pe:uses
+    { :e :kind :Transcendental . },
+    { :e :provedBy :TransImpliesIrrational . }.
+
+{
+  :report :proof {
+      :e :provedBy :TransImpliesNotConstructible .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransImpliesNotConstructible ],
+    [ pe:var "X"; pe:value :e ];
+  pe:uses
+    { :e :kind :Transcendental . },
+    { :e :provedBy :TransImpliesNotConstructible . }.
+
+{
+  :report :proof {
+      :pi :provedBy :Lindemann1882 .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :Lindemann1882 ],
+    [ pe:var "X"; pe:value :pi ];
+  pe:uses
+    { :pi :kind :Transcendental . },
+    { :pi :provedBy :Lindemann1882 . }.
+
+{ :pi :provedBy :Lindemann1882 . }
+  pe:fact "transcendental-numbers-stretched.n3".
+
+{
+  :report :proof {
+      :pi :provedBy :TransImpliesIrrational .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransImpliesIrrational ],
+    [ pe:var "X"; pe:value :pi ];
+  pe:uses
+    { :pi :kind :Transcendental . },
+    { :pi :provedBy :TransImpliesIrrational . }.
+
+{
+  :report :proof {
+      :pi :provedBy :TransImpliesNotConstructible .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransImpliesNotConstructible ],
+    [ pe:var "X"; pe:value :pi ];
+  pe:uses
+    { :pi :kind :Transcendental . },
+    { :pi :provedBy :TransImpliesNotConstructible . }.
+
+{
+  :report :proof {
+      :e_plus_1 :provedBy :TransPlusAlg .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransPlusAlg ],
+    [ pe:var "X"; pe:value :e_plus_1 ];
+  pe:uses
+    { :e_plus_1 :kind :Transcendental . },
+    { :e_plus_1 :provedBy :TransPlusAlg . }.
+
+{
+  :report :proof {
+      :e_plus_1 :provedBy :TransImpliesIrrational .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransImpliesIrrational ],
+    [ pe:var "X"; pe:value :e_plus_1 ];
+  pe:uses
+    { :e_plus_1 :kind :Transcendental . },
+    { :e_plus_1 :provedBy :TransImpliesIrrational . }.
+
+{
+  :report :proof {
+      :e_plus_1 :provedBy :TransImpliesNotConstructible .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransImpliesNotConstructible ],
+    [ pe:var "X"; pe:value :e_plus_1 ];
+  pe:uses
+    { :e_plus_1 :kind :Transcendental . },
+    { :e_plus_1 :provedBy :TransImpliesNotConstructible . }.
+
+{
+  :report :proof {
+      :pi_plus_1 :provedBy :TransPlusAlg .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransPlusAlg ],
+    [ pe:var "X"; pe:value :pi_plus_1 ];
+  pe:uses
+    { :pi_plus_1 :kind :Transcendental . },
+    { :pi_plus_1 :provedBy :TransPlusAlg . }.
+
+{
+  :report :proof {
+      :pi_plus_1 :provedBy :TransImpliesIrrational .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransImpliesIrrational ],
+    [ pe:var "X"; pe:value :pi_plus_1 ];
+  pe:uses
+    { :pi_plus_1 :kind :Transcendental . },
+    { :pi_plus_1 :provedBy :TransImpliesIrrational . }.
+
+{
+  :report :proof {
+      :pi_plus_1 :provedBy :TransImpliesNotConstructible .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransImpliesNotConstructible ],
+    [ pe:var "X"; pe:value :pi_plus_1 ];
+  pe:uses
+    { :pi_plus_1 :kind :Transcendental . },
+    { :pi_plus_1 :provedBy :TransImpliesNotConstructible . }.
+
+{
+  :report :proof {
+      :pow_2_sqrt2 :provedBy :GelfondSchneider .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :GelfondSchneider ],
+    [ pe:var "X"; pe:value :pow_2_sqrt2 ];
+  pe:uses
+    { :pow_2_sqrt2 :kind :Transcendental . },
+    { :pow_2_sqrt2 :provedBy :GelfondSchneider . }.
+
+{
+  :report :proof {
+      :pow_2_sqrt2 :provedBy :TransImpliesIrrational .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransImpliesIrrational ],
+    [ pe:var "X"; pe:value :pow_2_sqrt2 ];
+  pe:uses
+    { :pow_2_sqrt2 :kind :Transcendental . },
+    { :pow_2_sqrt2 :provedBy :TransImpliesIrrational . }.
+
+{
+  :report :proof {
+      :pow_2_sqrt2 :provedBy :TransImpliesNotConstructible .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransImpliesNotConstructible ],
+    [ pe:var "X"; pe:value :pow_2_sqrt2 ];
+  pe:uses
+    { :pow_2_sqrt2 :kind :Transcendental . },
+    { :pow_2_sqrt2 :provedBy :TransImpliesNotConstructible . }.
+
+{
+  :report :proof {
+      :e_plus_2 :provedBy :TransPlusAlg .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransPlusAlg ],
+    [ pe:var "X"; pe:value :e_plus_2 ];
+  pe:uses
+    { :e_plus_2 :kind :Transcendental . },
+    { :e_plus_2 :provedBy :TransPlusAlg . }.
+
+{
+  :report :proof {
+      :e_plus_2 :provedBy :TransImpliesIrrational .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransImpliesIrrational ],
+    [ pe:var "X"; pe:value :e_plus_2 ];
+  pe:uses
+    { :e_plus_2 :kind :Transcendental . },
+    { :e_plus_2 :provedBy :TransImpliesIrrational . }.
+
+{
+  :report :proof {
+      :e_plus_2 :provedBy :TransImpliesNotConstructible .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransImpliesNotConstructible ],
+    [ pe:var "X"; pe:value :e_plus_2 ];
+  pe:uses
+    { :e_plus_2 :kind :Transcendental . },
+    { :e_plus_2 :provedBy :TransImpliesNotConstructible . }.
+
+{
+  :report :proof {
+      :two_times_pi :provedBy :TransTimesAlg .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransTimesAlg ],
+    [ pe:var "X"; pe:value :two_times_pi ];
+  pe:uses
+    { :two_times_pi :kind :Transcendental . },
+    { :two_times_pi :provedBy :TransTimesAlg . }.
+
+{
+  :report :proof {
+      :two_times_pi :provedBy :TransImpliesIrrational .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransImpliesIrrational ],
+    [ pe:var "X"; pe:value :two_times_pi ];
+  pe:uses
+    { :two_times_pi :kind :Transcendental . },
+    { :two_times_pi :provedBy :TransImpliesIrrational . }.
+
+{
+  :report :proof {
+      :two_times_pi :provedBy :TransImpliesNotConstructible .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransImpliesNotConstructible ],
+    [ pe:var "X"; pe:value :two_times_pi ];
+  pe:uses
+    { :two_times_pi :kind :Transcendental . },
+    { :two_times_pi :provedBy :TransImpliesNotConstructible . }.
+
+{
+  :report :proof {
+      :two_times_e :provedBy :TransTimesAlg .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransTimesAlg ],
+    [ pe:var "X"; pe:value :two_times_e ];
+  pe:uses
+    { :two_times_e :kind :Transcendental . },
+    { :two_times_e :provedBy :TransTimesAlg . }.
+
+{
+  :report :proof {
+      :two_times_e :provedBy :TransImpliesIrrational .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransImpliesIrrational ],
+    [ pe:var "X"; pe:value :two_times_e ];
+  pe:uses
+    { :two_times_e :kind :Transcendental . },
+    { :two_times_e :provedBy :TransImpliesIrrational . }.
+
+{
+  :report :proof {
+      :two_times_e :provedBy :TransImpliesNotConstructible .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransImpliesNotConstructible ],
+    [ pe:var "X"; pe:value :two_times_e ];
+  pe:uses
+    { :two_times_e :kind :Transcendental . },
+    { :two_times_e :provedBy :TransImpliesNotConstructible . }.
+
+{
+  :report :proof {
+      :two_times_pow2sqrt2 :provedBy :TransTimesAlg .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransTimesAlg ],
+    [ pe:var "X"; pe:value :two_times_pow2sqrt2 ];
+  pe:uses
+    { :two_times_pow2sqrt2 :kind :Transcendental . },
+    { :two_times_pow2sqrt2 :provedBy :TransTimesAlg . }.
+
+{
+  :report :proof {
+      :two_times_pow2sqrt2 :provedBy :TransImpliesIrrational .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransImpliesIrrational ],
+    [ pe:var "X"; pe:value :two_times_pow2sqrt2 ];
+  pe:uses
+    { :two_times_pow2sqrt2 :kind :Transcendental . },
+    { :two_times_pow2sqrt2 :provedBy :TransImpliesIrrational . }.
+
+{
+  :report :proof {
+      :two_times_pow2sqrt2 :provedBy :TransImpliesNotConstructible .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransImpliesNotConstructible ],
+    [ pe:var "X"; pe:value :two_times_pow2sqrt2 ];
+  pe:uses
+    { :two_times_pow2sqrt2 :kind :Transcendental . },
+    { :two_times_pow2sqrt2 :provedBy :TransImpliesNotConstructible . }.
+
+{
+  :report :proof {
+      :e_div_2 :provedBy :TransDivAlg .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransDivAlg ],
+    [ pe:var "X"; pe:value :e_div_2 ];
+  pe:uses
+    { :e_div_2 :kind :Transcendental . },
+    { :e_div_2 :provedBy :TransDivAlg . }.
+
+{
+  :report :proof {
+      :e_div_2 :provedBy :TransImpliesIrrational .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransImpliesIrrational ],
+    [ pe:var "X"; pe:value :e_div_2 ];
+  pe:uses
+    { :e_div_2 :kind :Transcendental . },
+    { :e_div_2 :provedBy :TransImpliesIrrational . }.
+
+{
+  :report :proof {
+      :e_div_2 :provedBy :TransImpliesNotConstructible .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransImpliesNotConstructible ],
+    [ pe:var "X"; pe:value :e_div_2 ];
+  pe:uses
+    { :e_div_2 :kind :Transcendental . },
+    { :e_div_2 :provedBy :TransImpliesNotConstructible . }.
+
+{
+  :report :proof {
+      :pi_div_2 :provedBy :TransDivAlg .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransDivAlg ],
+    [ pe:var "X"; pe:value :pi_div_2 ];
+  pe:uses
+    { :pi_div_2 :kind :Transcendental . },
+    { :pi_div_2 :provedBy :TransDivAlg . }.
+
+{
+  :report :proof {
+      :pi_div_2 :provedBy :TransImpliesIrrational .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransImpliesIrrational ],
+    [ pe:var "X"; pe:value :pi_div_2 ];
+  pe:uses
+    { :pi_div_2 :kind :Transcendental . },
+    { :pi_div_2 :provedBy :TransImpliesIrrational . }.
+
+{
+  :report :proof {
+      :pi_div_2 :provedBy :TransImpliesNotConstructible .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransImpliesNotConstructible ],
+    [ pe:var "X"; pe:value :pi_div_2 ];
+  pe:uses
+    { :pi_div_2 :kind :Transcendental . },
+    { :pi_div_2 :provedBy :TransImpliesNotConstructible . }.
+
+{
+  :report :proof {
+      :pow2sqrt2_div_2 :provedBy :TransDivAlg .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransDivAlg ],
+    [ pe:var "X"; pe:value :pow2sqrt2_div_2 ];
+  pe:uses
+    { :pow2sqrt2_div_2 :kind :Transcendental . },
+    { :pow2sqrt2_div_2 :provedBy :TransDivAlg . }.
+
+{
+  :report :proof {
+      :pow2sqrt2_div_2 :provedBy :TransImpliesIrrational .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransImpliesIrrational ],
+    [ pe:var "X"; pe:value :pow2sqrt2_div_2 ];
+  pe:uses
+    { :pow2sqrt2_div_2 :kind :Transcendental . },
+    { :pow2sqrt2_div_2 :provedBy :TransImpliesIrrational . }.
+
+{
+  :report :proof {
+      :pow2sqrt2_div_2 :provedBy :TransImpliesNotConstructible .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransImpliesNotConstructible ],
+    [ pe:var "X"; pe:value :pow2sqrt2_div_2 ];
+  pe:uses
+    { :pow2sqrt2_div_2 :kind :Transcendental . },
+    { :pow2sqrt2_div_2 :provedBy :TransImpliesNotConstructible . }.
+
+{
+  :report :proof {
+      :half_times_pi :provedBy :TransTimesAlg .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransTimesAlg ],
+    [ pe:var "X"; pe:value :half_times_pi ];
+  pe:uses
+    { :half_times_pi :kind :Transcendental . },
+    { :half_times_pi :provedBy :TransTimesAlg . }.
+
+{
+  :report :proof {
+      :half_times_pi :provedBy :TransImpliesIrrational .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransImpliesIrrational ],
+    [ pe:var "X"; pe:value :half_times_pi ];
+  pe:uses
+    { :half_times_pi :kind :Transcendental . },
+    { :half_times_pi :provedBy :TransImpliesIrrational . }.
+
+{
+  :report :proof {
+      :half_times_pi :provedBy :TransImpliesNotConstructible .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransImpliesNotConstructible ],
+    [ pe:var "X"; pe:value :half_times_pi ];
+  pe:uses
+    { :half_times_pi :kind :Transcendental . },
+    { :half_times_pi :provedBy :TransImpliesNotConstructible . }.
+
+{
+  :report :proof {
+      :half_times_e :provedBy :TransTimesAlg .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransTimesAlg ],
+    [ pe:var "X"; pe:value :half_times_e ];
+  pe:uses
+    { :half_times_e :kind :Transcendental . },
+    { :half_times_e :provedBy :TransTimesAlg . }.
+
+{
+  :report :proof {
+      :half_times_e :provedBy :TransImpliesIrrational .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransImpliesIrrational ],
+    [ pe:var "X"; pe:value :half_times_e ];
+  pe:uses
+    { :half_times_e :kind :Transcendental . },
+    { :half_times_e :provedBy :TransImpliesIrrational . }.
+
+{
+  :report :proof {
+      :half_times_e :provedBy :TransImpliesNotConstructible .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransImpliesNotConstructible ],
+    [ pe:var "X"; pe:value :half_times_e ];
+  pe:uses
+    { :half_times_e :kind :Transcendental . },
+    { :half_times_e :provedBy :TransImpliesNotConstructible . }.
+
+{
+  :report :proof {
+      :pow_minus1_minusI :provedBy :GelfondSchneider .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :GelfondSchneider ],
+    [ pe:var "X"; pe:value :pow_minus1_minusI ];
+  pe:uses
+    { :pow_minus1_minusI :kind :Transcendental . },
+    { :pow_minus1_minusI :provedBy :GelfondSchneider . }.
+
+{
+  :report :proof {
+      :pow_minus1_minusI :provedBy :TransImpliesIrrational .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransImpliesIrrational ],
+    [ pe:var "X"; pe:value :pow_minus1_minusI ];
+  pe:uses
+    { :pow_minus1_minusI :kind :Transcendental . },
+    { :pow_minus1_minusI :provedBy :TransImpliesIrrational . }.
+
+{
+  :report :proof {
+      :pow_minus1_minusI :provedBy :TransImpliesNotConstructible .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransImpliesNotConstructible ],
+    [ pe:var "X"; pe:value :pow_minus1_minusI ];
+  pe:uses
+    { :pow_minus1_minusI :kind :Transcendental . },
+    { :pow_minus1_minusI :provedBy :TransImpliesNotConstructible . }.
+
+{
+  :report :proof {
+      :exp_sqrt2 :provedBy :LindemannWeierstrass .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :LindemannWeierstrass ],
+    [ pe:var "X"; pe:value :exp_sqrt2 ];
+  pe:uses
+    { :exp_sqrt2 :kind :Transcendental . },
+    { :exp_sqrt2 :provedBy :LindemannWeierstrass . }.
+
+{
+  :report :proof {
+      :exp_sqrt2 :provedBy :TransImpliesIrrational .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransImpliesIrrational ],
+    [ pe:var "X"; pe:value :exp_sqrt2 ];
+  pe:uses
+    { :exp_sqrt2 :kind :Transcendental . },
+    { :exp_sqrt2 :provedBy :TransImpliesIrrational . }.
+
+{
+  :report :proof {
+      :exp_sqrt2 :provedBy :TransImpliesNotConstructible .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransImpliesNotConstructible ],
+    [ pe:var "X"; pe:value :exp_sqrt2 ];
+  pe:uses
+    { :exp_sqrt2 :kind :Transcendental . },
+    { :exp_sqrt2 :provedBy :TransImpliesNotConstructible . }.
+
+{
+  :report :proof {
+      :pi_plus_sqrt2 :provedBy :TransPlusAlg .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransPlusAlg ],
+    [ pe:var "X"; pe:value :pi_plus_sqrt2 ];
+  pe:uses
+    { :pi_plus_sqrt2 :kind :Transcendental . },
+    { :pi_plus_sqrt2 :provedBy :TransPlusAlg . }.
+
+{
+  :report :proof {
+      :pi_plus_sqrt2 :provedBy :TransImpliesIrrational .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransImpliesIrrational ],
+    [ pe:var "X"; pe:value :pi_plus_sqrt2 ];
+  pe:uses
+    { :pi_plus_sqrt2 :kind :Transcendental . },
+    { :pi_plus_sqrt2 :provedBy :TransImpliesIrrational . }.
+
+{
+  :report :proof {
+      :pi_plus_sqrt2 :provedBy :TransImpliesNotConstructible .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransImpliesNotConstructible ],
+    [ pe:var "X"; pe:value :pi_plus_sqrt2 ];
+  pe:uses
+    { :pi_plus_sqrt2 :kind :Transcendental . },
+    { :pi_plus_sqrt2 :provedBy :TransImpliesNotConstructible . }.
+
+{
+  :report :proof {
+      :pow_i_i :provedBy :GelfondSchneider .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :GelfondSchneider ],
+    [ pe:var "X"; pe:value :pow_i_i ];
+  pe:uses
+    { :pow_i_i :kind :Transcendental . },
+    { :pow_i_i :provedBy :GelfondSchneider . }.
+
+{
+  :report :proof {
+      :pow_i_i :provedBy :TransImpliesIrrational .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransImpliesIrrational ],
+    [ pe:var "X"; pe:value :pow_i_i ];
+  pe:uses
+    { :pow_i_i :kind :Transcendental . },
+    { :pow_i_i :provedBy :TransImpliesIrrational . }.
+
+{
+  :report :proof {
+      :pow_i_i :provedBy :TransImpliesNotConstructible .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransImpliesNotConstructible ],
+    [ pe:var "X"; pe:value :pow_i_i ];
+  pe:uses
+    { :pow_i_i :kind :Transcendental . },
+    { :pow_i_i :provedBy :TransImpliesNotConstructible . }.
+
+{
+  :report :proof {
+      :pow_e_pi :provedBy :GelfondSchneider .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :GelfondSchneider ],
+    [ pe:var "X"; pe:value :pow_e_pi ];
+  pe:uses
+    { :pow_e_pi :kind :Transcendental . },
+    { :pow_e_pi :provedBy :GelfondSchneider . }.
+
+{
+  :report :proof {
+      :pow_e_pi :provedBy :TransImpliesIrrational .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransImpliesIrrational ],
+    [ pe:var "X"; pe:value :pow_e_pi ];
+  pe:uses
+    { :pow_e_pi :kind :Transcendental . },
+    { :pow_e_pi :provedBy :TransImpliesIrrational . }.
+
+{
+  :report :proof {
+      :pow_e_pi :provedBy :TransImpliesNotConstructible .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransImpliesNotConstructible ],
+    [ pe:var "X"; pe:value :pow_e_pi ];
+  pe:uses
+    { :pow_e_pi :kind :Transcendental . },
+    { :pow_e_pi :provedBy :TransImpliesNotConstructible . }.
+
+{
+  :report :proof {
+      :exp_minus_pi_over_2 :provedBy :GelfondSchneider .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :GelfondSchneider ],
+    [ pe:var "X"; pe:value :exp_minus_pi_over_2 ];
+  pe:uses
+    { :exp_minus_pi_over_2 :kind :Transcendental . },
+    { :exp_minus_pi_over_2 :provedBy :GelfondSchneider . }.
+
+{
+  :report :proof {
+      :exp_minus_pi_over_2 :provedBy :TransImpliesIrrational .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransImpliesIrrational ],
+    [ pe:var "X"; pe:value :exp_minus_pi_over_2 ];
+  pe:uses
+    { :exp_minus_pi_over_2 :kind :Transcendental . },
+    { :exp_minus_pi_over_2 :provedBy :TransImpliesIrrational . }.
+
+{
+  :report :proof {
+      :exp_minus_pi_over_2 :provedBy :TransImpliesNotConstructible .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransImpliesNotConstructible ],
+    [ pe:var "X"; pe:value :exp_minus_pi_over_2 ];
+  pe:uses
+    { :exp_minus_pi_over_2 :kind :Transcendental . },
+    { :exp_minus_pi_over_2 :provedBy :TransImpliesNotConstructible . }.
+
+{
+  :report :proof {
+      :pow2sqrt2_plus_1 :provedBy :TransPlusAlg .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransPlusAlg ],
+    [ pe:var "X"; pe:value :pow2sqrt2_plus_1 ];
+  pe:uses
+    { :pow2sqrt2_plus_1 :kind :Transcendental . },
+    { :pow2sqrt2_plus_1 :provedBy :TransPlusAlg . }.
+
+{
+  :report :proof {
+      :pow2sqrt2_plus_1 :provedBy :TransImpliesIrrational .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransImpliesIrrational ],
+    [ pe:var "X"; pe:value :pow2sqrt2_plus_1 ];
+  pe:uses
+    { :pow2sqrt2_plus_1 :kind :Transcendental . },
+    { :pow2sqrt2_plus_1 :provedBy :TransImpliesIrrational . }.
+
+{
+  :report :proof {
+      :pow2sqrt2_plus_1 :provedBy :TransImpliesNotConstructible .
+  } .
+}
+  pe:rule
+    {
+        {
+            ?X :kind :Transcendental .
+            ?X :provedBy ?T .
+        } => {
+            :report :proof {
+            ?X :provedBy ?T .
+        } .
+        } .
+    };
+  pe:binding
+    [ pe:var "T"; pe:value :TransImpliesNotConstructible ],
+    [ pe:var "X"; pe:value :pow2sqrt2_plus_1 ];
+  pe:uses
+    { :pow2sqrt2_plus_1 :kind :Transcendental . },
+    { :pow2sqrt2_plus_1 :provedBy :TransImpliesNotConstructible . }.
+
+{ :report :unknown :sum_e_pi . }
+  pe:rule
+    {
+        {
+            ?X :kind :Unknown .
+        } => {
+            :report :unknown ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :sum_e_pi ];
+  pe:uses { :sum_e_pi :kind :Unknown . }.
+
+{ :sum_e_pi :kind :Unknown . }
+  pe:fact "transcendental-numbers-stretched.n3".
+
+{ :report :unknown :prod_e_pi . }
+  pe:rule
+    {
+        {
+            ?X :kind :Unknown .
+        } => {
+            :report :unknown ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :prod_e_pi ];
+  pe:uses { :prod_e_pi :kind :Unknown . }.
+
+{ :prod_e_pi :kind :Unknown . }
+  pe:fact "transcendental-numbers-stretched.n3".
+
+{ :report :unknown :pow_pi_e . }
+  pe:rule
+    {
+        {
+            ?X :kind :Unknown .
+        } => {
+            :report :unknown ?X .
+        } .
+    };
+  pe:binding [ pe:var "X"; pe:value :pow_pi_e ];
+  pe:uses { :pow_pi_e :kind :Unknown . }.
+
+{ :pow_pi_e :kind :Unknown . }
+  pe:fact "transcendental-numbers-stretched.n3".
+
+{ :report :headline :quadraticTrick . }
+  pe:rule
+    {
+        {
+            :quadraticTrick :concerns ?A .
+            :quadraticTrick :concerns ?B .
+        } => {
+            :report :headline :quadraticTrick .
+            :report :concerns ?A .
+            :report :concerns ?B .
+        } .
+    };
+  pe:binding
+    [ pe:var "A"; pe:value :sum_e_pi ],
+    [ pe:var "B"; pe:value :sum_e_pi ];
+  pe:uses
+    { :quadraticTrick :concerns :sum_e_pi . },
+    { :quadraticTrick :concerns :sum_e_pi . }.
+
+{ :quadraticTrick :concerns :sum_e_pi . }
+  pe:fact "transcendental-numbers-stretched.n3".
+
+{ :report :concerns :sum_e_pi . }
+  pe:rule
+    {
+        {
+            :quadraticTrick :concerns ?A .
+            :quadraticTrick :concerns ?B .
+        } => {
+            :report :headline :quadraticTrick .
+            :report :concerns ?A .
+            :report :concerns ?B .
+        } .
+    };
+  pe:binding
+    [ pe:var "A"; pe:value :sum_e_pi ],
+    [ pe:var "B"; pe:value :sum_e_pi ];
+  pe:uses
+    { :quadraticTrick :concerns :sum_e_pi . },
+    { :quadraticTrick :concerns :sum_e_pi . }.
+
+{ :report :concerns :prod_e_pi . }
+  pe:rule
+    {
+        {
+            :quadraticTrick :concerns ?A .
+            :quadraticTrick :concerns ?B .
+        } => {
+            :report :headline :quadraticTrick .
+            :report :concerns ?A .
+            :report :concerns ?B .
+        } .
+    };
+  pe:binding
+    [ pe:var "A"; pe:value :sum_e_pi ],
+    [ pe:var "B"; pe:value :prod_e_pi ];
+  pe:uses
+    { :quadraticTrick :concerns :sum_e_pi . },
+    { :quadraticTrick :concerns :prod_e_pi . }.
+
+{ :quadraticTrick :concerns :prod_e_pi . }
+  pe:fact "transcendental-numbers-stretched.n3".
+
+{ :__md_output log:outputString "# transcendental-numbers-stretched\n\n## Source files\n\n- [N3 rules](../transcendental-numbers-stretched.n3)\n\n@prefix : <https://example.org/transcendental#> .\n\n:report :concerns :prod_e_pi .\n:report :concerns :sum_e_pi .\n:report :headline :quadraticTrick .\n:report :irrational :e .\n:report :irrational :e_div_2 .\n:report :irrational :e_plus_1 .\n:report :irrational :e_plus_2 .\n:report :irrational :exp_minus_pi_over_2 .\n:report :irrational :exp_sqrt2 .\n:report :irrational :half_times_e .\n:report :irrational :half_times_pi .\n:report :irrational :pi .\n:report :irrational :pi_div_2 .\n:report :irrational :pi_plus_1 .\n:report :irrational :pi_plus_sqrt2 .\n:report :irrational :pow_2_sqrt2 .\n:report :irrational :pow_e_pi .\n:report :irrational :pow_i_i .\n:report :irrational :pow_minus1_minusI .\n:report :irrational :pow2sqrt2_div_2 .\n:report :irrational :pow2sqrt2_plus_1 .\n:report :irrational :two_times_e .\n:report :irrational :two_times_pi .\n:report :irrational :two_times_pow2sqrt2 .\n:report :notConstructible :e .\n:report :notConstructible :e_div_2 .\n:report :notConstructible :e_plus_1 .\n:report :notConstructible :e_plus_2 .\n:report :notConstructible :exp_minus_pi_over_2 .\n:report :notConstructible :exp_sqrt2 .\n:report :notConstructible :half_times_e .\n:report :notConstructible :half_times_pi .\n:report :notConstructible :pi .\n:report :notConstructible :pi_div_2 .\n:report :notConstructible :pi_plus_1 .\n:report :notConstructible :pi_plus_sqrt2 .\n:report :notConstructible :pow_2_sqrt2 .\n:report :notConstructible :pow_e_pi .\n:report :notConstructible :pow_i_i .\n:report :notConstructible :pow_minus1_minusI .\n:report :notConstructible :pow2sqrt2_div_2 .\n:report :notConstructible :pow2sqrt2_plus_1 .\n:report :notConstructible :two_times_e .\n:report :notConstructible :two_times_pi .\n:report :notConstructible :two_times_pow2sqrt2 .\n:report :proof {\n    :e :provedBy :Hermite1873 .\n} .\n:report :proof {\n    :e :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :e :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :e_div_2 :provedBy :TransDivAlg .\n} .\n:report :proof {\n    :e_div_2 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :e_div_2 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :e_plus_1 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :e_plus_1 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :e_plus_1 :provedBy :TransPlusAlg .\n} .\n:report :proof {\n    :e_plus_2 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :e_plus_2 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :e_plus_2 :provedBy :TransPlusAlg .\n} .\n:report :proof {\n    :exp_minus_pi_over_2 :provedBy :GelfondSchneider .\n} .\n:report :proof {\n    :exp_minus_pi_over_2 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :exp_minus_pi_over_2 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :exp_sqrt2 :provedBy :LindemannWeierstrass .\n} .\n:report :proof {\n    :exp_sqrt2 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :exp_sqrt2 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :half_times_e :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :half_times_e :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :half_times_e :provedBy :TransTimesAlg .\n} .\n:report :proof {\n    :half_times_pi :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :half_times_pi :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :half_times_pi :provedBy :TransTimesAlg .\n} .\n:report :proof {\n    :pi :provedBy :Lindemann1882 .\n} .\n:report :proof {\n    :pi :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :pi :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :pi_div_2 :provedBy :TransDivAlg .\n} .\n:report :proof {\n    :pi_div_2 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :pi_div_2 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :pi_plus_1 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :pi_plus_1 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :pi_plus_1 :provedBy :TransPlusAlg .\n} .\n:report :proof {\n    :pi_plus_sqrt2 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :pi_plus_sqrt2 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :pi_plus_sqrt2 :provedBy :TransPlusAlg .\n} .\n:report :proof {\n    :pow_2_sqrt2 :provedBy :GelfondSchneider .\n} .\n:report :proof {\n    :pow_2_sqrt2 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :pow_2_sqrt2 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :pow_e_pi :provedBy :GelfondSchneider .\n} .\n:report :proof {\n    :pow_e_pi :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :pow_e_pi :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :pow_i_i :provedBy :GelfondSchneider .\n} .\n:report :proof {\n    :pow_i_i :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :pow_i_i :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :pow_minus1_minusI :provedBy :GelfondSchneider .\n} .\n:report :proof {\n    :pow_minus1_minusI :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :pow_minus1_minusI :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :pow2sqrt2_div_2 :provedBy :TransDivAlg .\n} .\n:report :proof {\n    :pow2sqrt2_div_2 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :pow2sqrt2_div_2 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :pow2sqrt2_plus_1 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :pow2sqrt2_plus_1 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :pow2sqrt2_plus_1 :provedBy :TransPlusAlg .\n} .\n:report :proof {\n    :two_times_e :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :two_times_e :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :two_times_e :provedBy :TransTimesAlg .\n} .\n:report :proof {\n    :two_times_pi :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :two_times_pi :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :two_times_pi :provedBy :TransTimesAlg .\n} .\n:report :proof {\n    :two_times_pow2sqrt2 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :two_times_pow2sqrt2 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :two_times_pow2sqrt2 :provedBy :TransTimesAlg .\n} .\n:report :transcendental :e .\n:report :transcendental :e_div_2 .\n:report :transcendental :e_plus_1 .\n:report :transcendental :e_plus_2 .\n:report :transcendental :exp_minus_pi_over_2 .\n:report :transcendental :exp_sqrt2 .\n:report :transcendental :half_times_e .\n:report :transcendental :half_times_pi .\n:report :transcendental :pi .\n:report :transcendental :pi_div_2 .\n:report :transcendental :pi_plus_1 .\n:report :transcendental :pi_plus_sqrt2 .\n:report :transcendental :pow_2_sqrt2 .\n:report :transcendental :pow_e_pi .\n:report :transcendental :pow_i_i .\n:report :transcendental :pow_minus1_minusI .\n:report :transcendental :pow2sqrt2_div_2 .\n:report :transcendental :pow2sqrt2_plus_1 .\n:report :transcendental :two_times_e .\n:report :transcendental :two_times_pi .\n:report :transcendental :two_times_pow2sqrt2 .\n:report :unknown :pow_pi_e .\n:report :unknown :prod_e_pi .\n:report :unknown :sum_e_pi .\n" . }
+  pe:rule
+    {
+        {
+            :__md_output :text ?text .
+        } => {
+            :__md_output log:outputString ?text .
+        } .
+    };
+  pe:binding [ pe:var "text"; pe:value "# transcendental-numbers-stretched\n\n## Source files\n\n- [N3 rules](../transcendental-numbers-stretched.n3)\n\n@prefix : <https://example.org/transcendental#> .\n\n:report :concerns :prod_e_pi .\n:report :concerns :sum_e_pi .\n:report :headline :quadraticTrick .\n:report :irrational :e .\n:report :irrational :e_div_2 .\n:report :irrational :e_plus_1 .\n:report :irrational :e_plus_2 .\n:report :irrational :exp_minus_pi_over_2 .\n:report :irrational :exp_sqrt2 .\n:report :irrational :half_times_e .\n:report :irrational :half_times_pi .\n:report :irrational :pi .\n:report :irrational :pi_div_2 .\n:report :irrational :pi_plus_1 .\n:report :irrational :pi_plus_sqrt2 .\n:report :irrational :pow_2_sqrt2 .\n:report :irrational :pow_e_pi .\n:report :irrational :pow_i_i .\n:report :irrational :pow_minus1_minusI .\n:report :irrational :pow2sqrt2_div_2 .\n:report :irrational :pow2sqrt2_plus_1 .\n:report :irrational :two_times_e .\n:report :irrational :two_times_pi .\n:report :irrational :two_times_pow2sqrt2 .\n:report :notConstructible :e .\n:report :notConstructible :e_div_2 .\n:report :notConstructible :e_plus_1 .\n:report :notConstructible :e_plus_2 .\n:report :notConstructible :exp_minus_pi_over_2 .\n:report :notConstructible :exp_sqrt2 .\n:report :notConstructible :half_times_e .\n:report :notConstructible :half_times_pi .\n:report :notConstructible :pi .\n:report :notConstructible :pi_div_2 .\n:report :notConstructible :pi_plus_1 .\n:report :notConstructible :pi_plus_sqrt2 .\n:report :notConstructible :pow_2_sqrt2 .\n:report :notConstructible :pow_e_pi .\n:report :notConstructible :pow_i_i .\n:report :notConstructible :pow_minus1_minusI .\n:report :notConstructible :pow2sqrt2_div_2 .\n:report :notConstructible :pow2sqrt2_plus_1 .\n:report :notConstructible :two_times_e .\n:report :notConstructible :two_times_pi .\n:report :notConstructible :two_times_pow2sqrt2 .\n:report :proof {\n    :e :provedBy :Hermite1873 .\n} .\n:report :proof {\n    :e :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :e :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :e_div_2 :provedBy :TransDivAlg .\n} .\n:report :proof {\n    :e_div_2 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :e_div_2 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :e_plus_1 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :e_plus_1 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :e_plus_1 :provedBy :TransPlusAlg .\n} .\n:report :proof {\n    :e_plus_2 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :e_plus_2 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :e_plus_2 :provedBy :TransPlusAlg .\n} .\n:report :proof {\n    :exp_minus_pi_over_2 :provedBy :GelfondSchneider .\n} .\n:report :proof {\n    :exp_minus_pi_over_2 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :exp_minus_pi_over_2 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :exp_sqrt2 :provedBy :LindemannWeierstrass .\n} .\n:report :proof {\n    :exp_sqrt2 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :exp_sqrt2 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :half_times_e :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :half_times_e :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :half_times_e :provedBy :TransTimesAlg .\n} .\n:report :proof {\n    :half_times_pi :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :half_times_pi :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :half_times_pi :provedBy :TransTimesAlg .\n} .\n:report :proof {\n    :pi :provedBy :Lindemann1882 .\n} .\n:report :proof {\n    :pi :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :pi :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :pi_div_2 :provedBy :TransDivAlg .\n} .\n:report :proof {\n    :pi_div_2 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :pi_div_2 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :pi_plus_1 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :pi_plus_1 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :pi_plus_1 :provedBy :TransPlusAlg .\n} .\n:report :proof {\n    :pi_plus_sqrt2 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :pi_plus_sqrt2 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :pi_plus_sqrt2 :provedBy :TransPlusAlg .\n} .\n:report :proof {\n    :pow_2_sqrt2 :provedBy :GelfondSchneider .\n} .\n:report :proof {\n    :pow_2_sqrt2 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :pow_2_sqrt2 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :pow_e_pi :provedBy :GelfondSchneider .\n} .\n:report :proof {\n    :pow_e_pi :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :pow_e_pi :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :pow_i_i :provedBy :GelfondSchneider .\n} .\n:report :proof {\n    :pow_i_i :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :pow_i_i :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :pow_minus1_minusI :provedBy :GelfondSchneider .\n} .\n:report :proof {\n    :pow_minus1_minusI :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :pow_minus1_minusI :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :pow2sqrt2_div_2 :provedBy :TransDivAlg .\n} .\n:report :proof {\n    :pow2sqrt2_div_2 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :pow2sqrt2_div_2 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :pow2sqrt2_plus_1 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :pow2sqrt2_plus_1 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :pow2sqrt2_plus_1 :provedBy :TransPlusAlg .\n} .\n:report :proof {\n    :two_times_e :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :two_times_e :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :two_times_e :provedBy :TransTimesAlg .\n} .\n:report :proof {\n    :two_times_pi :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :two_times_pi :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :two_times_pi :provedBy :TransTimesAlg .\n} .\n:report :proof {\n    :two_times_pow2sqrt2 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :two_times_pow2sqrt2 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :two_times_pow2sqrt2 :provedBy :TransTimesAlg .\n} .\n:report :transcendental :e .\n:report :transcendental :e_div_2 .\n:report :transcendental :e_plus_1 .\n:report :transcendental :e_plus_2 .\n:report :transcendental :exp_minus_pi_over_2 .\n:report :transcendental :exp_sqrt2 .\n:report :transcendental :half_times_e .\n:report :transcendental :half_times_pi .\n:report :transcendental :pi .\n:report :transcendental :pi_div_2 .\n:report :transcendental :pi_plus_1 .\n:report :transcendental :pi_plus_sqrt2 .\n:report :transcendental :pow_2_sqrt2 .\n:report :transcendental :pow_e_pi .\n:report :transcendental :pow_i_i .\n:report :transcendental :pow_minus1_minusI .\n:report :transcendental :pow2sqrt2_div_2 .\n:report :transcendental :pow2sqrt2_plus_1 .\n:report :transcendental :two_times_e .\n:report :transcendental :two_times_pi .\n:report :transcendental :two_times_pow2sqrt2 .\n:report :unknown :pow_pi_e .\n:report :unknown :prod_e_pi .\n:report :unknown :sum_e_pi .\n" ];
+  pe:uses { :__md_output :text "# transcendental-numbers-stretched\n\n## Source files\n\n- [N3 rules](../transcendental-numbers-stretched.n3)\n\n@prefix : <https://example.org/transcendental#> .\n\n:report :concerns :prod_e_pi .\n:report :concerns :sum_e_pi .\n:report :headline :quadraticTrick .\n:report :irrational :e .\n:report :irrational :e_div_2 .\n:report :irrational :e_plus_1 .\n:report :irrational :e_plus_2 .\n:report :irrational :exp_minus_pi_over_2 .\n:report :irrational :exp_sqrt2 .\n:report :irrational :half_times_e .\n:report :irrational :half_times_pi .\n:report :irrational :pi .\n:report :irrational :pi_div_2 .\n:report :irrational :pi_plus_1 .\n:report :irrational :pi_plus_sqrt2 .\n:report :irrational :pow_2_sqrt2 .\n:report :irrational :pow_e_pi .\n:report :irrational :pow_i_i .\n:report :irrational :pow_minus1_minusI .\n:report :irrational :pow2sqrt2_div_2 .\n:report :irrational :pow2sqrt2_plus_1 .\n:report :irrational :two_times_e .\n:report :irrational :two_times_pi .\n:report :irrational :two_times_pow2sqrt2 .\n:report :notConstructible :e .\n:report :notConstructible :e_div_2 .\n:report :notConstructible :e_plus_1 .\n:report :notConstructible :e_plus_2 .\n:report :notConstructible :exp_minus_pi_over_2 .\n:report :notConstructible :exp_sqrt2 .\n:report :notConstructible :half_times_e .\n:report :notConstructible :half_times_pi .\n:report :notConstructible :pi .\n:report :notConstructible :pi_div_2 .\n:report :notConstructible :pi_plus_1 .\n:report :notConstructible :pi_plus_sqrt2 .\n:report :notConstructible :pow_2_sqrt2 .\n:report :notConstructible :pow_e_pi .\n:report :notConstructible :pow_i_i .\n:report :notConstructible :pow_minus1_minusI .\n:report :notConstructible :pow2sqrt2_div_2 .\n:report :notConstructible :pow2sqrt2_plus_1 .\n:report :notConstructible :two_times_e .\n:report :notConstructible :two_times_pi .\n:report :notConstructible :two_times_pow2sqrt2 .\n:report :proof {\n    :e :provedBy :Hermite1873 .\n} .\n:report :proof {\n    :e :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :e :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :e_div_2 :provedBy :TransDivAlg .\n} .\n:report :proof {\n    :e_div_2 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :e_div_2 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :e_plus_1 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :e_plus_1 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :e_plus_1 :provedBy :TransPlusAlg .\n} .\n:report :proof {\n    :e_plus_2 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :e_plus_2 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :e_plus_2 :provedBy :TransPlusAlg .\n} .\n:report :proof {\n    :exp_minus_pi_over_2 :provedBy :GelfondSchneider .\n} .\n:report :proof {\n    :exp_minus_pi_over_2 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :exp_minus_pi_over_2 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :exp_sqrt2 :provedBy :LindemannWeierstrass .\n} .\n:report :proof {\n    :exp_sqrt2 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :exp_sqrt2 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :half_times_e :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :half_times_e :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :half_times_e :provedBy :TransTimesAlg .\n} .\n:report :proof {\n    :half_times_pi :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :half_times_pi :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :half_times_pi :provedBy :TransTimesAlg .\n} .\n:report :proof {\n    :pi :provedBy :Lindemann1882 .\n} .\n:report :proof {\n    :pi :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :pi :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :pi_div_2 :provedBy :TransDivAlg .\n} .\n:report :proof {\n    :pi_div_2 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :pi_div_2 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :pi_plus_1 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :pi_plus_1 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :pi_plus_1 :provedBy :TransPlusAlg .\n} .\n:report :proof {\n    :pi_plus_sqrt2 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :pi_plus_sqrt2 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :pi_plus_sqrt2 :provedBy :TransPlusAlg .\n} .\n:report :proof {\n    :pow_2_sqrt2 :provedBy :GelfondSchneider .\n} .\n:report :proof {\n    :pow_2_sqrt2 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :pow_2_sqrt2 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :pow_e_pi :provedBy :GelfondSchneider .\n} .\n:report :proof {\n    :pow_e_pi :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :pow_e_pi :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :pow_i_i :provedBy :GelfondSchneider .\n} .\n:report :proof {\n    :pow_i_i :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :pow_i_i :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :pow_minus1_minusI :provedBy :GelfondSchneider .\n} .\n:report :proof {\n    :pow_minus1_minusI :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :pow_minus1_minusI :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :pow2sqrt2_div_2 :provedBy :TransDivAlg .\n} .\n:report :proof {\n    :pow2sqrt2_div_2 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :pow2sqrt2_div_2 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :pow2sqrt2_plus_1 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :pow2sqrt2_plus_1 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :pow2sqrt2_plus_1 :provedBy :TransPlusAlg .\n} .\n:report :proof {\n    :two_times_e :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :two_times_e :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :two_times_e :provedBy :TransTimesAlg .\n} .\n:report :proof {\n    :two_times_pi :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :two_times_pi :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :two_times_pi :provedBy :TransTimesAlg .\n} .\n:report :proof {\n    :two_times_pow2sqrt2 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :two_times_pow2sqrt2 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :two_times_pow2sqrt2 :provedBy :TransTimesAlg .\n} .\n:report :transcendental :e .\n:report :transcendental :e_div_2 .\n:report :transcendental :e_plus_1 .\n:report :transcendental :e_plus_2 .\n:report :transcendental :exp_minus_pi_over_2 .\n:report :transcendental :exp_sqrt2 .\n:report :transcendental :half_times_e .\n:report :transcendental :half_times_pi .\n:report :transcendental :pi .\n:report :transcendental :pi_div_2 .\n:report :transcendental :pi_plus_1 .\n:report :transcendental :pi_plus_sqrt2 .\n:report :transcendental :pow_2_sqrt2 .\n:report :transcendental :pow_e_pi .\n:report :transcendental :pow_i_i .\n:report :transcendental :pow_minus1_minusI .\n:report :transcendental :pow2sqrt2_div_2 .\n:report :transcendental :pow2sqrt2_plus_1 .\n:report :transcendental :two_times_e .\n:report :transcendental :two_times_pi .\n:report :transcendental :two_times_pow2sqrt2 .\n:report :unknown :pow_pi_e .\n:report :unknown :prod_e_pi .\n:report :unknown :sum_e_pi .\n" . }.
+
+{ :__md_output :text "# transcendental-numbers-stretched\n\n## Source files\n\n- [N3 rules](../transcendental-numbers-stretched.n3)\n\n@prefix : <https://example.org/transcendental#> .\n\n:report :concerns :prod_e_pi .\n:report :concerns :sum_e_pi .\n:report :headline :quadraticTrick .\n:report :irrational :e .\n:report :irrational :e_div_2 .\n:report :irrational :e_plus_1 .\n:report :irrational :e_plus_2 .\n:report :irrational :exp_minus_pi_over_2 .\n:report :irrational :exp_sqrt2 .\n:report :irrational :half_times_e .\n:report :irrational :half_times_pi .\n:report :irrational :pi .\n:report :irrational :pi_div_2 .\n:report :irrational :pi_plus_1 .\n:report :irrational :pi_plus_sqrt2 .\n:report :irrational :pow_2_sqrt2 .\n:report :irrational :pow_e_pi .\n:report :irrational :pow_i_i .\n:report :irrational :pow_minus1_minusI .\n:report :irrational :pow2sqrt2_div_2 .\n:report :irrational :pow2sqrt2_plus_1 .\n:report :irrational :two_times_e .\n:report :irrational :two_times_pi .\n:report :irrational :two_times_pow2sqrt2 .\n:report :notConstructible :e .\n:report :notConstructible :e_div_2 .\n:report :notConstructible :e_plus_1 .\n:report :notConstructible :e_plus_2 .\n:report :notConstructible :exp_minus_pi_over_2 .\n:report :notConstructible :exp_sqrt2 .\n:report :notConstructible :half_times_e .\n:report :notConstructible :half_times_pi .\n:report :notConstructible :pi .\n:report :notConstructible :pi_div_2 .\n:report :notConstructible :pi_plus_1 .\n:report :notConstructible :pi_plus_sqrt2 .\n:report :notConstructible :pow_2_sqrt2 .\n:report :notConstructible :pow_e_pi .\n:report :notConstructible :pow_i_i .\n:report :notConstructible :pow_minus1_minusI .\n:report :notConstructible :pow2sqrt2_div_2 .\n:report :notConstructible :pow2sqrt2_plus_1 .\n:report :notConstructible :two_times_e .\n:report :notConstructible :two_times_pi .\n:report :notConstructible :two_times_pow2sqrt2 .\n:report :proof {\n    :e :provedBy :Hermite1873 .\n} .\n:report :proof {\n    :e :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :e :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :e_div_2 :provedBy :TransDivAlg .\n} .\n:report :proof {\n    :e_div_2 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :e_div_2 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :e_plus_1 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :e_plus_1 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :e_plus_1 :provedBy :TransPlusAlg .\n} .\n:report :proof {\n    :e_plus_2 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :e_plus_2 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :e_plus_2 :provedBy :TransPlusAlg .\n} .\n:report :proof {\n    :exp_minus_pi_over_2 :provedBy :GelfondSchneider .\n} .\n:report :proof {\n    :exp_minus_pi_over_2 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :exp_minus_pi_over_2 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :exp_sqrt2 :provedBy :LindemannWeierstrass .\n} .\n:report :proof {\n    :exp_sqrt2 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :exp_sqrt2 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :half_times_e :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :half_times_e :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :half_times_e :provedBy :TransTimesAlg .\n} .\n:report :proof {\n    :half_times_pi :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :half_times_pi :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :half_times_pi :provedBy :TransTimesAlg .\n} .\n:report :proof {\n    :pi :provedBy :Lindemann1882 .\n} .\n:report :proof {\n    :pi :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :pi :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :pi_div_2 :provedBy :TransDivAlg .\n} .\n:report :proof {\n    :pi_div_2 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :pi_div_2 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :pi_plus_1 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :pi_plus_1 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :pi_plus_1 :provedBy :TransPlusAlg .\n} .\n:report :proof {\n    :pi_plus_sqrt2 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :pi_plus_sqrt2 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :pi_plus_sqrt2 :provedBy :TransPlusAlg .\n} .\n:report :proof {\n    :pow_2_sqrt2 :provedBy :GelfondSchneider .\n} .\n:report :proof {\n    :pow_2_sqrt2 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :pow_2_sqrt2 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :pow_e_pi :provedBy :GelfondSchneider .\n} .\n:report :proof {\n    :pow_e_pi :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :pow_e_pi :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :pow_i_i :provedBy :GelfondSchneider .\n} .\n:report :proof {\n    :pow_i_i :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :pow_i_i :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :pow_minus1_minusI :provedBy :GelfondSchneider .\n} .\n:report :proof {\n    :pow_minus1_minusI :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :pow_minus1_minusI :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :pow2sqrt2_div_2 :provedBy :TransDivAlg .\n} .\n:report :proof {\n    :pow2sqrt2_div_2 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :pow2sqrt2_div_2 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :pow2sqrt2_plus_1 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :pow2sqrt2_plus_1 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :pow2sqrt2_plus_1 :provedBy :TransPlusAlg .\n} .\n:report :proof {\n    :two_times_e :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :two_times_e :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :two_times_e :provedBy :TransTimesAlg .\n} .\n:report :proof {\n    :two_times_pi :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :two_times_pi :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :two_times_pi :provedBy :TransTimesAlg .\n} .\n:report :proof {\n    :two_times_pow2sqrt2 :provedBy :TransImpliesIrrational .\n} .\n:report :proof {\n    :two_times_pow2sqrt2 :provedBy :TransImpliesNotConstructible .\n} .\n:report :proof {\n    :two_times_pow2sqrt2 :provedBy :TransTimesAlg .\n} .\n:report :transcendental :e .\n:report :transcendental :e_div_2 .\n:report :transcendental :e_plus_1 .\n:report :transcendental :e_plus_2 .\n:report :transcendental :exp_minus_pi_over_2 .\n:report :transcendental :exp_sqrt2 .\n:report :transcendental :half_times_e .\n:report :transcendental :half_times_pi .\n:report :transcendental :pi .\n:report :transcendental :pi_div_2 .\n:report :transcendental :pi_plus_1 .\n:report :transcendental :pi_plus_sqrt2 .\n:report :transcendental :pow_2_sqrt2 .\n:report :transcendental :pow_e_pi .\n:report :transcendental :pow_i_i .\n:report :transcendental :pow_minus1_minusI .\n:report :transcendental :pow2sqrt2_div_2 .\n:report :transcendental :pow2sqrt2_plus_1 .\n:report :transcendental :two_times_e .\n:report :transcendental :two_times_pi .\n:report :transcendental :two_times_pow2sqrt2 .\n:report :unknown :pow_pi_e .\n:report :unknown :prod_e_pi .\n:report :unknown :sum_e_pi .\n" . }
+  pe:fact "transcendental-numbers-stretched.n3".

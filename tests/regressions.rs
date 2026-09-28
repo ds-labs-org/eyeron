@@ -1643,3 +1643,54 @@ fn writing_a_proof_is_linear_in_the_number_of_steps_it_explains() {
         "writing the proof took {elapsed:?}: explain_backward is indexing every fact per premise again"
     );
 }
+
+#[test]
+fn a_log_query_answer_carries_a_proof_of_its_own() {
+    // A query answer is derived too -- by the query rule, from the premises
+    // that matched. Until this was recorded, an example whose whole printed
+    // result came from a `log:query` goal had nothing to write a proof from,
+    // and seven of the packaged examples were in exactly that position.
+    let source = r#"
+        @prefix : <http://example.org/>.
+        @prefix log: <http://www.w3.org/2000/10/swap/log#>.
+
+        :a :p :b.
+        { ?s :p ?o } => { ?s :q ?o }.
+        { ?s :q ?o } log:query { ?s :answer ?o }.
+    "#;
+
+    let doc = parse_n3(source, None).unwrap();
+    let result = reason_document(&doc, &ReasonerOptions { proof: true, ..ReasonerOptions::default() });
+    let output = result_to_string(&doc.prefixes, &result.derived);
+    assert!(output.contains(":a :answer :b"), "{output}");
+
+    let proof = proof_to_n3(&doc.prefixes, &result);
+    // Both the answer and the forward step it rests on are in the proof.
+    assert!(proof.contains(":a :answer :b"), "{proof}");
+    assert!(proof.contains(":a :q :b"), "{proof}");
+}
+
+#[test]
+fn a_query_that_hands_back_its_own_premise_records_no_step() {
+    // `{ ?s ?p ?o } log:query { ?s ?p ?o }` selects a fact rather than
+    // inferring one. A step for it would say the fact holds because it
+    // holds, which is the circularity a proof checker exists to reject --
+    // and did, on kronecker.n3, relational-cube-lookup.n3 and
+    // kaprekar-6174.n3.
+    let source = r#"
+        @prefix : <http://example.org/>.
+        @prefix log: <http://www.w3.org/2000/10/swap/log#>.
+
+        :a :p :b.
+        { ?s :p ?o } => { ?s :q ?o }.
+        { ?s ?p ?o } log:query { ?s ?p ?o }.
+    "#;
+
+    let doc = parse_n3(source, None).unwrap();
+    let result = reason_document(&doc, &ReasonerOptions { proof: true, ..ReasonerOptions::default() });
+    let proof = proof_to_n3(&doc.prefixes, &result);
+
+    // The forward step is still proved; the query restating it is not a step.
+    assert!(proof.contains(":a :q :b"), "{proof}");
+    assert!(!proof.contains("log:query"), "{proof}");
+}

@@ -13,6 +13,10 @@
 :artifact :expectedExtraExactLookupsUpper 83.54029798214196 .
 :artifact :withinExactLookupBudget true .
 :artifact :deploymentDecision :AcceptForHighTrustUse .
+:result :summary ("parameter-sanity" true "index-agreement" true "transcendental" "exp(-k*n/m)" "lambda" 0.5126953125 "certified-lambda" 0.5126953125 "exp-lower" 0.5988792348 "exp-upper" 0.5988792349 "fp-lower" 0.0016708059567271017 "fp-upper" 0.0016708059596428394 "expected-extra-exact-lookups-upper" 83.54029798214196 "decision" :AcceptForHighTrustUse) .
+:result :expIntervalCertificate :CertifiedDecimalInterval .
+:result :withinFpRateBudget true .
+:result :withinExactLookupBudget true .
 
 { :artifact :parameterSanity true . }
   pe:rule 1;
@@ -268,3 +272,86 @@
 
 { :artifact :definiteNegativePolicy :ReturnAbsent . }
   pe:fact "high-trust-rdf-bloom-envelope.n3".
+
+{ :result :summary ("parameter-sanity" true "index-agreement" true "transcendental" "exp(-k*n/m)" "lambda" 0.5126953125 "certified-lambda" 0.5126953125 "exp-lower" 0.5988792348 "exp-upper" 0.5988792349 "fp-lower" 0.0016708059567271017 "fp-upper" 0.0016708059596428394 "expected-extra-exact-lookups-upper" 83.54029798214196 "decision" :AcceptForHighTrustUse) . }
+  pe:rule
+    {
+        {
+            :artifact :parameterSanity ?sanity .
+            :artifact :indexAgreement ?agreement .
+            :artifact :lambda ?lambda .
+            :artifact :certifiedLambda ?certifiedLambda .
+            :artifact :exactTranscendentalSymbol ?sym .
+            :artifact :expMinusLambdaLower ?eLo .
+            :artifact :expMinusLambdaUpper ?eHi .
+            :artifact :fpRateLower ?fpLo .
+            :artifact :fpRateUpper ?fpHi .
+            :artifact :expectedExtraExactLookupsUpper ?extraHi .
+            :artifact :deploymentDecision ?decision .
+        } => {
+            :result :summary ("parameter-sanity" ?sanity "index-agreement" ?agreement "transcendental" ?sym "lambda" ?lambda "certified-lambda" ?certifiedLambda "exp-lower" ?eLo "exp-upper" ?eHi "fp-lower" ?fpLo "fp-upper" ?fpHi "expected-extra-exact-lookups-upper" ?extraHi "decision" ?decision) .
+        } .
+    };
+  pe:binding
+    [ pe:var "agreement"; pe:value true ],
+    [ pe:var "certifiedLambda"; pe:value 0.5126953125 ],
+    [ pe:var "decision"; pe:value :AcceptForHighTrustUse ],
+    [ pe:var "eHi"; pe:value 0.5988792349 ],
+    [ pe:var "eLo"; pe:value 0.5988792348 ],
+    [ pe:var "extraHi"; pe:value 83.54029798214196 ],
+    [ pe:var "fpHi"; pe:value 0.0016708059596428394 ],
+    [ pe:var "fpLo"; pe:value 0.0016708059567271017 ],
+    [ pe:var "lambda"; pe:value 0.5126953125 ],
+    [ pe:var "sanity"; pe:value true ],
+    [ pe:var "sym"; pe:value "exp(-k*n/m)" ];
+  pe:uses
+    { :artifact :parameterSanity true . },
+    { :artifact :indexAgreement true . },
+    { :artifact :lambda 0.5126953125 . },
+    { :artifact :certifiedLambda 0.5126953125 . },
+    { :artifact :exactTranscendentalSymbol "exp(-k*n/m)" . },
+    { :artifact :expMinusLambdaLower 0.5988792348 . },
+    { :artifact :expMinusLambdaUpper 0.5988792349 . },
+    { :artifact :fpRateLower 0.0016708059567271017 . },
+    { :artifact :fpRateUpper 0.0016708059596428394 . },
+    { :artifact :expectedExtraExactLookupsUpper 83.54029798214196 . },
+    { :artifact :deploymentDecision :AcceptForHighTrustUse . }.
+
+{ :artifact :exactTranscendentalSymbol "exp(-k*n/m)" . }
+  pe:fact "high-trust-rdf-bloom-envelope.n3".
+
+{ :result :expIntervalCertificate :CertifiedDecimalInterval . }
+  pe:rule
+    {
+        {
+            :artifact :expIntervalCertificate ?v .
+        } => {
+            :result :expIntervalCertificate ?v .
+        } .
+    };
+  pe:binding [ pe:var "v"; pe:value :CertifiedDecimalInterval ];
+  pe:uses { :artifact :expIntervalCertificate :CertifiedDecimalInterval . }.
+
+{ :result :withinFpRateBudget true . }
+  pe:rule
+    {
+        {
+            :artifact :withinFpRateBudget ?v .
+        } => {
+            :result :withinFpRateBudget ?v .
+        } .
+    };
+  pe:binding [ pe:var "v"; pe:value true ];
+  pe:uses { :artifact :withinFpRateBudget true . }.
+
+{ :result :withinExactLookupBudget true . }
+  pe:rule
+    {
+        {
+            :artifact :withinExactLookupBudget ?v .
+        } => {
+            :result :withinExactLookupBudget ?v .
+        } .
+    };
+  pe:binding [ pe:var "v"; pe:value true ];
+  pe:uses { :artifact :withinExactLookupBudget true . }.

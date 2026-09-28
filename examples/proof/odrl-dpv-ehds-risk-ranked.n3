@@ -135,6 +135,15 @@ _:riskH3_fc196b9dc5c58ed6 dpv:hasRiskLevel risk:HighRisk .
 _:riskH4_cece88d41ac6b3e0 :score 80 .
 _:riskH4_cece88d41ac6b3e0 dpv:hasSeverity risk:HighSeverity .
 _:riskH4_cece88d41ac6b3e0 dpv:hasRiskLevel risk:HighRisk .
+(:AgreementEHDS1 :PatientProfileExample 0) log:outputString "# odrl-dpv-ehds-risk-ranked\n\n## Source files\n\n- [N3 rules](../odrl-dpv-ehds-risk-ranked.n3)\n\n## Ranked DPV Risk Report (EHDS-aligned)\n\n**Agreement:** EHDS Secondary Use Agreement (example)\n**Profile:** Example patient profile (EHDS rights expectations)\n\n" .
+(:AgreementEHDS1 :PatientProfileExample 1 900 "H1" 0 _:riskH1_7299718daead7eb1) log:outputString "### Clause H1 — score 100\n\n**Risk level:** `https://w3id.org/dpv/risk#HighRisk`\n**Severity:** `https://w3id.org/dpv/risk#HighSeverity`\n\nRisk: secondary use is permitted without an EHDS Data Permit safeguard. Clause H1: Hospital may provide electronic health data for secondary use based on a bilateral data use agreement with the applicant.\n\n" .
+(:AgreementEHDS1 :PatientProfileExample 1 900 "H2" 0 _:riskH2_efa7ddd6f8321a24) log:outputString "### Clause H2 — score 100\n\n**Risk level:** `https://w3id.org/dpv/risk#HighRisk`\n**Severity:** `https://w3id.org/dpv/risk#HighSeverity`\n\nRisk: secondary use may include patients who opted out (EHDS A71). Clause H2: Secondary use may include all patient records for training and evaluating health-related algorithms.\n\n" .
+(:AgreementEHDS1 :PatientProfileExample 1 912 "H3" 0 _:riskH3_fc196b9dc5c58ed6) log:outputString "### Clause H3 — score 88\n\n**Risk level:** `https://w3id.org/dpv/risk#HighRisk`\n**Severity:** `https://w3id.org/dpv/risk#HighSeverity`\n\nRisk: the agreement permits local downloads rather than processing within a secure processing environment. Clause H3: The applicant may download a complete local copy of the dataset to its own infrastructure for analysis.\n\n" .
+(:AgreementEHDS1 :PatientProfileExample 1 920 "H4" 0 _:riskH4_cece88d41ac6b3e0) log:outputString "### Clause H4 — score 80\n\n**Risk level:** `https://w3id.org/dpv/risk#HighRisk`\n**Severity:** `https://w3id.org/dpv/risk#HighSeverity`\n\nRisk: secondary-use dataset is only described as pseudonymised, without a safeguard requiring statistically anonymised data for secondary use. Clause H4: The dataset will be provided in pseudonymised form by removing direct identifiers.\n\n" .
+(:AgreementEHDS1 :PatientProfileExample 1 900 "H1" 1 _:riskH1_7299718daead7eb1 _:mH1_1_7299718daead7eb1) log:outputString "- **Mitigation for clause H1:** Require an EHDS Data Permit (eu-ehds:DataPermit) issued by a Health Data Access Body prior to secondary use.\n\n" .
+(:AgreementEHDS1 :PatientProfileExample 1 900 "H2" 1 _:riskH2_efa7ddd6f8321a24 _:mH2_1_efa7ddd6f8321a24) log:outputString "- **Mitigation for clause H2:** Add an explicit safeguard to exclude records of persons who exercised the EHDS opt-out from secondary use (A71).\n\n" .
+(:AgreementEHDS1 :PatientProfileExample 1 912 "H3" 1 _:riskH3_fc196b9dc5c58ed6 _:mH3_1_fc196b9dc5c58ed6) log:outputString "- **Mitigation for clause H3:** Require processing only within a secure processing environment (e.g., eu-dga:SecureProcessingEnvironment), and prohibit local downloads of raw datasets.\n\n" .
+(:AgreementEHDS1 :PatientProfileExample 1 920 "H4" 1 _:riskH4_cece88d41ac6b3e0 _:mH4_1_cece88d41ac6b3e0) log:outputString "- **Mitigation for clause H4:** Require an EHDS Health Data Request for statistically anonymised data (eu-ehds:HealthDataRequest), and add a constraint that secondary-use data must be statistically anonymised.\n\n" .
 
 { _:srcH1_7299718daead7eb1 a risk:RiskSource . }
   pe:rule 1;
@@ -17940,3 +17949,357 @@ _:riskH4_cece88d41ac6b3e0 dpv:hasRiskLevel risk:HighRisk .
     { _:riskH4_cece88d41ac6b3e0 a dpv:Risk . },
     { _:riskH4_cece88d41ac6b3e0 :score 80 . },
     { 80 math:greaterThan 79 . }.
+
+{ (:AgreementEHDS1 :PatientProfileExample 0) log:outputString "# odrl-dpv-ehds-risk-ranked\n\n## Source files\n\n- [N3 rules](../odrl-dpv-ehds-risk-ranked.n3)\n\n## Ranked DPV Risk Report (EHDS-aligned)\n\n**Agreement:** EHDS Secondary Use Agreement (example)\n**Profile:** Example patient profile (EHDS rights expectations)\n\n" . }
+  pe:rule
+    {
+        {
+            :AgreementEHDS1 dct:title ?alabel .
+            :PatientProfileExample dct:title ?plabel .
+            ("# odrl-dpv-ehds-risk-ranked\n\n## Source files\n\n- [N3 rules](../odrl-dpv-ehds-risk-ranked.n3)\n\n## Ranked DPV Risk Report (EHDS-aligned)\n\n**Agreement:** %s\n**Profile:** %s\n\n" ?alabel ?plabel) string:format ?hdr .
+        } => {
+            (:AgreementEHDS1 :PatientProfileExample 0) log:outputString ?hdr .
+        } .
+    };
+  pe:binding
+    [ pe:var "alabel"; pe:value "EHDS Secondary Use Agreement (example)" ],
+    [ pe:var "hdr"; pe:value "# odrl-dpv-ehds-risk-ranked\n\n## Source files\n\n- [N3 rules](../odrl-dpv-ehds-risk-ranked.n3)\n\n## Ranked DPV Risk Report (EHDS-aligned)\n\n**Agreement:** EHDS Secondary Use Agreement (example)\n**Profile:** Example patient profile (EHDS rights expectations)\n\n" ],
+    [ pe:var "plabel"; pe:value "Example patient profile (EHDS rights expectations)" ];
+  pe:uses
+    { :AgreementEHDS1 dct:title "EHDS Secondary Use Agreement (example)" . },
+    { :PatientProfileExample dct:title "Example patient profile (EHDS rights expectations)" . },
+    { ("# odrl-dpv-ehds-risk-ranked\n\n## Source files\n\n- [N3 rules](../odrl-dpv-ehds-risk-ranked.n3)\n\n## Ranked DPV Risk Report (EHDS-aligned)\n\n**Agreement:** %s\n**Profile:** %s\n\n" "EHDS Secondary Use Agreement (example)" "Example patient profile (EHDS rights expectations)") string:format "# odrl-dpv-ehds-risk-ranked\n\n## Source files\n\n- [N3 rules](../odrl-dpv-ehds-risk-ranked.n3)\n\n## Ranked DPV Risk Report (EHDS-aligned)\n\n**Agreement:** EHDS Secondary Use Agreement (example)\n**Profile:** Example patient profile (EHDS rights expectations)\n\n" . }.
+
+{ :AgreementEHDS1 dct:title "EHDS Secondary Use Agreement (example)" . }
+  pe:fact "odrl-dpv-ehds-risk-ranked.n3".
+
+{ :PatientProfileExample dct:title "Example patient profile (EHDS rights expectations)" . }
+  pe:fact "odrl-dpv-ehds-risk-ranked.n3".
+
+{ ("# odrl-dpv-ehds-risk-ranked\n\n## Source files\n\n- [N3 rules](../odrl-dpv-ehds-risk-ranked.n3)\n\n## Ranked DPV Risk Report (EHDS-aligned)\n\n**Agreement:** %s\n**Profile:** %s\n\n" "EHDS Secondary Use Agreement (example)" "Example patient profile (EHDS rights expectations)") string:format "# odrl-dpv-ehds-risk-ranked\n\n## Source files\n\n- [N3 rules](../odrl-dpv-ehds-risk-ranked.n3)\n\n## Ranked DPV Risk Report (EHDS-aligned)\n\n**Agreement:** EHDS Secondary Use Agreement (example)\n**Profile:** Example patient profile (EHDS rights expectations)\n\n" . }
+  pe:builtin string:format.
+
+{ (:AgreementEHDS1 :PatientProfileExample 1 900 "H1" 0 _:riskH1_7299718daead7eb1) log:outputString "### Clause H1 — score 100\n\n**Risk level:** `https://w3id.org/dpv/risk#HighRisk`\n**Severity:** `https://w3id.org/dpv/risk#HighSeverity`\n\nRisk: secondary use is permitted without an EHDS Data Permit safeguard. Clause H1: Hospital may provide electronic health data for secondary use based on a bilateral data use agreement with the applicant.\n\n" . }
+  pe:rule
+    {
+        {
+            ?r a dpv:Risk .
+            ?r :score ?score .
+            ?r dpv:hasRiskLevel ?lvl .
+            ?r dpv:hasSeverity ?sev .
+            ?r :aboutClause ?clause .
+            ?r dct:description ?why .
+            ?clause :clauseId ?cid .
+            (1000 ?score) math:difference ?inv .
+            ("### Clause %s — score %s\n\n**Risk level:** `%s`\n**Severity:** `%s`\n\n%s\n\n" ?cid ?score ?lvl ?sev ?why) string:format ?line .
+        } => {
+            (:AgreementEHDS1 :PatientProfileExample 1 ?inv ?cid 0 ?r) log:outputString ?line .
+        } .
+    };
+  pe:binding
+    [ pe:var "cid"; pe:value "H1" ],
+    [ pe:var "clause"; pe:value :ClauseH1 ],
+    [ pe:var "inv"; pe:value 900 ],
+    [ pe:var "line"; pe:value "### Clause H1 — score 100\n\n**Risk level:** `https://w3id.org/dpv/risk#HighRisk`\n**Severity:** `https://w3id.org/dpv/risk#HighSeverity`\n\nRisk: secondary use is permitted without an EHDS Data Permit safeguard. Clause H1: Hospital may provide electronic health data for secondary use based on a bilateral data use agreement with the applicant.\n\n" ],
+    [ pe:var "lvl"; pe:value risk:HighRisk ],
+    [ pe:var "r"; pe:value _:riskH1_7299718daead7eb1 ],
+    [ pe:var "score"; pe:value 100 ],
+    [ pe:var "sev"; pe:value risk:HighSeverity ],
+    [ pe:var "why"; pe:value "Risk: secondary use is permitted without an EHDS Data Permit safeguard. Clause H1: Hospital may provide electronic health data for secondary use based on a bilateral data use agreement with the applicant." ];
+  pe:uses
+    { _:riskH1_7299718daead7eb1 a dpv:Risk . },
+    { _:riskH1_7299718daead7eb1 :score 100 . },
+    { _:riskH1_7299718daead7eb1 dpv:hasRiskLevel risk:HighRisk . },
+    { _:riskH1_7299718daead7eb1 dpv:hasSeverity risk:HighSeverity . },
+    { _:riskH1_7299718daead7eb1 :aboutClause :ClauseH1 . },
+    { _:riskH1_7299718daead7eb1 dct:description "Risk: secondary use is permitted without an EHDS Data Permit safeguard. Clause H1: Hospital may provide electronic health data for secondary use based on a bilateral data use agreement with the applicant." . },
+    { :ClauseH1 :clauseId "H1" . },
+    { (1000 100) math:difference 900 . },
+    { ("### Clause %s — score %s\n\n**Risk level:** `%s`\n**Severity:** `%s`\n\n%s\n\n" "H1" 100 risk:HighRisk risk:HighSeverity "Risk: secondary use is permitted without an EHDS Data Permit safeguard. Clause H1: Hospital may provide electronic health data for secondary use based on a bilateral data use agreement with the applicant.") string:format "### Clause H1 — score 100\n\n**Risk level:** `https://w3id.org/dpv/risk#HighRisk`\n**Severity:** `https://w3id.org/dpv/risk#HighSeverity`\n\nRisk: secondary use is permitted without an EHDS Data Permit safeguard. Clause H1: Hospital may provide electronic health data for secondary use based on a bilateral data use agreement with the applicant.\n\n" . }.
+
+{ (1000 100) math:difference 900 . }
+  pe:builtin math:difference.
+
+{ ("### Clause %s — score %s\n\n**Risk level:** `%s`\n**Severity:** `%s`\n\n%s\n\n" "H1" 100 risk:HighRisk risk:HighSeverity "Risk: secondary use is permitted without an EHDS Data Permit safeguard. Clause H1: Hospital may provide electronic health data for secondary use based on a bilateral data use agreement with the applicant.") string:format "### Clause H1 — score 100\n\n**Risk level:** `https://w3id.org/dpv/risk#HighRisk`\n**Severity:** `https://w3id.org/dpv/risk#HighSeverity`\n\nRisk: secondary use is permitted without an EHDS Data Permit safeguard. Clause H1: Hospital may provide electronic health data for secondary use based on a bilateral data use agreement with the applicant.\n\n" . }
+  pe:builtin string:format.
+
+{ (:AgreementEHDS1 :PatientProfileExample 1 900 "H2" 0 _:riskH2_efa7ddd6f8321a24) log:outputString "### Clause H2 — score 100\n\n**Risk level:** `https://w3id.org/dpv/risk#HighRisk`\n**Severity:** `https://w3id.org/dpv/risk#HighSeverity`\n\nRisk: secondary use may include patients who opted out (EHDS A71). Clause H2: Secondary use may include all patient records for training and evaluating health-related algorithms.\n\n" . }
+  pe:rule
+    {
+        {
+            ?r a dpv:Risk .
+            ?r :score ?score .
+            ?r dpv:hasRiskLevel ?lvl .
+            ?r dpv:hasSeverity ?sev .
+            ?r :aboutClause ?clause .
+            ?r dct:description ?why .
+            ?clause :clauseId ?cid .
+            (1000 ?score) math:difference ?inv .
+            ("### Clause %s — score %s\n\n**Risk level:** `%s`\n**Severity:** `%s`\n\n%s\n\n" ?cid ?score ?lvl ?sev ?why) string:format ?line .
+        } => {
+            (:AgreementEHDS1 :PatientProfileExample 1 ?inv ?cid 0 ?r) log:outputString ?line .
+        } .
+    };
+  pe:binding
+    [ pe:var "cid"; pe:value "H2" ],
+    [ pe:var "clause"; pe:value :ClauseH2 ],
+    [ pe:var "inv"; pe:value 900 ],
+    [ pe:var "line"; pe:value "### Clause H2 — score 100\n\n**Risk level:** `https://w3id.org/dpv/risk#HighRisk`\n**Severity:** `https://w3id.org/dpv/risk#HighSeverity`\n\nRisk: secondary use may include patients who opted out (EHDS A71). Clause H2: Secondary use may include all patient records for training and evaluating health-related algorithms.\n\n" ],
+    [ pe:var "lvl"; pe:value risk:HighRisk ],
+    [ pe:var "r"; pe:value _:riskH2_efa7ddd6f8321a24 ],
+    [ pe:var "score"; pe:value 100 ],
+    [ pe:var "sev"; pe:value risk:HighSeverity ],
+    [ pe:var "why"; pe:value "Risk: secondary use may include patients who opted out (EHDS A71). Clause H2: Secondary use may include all patient records for training and evaluating health-related algorithms." ];
+  pe:uses
+    { _:riskH2_efa7ddd6f8321a24 a dpv:Risk . },
+    { _:riskH2_efa7ddd6f8321a24 :score 100 . },
+    { _:riskH2_efa7ddd6f8321a24 dpv:hasRiskLevel risk:HighRisk . },
+    { _:riskH2_efa7ddd6f8321a24 dpv:hasSeverity risk:HighSeverity . },
+    { _:riskH2_efa7ddd6f8321a24 :aboutClause :ClauseH2 . },
+    { _:riskH2_efa7ddd6f8321a24 dct:description "Risk: secondary use may include patients who opted out (EHDS A71). Clause H2: Secondary use may include all patient records for training and evaluating health-related algorithms." . },
+    { :ClauseH2 :clauseId "H2" . },
+    { (1000 100) math:difference 900 . },
+    { ("### Clause %s — score %s\n\n**Risk level:** `%s`\n**Severity:** `%s`\n\n%s\n\n" "H2" 100 risk:HighRisk risk:HighSeverity "Risk: secondary use may include patients who opted out (EHDS A71). Clause H2: Secondary use may include all patient records for training and evaluating health-related algorithms.") string:format "### Clause H2 — score 100\n\n**Risk level:** `https://w3id.org/dpv/risk#HighRisk`\n**Severity:** `https://w3id.org/dpv/risk#HighSeverity`\n\nRisk: secondary use may include patients who opted out (EHDS A71). Clause H2: Secondary use may include all patient records for training and evaluating health-related algorithms.\n\n" . }.
+
+{ ("### Clause %s — score %s\n\n**Risk level:** `%s`\n**Severity:** `%s`\n\n%s\n\n" "H2" 100 risk:HighRisk risk:HighSeverity "Risk: secondary use may include patients who opted out (EHDS A71). Clause H2: Secondary use may include all patient records for training and evaluating health-related algorithms.") string:format "### Clause H2 — score 100\n\n**Risk level:** `https://w3id.org/dpv/risk#HighRisk`\n**Severity:** `https://w3id.org/dpv/risk#HighSeverity`\n\nRisk: secondary use may include patients who opted out (EHDS A71). Clause H2: Secondary use may include all patient records for training and evaluating health-related algorithms.\n\n" . }
+  pe:builtin string:format.
+
+{ (:AgreementEHDS1 :PatientProfileExample 1 912 "H3" 0 _:riskH3_fc196b9dc5c58ed6) log:outputString "### Clause H3 — score 88\n\n**Risk level:** `https://w3id.org/dpv/risk#HighRisk`\n**Severity:** `https://w3id.org/dpv/risk#HighSeverity`\n\nRisk: the agreement permits local downloads rather than processing within a secure processing environment. Clause H3: The applicant may download a complete local copy of the dataset to its own infrastructure for analysis.\n\n" . }
+  pe:rule
+    {
+        {
+            ?r a dpv:Risk .
+            ?r :score ?score .
+            ?r dpv:hasRiskLevel ?lvl .
+            ?r dpv:hasSeverity ?sev .
+            ?r :aboutClause ?clause .
+            ?r dct:description ?why .
+            ?clause :clauseId ?cid .
+            (1000 ?score) math:difference ?inv .
+            ("### Clause %s — score %s\n\n**Risk level:** `%s`\n**Severity:** `%s`\n\n%s\n\n" ?cid ?score ?lvl ?sev ?why) string:format ?line .
+        } => {
+            (:AgreementEHDS1 :PatientProfileExample 1 ?inv ?cid 0 ?r) log:outputString ?line .
+        } .
+    };
+  pe:binding
+    [ pe:var "cid"; pe:value "H3" ],
+    [ pe:var "clause"; pe:value :ClauseH3 ],
+    [ pe:var "inv"; pe:value 912 ],
+    [ pe:var "line"; pe:value "### Clause H3 — score 88\n\n**Risk level:** `https://w3id.org/dpv/risk#HighRisk`\n**Severity:** `https://w3id.org/dpv/risk#HighSeverity`\n\nRisk: the agreement permits local downloads rather than processing within a secure processing environment. Clause H3: The applicant may download a complete local copy of the dataset to its own infrastructure for analysis.\n\n" ],
+    [ pe:var "lvl"; pe:value risk:HighRisk ],
+    [ pe:var "r"; pe:value _:riskH3_fc196b9dc5c58ed6 ],
+    [ pe:var "score"; pe:value 88 ],
+    [ pe:var "sev"; pe:value risk:HighSeverity ],
+    [ pe:var "why"; pe:value "Risk: the agreement permits local downloads rather than processing within a secure processing environment. Clause H3: The applicant may download a complete local copy of the dataset to its own infrastructure for analysis." ];
+  pe:uses
+    { _:riskH3_fc196b9dc5c58ed6 a dpv:Risk . },
+    { _:riskH3_fc196b9dc5c58ed6 :score 88 . },
+    { _:riskH3_fc196b9dc5c58ed6 dpv:hasRiskLevel risk:HighRisk . },
+    { _:riskH3_fc196b9dc5c58ed6 dpv:hasSeverity risk:HighSeverity . },
+    { _:riskH3_fc196b9dc5c58ed6 :aboutClause :ClauseH3 . },
+    { _:riskH3_fc196b9dc5c58ed6 dct:description "Risk: the agreement permits local downloads rather than processing within a secure processing environment. Clause H3: The applicant may download a complete local copy of the dataset to its own infrastructure for analysis." . },
+    { :ClauseH3 :clauseId "H3" . },
+    { (1000 88) math:difference 912 . },
+    { ("### Clause %s — score %s\n\n**Risk level:** `%s`\n**Severity:** `%s`\n\n%s\n\n" "H3" 88 risk:HighRisk risk:HighSeverity "Risk: the agreement permits local downloads rather than processing within a secure processing environment. Clause H3: The applicant may download a complete local copy of the dataset to its own infrastructure for analysis.") string:format "### Clause H3 — score 88\n\n**Risk level:** `https://w3id.org/dpv/risk#HighRisk`\n**Severity:** `https://w3id.org/dpv/risk#HighSeverity`\n\nRisk: the agreement permits local downloads rather than processing within a secure processing environment. Clause H3: The applicant may download a complete local copy of the dataset to its own infrastructure for analysis.\n\n" . }.
+
+{ (1000 88) math:difference 912 . }
+  pe:builtin math:difference.
+
+{ ("### Clause %s — score %s\n\n**Risk level:** `%s`\n**Severity:** `%s`\n\n%s\n\n" "H3" 88 risk:HighRisk risk:HighSeverity "Risk: the agreement permits local downloads rather than processing within a secure processing environment. Clause H3: The applicant may download a complete local copy of the dataset to its own infrastructure for analysis.") string:format "### Clause H3 — score 88\n\n**Risk level:** `https://w3id.org/dpv/risk#HighRisk`\n**Severity:** `https://w3id.org/dpv/risk#HighSeverity`\n\nRisk: the agreement permits local downloads rather than processing within a secure processing environment. Clause H3: The applicant may download a complete local copy of the dataset to its own infrastructure for analysis.\n\n" . }
+  pe:builtin string:format.
+
+{ (:AgreementEHDS1 :PatientProfileExample 1 920 "H4" 0 _:riskH4_cece88d41ac6b3e0) log:outputString "### Clause H4 — score 80\n\n**Risk level:** `https://w3id.org/dpv/risk#HighRisk`\n**Severity:** `https://w3id.org/dpv/risk#HighSeverity`\n\nRisk: secondary-use dataset is only described as pseudonymised, without a safeguard requiring statistically anonymised data for secondary use. Clause H4: The dataset will be provided in pseudonymised form by removing direct identifiers.\n\n" . }
+  pe:rule
+    {
+        {
+            ?r a dpv:Risk .
+            ?r :score ?score .
+            ?r dpv:hasRiskLevel ?lvl .
+            ?r dpv:hasSeverity ?sev .
+            ?r :aboutClause ?clause .
+            ?r dct:description ?why .
+            ?clause :clauseId ?cid .
+            (1000 ?score) math:difference ?inv .
+            ("### Clause %s — score %s\n\n**Risk level:** `%s`\n**Severity:** `%s`\n\n%s\n\n" ?cid ?score ?lvl ?sev ?why) string:format ?line .
+        } => {
+            (:AgreementEHDS1 :PatientProfileExample 1 ?inv ?cid 0 ?r) log:outputString ?line .
+        } .
+    };
+  pe:binding
+    [ pe:var "cid"; pe:value "H4" ],
+    [ pe:var "clause"; pe:value :ClauseH4 ],
+    [ pe:var "inv"; pe:value 920 ],
+    [ pe:var "line"; pe:value "### Clause H4 — score 80\n\n**Risk level:** `https://w3id.org/dpv/risk#HighRisk`\n**Severity:** `https://w3id.org/dpv/risk#HighSeverity`\n\nRisk: secondary-use dataset is only described as pseudonymised, without a safeguard requiring statistically anonymised data for secondary use. Clause H4: The dataset will be provided in pseudonymised form by removing direct identifiers.\n\n" ],
+    [ pe:var "lvl"; pe:value risk:HighRisk ],
+    [ pe:var "r"; pe:value _:riskH4_cece88d41ac6b3e0 ],
+    [ pe:var "score"; pe:value 80 ],
+    [ pe:var "sev"; pe:value risk:HighSeverity ],
+    [ pe:var "why"; pe:value "Risk: secondary-use dataset is only described as pseudonymised, without a safeguard requiring statistically anonymised data for secondary use. Clause H4: The dataset will be provided in pseudonymised form by removing direct identifiers." ];
+  pe:uses
+    { _:riskH4_cece88d41ac6b3e0 a dpv:Risk . },
+    { _:riskH4_cece88d41ac6b3e0 :score 80 . },
+    { _:riskH4_cece88d41ac6b3e0 dpv:hasRiskLevel risk:HighRisk . },
+    { _:riskH4_cece88d41ac6b3e0 dpv:hasSeverity risk:HighSeverity . },
+    { _:riskH4_cece88d41ac6b3e0 :aboutClause :ClauseH4 . },
+    { _:riskH4_cece88d41ac6b3e0 dct:description "Risk: secondary-use dataset is only described as pseudonymised, without a safeguard requiring statistically anonymised data for secondary use. Clause H4: The dataset will be provided in pseudonymised form by removing direct identifiers." . },
+    { :ClauseH4 :clauseId "H4" . },
+    { (1000 80) math:difference 920 . },
+    { ("### Clause %s — score %s\n\n**Risk level:** `%s`\n**Severity:** `%s`\n\n%s\n\n" "H4" 80 risk:HighRisk risk:HighSeverity "Risk: secondary-use dataset is only described as pseudonymised, without a safeguard requiring statistically anonymised data for secondary use. Clause H4: The dataset will be provided in pseudonymised form by removing direct identifiers.") string:format "### Clause H4 — score 80\n\n**Risk level:** `https://w3id.org/dpv/risk#HighRisk`\n**Severity:** `https://w3id.org/dpv/risk#HighSeverity`\n\nRisk: secondary-use dataset is only described as pseudonymised, without a safeguard requiring statistically anonymised data for secondary use. Clause H4: The dataset will be provided in pseudonymised form by removing direct identifiers.\n\n" . }.
+
+{ (1000 80) math:difference 920 . }
+  pe:builtin math:difference.
+
+{ ("### Clause %s — score %s\n\n**Risk level:** `%s`\n**Severity:** `%s`\n\n%s\n\n" "H4" 80 risk:HighRisk risk:HighSeverity "Risk: secondary-use dataset is only described as pseudonymised, without a safeguard requiring statistically anonymised data for secondary use. Clause H4: The dataset will be provided in pseudonymised form by removing direct identifiers.") string:format "### Clause H4 — score 80\n\n**Risk level:** `https://w3id.org/dpv/risk#HighRisk`\n**Severity:** `https://w3id.org/dpv/risk#HighSeverity`\n\nRisk: secondary-use dataset is only described as pseudonymised, without a safeguard requiring statistically anonymised data for secondary use. Clause H4: The dataset will be provided in pseudonymised form by removing direct identifiers.\n\n" . }
+  pe:builtin string:format.
+
+{ (:AgreementEHDS1 :PatientProfileExample 1 900 "H1" 1 _:riskH1_7299718daead7eb1 _:mH1_1_7299718daead7eb1) log:outputString "- **Mitigation for clause H1:** Require an EHDS Data Permit (eu-ehds:DataPermit) issued by a Health Data Access Body prior to secondary use.\n\n" . }
+  pe:rule
+    {
+        {
+            ?r a dpv:Risk .
+            ?r :score ?score .
+            ?r dpv:isMitigatedByMeasure ?m .
+            ?r :aboutClause ?clause .
+            ?clause :clauseId ?cid .
+            ?m dct:description ?md .
+            (1000 ?score) math:difference ?inv .
+            ("- **Mitigation for clause %s:** %s\n\n" ?cid ?md) string:format ?mline .
+        } => {
+            (:AgreementEHDS1 :PatientProfileExample 1 ?inv ?cid 1 ?r ?m) log:outputString ?mline .
+        } .
+    };
+  pe:binding
+    [ pe:var "cid"; pe:value "H1" ],
+    [ pe:var "clause"; pe:value :ClauseH1 ],
+    [ pe:var "inv"; pe:value 900 ],
+    [ pe:var "m"; pe:value _:mH1_1_7299718daead7eb1 ],
+    [ pe:var "md"; pe:value "Require an EHDS Data Permit (eu-ehds:DataPermit) issued by a Health Data Access Body prior to secondary use." ],
+    [ pe:var "mline"; pe:value "- **Mitigation for clause H1:** Require an EHDS Data Permit (eu-ehds:DataPermit) issued by a Health Data Access Body prior to secondary use.\n\n" ],
+    [ pe:var "r"; pe:value _:riskH1_7299718daead7eb1 ],
+    [ pe:var "score"; pe:value 100 ];
+  pe:uses
+    { _:riskH1_7299718daead7eb1 a dpv:Risk . },
+    { _:riskH1_7299718daead7eb1 :score 100 . },
+    { _:riskH1_7299718daead7eb1 dpv:isMitigatedByMeasure _:mH1_1_7299718daead7eb1 . },
+    { _:riskH1_7299718daead7eb1 :aboutClause :ClauseH1 . },
+    { :ClauseH1 :clauseId "H1" . },
+    { _:mH1_1_7299718daead7eb1 dct:description "Require an EHDS Data Permit (eu-ehds:DataPermit) issued by a Health Data Access Body prior to secondary use." . },
+    { (1000 100) math:difference 900 . },
+    { ("- **Mitigation for clause %s:** %s\n\n" "H1" "Require an EHDS Data Permit (eu-ehds:DataPermit) issued by a Health Data Access Body prior to secondary use.") string:format "- **Mitigation for clause H1:** Require an EHDS Data Permit (eu-ehds:DataPermit) issued by a Health Data Access Body prior to secondary use.\n\n" . }.
+
+{ ("- **Mitigation for clause %s:** %s\n\n" "H1" "Require an EHDS Data Permit (eu-ehds:DataPermit) issued by a Health Data Access Body prior to secondary use.") string:format "- **Mitigation for clause H1:** Require an EHDS Data Permit (eu-ehds:DataPermit) issued by a Health Data Access Body prior to secondary use.\n\n" . }
+  pe:builtin string:format.
+
+{ (:AgreementEHDS1 :PatientProfileExample 1 900 "H2" 1 _:riskH2_efa7ddd6f8321a24 _:mH2_1_efa7ddd6f8321a24) log:outputString "- **Mitigation for clause H2:** Add an explicit safeguard to exclude records of persons who exercised the EHDS opt-out from secondary use (A71).\n\n" . }
+  pe:rule
+    {
+        {
+            ?r a dpv:Risk .
+            ?r :score ?score .
+            ?r dpv:isMitigatedByMeasure ?m .
+            ?r :aboutClause ?clause .
+            ?clause :clauseId ?cid .
+            ?m dct:description ?md .
+            (1000 ?score) math:difference ?inv .
+            ("- **Mitigation for clause %s:** %s\n\n" ?cid ?md) string:format ?mline .
+        } => {
+            (:AgreementEHDS1 :PatientProfileExample 1 ?inv ?cid 1 ?r ?m) log:outputString ?mline .
+        } .
+    };
+  pe:binding
+    [ pe:var "cid"; pe:value "H2" ],
+    [ pe:var "clause"; pe:value :ClauseH2 ],
+    [ pe:var "inv"; pe:value 900 ],
+    [ pe:var "m"; pe:value _:mH2_1_efa7ddd6f8321a24 ],
+    [ pe:var "md"; pe:value "Add an explicit safeguard to exclude records of persons who exercised the EHDS opt-out from secondary use (A71)." ],
+    [ pe:var "mline"; pe:value "- **Mitigation for clause H2:** Add an explicit safeguard to exclude records of persons who exercised the EHDS opt-out from secondary use (A71).\n\n" ],
+    [ pe:var "r"; pe:value _:riskH2_efa7ddd6f8321a24 ],
+    [ pe:var "score"; pe:value 100 ];
+  pe:uses
+    { _:riskH2_efa7ddd6f8321a24 a dpv:Risk . },
+    { _:riskH2_efa7ddd6f8321a24 :score 100 . },
+    { _:riskH2_efa7ddd6f8321a24 dpv:isMitigatedByMeasure _:mH2_1_efa7ddd6f8321a24 . },
+    { _:riskH2_efa7ddd6f8321a24 :aboutClause :ClauseH2 . },
+    { :ClauseH2 :clauseId "H2" . },
+    { _:mH2_1_efa7ddd6f8321a24 dct:description "Add an explicit safeguard to exclude records of persons who exercised the EHDS opt-out from secondary use (A71)." . },
+    { (1000 100) math:difference 900 . },
+    { ("- **Mitigation for clause %s:** %s\n\n" "H2" "Add an explicit safeguard to exclude records of persons who exercised the EHDS opt-out from secondary use (A71).") string:format "- **Mitigation for clause H2:** Add an explicit safeguard to exclude records of persons who exercised the EHDS opt-out from secondary use (A71).\n\n" . }.
+
+{ ("- **Mitigation for clause %s:** %s\n\n" "H2" "Add an explicit safeguard to exclude records of persons who exercised the EHDS opt-out from secondary use (A71).") string:format "- **Mitigation for clause H2:** Add an explicit safeguard to exclude records of persons who exercised the EHDS opt-out from secondary use (A71).\n\n" . }
+  pe:builtin string:format.
+
+{ (:AgreementEHDS1 :PatientProfileExample 1 912 "H3" 1 _:riskH3_fc196b9dc5c58ed6 _:mH3_1_fc196b9dc5c58ed6) log:outputString "- **Mitigation for clause H3:** Require processing only within a secure processing environment (e.g., eu-dga:SecureProcessingEnvironment), and prohibit local downloads of raw datasets.\n\n" . }
+  pe:rule
+    {
+        {
+            ?r a dpv:Risk .
+            ?r :score ?score .
+            ?r dpv:isMitigatedByMeasure ?m .
+            ?r :aboutClause ?clause .
+            ?clause :clauseId ?cid .
+            ?m dct:description ?md .
+            (1000 ?score) math:difference ?inv .
+            ("- **Mitigation for clause %s:** %s\n\n" ?cid ?md) string:format ?mline .
+        } => {
+            (:AgreementEHDS1 :PatientProfileExample 1 ?inv ?cid 1 ?r ?m) log:outputString ?mline .
+        } .
+    };
+  pe:binding
+    [ pe:var "cid"; pe:value "H3" ],
+    [ pe:var "clause"; pe:value :ClauseH3 ],
+    [ pe:var "inv"; pe:value 912 ],
+    [ pe:var "m"; pe:value _:mH3_1_fc196b9dc5c58ed6 ],
+    [ pe:var "md"; pe:value "Require processing only within a secure processing environment (e.g., eu-dga:SecureProcessingEnvironment), and prohibit local downloads of raw datasets." ],
+    [ pe:var "mline"; pe:value "- **Mitigation for clause H3:** Require processing only within a secure processing environment (e.g., eu-dga:SecureProcessingEnvironment), and prohibit local downloads of raw datasets.\n\n" ],
+    [ pe:var "r"; pe:value _:riskH3_fc196b9dc5c58ed6 ],
+    [ pe:var "score"; pe:value 88 ];
+  pe:uses
+    { _:riskH3_fc196b9dc5c58ed6 a dpv:Risk . },
+    { _:riskH3_fc196b9dc5c58ed6 :score 88 . },
+    { _:riskH3_fc196b9dc5c58ed6 dpv:isMitigatedByMeasure _:mH3_1_fc196b9dc5c58ed6 . },
+    { _:riskH3_fc196b9dc5c58ed6 :aboutClause :ClauseH3 . },
+    { :ClauseH3 :clauseId "H3" . },
+    { _:mH3_1_fc196b9dc5c58ed6 dct:description "Require processing only within a secure processing environment (e.g., eu-dga:SecureProcessingEnvironment), and prohibit local downloads of raw datasets." . },
+    { (1000 88) math:difference 912 . },
+    { ("- **Mitigation for clause %s:** %s\n\n" "H3" "Require processing only within a secure processing environment (e.g., eu-dga:SecureProcessingEnvironment), and prohibit local downloads of raw datasets.") string:format "- **Mitigation for clause H3:** Require processing only within a secure processing environment (e.g., eu-dga:SecureProcessingEnvironment), and prohibit local downloads of raw datasets.\n\n" . }.
+
+{ ("- **Mitigation for clause %s:** %s\n\n" "H3" "Require processing only within a secure processing environment (e.g., eu-dga:SecureProcessingEnvironment), and prohibit local downloads of raw datasets.") string:format "- **Mitigation for clause H3:** Require processing only within a secure processing environment (e.g., eu-dga:SecureProcessingEnvironment), and prohibit local downloads of raw datasets.\n\n" . }
+  pe:builtin string:format.
+
+{ (:AgreementEHDS1 :PatientProfileExample 1 920 "H4" 1 _:riskH4_cece88d41ac6b3e0 _:mH4_1_cece88d41ac6b3e0) log:outputString "- **Mitigation for clause H4:** Require an EHDS Health Data Request for statistically anonymised data (eu-ehds:HealthDataRequest), and add a constraint that secondary-use data must be statistically anonymised.\n\n" . }
+  pe:rule
+    {
+        {
+            ?r a dpv:Risk .
+            ?r :score ?score .
+            ?r dpv:isMitigatedByMeasure ?m .
+            ?r :aboutClause ?clause .
+            ?clause :clauseId ?cid .
+            ?m dct:description ?md .
+            (1000 ?score) math:difference ?inv .
+            ("- **Mitigation for clause %s:** %s\n\n" ?cid ?md) string:format ?mline .
+        } => {
+            (:AgreementEHDS1 :PatientProfileExample 1 ?inv ?cid 1 ?r ?m) log:outputString ?mline .
+        } .
+    };
+  pe:binding
+    [ pe:var "cid"; pe:value "H4" ],
+    [ pe:var "clause"; pe:value :ClauseH4 ],
+    [ pe:var "inv"; pe:value 920 ],
+    [ pe:var "m"; pe:value _:mH4_1_cece88d41ac6b3e0 ],
+    [ pe:var "md"; pe:value "Require an EHDS Health Data Request for statistically anonymised data (eu-ehds:HealthDataRequest), and add a constraint that secondary-use data must be statistically anonymised." ],
+    [ pe:var "mline"; pe:value "- **Mitigation for clause H4:** Require an EHDS Health Data Request for statistically anonymised data (eu-ehds:HealthDataRequest), and add a constraint that secondary-use data must be statistically anonymised.\n\n" ],
+    [ pe:var "r"; pe:value _:riskH4_cece88d41ac6b3e0 ],
+    [ pe:var "score"; pe:value 80 ];
+  pe:uses
+    { _:riskH4_cece88d41ac6b3e0 a dpv:Risk . },
+    { _:riskH4_cece88d41ac6b3e0 :score 80 . },
+    { _:riskH4_cece88d41ac6b3e0 dpv:isMitigatedByMeasure _:mH4_1_cece88d41ac6b3e0 . },
+    { _:riskH4_cece88d41ac6b3e0 :aboutClause :ClauseH4 . },
+    { :ClauseH4 :clauseId "H4" . },
+    { _:mH4_1_cece88d41ac6b3e0 dct:description "Require an EHDS Health Data Request for statistically anonymised data (eu-ehds:HealthDataRequest), and add a constraint that secondary-use data must be statistically anonymised." . },
+    { (1000 80) math:difference 920 . },
+    { ("- **Mitigation for clause %s:** %s\n\n" "H4" "Require an EHDS Health Data Request for statistically anonymised data (eu-ehds:HealthDataRequest), and add a constraint that secondary-use data must be statistically anonymised.") string:format "- **Mitigation for clause H4:** Require an EHDS Health Data Request for statistically anonymised data (eu-ehds:HealthDataRequest), and add a constraint that secondary-use data must be statistically anonymised.\n\n" . }.
+
+{ ("- **Mitigation for clause %s:** %s\n\n" "H4" "Require an EHDS Health Data Request for statistically anonymised data (eu-ehds:HealthDataRequest), and add a constraint that secondary-use data must be statistically anonymised.") string:format "- **Mitigation for clause H4:** Require an EHDS Health Data Request for statistically anonymised data (eu-ehds:HealthDataRequest), and add a constraint that secondary-use data must be statistically anonymised.\n\n" . }
+  pe:builtin string:format.

@@ -114,6 +114,96 @@
 :e :nested (12 true) .
 :e :guaranteeWidthLe2PowNegN (11 true) .
 :e :guaranteeWidthLe2PowNegN (12 true) .
+:result :requestN 0 .
+:result :chosenM 6 .
+:result :interval (0 2.7180555555555554 2.718287037037037) .
+:result :width (0 0.0002314814814814815) .
+:result :eps (0 "1"^^xsd:decimal) .
+:result :midpoint (0 2.7181712962962963 0.00011574074074074075) .
+:result :requestN 1 .
+:result :chosenM 7 .
+:result :interval (1 2.7182539682539684 2.71828231292517) .
+:result :width (1 0.00002834467120181406) .
+:result :eps (1 0.5) .
+:result :midpoint (1 2.7182681405895694 0.00001417233560090703) .
+:result :requestN 2 .
+:result :chosenM 8 .
+:result :interval (2 2.71827876984127 2.7182818700396827) .
+:result :width (2 0.0000031001984126984127) .
+:result :eps (2 0.25) .
+:result :midpoint (2 2.7182803199404764 0.0000015500992063492063) .
+:result :requestN 3 .
+:result :chosenM 9 .
+:result :interval (3 2.7182815255731922 2.718281831765628) .
+:result :width (3 3.0619243582206544e-7) .
+:result :eps (3 0.125) .
+:result :midpoint (3 2.71828167866941 1.5309621791103272e-7) .
+:result :requestN 4 .
+:result :chosenM 10 .
+:result :interval (4 2.7182818011463845 2.7182818287037036) .
+:result :width (4 2.755731922398589e-8) .
+:result :eps (4 0.0625) .
+:result :midpoint (4 2.718281814925044 1.3778659611992945e-8) .
+:result :requestN 5 .
+:result :chosenM 11 .
+:result :interval (5 2.718281826198493 2.7182818284759573) .
+:result :width (5 2.27746439867652e-9) .
+:result :eps (5 0.03125) .
+:result :midpoint (5 2.718281827337225 1.13873219933826e-9) .
+:result :requestN 6 .
+:result :chosenM 12 .
+:result :interval (6 2.7182818282861687 2.7182818284601415) .
+:result :width (6 1.7397297489890083e-10) .
+:result :eps (6 0.015625) .
+:result :midpoint (6 2.718281828373155 8.698648744945042e-11) .
+:result :requestN 7 .
+:result :chosenM 13 .
+:result :interval (7 2.7182818284467594 2.7182818284591126) .
+:result :width (7 1.2353110643708935e-11) .
+:result :eps (7 0.0078125) .
+:result :midpoint (7 2.7182818284529358 6.1765553218544674e-12) .
+:result :requestN 8 .
+:result :chosenM 14 .
+:result :interval (8 2.71828182845823 2.7182818284590495) .
+:result :width (8 8.193389712664089e-13) .
+:result :eps (8 0.00390625) .
+:result :midpoint (8 2.7182818284586396 4.0966948563320443e-13) .
+:result :requestN 9 .
+:result :chosenM 15 .
+:result :interval (9 2.718281828458995 2.718281828459046) .
+:result :width (9 5.0981091545465446e-14) .
+:result :eps (9 0.001953125) .
+:result :midpoint (9 2.7182818284590207 2.5490545772732723e-14) .
+:result :requestN 10 .
+:result :chosenM 16 .
+:result :interval (10 2.718281828459043 2.718281828459046) .
+:result :width (10 2.9871733327421158e-15) .
+:result :eps (10 0.0009765625) .
+:result :midpoint (10 2.7182818284590446 1.4935866663710579e-15) .
+:result :requestN 11 .
+:result :chosenM 17 .
+:result :interval (11 2.7182818284590455 2.7182818284590455) .
+:result :width (11 1.6537983849091297e-16) .
+:result :eps (11 0.00048828125) .
+:result :midpoint (11 2.7182818284590455 8.268991924545649e-17) .
+:result :requestN 12 .
+:result :chosenM 18 .
+:result :interval (12 2.7182818284590455 2.7182818284590455) .
+:result :width (12 8.677337204770125e-18) .
+:result :eps (12 0.000244140625) .
+:result :midpoint (12 2.7182818284590455 4.338668602385063e-18) .
+:result :nestedAt (1 true) .
+:result :nestedAt (2 true) .
+:result :nestedAt (3 true) .
+:result :nestedAt (4 true) .
+:result :nestedAt (5 true) .
+:result :nestedAt (6 true) .
+:result :nestedAt (7 true) .
+:result :nestedAt (8 true) .
+:result :nestedAt (9 true) .
+:result :nestedAt (10 true) .
+:result :nestedAt (11 true) .
+:result :nestedAt (12 true) .
 
 { :seriesE :n 1 . }
   pe:rule 3;
@@ -2587,3 +2677,3300 @@
 
 { 8.677337204770125e-18 math:notGreaterThan 0.000244140625 . }
   pe:builtin math:notGreaterThan.
+
+{ :result :requestN 0 . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.7180555555555554 ],
+    [ pe:var "M"; pe:value 2.7181712962962963 ],
+    [ pe:var "U"; pe:value 2.718287037037037 ],
+    [ pe:var "W"; pe:value 0.0002314814814814815 ],
+    [ pe:var "eps"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "errBound"; pe:value 0.00011574074074074075 ],
+    [ pe:var "m"; pe:value 6 ],
+    [ pe:var "n"; pe:value 0 ],
+    [ pe:var "s"; pe:value 5.436342592592593 ];
+  pe:uses
+    { :e :bounds (0 6 2.7180555555555554 2.718287037037037) . },
+    { :e :width (0 0.0002314814814814815) . },
+    { :e :epsilon (0 "1"^^xsd:decimal) . },
+    { :e :guaranteeWidthLe2PowNegN (0 true) . },
+    { (2.7180555555555554 2.718287037037037) math:sum 5.436342592592593 . },
+    { (5.436342592592593 2) math:quotient 2.7181712962962963 . },
+    { (0.0002314814814814815 2) math:quotient 0.00011574074074074075 . }.
+
+{ (2.7180555555555554 2.718287037037037) math:sum 5.436342592592593 . }
+  pe:builtin math:sum.
+
+{ (5.436342592592593 2) math:quotient 2.7181712962962963 . }
+  pe:builtin math:quotient.
+
+{ (0.0002314814814814815 2) math:quotient 0.00011574074074074075 . }
+  pe:builtin math:quotient.
+
+{ :result :chosenM 6 . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.7180555555555554 ],
+    [ pe:var "M"; pe:value 2.7181712962962963 ],
+    [ pe:var "U"; pe:value 2.718287037037037 ],
+    [ pe:var "W"; pe:value 0.0002314814814814815 ],
+    [ pe:var "eps"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "errBound"; pe:value 0.00011574074074074075 ],
+    [ pe:var "m"; pe:value 6 ],
+    [ pe:var "n"; pe:value 0 ],
+    [ pe:var "s"; pe:value 5.436342592592593 ];
+  pe:uses
+    { :e :bounds (0 6 2.7180555555555554 2.718287037037037) . },
+    { :e :width (0 0.0002314814814814815) . },
+    { :e :epsilon (0 "1"^^xsd:decimal) . },
+    { :e :guaranteeWidthLe2PowNegN (0 true) . },
+    { (2.7180555555555554 2.718287037037037) math:sum 5.436342592592593 . },
+    { (5.436342592592593 2) math:quotient 2.7181712962962963 . },
+    { (0.0002314814814814815 2) math:quotient 0.00011574074074074075 . }.
+
+{ :result :interval (0 2.7180555555555554 2.718287037037037) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.7180555555555554 ],
+    [ pe:var "M"; pe:value 2.7181712962962963 ],
+    [ pe:var "U"; pe:value 2.718287037037037 ],
+    [ pe:var "W"; pe:value 0.0002314814814814815 ],
+    [ pe:var "eps"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "errBound"; pe:value 0.00011574074074074075 ],
+    [ pe:var "m"; pe:value 6 ],
+    [ pe:var "n"; pe:value 0 ],
+    [ pe:var "s"; pe:value 5.436342592592593 ];
+  pe:uses
+    { :e :bounds (0 6 2.7180555555555554 2.718287037037037) . },
+    { :e :width (0 0.0002314814814814815) . },
+    { :e :epsilon (0 "1"^^xsd:decimal) . },
+    { :e :guaranteeWidthLe2PowNegN (0 true) . },
+    { (2.7180555555555554 2.718287037037037) math:sum 5.436342592592593 . },
+    { (5.436342592592593 2) math:quotient 2.7181712962962963 . },
+    { (0.0002314814814814815 2) math:quotient 0.00011574074074074075 . }.
+
+{ :result :width (0 0.0002314814814814815) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.7180555555555554 ],
+    [ pe:var "M"; pe:value 2.7181712962962963 ],
+    [ pe:var "U"; pe:value 2.718287037037037 ],
+    [ pe:var "W"; pe:value 0.0002314814814814815 ],
+    [ pe:var "eps"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "errBound"; pe:value 0.00011574074074074075 ],
+    [ pe:var "m"; pe:value 6 ],
+    [ pe:var "n"; pe:value 0 ],
+    [ pe:var "s"; pe:value 5.436342592592593 ];
+  pe:uses
+    { :e :bounds (0 6 2.7180555555555554 2.718287037037037) . },
+    { :e :width (0 0.0002314814814814815) . },
+    { :e :epsilon (0 "1"^^xsd:decimal) . },
+    { :e :guaranteeWidthLe2PowNegN (0 true) . },
+    { (2.7180555555555554 2.718287037037037) math:sum 5.436342592592593 . },
+    { (5.436342592592593 2) math:quotient 2.7181712962962963 . },
+    { (0.0002314814814814815 2) math:quotient 0.00011574074074074075 . }.
+
+{ :result :eps (0 "1"^^xsd:decimal) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.7180555555555554 ],
+    [ pe:var "M"; pe:value 2.7181712962962963 ],
+    [ pe:var "U"; pe:value 2.718287037037037 ],
+    [ pe:var "W"; pe:value 0.0002314814814814815 ],
+    [ pe:var "eps"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "errBound"; pe:value 0.00011574074074074075 ],
+    [ pe:var "m"; pe:value 6 ],
+    [ pe:var "n"; pe:value 0 ],
+    [ pe:var "s"; pe:value 5.436342592592593 ];
+  pe:uses
+    { :e :bounds (0 6 2.7180555555555554 2.718287037037037) . },
+    { :e :width (0 0.0002314814814814815) . },
+    { :e :epsilon (0 "1"^^xsd:decimal) . },
+    { :e :guaranteeWidthLe2PowNegN (0 true) . },
+    { (2.7180555555555554 2.718287037037037) math:sum 5.436342592592593 . },
+    { (5.436342592592593 2) math:quotient 2.7181712962962963 . },
+    { (0.0002314814814814815 2) math:quotient 0.00011574074074074075 . }.
+
+{ :result :midpoint (0 2.7181712962962963 0.00011574074074074075) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.7180555555555554 ],
+    [ pe:var "M"; pe:value 2.7181712962962963 ],
+    [ pe:var "U"; pe:value 2.718287037037037 ],
+    [ pe:var "W"; pe:value 0.0002314814814814815 ],
+    [ pe:var "eps"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "errBound"; pe:value 0.00011574074074074075 ],
+    [ pe:var "m"; pe:value 6 ],
+    [ pe:var "n"; pe:value 0 ],
+    [ pe:var "s"; pe:value 5.436342592592593 ];
+  pe:uses
+    { :e :bounds (0 6 2.7180555555555554 2.718287037037037) . },
+    { :e :width (0 0.0002314814814814815) . },
+    { :e :epsilon (0 "1"^^xsd:decimal) . },
+    { :e :guaranteeWidthLe2PowNegN (0 true) . },
+    { (2.7180555555555554 2.718287037037037) math:sum 5.436342592592593 . },
+    { (5.436342592592593 2) math:quotient 2.7181712962962963 . },
+    { (0.0002314814814814815 2) math:quotient 0.00011574074074074075 . }.
+
+{ :result :requestN 1 . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.7182539682539684 ],
+    [ pe:var "M"; pe:value 2.7182681405895694 ],
+    [ pe:var "U"; pe:value 2.71828231292517 ],
+    [ pe:var "W"; pe:value 0.00002834467120181406 ],
+    [ pe:var "eps"; pe:value 0.5 ],
+    [ pe:var "errBound"; pe:value 0.00001417233560090703 ],
+    [ pe:var "m"; pe:value 7 ],
+    [ pe:var "n"; pe:value 1 ],
+    [ pe:var "s"; pe:value 5.436536281179139 ];
+  pe:uses
+    { :e :bounds (1 7 2.7182539682539684 2.71828231292517) . },
+    { :e :width (1 0.00002834467120181406) . },
+    { :e :epsilon (1 0.5) . },
+    { :e :guaranteeWidthLe2PowNegN (1 true) . },
+    { (2.7182539682539684 2.71828231292517) math:sum 5.436536281179139 . },
+    { (5.436536281179139 2) math:quotient 2.7182681405895694 . },
+    { (0.00002834467120181406 2) math:quotient 0.00001417233560090703 . }.
+
+{ (2.7182539682539684 2.71828231292517) math:sum 5.436536281179139 . }
+  pe:builtin math:sum.
+
+{ (5.436536281179139 2) math:quotient 2.7182681405895694 . }
+  pe:builtin math:quotient.
+
+{ (0.00002834467120181406 2) math:quotient 0.00001417233560090703 . }
+  pe:builtin math:quotient.
+
+{ :result :chosenM 7 . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.7182539682539684 ],
+    [ pe:var "M"; pe:value 2.7182681405895694 ],
+    [ pe:var "U"; pe:value 2.71828231292517 ],
+    [ pe:var "W"; pe:value 0.00002834467120181406 ],
+    [ pe:var "eps"; pe:value 0.5 ],
+    [ pe:var "errBound"; pe:value 0.00001417233560090703 ],
+    [ pe:var "m"; pe:value 7 ],
+    [ pe:var "n"; pe:value 1 ],
+    [ pe:var "s"; pe:value 5.436536281179139 ];
+  pe:uses
+    { :e :bounds (1 7 2.7182539682539684 2.71828231292517) . },
+    { :e :width (1 0.00002834467120181406) . },
+    { :e :epsilon (1 0.5) . },
+    { :e :guaranteeWidthLe2PowNegN (1 true) . },
+    { (2.7182539682539684 2.71828231292517) math:sum 5.436536281179139 . },
+    { (5.436536281179139 2) math:quotient 2.7182681405895694 . },
+    { (0.00002834467120181406 2) math:quotient 0.00001417233560090703 . }.
+
+{ :result :interval (1 2.7182539682539684 2.71828231292517) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.7182539682539684 ],
+    [ pe:var "M"; pe:value 2.7182681405895694 ],
+    [ pe:var "U"; pe:value 2.71828231292517 ],
+    [ pe:var "W"; pe:value 0.00002834467120181406 ],
+    [ pe:var "eps"; pe:value 0.5 ],
+    [ pe:var "errBound"; pe:value 0.00001417233560090703 ],
+    [ pe:var "m"; pe:value 7 ],
+    [ pe:var "n"; pe:value 1 ],
+    [ pe:var "s"; pe:value 5.436536281179139 ];
+  pe:uses
+    { :e :bounds (1 7 2.7182539682539684 2.71828231292517) . },
+    { :e :width (1 0.00002834467120181406) . },
+    { :e :epsilon (1 0.5) . },
+    { :e :guaranteeWidthLe2PowNegN (1 true) . },
+    { (2.7182539682539684 2.71828231292517) math:sum 5.436536281179139 . },
+    { (5.436536281179139 2) math:quotient 2.7182681405895694 . },
+    { (0.00002834467120181406 2) math:quotient 0.00001417233560090703 . }.
+
+{ :result :width (1 0.00002834467120181406) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.7182539682539684 ],
+    [ pe:var "M"; pe:value 2.7182681405895694 ],
+    [ pe:var "U"; pe:value 2.71828231292517 ],
+    [ pe:var "W"; pe:value 0.00002834467120181406 ],
+    [ pe:var "eps"; pe:value 0.5 ],
+    [ pe:var "errBound"; pe:value 0.00001417233560090703 ],
+    [ pe:var "m"; pe:value 7 ],
+    [ pe:var "n"; pe:value 1 ],
+    [ pe:var "s"; pe:value 5.436536281179139 ];
+  pe:uses
+    { :e :bounds (1 7 2.7182539682539684 2.71828231292517) . },
+    { :e :width (1 0.00002834467120181406) . },
+    { :e :epsilon (1 0.5) . },
+    { :e :guaranteeWidthLe2PowNegN (1 true) . },
+    { (2.7182539682539684 2.71828231292517) math:sum 5.436536281179139 . },
+    { (5.436536281179139 2) math:quotient 2.7182681405895694 . },
+    { (0.00002834467120181406 2) math:quotient 0.00001417233560090703 . }.
+
+{ :result :eps (1 0.5) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.7182539682539684 ],
+    [ pe:var "M"; pe:value 2.7182681405895694 ],
+    [ pe:var "U"; pe:value 2.71828231292517 ],
+    [ pe:var "W"; pe:value 0.00002834467120181406 ],
+    [ pe:var "eps"; pe:value 0.5 ],
+    [ pe:var "errBound"; pe:value 0.00001417233560090703 ],
+    [ pe:var "m"; pe:value 7 ],
+    [ pe:var "n"; pe:value 1 ],
+    [ pe:var "s"; pe:value 5.436536281179139 ];
+  pe:uses
+    { :e :bounds (1 7 2.7182539682539684 2.71828231292517) . },
+    { :e :width (1 0.00002834467120181406) . },
+    { :e :epsilon (1 0.5) . },
+    { :e :guaranteeWidthLe2PowNegN (1 true) . },
+    { (2.7182539682539684 2.71828231292517) math:sum 5.436536281179139 . },
+    { (5.436536281179139 2) math:quotient 2.7182681405895694 . },
+    { (0.00002834467120181406 2) math:quotient 0.00001417233560090703 . }.
+
+{ :result :midpoint (1 2.7182681405895694 0.00001417233560090703) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.7182539682539684 ],
+    [ pe:var "M"; pe:value 2.7182681405895694 ],
+    [ pe:var "U"; pe:value 2.71828231292517 ],
+    [ pe:var "W"; pe:value 0.00002834467120181406 ],
+    [ pe:var "eps"; pe:value 0.5 ],
+    [ pe:var "errBound"; pe:value 0.00001417233560090703 ],
+    [ pe:var "m"; pe:value 7 ],
+    [ pe:var "n"; pe:value 1 ],
+    [ pe:var "s"; pe:value 5.436536281179139 ];
+  pe:uses
+    { :e :bounds (1 7 2.7182539682539684 2.71828231292517) . },
+    { :e :width (1 0.00002834467120181406) . },
+    { :e :epsilon (1 0.5) . },
+    { :e :guaranteeWidthLe2PowNegN (1 true) . },
+    { (2.7182539682539684 2.71828231292517) math:sum 5.436536281179139 . },
+    { (5.436536281179139 2) math:quotient 2.7182681405895694 . },
+    { (0.00002834467120181406 2) math:quotient 0.00001417233560090703 . }.
+
+{ :result :requestN 2 . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.71827876984127 ],
+    [ pe:var "M"; pe:value 2.7182803199404764 ],
+    [ pe:var "U"; pe:value 2.7182818700396827 ],
+    [ pe:var "W"; pe:value 0.0000031001984126984127 ],
+    [ pe:var "eps"; pe:value 0.25 ],
+    [ pe:var "errBound"; pe:value 0.0000015500992063492063 ],
+    [ pe:var "m"; pe:value 8 ],
+    [ pe:var "n"; pe:value 2 ],
+    [ pe:var "s"; pe:value 5.436560639880953 ];
+  pe:uses
+    { :e :bounds (2 8 2.71827876984127 2.7182818700396827) . },
+    { :e :width (2 0.0000031001984126984127) . },
+    { :e :epsilon (2 0.25) . },
+    { :e :guaranteeWidthLe2PowNegN (2 true) . },
+    { (2.71827876984127 2.7182818700396827) math:sum 5.436560639880953 . },
+    { (5.436560639880953 2) math:quotient 2.7182803199404764 . },
+    { (0.0000031001984126984127 2) math:quotient 0.0000015500992063492063 . }.
+
+{ (2.71827876984127 2.7182818700396827) math:sum 5.436560639880953 . }
+  pe:builtin math:sum.
+
+{ (5.436560639880953 2) math:quotient 2.7182803199404764 . }
+  pe:builtin math:quotient.
+
+{ (0.0000031001984126984127 2) math:quotient 0.0000015500992063492063 . }
+  pe:builtin math:quotient.
+
+{ :result :chosenM 8 . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.71827876984127 ],
+    [ pe:var "M"; pe:value 2.7182803199404764 ],
+    [ pe:var "U"; pe:value 2.7182818700396827 ],
+    [ pe:var "W"; pe:value 0.0000031001984126984127 ],
+    [ pe:var "eps"; pe:value 0.25 ],
+    [ pe:var "errBound"; pe:value 0.0000015500992063492063 ],
+    [ pe:var "m"; pe:value 8 ],
+    [ pe:var "n"; pe:value 2 ],
+    [ pe:var "s"; pe:value 5.436560639880953 ];
+  pe:uses
+    { :e :bounds (2 8 2.71827876984127 2.7182818700396827) . },
+    { :e :width (2 0.0000031001984126984127) . },
+    { :e :epsilon (2 0.25) . },
+    { :e :guaranteeWidthLe2PowNegN (2 true) . },
+    { (2.71827876984127 2.7182818700396827) math:sum 5.436560639880953 . },
+    { (5.436560639880953 2) math:quotient 2.7182803199404764 . },
+    { (0.0000031001984126984127 2) math:quotient 0.0000015500992063492063 . }.
+
+{ :result :interval (2 2.71827876984127 2.7182818700396827) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.71827876984127 ],
+    [ pe:var "M"; pe:value 2.7182803199404764 ],
+    [ pe:var "U"; pe:value 2.7182818700396827 ],
+    [ pe:var "W"; pe:value 0.0000031001984126984127 ],
+    [ pe:var "eps"; pe:value 0.25 ],
+    [ pe:var "errBound"; pe:value 0.0000015500992063492063 ],
+    [ pe:var "m"; pe:value 8 ],
+    [ pe:var "n"; pe:value 2 ],
+    [ pe:var "s"; pe:value 5.436560639880953 ];
+  pe:uses
+    { :e :bounds (2 8 2.71827876984127 2.7182818700396827) . },
+    { :e :width (2 0.0000031001984126984127) . },
+    { :e :epsilon (2 0.25) . },
+    { :e :guaranteeWidthLe2PowNegN (2 true) . },
+    { (2.71827876984127 2.7182818700396827) math:sum 5.436560639880953 . },
+    { (5.436560639880953 2) math:quotient 2.7182803199404764 . },
+    { (0.0000031001984126984127 2) math:quotient 0.0000015500992063492063 . }.
+
+{ :result :width (2 0.0000031001984126984127) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.71827876984127 ],
+    [ pe:var "M"; pe:value 2.7182803199404764 ],
+    [ pe:var "U"; pe:value 2.7182818700396827 ],
+    [ pe:var "W"; pe:value 0.0000031001984126984127 ],
+    [ pe:var "eps"; pe:value 0.25 ],
+    [ pe:var "errBound"; pe:value 0.0000015500992063492063 ],
+    [ pe:var "m"; pe:value 8 ],
+    [ pe:var "n"; pe:value 2 ],
+    [ pe:var "s"; pe:value 5.436560639880953 ];
+  pe:uses
+    { :e :bounds (2 8 2.71827876984127 2.7182818700396827) . },
+    { :e :width (2 0.0000031001984126984127) . },
+    { :e :epsilon (2 0.25) . },
+    { :e :guaranteeWidthLe2PowNegN (2 true) . },
+    { (2.71827876984127 2.7182818700396827) math:sum 5.436560639880953 . },
+    { (5.436560639880953 2) math:quotient 2.7182803199404764 . },
+    { (0.0000031001984126984127 2) math:quotient 0.0000015500992063492063 . }.
+
+{ :result :eps (2 0.25) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.71827876984127 ],
+    [ pe:var "M"; pe:value 2.7182803199404764 ],
+    [ pe:var "U"; pe:value 2.7182818700396827 ],
+    [ pe:var "W"; pe:value 0.0000031001984126984127 ],
+    [ pe:var "eps"; pe:value 0.25 ],
+    [ pe:var "errBound"; pe:value 0.0000015500992063492063 ],
+    [ pe:var "m"; pe:value 8 ],
+    [ pe:var "n"; pe:value 2 ],
+    [ pe:var "s"; pe:value 5.436560639880953 ];
+  pe:uses
+    { :e :bounds (2 8 2.71827876984127 2.7182818700396827) . },
+    { :e :width (2 0.0000031001984126984127) . },
+    { :e :epsilon (2 0.25) . },
+    { :e :guaranteeWidthLe2PowNegN (2 true) . },
+    { (2.71827876984127 2.7182818700396827) math:sum 5.436560639880953 . },
+    { (5.436560639880953 2) math:quotient 2.7182803199404764 . },
+    { (0.0000031001984126984127 2) math:quotient 0.0000015500992063492063 . }.
+
+{ :result :midpoint (2 2.7182803199404764 0.0000015500992063492063) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.71827876984127 ],
+    [ pe:var "M"; pe:value 2.7182803199404764 ],
+    [ pe:var "U"; pe:value 2.7182818700396827 ],
+    [ pe:var "W"; pe:value 0.0000031001984126984127 ],
+    [ pe:var "eps"; pe:value 0.25 ],
+    [ pe:var "errBound"; pe:value 0.0000015500992063492063 ],
+    [ pe:var "m"; pe:value 8 ],
+    [ pe:var "n"; pe:value 2 ],
+    [ pe:var "s"; pe:value 5.436560639880953 ];
+  pe:uses
+    { :e :bounds (2 8 2.71827876984127 2.7182818700396827) . },
+    { :e :width (2 0.0000031001984126984127) . },
+    { :e :epsilon (2 0.25) . },
+    { :e :guaranteeWidthLe2PowNegN (2 true) . },
+    { (2.71827876984127 2.7182818700396827) math:sum 5.436560639880953 . },
+    { (5.436560639880953 2) math:quotient 2.7182803199404764 . },
+    { (0.0000031001984126984127 2) math:quotient 0.0000015500992063492063 . }.
+
+{ :result :requestN 3 . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.7182815255731922 ],
+    [ pe:var "M"; pe:value 2.71828167866941 ],
+    [ pe:var "U"; pe:value 2.718281831765628 ],
+    [ pe:var "W"; pe:value 3.0619243582206544e-7 ],
+    [ pe:var "eps"; pe:value 0.125 ],
+    [ pe:var "errBound"; pe:value 1.5309621791103272e-7 ],
+    [ pe:var "m"; pe:value 9 ],
+    [ pe:var "n"; pe:value 3 ],
+    [ pe:var "s"; pe:value 5.43656335733882 ];
+  pe:uses
+    { :e :bounds (3 9 2.7182815255731922 2.718281831765628) . },
+    { :e :width (3 3.0619243582206544e-7) . },
+    { :e :epsilon (3 0.125) . },
+    { :e :guaranteeWidthLe2PowNegN (3 true) . },
+    { (2.7182815255731922 2.718281831765628) math:sum 5.43656335733882 . },
+    { (5.43656335733882 2) math:quotient 2.71828167866941 . },
+    { (3.0619243582206544e-7 2) math:quotient 1.5309621791103272e-7 . }.
+
+{ (2.7182815255731922 2.718281831765628) math:sum 5.43656335733882 . }
+  pe:builtin math:sum.
+
+{ (5.43656335733882 2) math:quotient 2.71828167866941 . }
+  pe:builtin math:quotient.
+
+{ (3.0619243582206544e-7 2) math:quotient 1.5309621791103272e-7 . }
+  pe:builtin math:quotient.
+
+{ :result :chosenM 9 . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.7182815255731922 ],
+    [ pe:var "M"; pe:value 2.71828167866941 ],
+    [ pe:var "U"; pe:value 2.718281831765628 ],
+    [ pe:var "W"; pe:value 3.0619243582206544e-7 ],
+    [ pe:var "eps"; pe:value 0.125 ],
+    [ pe:var "errBound"; pe:value 1.5309621791103272e-7 ],
+    [ pe:var "m"; pe:value 9 ],
+    [ pe:var "n"; pe:value 3 ],
+    [ pe:var "s"; pe:value 5.43656335733882 ];
+  pe:uses
+    { :e :bounds (3 9 2.7182815255731922 2.718281831765628) . },
+    { :e :width (3 3.0619243582206544e-7) . },
+    { :e :epsilon (3 0.125) . },
+    { :e :guaranteeWidthLe2PowNegN (3 true) . },
+    { (2.7182815255731922 2.718281831765628) math:sum 5.43656335733882 . },
+    { (5.43656335733882 2) math:quotient 2.71828167866941 . },
+    { (3.0619243582206544e-7 2) math:quotient 1.5309621791103272e-7 . }.
+
+{ :result :interval (3 2.7182815255731922 2.718281831765628) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.7182815255731922 ],
+    [ pe:var "M"; pe:value 2.71828167866941 ],
+    [ pe:var "U"; pe:value 2.718281831765628 ],
+    [ pe:var "W"; pe:value 3.0619243582206544e-7 ],
+    [ pe:var "eps"; pe:value 0.125 ],
+    [ pe:var "errBound"; pe:value 1.5309621791103272e-7 ],
+    [ pe:var "m"; pe:value 9 ],
+    [ pe:var "n"; pe:value 3 ],
+    [ pe:var "s"; pe:value 5.43656335733882 ];
+  pe:uses
+    { :e :bounds (3 9 2.7182815255731922 2.718281831765628) . },
+    { :e :width (3 3.0619243582206544e-7) . },
+    { :e :epsilon (3 0.125) . },
+    { :e :guaranteeWidthLe2PowNegN (3 true) . },
+    { (2.7182815255731922 2.718281831765628) math:sum 5.43656335733882 . },
+    { (5.43656335733882 2) math:quotient 2.71828167866941 . },
+    { (3.0619243582206544e-7 2) math:quotient 1.5309621791103272e-7 . }.
+
+{ :result :width (3 3.0619243582206544e-7) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.7182815255731922 ],
+    [ pe:var "M"; pe:value 2.71828167866941 ],
+    [ pe:var "U"; pe:value 2.718281831765628 ],
+    [ pe:var "W"; pe:value 3.0619243582206544e-7 ],
+    [ pe:var "eps"; pe:value 0.125 ],
+    [ pe:var "errBound"; pe:value 1.5309621791103272e-7 ],
+    [ pe:var "m"; pe:value 9 ],
+    [ pe:var "n"; pe:value 3 ],
+    [ pe:var "s"; pe:value 5.43656335733882 ];
+  pe:uses
+    { :e :bounds (3 9 2.7182815255731922 2.718281831765628) . },
+    { :e :width (3 3.0619243582206544e-7) . },
+    { :e :epsilon (3 0.125) . },
+    { :e :guaranteeWidthLe2PowNegN (3 true) . },
+    { (2.7182815255731922 2.718281831765628) math:sum 5.43656335733882 . },
+    { (5.43656335733882 2) math:quotient 2.71828167866941 . },
+    { (3.0619243582206544e-7 2) math:quotient 1.5309621791103272e-7 . }.
+
+{ :result :eps (3 0.125) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.7182815255731922 ],
+    [ pe:var "M"; pe:value 2.71828167866941 ],
+    [ pe:var "U"; pe:value 2.718281831765628 ],
+    [ pe:var "W"; pe:value 3.0619243582206544e-7 ],
+    [ pe:var "eps"; pe:value 0.125 ],
+    [ pe:var "errBound"; pe:value 1.5309621791103272e-7 ],
+    [ pe:var "m"; pe:value 9 ],
+    [ pe:var "n"; pe:value 3 ],
+    [ pe:var "s"; pe:value 5.43656335733882 ];
+  pe:uses
+    { :e :bounds (3 9 2.7182815255731922 2.718281831765628) . },
+    { :e :width (3 3.0619243582206544e-7) . },
+    { :e :epsilon (3 0.125) . },
+    { :e :guaranteeWidthLe2PowNegN (3 true) . },
+    { (2.7182815255731922 2.718281831765628) math:sum 5.43656335733882 . },
+    { (5.43656335733882 2) math:quotient 2.71828167866941 . },
+    { (3.0619243582206544e-7 2) math:quotient 1.5309621791103272e-7 . }.
+
+{ :result :midpoint (3 2.71828167866941 1.5309621791103272e-7) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.7182815255731922 ],
+    [ pe:var "M"; pe:value 2.71828167866941 ],
+    [ pe:var "U"; pe:value 2.718281831765628 ],
+    [ pe:var "W"; pe:value 3.0619243582206544e-7 ],
+    [ pe:var "eps"; pe:value 0.125 ],
+    [ pe:var "errBound"; pe:value 1.5309621791103272e-7 ],
+    [ pe:var "m"; pe:value 9 ],
+    [ pe:var "n"; pe:value 3 ],
+    [ pe:var "s"; pe:value 5.43656335733882 ];
+  pe:uses
+    { :e :bounds (3 9 2.7182815255731922 2.718281831765628) . },
+    { :e :width (3 3.0619243582206544e-7) . },
+    { :e :epsilon (3 0.125) . },
+    { :e :guaranteeWidthLe2PowNegN (3 true) . },
+    { (2.7182815255731922 2.718281831765628) math:sum 5.43656335733882 . },
+    { (5.43656335733882 2) math:quotient 2.71828167866941 . },
+    { (3.0619243582206544e-7 2) math:quotient 1.5309621791103272e-7 . }.
+
+{ :result :requestN 4 . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.7182818011463845 ],
+    [ pe:var "M"; pe:value 2.718281814925044 ],
+    [ pe:var "U"; pe:value 2.7182818287037036 ],
+    [ pe:var "W"; pe:value 2.755731922398589e-8 ],
+    [ pe:var "eps"; pe:value 0.0625 ],
+    [ pe:var "errBound"; pe:value 1.3778659611992945e-8 ],
+    [ pe:var "m"; pe:value 10 ],
+    [ pe:var "n"; pe:value 4 ],
+    [ pe:var "s"; pe:value 5.436563629850088 ];
+  pe:uses
+    { :e :bounds (4 10 2.7182818011463845 2.7182818287037036) . },
+    { :e :width (4 2.755731922398589e-8) . },
+    { :e :epsilon (4 0.0625) . },
+    { :e :guaranteeWidthLe2PowNegN (4 true) . },
+    { (2.7182818011463845 2.7182818287037036) math:sum 5.436563629850088 . },
+    { (5.436563629850088 2) math:quotient 2.718281814925044 . },
+    { (2.755731922398589e-8 2) math:quotient 1.3778659611992945e-8 . }.
+
+{ (2.7182818011463845 2.7182818287037036) math:sum 5.436563629850088 . }
+  pe:builtin math:sum.
+
+{ (5.436563629850088 2) math:quotient 2.718281814925044 . }
+  pe:builtin math:quotient.
+
+{ (2.755731922398589e-8 2) math:quotient 1.3778659611992945e-8 . }
+  pe:builtin math:quotient.
+
+{ :result :chosenM 10 . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.7182818011463845 ],
+    [ pe:var "M"; pe:value 2.718281814925044 ],
+    [ pe:var "U"; pe:value 2.7182818287037036 ],
+    [ pe:var "W"; pe:value 2.755731922398589e-8 ],
+    [ pe:var "eps"; pe:value 0.0625 ],
+    [ pe:var "errBound"; pe:value 1.3778659611992945e-8 ],
+    [ pe:var "m"; pe:value 10 ],
+    [ pe:var "n"; pe:value 4 ],
+    [ pe:var "s"; pe:value 5.436563629850088 ];
+  pe:uses
+    { :e :bounds (4 10 2.7182818011463845 2.7182818287037036) . },
+    { :e :width (4 2.755731922398589e-8) . },
+    { :e :epsilon (4 0.0625) . },
+    { :e :guaranteeWidthLe2PowNegN (4 true) . },
+    { (2.7182818011463845 2.7182818287037036) math:sum 5.436563629850088 . },
+    { (5.436563629850088 2) math:quotient 2.718281814925044 . },
+    { (2.755731922398589e-8 2) math:quotient 1.3778659611992945e-8 . }.
+
+{ :result :interval (4 2.7182818011463845 2.7182818287037036) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.7182818011463845 ],
+    [ pe:var "M"; pe:value 2.718281814925044 ],
+    [ pe:var "U"; pe:value 2.7182818287037036 ],
+    [ pe:var "W"; pe:value 2.755731922398589e-8 ],
+    [ pe:var "eps"; pe:value 0.0625 ],
+    [ pe:var "errBound"; pe:value 1.3778659611992945e-8 ],
+    [ pe:var "m"; pe:value 10 ],
+    [ pe:var "n"; pe:value 4 ],
+    [ pe:var "s"; pe:value 5.436563629850088 ];
+  pe:uses
+    { :e :bounds (4 10 2.7182818011463845 2.7182818287037036) . },
+    { :e :width (4 2.755731922398589e-8) . },
+    { :e :epsilon (4 0.0625) . },
+    { :e :guaranteeWidthLe2PowNegN (4 true) . },
+    { (2.7182818011463845 2.7182818287037036) math:sum 5.436563629850088 . },
+    { (5.436563629850088 2) math:quotient 2.718281814925044 . },
+    { (2.755731922398589e-8 2) math:quotient 1.3778659611992945e-8 . }.
+
+{ :result :width (4 2.755731922398589e-8) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.7182818011463845 ],
+    [ pe:var "M"; pe:value 2.718281814925044 ],
+    [ pe:var "U"; pe:value 2.7182818287037036 ],
+    [ pe:var "W"; pe:value 2.755731922398589e-8 ],
+    [ pe:var "eps"; pe:value 0.0625 ],
+    [ pe:var "errBound"; pe:value 1.3778659611992945e-8 ],
+    [ pe:var "m"; pe:value 10 ],
+    [ pe:var "n"; pe:value 4 ],
+    [ pe:var "s"; pe:value 5.436563629850088 ];
+  pe:uses
+    { :e :bounds (4 10 2.7182818011463845 2.7182818287037036) . },
+    { :e :width (4 2.755731922398589e-8) . },
+    { :e :epsilon (4 0.0625) . },
+    { :e :guaranteeWidthLe2PowNegN (4 true) . },
+    { (2.7182818011463845 2.7182818287037036) math:sum 5.436563629850088 . },
+    { (5.436563629850088 2) math:quotient 2.718281814925044 . },
+    { (2.755731922398589e-8 2) math:quotient 1.3778659611992945e-8 . }.
+
+{ :result :eps (4 0.0625) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.7182818011463845 ],
+    [ pe:var "M"; pe:value 2.718281814925044 ],
+    [ pe:var "U"; pe:value 2.7182818287037036 ],
+    [ pe:var "W"; pe:value 2.755731922398589e-8 ],
+    [ pe:var "eps"; pe:value 0.0625 ],
+    [ pe:var "errBound"; pe:value 1.3778659611992945e-8 ],
+    [ pe:var "m"; pe:value 10 ],
+    [ pe:var "n"; pe:value 4 ],
+    [ pe:var "s"; pe:value 5.436563629850088 ];
+  pe:uses
+    { :e :bounds (4 10 2.7182818011463845 2.7182818287037036) . },
+    { :e :width (4 2.755731922398589e-8) . },
+    { :e :epsilon (4 0.0625) . },
+    { :e :guaranteeWidthLe2PowNegN (4 true) . },
+    { (2.7182818011463845 2.7182818287037036) math:sum 5.436563629850088 . },
+    { (5.436563629850088 2) math:quotient 2.718281814925044 . },
+    { (2.755731922398589e-8 2) math:quotient 1.3778659611992945e-8 . }.
+
+{ :result :midpoint (4 2.718281814925044 1.3778659611992945e-8) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.7182818011463845 ],
+    [ pe:var "M"; pe:value 2.718281814925044 ],
+    [ pe:var "U"; pe:value 2.7182818287037036 ],
+    [ pe:var "W"; pe:value 2.755731922398589e-8 ],
+    [ pe:var "eps"; pe:value 0.0625 ],
+    [ pe:var "errBound"; pe:value 1.3778659611992945e-8 ],
+    [ pe:var "m"; pe:value 10 ],
+    [ pe:var "n"; pe:value 4 ],
+    [ pe:var "s"; pe:value 5.436563629850088 ];
+  pe:uses
+    { :e :bounds (4 10 2.7182818011463845 2.7182818287037036) . },
+    { :e :width (4 2.755731922398589e-8) . },
+    { :e :epsilon (4 0.0625) . },
+    { :e :guaranteeWidthLe2PowNegN (4 true) . },
+    { (2.7182818011463845 2.7182818287037036) math:sum 5.436563629850088 . },
+    { (5.436563629850088 2) math:quotient 2.718281814925044 . },
+    { (2.755731922398589e-8 2) math:quotient 1.3778659611992945e-8 . }.
+
+{ :result :requestN 5 . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.718281826198493 ],
+    [ pe:var "M"; pe:value 2.718281827337225 ],
+    [ pe:var "U"; pe:value 2.7182818284759573 ],
+    [ pe:var "W"; pe:value 2.27746439867652e-9 ],
+    [ pe:var "eps"; pe:value 0.03125 ],
+    [ pe:var "errBound"; pe:value 1.13873219933826e-9 ],
+    [ pe:var "m"; pe:value 11 ],
+    [ pe:var "n"; pe:value 5 ],
+    [ pe:var "s"; pe:value 5.43656365467445 ];
+  pe:uses
+    { :e :bounds (5 11 2.718281826198493 2.7182818284759573) . },
+    { :e :width (5 2.27746439867652e-9) . },
+    { :e :epsilon (5 0.03125) . },
+    { :e :guaranteeWidthLe2PowNegN (5 true) . },
+    { (2.718281826198493 2.7182818284759573) math:sum 5.43656365467445 . },
+    { (5.43656365467445 2) math:quotient 2.718281827337225 . },
+    { (2.27746439867652e-9 2) math:quotient 1.13873219933826e-9 . }.
+
+{ (2.718281826198493 2.7182818284759573) math:sum 5.43656365467445 . }
+  pe:builtin math:sum.
+
+{ (5.43656365467445 2) math:quotient 2.718281827337225 . }
+  pe:builtin math:quotient.
+
+{ (2.27746439867652e-9 2) math:quotient 1.13873219933826e-9 . }
+  pe:builtin math:quotient.
+
+{ :result :chosenM 11 . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.718281826198493 ],
+    [ pe:var "M"; pe:value 2.718281827337225 ],
+    [ pe:var "U"; pe:value 2.7182818284759573 ],
+    [ pe:var "W"; pe:value 2.27746439867652e-9 ],
+    [ pe:var "eps"; pe:value 0.03125 ],
+    [ pe:var "errBound"; pe:value 1.13873219933826e-9 ],
+    [ pe:var "m"; pe:value 11 ],
+    [ pe:var "n"; pe:value 5 ],
+    [ pe:var "s"; pe:value 5.43656365467445 ];
+  pe:uses
+    { :e :bounds (5 11 2.718281826198493 2.7182818284759573) . },
+    { :e :width (5 2.27746439867652e-9) . },
+    { :e :epsilon (5 0.03125) . },
+    { :e :guaranteeWidthLe2PowNegN (5 true) . },
+    { (2.718281826198493 2.7182818284759573) math:sum 5.43656365467445 . },
+    { (5.43656365467445 2) math:quotient 2.718281827337225 . },
+    { (2.27746439867652e-9 2) math:quotient 1.13873219933826e-9 . }.
+
+{ :result :interval (5 2.718281826198493 2.7182818284759573) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.718281826198493 ],
+    [ pe:var "M"; pe:value 2.718281827337225 ],
+    [ pe:var "U"; pe:value 2.7182818284759573 ],
+    [ pe:var "W"; pe:value 2.27746439867652e-9 ],
+    [ pe:var "eps"; pe:value 0.03125 ],
+    [ pe:var "errBound"; pe:value 1.13873219933826e-9 ],
+    [ pe:var "m"; pe:value 11 ],
+    [ pe:var "n"; pe:value 5 ],
+    [ pe:var "s"; pe:value 5.43656365467445 ];
+  pe:uses
+    { :e :bounds (5 11 2.718281826198493 2.7182818284759573) . },
+    { :e :width (5 2.27746439867652e-9) . },
+    { :e :epsilon (5 0.03125) . },
+    { :e :guaranteeWidthLe2PowNegN (5 true) . },
+    { (2.718281826198493 2.7182818284759573) math:sum 5.43656365467445 . },
+    { (5.43656365467445 2) math:quotient 2.718281827337225 . },
+    { (2.27746439867652e-9 2) math:quotient 1.13873219933826e-9 . }.
+
+{ :result :width (5 2.27746439867652e-9) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.718281826198493 ],
+    [ pe:var "M"; pe:value 2.718281827337225 ],
+    [ pe:var "U"; pe:value 2.7182818284759573 ],
+    [ pe:var "W"; pe:value 2.27746439867652e-9 ],
+    [ pe:var "eps"; pe:value 0.03125 ],
+    [ pe:var "errBound"; pe:value 1.13873219933826e-9 ],
+    [ pe:var "m"; pe:value 11 ],
+    [ pe:var "n"; pe:value 5 ],
+    [ pe:var "s"; pe:value 5.43656365467445 ];
+  pe:uses
+    { :e :bounds (5 11 2.718281826198493 2.7182818284759573) . },
+    { :e :width (5 2.27746439867652e-9) . },
+    { :e :epsilon (5 0.03125) . },
+    { :e :guaranteeWidthLe2PowNegN (5 true) . },
+    { (2.718281826198493 2.7182818284759573) math:sum 5.43656365467445 . },
+    { (5.43656365467445 2) math:quotient 2.718281827337225 . },
+    { (2.27746439867652e-9 2) math:quotient 1.13873219933826e-9 . }.
+
+{ :result :eps (5 0.03125) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.718281826198493 ],
+    [ pe:var "M"; pe:value 2.718281827337225 ],
+    [ pe:var "U"; pe:value 2.7182818284759573 ],
+    [ pe:var "W"; pe:value 2.27746439867652e-9 ],
+    [ pe:var "eps"; pe:value 0.03125 ],
+    [ pe:var "errBound"; pe:value 1.13873219933826e-9 ],
+    [ pe:var "m"; pe:value 11 ],
+    [ pe:var "n"; pe:value 5 ],
+    [ pe:var "s"; pe:value 5.43656365467445 ];
+  pe:uses
+    { :e :bounds (5 11 2.718281826198493 2.7182818284759573) . },
+    { :e :width (5 2.27746439867652e-9) . },
+    { :e :epsilon (5 0.03125) . },
+    { :e :guaranteeWidthLe2PowNegN (5 true) . },
+    { (2.718281826198493 2.7182818284759573) math:sum 5.43656365467445 . },
+    { (5.43656365467445 2) math:quotient 2.718281827337225 . },
+    { (2.27746439867652e-9 2) math:quotient 1.13873219933826e-9 . }.
+
+{ :result :midpoint (5 2.718281827337225 1.13873219933826e-9) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.718281826198493 ],
+    [ pe:var "M"; pe:value 2.718281827337225 ],
+    [ pe:var "U"; pe:value 2.7182818284759573 ],
+    [ pe:var "W"; pe:value 2.27746439867652e-9 ],
+    [ pe:var "eps"; pe:value 0.03125 ],
+    [ pe:var "errBound"; pe:value 1.13873219933826e-9 ],
+    [ pe:var "m"; pe:value 11 ],
+    [ pe:var "n"; pe:value 5 ],
+    [ pe:var "s"; pe:value 5.43656365467445 ];
+  pe:uses
+    { :e :bounds (5 11 2.718281826198493 2.7182818284759573) . },
+    { :e :width (5 2.27746439867652e-9) . },
+    { :e :epsilon (5 0.03125) . },
+    { :e :guaranteeWidthLe2PowNegN (5 true) . },
+    { (2.718281826198493 2.7182818284759573) math:sum 5.43656365467445 . },
+    { (5.43656365467445 2) math:quotient 2.718281827337225 . },
+    { (2.27746439867652e-9 2) math:quotient 1.13873219933826e-9 . }.
+
+{ :result :requestN 6 . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.7182818282861687 ],
+    [ pe:var "M"; pe:value 2.718281828373155 ],
+    [ pe:var "U"; pe:value 2.7182818284601415 ],
+    [ pe:var "W"; pe:value 1.7397297489890083e-10 ],
+    [ pe:var "eps"; pe:value 0.015625 ],
+    [ pe:var "errBound"; pe:value 8.698648744945042e-11 ],
+    [ pe:var "m"; pe:value 12 ],
+    [ pe:var "n"; pe:value 6 ],
+    [ pe:var "s"; pe:value 5.43656365674631 ];
+  pe:uses
+    { :e :bounds (6 12 2.7182818282861687 2.7182818284601415) . },
+    { :e :width (6 1.7397297489890083e-10) . },
+    { :e :epsilon (6 0.015625) . },
+    { :e :guaranteeWidthLe2PowNegN (6 true) . },
+    { (2.7182818282861687 2.7182818284601415) math:sum 5.43656365674631 . },
+    { (5.43656365674631 2) math:quotient 2.718281828373155 . },
+    { (1.7397297489890083e-10 2) math:quotient 8.698648744945042e-11 . }.
+
+{ (2.7182818282861687 2.7182818284601415) math:sum 5.43656365674631 . }
+  pe:builtin math:sum.
+
+{ (5.43656365674631 2) math:quotient 2.718281828373155 . }
+  pe:builtin math:quotient.
+
+{ (1.7397297489890083e-10 2) math:quotient 8.698648744945042e-11 . }
+  pe:builtin math:quotient.
+
+{ :result :chosenM 12 . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.7182818282861687 ],
+    [ pe:var "M"; pe:value 2.718281828373155 ],
+    [ pe:var "U"; pe:value 2.7182818284601415 ],
+    [ pe:var "W"; pe:value 1.7397297489890083e-10 ],
+    [ pe:var "eps"; pe:value 0.015625 ],
+    [ pe:var "errBound"; pe:value 8.698648744945042e-11 ],
+    [ pe:var "m"; pe:value 12 ],
+    [ pe:var "n"; pe:value 6 ],
+    [ pe:var "s"; pe:value 5.43656365674631 ];
+  pe:uses
+    { :e :bounds (6 12 2.7182818282861687 2.7182818284601415) . },
+    { :e :width (6 1.7397297489890083e-10) . },
+    { :e :epsilon (6 0.015625) . },
+    { :e :guaranteeWidthLe2PowNegN (6 true) . },
+    { (2.7182818282861687 2.7182818284601415) math:sum 5.43656365674631 . },
+    { (5.43656365674631 2) math:quotient 2.718281828373155 . },
+    { (1.7397297489890083e-10 2) math:quotient 8.698648744945042e-11 . }.
+
+{ :result :interval (6 2.7182818282861687 2.7182818284601415) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.7182818282861687 ],
+    [ pe:var "M"; pe:value 2.718281828373155 ],
+    [ pe:var "U"; pe:value 2.7182818284601415 ],
+    [ pe:var "W"; pe:value 1.7397297489890083e-10 ],
+    [ pe:var "eps"; pe:value 0.015625 ],
+    [ pe:var "errBound"; pe:value 8.698648744945042e-11 ],
+    [ pe:var "m"; pe:value 12 ],
+    [ pe:var "n"; pe:value 6 ],
+    [ pe:var "s"; pe:value 5.43656365674631 ];
+  pe:uses
+    { :e :bounds (6 12 2.7182818282861687 2.7182818284601415) . },
+    { :e :width (6 1.7397297489890083e-10) . },
+    { :e :epsilon (6 0.015625) . },
+    { :e :guaranteeWidthLe2PowNegN (6 true) . },
+    { (2.7182818282861687 2.7182818284601415) math:sum 5.43656365674631 . },
+    { (5.43656365674631 2) math:quotient 2.718281828373155 . },
+    { (1.7397297489890083e-10 2) math:quotient 8.698648744945042e-11 . }.
+
+{ :result :width (6 1.7397297489890083e-10) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.7182818282861687 ],
+    [ pe:var "M"; pe:value 2.718281828373155 ],
+    [ pe:var "U"; pe:value 2.7182818284601415 ],
+    [ pe:var "W"; pe:value 1.7397297489890083e-10 ],
+    [ pe:var "eps"; pe:value 0.015625 ],
+    [ pe:var "errBound"; pe:value 8.698648744945042e-11 ],
+    [ pe:var "m"; pe:value 12 ],
+    [ pe:var "n"; pe:value 6 ],
+    [ pe:var "s"; pe:value 5.43656365674631 ];
+  pe:uses
+    { :e :bounds (6 12 2.7182818282861687 2.7182818284601415) . },
+    { :e :width (6 1.7397297489890083e-10) . },
+    { :e :epsilon (6 0.015625) . },
+    { :e :guaranteeWidthLe2PowNegN (6 true) . },
+    { (2.7182818282861687 2.7182818284601415) math:sum 5.43656365674631 . },
+    { (5.43656365674631 2) math:quotient 2.718281828373155 . },
+    { (1.7397297489890083e-10 2) math:quotient 8.698648744945042e-11 . }.
+
+{ :result :eps (6 0.015625) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.7182818282861687 ],
+    [ pe:var "M"; pe:value 2.718281828373155 ],
+    [ pe:var "U"; pe:value 2.7182818284601415 ],
+    [ pe:var "W"; pe:value 1.7397297489890083e-10 ],
+    [ pe:var "eps"; pe:value 0.015625 ],
+    [ pe:var "errBound"; pe:value 8.698648744945042e-11 ],
+    [ pe:var "m"; pe:value 12 ],
+    [ pe:var "n"; pe:value 6 ],
+    [ pe:var "s"; pe:value 5.43656365674631 ];
+  pe:uses
+    { :e :bounds (6 12 2.7182818282861687 2.7182818284601415) . },
+    { :e :width (6 1.7397297489890083e-10) . },
+    { :e :epsilon (6 0.015625) . },
+    { :e :guaranteeWidthLe2PowNegN (6 true) . },
+    { (2.7182818282861687 2.7182818284601415) math:sum 5.43656365674631 . },
+    { (5.43656365674631 2) math:quotient 2.718281828373155 . },
+    { (1.7397297489890083e-10 2) math:quotient 8.698648744945042e-11 . }.
+
+{ :result :midpoint (6 2.718281828373155 8.698648744945042e-11) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.7182818282861687 ],
+    [ pe:var "M"; pe:value 2.718281828373155 ],
+    [ pe:var "U"; pe:value 2.7182818284601415 ],
+    [ pe:var "W"; pe:value 1.7397297489890083e-10 ],
+    [ pe:var "eps"; pe:value 0.015625 ],
+    [ pe:var "errBound"; pe:value 8.698648744945042e-11 ],
+    [ pe:var "m"; pe:value 12 ],
+    [ pe:var "n"; pe:value 6 ],
+    [ pe:var "s"; pe:value 5.43656365674631 ];
+  pe:uses
+    { :e :bounds (6 12 2.7182818282861687 2.7182818284601415) . },
+    { :e :width (6 1.7397297489890083e-10) . },
+    { :e :epsilon (6 0.015625) . },
+    { :e :guaranteeWidthLe2PowNegN (6 true) . },
+    { (2.7182818282861687 2.7182818284601415) math:sum 5.43656365674631 . },
+    { (5.43656365674631 2) math:quotient 2.718281828373155 . },
+    { (1.7397297489890083e-10 2) math:quotient 8.698648744945042e-11 . }.
+
+{ :result :requestN 7 . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.7182818284467594 ],
+    [ pe:var "M"; pe:value 2.7182818284529358 ],
+    [ pe:var "U"; pe:value 2.7182818284591126 ],
+    [ pe:var "W"; pe:value 1.2353110643708935e-11 ],
+    [ pe:var "eps"; pe:value 0.0078125 ],
+    [ pe:var "errBound"; pe:value 6.1765553218544674e-12 ],
+    [ pe:var "m"; pe:value 13 ],
+    [ pe:var "n"; pe:value 7 ],
+    [ pe:var "s"; pe:value 5.4365636569058715 ];
+  pe:uses
+    { :e :bounds (7 13 2.7182818284467594 2.7182818284591126) . },
+    { :e :width (7 1.2353110643708935e-11) . },
+    { :e :epsilon (7 0.0078125) . },
+    { :e :guaranteeWidthLe2PowNegN (7 true) . },
+    { (2.7182818284467594 2.7182818284591126) math:sum 5.4365636569058715 . },
+    { (5.4365636569058715 2) math:quotient 2.7182818284529358 . },
+    { (1.2353110643708935e-11 2) math:quotient 6.1765553218544674e-12 . }.
+
+{ (2.7182818284467594 2.7182818284591126) math:sum 5.4365636569058715 . }
+  pe:builtin math:sum.
+
+{ (5.4365636569058715 2) math:quotient 2.7182818284529358 . }
+  pe:builtin math:quotient.
+
+{ (1.2353110643708935e-11 2) math:quotient 6.1765553218544674e-12 . }
+  pe:builtin math:quotient.
+
+{ :result :chosenM 13 . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.7182818284467594 ],
+    [ pe:var "M"; pe:value 2.7182818284529358 ],
+    [ pe:var "U"; pe:value 2.7182818284591126 ],
+    [ pe:var "W"; pe:value 1.2353110643708935e-11 ],
+    [ pe:var "eps"; pe:value 0.0078125 ],
+    [ pe:var "errBound"; pe:value 6.1765553218544674e-12 ],
+    [ pe:var "m"; pe:value 13 ],
+    [ pe:var "n"; pe:value 7 ],
+    [ pe:var "s"; pe:value 5.4365636569058715 ];
+  pe:uses
+    { :e :bounds (7 13 2.7182818284467594 2.7182818284591126) . },
+    { :e :width (7 1.2353110643708935e-11) . },
+    { :e :epsilon (7 0.0078125) . },
+    { :e :guaranteeWidthLe2PowNegN (7 true) . },
+    { (2.7182818284467594 2.7182818284591126) math:sum 5.4365636569058715 . },
+    { (5.4365636569058715 2) math:quotient 2.7182818284529358 . },
+    { (1.2353110643708935e-11 2) math:quotient 6.1765553218544674e-12 . }.
+
+{ :result :interval (7 2.7182818284467594 2.7182818284591126) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.7182818284467594 ],
+    [ pe:var "M"; pe:value 2.7182818284529358 ],
+    [ pe:var "U"; pe:value 2.7182818284591126 ],
+    [ pe:var "W"; pe:value 1.2353110643708935e-11 ],
+    [ pe:var "eps"; pe:value 0.0078125 ],
+    [ pe:var "errBound"; pe:value 6.1765553218544674e-12 ],
+    [ pe:var "m"; pe:value 13 ],
+    [ pe:var "n"; pe:value 7 ],
+    [ pe:var "s"; pe:value 5.4365636569058715 ];
+  pe:uses
+    { :e :bounds (7 13 2.7182818284467594 2.7182818284591126) . },
+    { :e :width (7 1.2353110643708935e-11) . },
+    { :e :epsilon (7 0.0078125) . },
+    { :e :guaranteeWidthLe2PowNegN (7 true) . },
+    { (2.7182818284467594 2.7182818284591126) math:sum 5.4365636569058715 . },
+    { (5.4365636569058715 2) math:quotient 2.7182818284529358 . },
+    { (1.2353110643708935e-11 2) math:quotient 6.1765553218544674e-12 . }.
+
+{ :result :width (7 1.2353110643708935e-11) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.7182818284467594 ],
+    [ pe:var "M"; pe:value 2.7182818284529358 ],
+    [ pe:var "U"; pe:value 2.7182818284591126 ],
+    [ pe:var "W"; pe:value 1.2353110643708935e-11 ],
+    [ pe:var "eps"; pe:value 0.0078125 ],
+    [ pe:var "errBound"; pe:value 6.1765553218544674e-12 ],
+    [ pe:var "m"; pe:value 13 ],
+    [ pe:var "n"; pe:value 7 ],
+    [ pe:var "s"; pe:value 5.4365636569058715 ];
+  pe:uses
+    { :e :bounds (7 13 2.7182818284467594 2.7182818284591126) . },
+    { :e :width (7 1.2353110643708935e-11) . },
+    { :e :epsilon (7 0.0078125) . },
+    { :e :guaranteeWidthLe2PowNegN (7 true) . },
+    { (2.7182818284467594 2.7182818284591126) math:sum 5.4365636569058715 . },
+    { (5.4365636569058715 2) math:quotient 2.7182818284529358 . },
+    { (1.2353110643708935e-11 2) math:quotient 6.1765553218544674e-12 . }.
+
+{ :result :eps (7 0.0078125) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.7182818284467594 ],
+    [ pe:var "M"; pe:value 2.7182818284529358 ],
+    [ pe:var "U"; pe:value 2.7182818284591126 ],
+    [ pe:var "W"; pe:value 1.2353110643708935e-11 ],
+    [ pe:var "eps"; pe:value 0.0078125 ],
+    [ pe:var "errBound"; pe:value 6.1765553218544674e-12 ],
+    [ pe:var "m"; pe:value 13 ],
+    [ pe:var "n"; pe:value 7 ],
+    [ pe:var "s"; pe:value 5.4365636569058715 ];
+  pe:uses
+    { :e :bounds (7 13 2.7182818284467594 2.7182818284591126) . },
+    { :e :width (7 1.2353110643708935e-11) . },
+    { :e :epsilon (7 0.0078125) . },
+    { :e :guaranteeWidthLe2PowNegN (7 true) . },
+    { (2.7182818284467594 2.7182818284591126) math:sum 5.4365636569058715 . },
+    { (5.4365636569058715 2) math:quotient 2.7182818284529358 . },
+    { (1.2353110643708935e-11 2) math:quotient 6.1765553218544674e-12 . }.
+
+{ :result :midpoint (7 2.7182818284529358 6.1765553218544674e-12) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.7182818284467594 ],
+    [ pe:var "M"; pe:value 2.7182818284529358 ],
+    [ pe:var "U"; pe:value 2.7182818284591126 ],
+    [ pe:var "W"; pe:value 1.2353110643708935e-11 ],
+    [ pe:var "eps"; pe:value 0.0078125 ],
+    [ pe:var "errBound"; pe:value 6.1765553218544674e-12 ],
+    [ pe:var "m"; pe:value 13 ],
+    [ pe:var "n"; pe:value 7 ],
+    [ pe:var "s"; pe:value 5.4365636569058715 ];
+  pe:uses
+    { :e :bounds (7 13 2.7182818284467594 2.7182818284591126) . },
+    { :e :width (7 1.2353110643708935e-11) . },
+    { :e :epsilon (7 0.0078125) . },
+    { :e :guaranteeWidthLe2PowNegN (7 true) . },
+    { (2.7182818284467594 2.7182818284591126) math:sum 5.4365636569058715 . },
+    { (5.4365636569058715 2) math:quotient 2.7182818284529358 . },
+    { (1.2353110643708935e-11 2) math:quotient 6.1765553218544674e-12 . }.
+
+{ :result :requestN 8 . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.71828182845823 ],
+    [ pe:var "M"; pe:value 2.7182818284586396 ],
+    [ pe:var "U"; pe:value 2.7182818284590495 ],
+    [ pe:var "W"; pe:value 8.193389712664089e-13 ],
+    [ pe:var "eps"; pe:value 0.00390625 ],
+    [ pe:var "errBound"; pe:value 4.0966948563320443e-13 ],
+    [ pe:var "m"; pe:value 14 ],
+    [ pe:var "n"; pe:value 8 ],
+    [ pe:var "s"; pe:value 5.436563656917279 ];
+  pe:uses
+    { :e :bounds (8 14 2.71828182845823 2.7182818284590495) . },
+    { :e :width (8 8.193389712664089e-13) . },
+    { :e :epsilon (8 0.00390625) . },
+    { :e :guaranteeWidthLe2PowNegN (8 true) . },
+    { (2.71828182845823 2.7182818284590495) math:sum 5.436563656917279 . },
+    { (5.436563656917279 2) math:quotient 2.7182818284586396 . },
+    { (8.193389712664089e-13 2) math:quotient 4.0966948563320443e-13 . }.
+
+{ (2.71828182845823 2.7182818284590495) math:sum 5.436563656917279 . }
+  pe:builtin math:sum.
+
+{ (5.436563656917279 2) math:quotient 2.7182818284586396 . }
+  pe:builtin math:quotient.
+
+{ (8.193389712664089e-13 2) math:quotient 4.0966948563320443e-13 . }
+  pe:builtin math:quotient.
+
+{ :result :chosenM 14 . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.71828182845823 ],
+    [ pe:var "M"; pe:value 2.7182818284586396 ],
+    [ pe:var "U"; pe:value 2.7182818284590495 ],
+    [ pe:var "W"; pe:value 8.193389712664089e-13 ],
+    [ pe:var "eps"; pe:value 0.00390625 ],
+    [ pe:var "errBound"; pe:value 4.0966948563320443e-13 ],
+    [ pe:var "m"; pe:value 14 ],
+    [ pe:var "n"; pe:value 8 ],
+    [ pe:var "s"; pe:value 5.436563656917279 ];
+  pe:uses
+    { :e :bounds (8 14 2.71828182845823 2.7182818284590495) . },
+    { :e :width (8 8.193389712664089e-13) . },
+    { :e :epsilon (8 0.00390625) . },
+    { :e :guaranteeWidthLe2PowNegN (8 true) . },
+    { (2.71828182845823 2.7182818284590495) math:sum 5.436563656917279 . },
+    { (5.436563656917279 2) math:quotient 2.7182818284586396 . },
+    { (8.193389712664089e-13 2) math:quotient 4.0966948563320443e-13 . }.
+
+{ :result :interval (8 2.71828182845823 2.7182818284590495) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.71828182845823 ],
+    [ pe:var "M"; pe:value 2.7182818284586396 ],
+    [ pe:var "U"; pe:value 2.7182818284590495 ],
+    [ pe:var "W"; pe:value 8.193389712664089e-13 ],
+    [ pe:var "eps"; pe:value 0.00390625 ],
+    [ pe:var "errBound"; pe:value 4.0966948563320443e-13 ],
+    [ pe:var "m"; pe:value 14 ],
+    [ pe:var "n"; pe:value 8 ],
+    [ pe:var "s"; pe:value 5.436563656917279 ];
+  pe:uses
+    { :e :bounds (8 14 2.71828182845823 2.7182818284590495) . },
+    { :e :width (8 8.193389712664089e-13) . },
+    { :e :epsilon (8 0.00390625) . },
+    { :e :guaranteeWidthLe2PowNegN (8 true) . },
+    { (2.71828182845823 2.7182818284590495) math:sum 5.436563656917279 . },
+    { (5.436563656917279 2) math:quotient 2.7182818284586396 . },
+    { (8.193389712664089e-13 2) math:quotient 4.0966948563320443e-13 . }.
+
+{ :result :width (8 8.193389712664089e-13) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.71828182845823 ],
+    [ pe:var "M"; pe:value 2.7182818284586396 ],
+    [ pe:var "U"; pe:value 2.7182818284590495 ],
+    [ pe:var "W"; pe:value 8.193389712664089e-13 ],
+    [ pe:var "eps"; pe:value 0.00390625 ],
+    [ pe:var "errBound"; pe:value 4.0966948563320443e-13 ],
+    [ pe:var "m"; pe:value 14 ],
+    [ pe:var "n"; pe:value 8 ],
+    [ pe:var "s"; pe:value 5.436563656917279 ];
+  pe:uses
+    { :e :bounds (8 14 2.71828182845823 2.7182818284590495) . },
+    { :e :width (8 8.193389712664089e-13) . },
+    { :e :epsilon (8 0.00390625) . },
+    { :e :guaranteeWidthLe2PowNegN (8 true) . },
+    { (2.71828182845823 2.7182818284590495) math:sum 5.436563656917279 . },
+    { (5.436563656917279 2) math:quotient 2.7182818284586396 . },
+    { (8.193389712664089e-13 2) math:quotient 4.0966948563320443e-13 . }.
+
+{ :result :eps (8 0.00390625) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.71828182845823 ],
+    [ pe:var "M"; pe:value 2.7182818284586396 ],
+    [ pe:var "U"; pe:value 2.7182818284590495 ],
+    [ pe:var "W"; pe:value 8.193389712664089e-13 ],
+    [ pe:var "eps"; pe:value 0.00390625 ],
+    [ pe:var "errBound"; pe:value 4.0966948563320443e-13 ],
+    [ pe:var "m"; pe:value 14 ],
+    [ pe:var "n"; pe:value 8 ],
+    [ pe:var "s"; pe:value 5.436563656917279 ];
+  pe:uses
+    { :e :bounds (8 14 2.71828182845823 2.7182818284590495) . },
+    { :e :width (8 8.193389712664089e-13) . },
+    { :e :epsilon (8 0.00390625) . },
+    { :e :guaranteeWidthLe2PowNegN (8 true) . },
+    { (2.71828182845823 2.7182818284590495) math:sum 5.436563656917279 . },
+    { (5.436563656917279 2) math:quotient 2.7182818284586396 . },
+    { (8.193389712664089e-13 2) math:quotient 4.0966948563320443e-13 . }.
+
+{ :result :midpoint (8 2.7182818284586396 4.0966948563320443e-13) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.71828182845823 ],
+    [ pe:var "M"; pe:value 2.7182818284586396 ],
+    [ pe:var "U"; pe:value 2.7182818284590495 ],
+    [ pe:var "W"; pe:value 8.193389712664089e-13 ],
+    [ pe:var "eps"; pe:value 0.00390625 ],
+    [ pe:var "errBound"; pe:value 4.0966948563320443e-13 ],
+    [ pe:var "m"; pe:value 14 ],
+    [ pe:var "n"; pe:value 8 ],
+    [ pe:var "s"; pe:value 5.436563656917279 ];
+  pe:uses
+    { :e :bounds (8 14 2.71828182845823 2.7182818284590495) . },
+    { :e :width (8 8.193389712664089e-13) . },
+    { :e :epsilon (8 0.00390625) . },
+    { :e :guaranteeWidthLe2PowNegN (8 true) . },
+    { (2.71828182845823 2.7182818284590495) math:sum 5.436563656917279 . },
+    { (5.436563656917279 2) math:quotient 2.7182818284586396 . },
+    { (8.193389712664089e-13 2) math:quotient 4.0966948563320443e-13 . }.
+
+{ :result :requestN 9 . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.718281828458995 ],
+    [ pe:var "M"; pe:value 2.7182818284590207 ],
+    [ pe:var "U"; pe:value 2.718281828459046 ],
+    [ pe:var "W"; pe:value 5.0981091545465446e-14 ],
+    [ pe:var "eps"; pe:value 0.001953125 ],
+    [ pe:var "errBound"; pe:value 2.5490545772732723e-14 ],
+    [ pe:var "m"; pe:value 15 ],
+    [ pe:var "n"; pe:value 9 ],
+    [ pe:var "s"; pe:value 5.436563656918041 ];
+  pe:uses
+    { :e :bounds (9 15 2.718281828458995 2.718281828459046) . },
+    { :e :width (9 5.0981091545465446e-14) . },
+    { :e :epsilon (9 0.001953125) . },
+    { :e :guaranteeWidthLe2PowNegN (9 true) . },
+    { (2.718281828458995 2.718281828459046) math:sum 5.436563656918041 . },
+    { (5.436563656918041 2) math:quotient 2.7182818284590207 . },
+    { (5.0981091545465446e-14 2) math:quotient 2.5490545772732723e-14 . }.
+
+{ (2.718281828458995 2.718281828459046) math:sum 5.436563656918041 . }
+  pe:builtin math:sum.
+
+{ (5.436563656918041 2) math:quotient 2.7182818284590207 . }
+  pe:builtin math:quotient.
+
+{ (5.0981091545465446e-14 2) math:quotient 2.5490545772732723e-14 . }
+  pe:builtin math:quotient.
+
+{ :result :chosenM 15 . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.718281828458995 ],
+    [ pe:var "M"; pe:value 2.7182818284590207 ],
+    [ pe:var "U"; pe:value 2.718281828459046 ],
+    [ pe:var "W"; pe:value 5.0981091545465446e-14 ],
+    [ pe:var "eps"; pe:value 0.001953125 ],
+    [ pe:var "errBound"; pe:value 2.5490545772732723e-14 ],
+    [ pe:var "m"; pe:value 15 ],
+    [ pe:var "n"; pe:value 9 ],
+    [ pe:var "s"; pe:value 5.436563656918041 ];
+  pe:uses
+    { :e :bounds (9 15 2.718281828458995 2.718281828459046) . },
+    { :e :width (9 5.0981091545465446e-14) . },
+    { :e :epsilon (9 0.001953125) . },
+    { :e :guaranteeWidthLe2PowNegN (9 true) . },
+    { (2.718281828458995 2.718281828459046) math:sum 5.436563656918041 . },
+    { (5.436563656918041 2) math:quotient 2.7182818284590207 . },
+    { (5.0981091545465446e-14 2) math:quotient 2.5490545772732723e-14 . }.
+
+{ :result :interval (9 2.718281828458995 2.718281828459046) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.718281828458995 ],
+    [ pe:var "M"; pe:value 2.7182818284590207 ],
+    [ pe:var "U"; pe:value 2.718281828459046 ],
+    [ pe:var "W"; pe:value 5.0981091545465446e-14 ],
+    [ pe:var "eps"; pe:value 0.001953125 ],
+    [ pe:var "errBound"; pe:value 2.5490545772732723e-14 ],
+    [ pe:var "m"; pe:value 15 ],
+    [ pe:var "n"; pe:value 9 ],
+    [ pe:var "s"; pe:value 5.436563656918041 ];
+  pe:uses
+    { :e :bounds (9 15 2.718281828458995 2.718281828459046) . },
+    { :e :width (9 5.0981091545465446e-14) . },
+    { :e :epsilon (9 0.001953125) . },
+    { :e :guaranteeWidthLe2PowNegN (9 true) . },
+    { (2.718281828458995 2.718281828459046) math:sum 5.436563656918041 . },
+    { (5.436563656918041 2) math:quotient 2.7182818284590207 . },
+    { (5.0981091545465446e-14 2) math:quotient 2.5490545772732723e-14 . }.
+
+{ :result :width (9 5.0981091545465446e-14) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.718281828458995 ],
+    [ pe:var "M"; pe:value 2.7182818284590207 ],
+    [ pe:var "U"; pe:value 2.718281828459046 ],
+    [ pe:var "W"; pe:value 5.0981091545465446e-14 ],
+    [ pe:var "eps"; pe:value 0.001953125 ],
+    [ pe:var "errBound"; pe:value 2.5490545772732723e-14 ],
+    [ pe:var "m"; pe:value 15 ],
+    [ pe:var "n"; pe:value 9 ],
+    [ pe:var "s"; pe:value 5.436563656918041 ];
+  pe:uses
+    { :e :bounds (9 15 2.718281828458995 2.718281828459046) . },
+    { :e :width (9 5.0981091545465446e-14) . },
+    { :e :epsilon (9 0.001953125) . },
+    { :e :guaranteeWidthLe2PowNegN (9 true) . },
+    { (2.718281828458995 2.718281828459046) math:sum 5.436563656918041 . },
+    { (5.436563656918041 2) math:quotient 2.7182818284590207 . },
+    { (5.0981091545465446e-14 2) math:quotient 2.5490545772732723e-14 . }.
+
+{ :result :eps (9 0.001953125) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.718281828458995 ],
+    [ pe:var "M"; pe:value 2.7182818284590207 ],
+    [ pe:var "U"; pe:value 2.718281828459046 ],
+    [ pe:var "W"; pe:value 5.0981091545465446e-14 ],
+    [ pe:var "eps"; pe:value 0.001953125 ],
+    [ pe:var "errBound"; pe:value 2.5490545772732723e-14 ],
+    [ pe:var "m"; pe:value 15 ],
+    [ pe:var "n"; pe:value 9 ],
+    [ pe:var "s"; pe:value 5.436563656918041 ];
+  pe:uses
+    { :e :bounds (9 15 2.718281828458995 2.718281828459046) . },
+    { :e :width (9 5.0981091545465446e-14) . },
+    { :e :epsilon (9 0.001953125) . },
+    { :e :guaranteeWidthLe2PowNegN (9 true) . },
+    { (2.718281828458995 2.718281828459046) math:sum 5.436563656918041 . },
+    { (5.436563656918041 2) math:quotient 2.7182818284590207 . },
+    { (5.0981091545465446e-14 2) math:quotient 2.5490545772732723e-14 . }.
+
+{ :result :midpoint (9 2.7182818284590207 2.5490545772732723e-14) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.718281828458995 ],
+    [ pe:var "M"; pe:value 2.7182818284590207 ],
+    [ pe:var "U"; pe:value 2.718281828459046 ],
+    [ pe:var "W"; pe:value 5.0981091545465446e-14 ],
+    [ pe:var "eps"; pe:value 0.001953125 ],
+    [ pe:var "errBound"; pe:value 2.5490545772732723e-14 ],
+    [ pe:var "m"; pe:value 15 ],
+    [ pe:var "n"; pe:value 9 ],
+    [ pe:var "s"; pe:value 5.436563656918041 ];
+  pe:uses
+    { :e :bounds (9 15 2.718281828458995 2.718281828459046) . },
+    { :e :width (9 5.0981091545465446e-14) . },
+    { :e :epsilon (9 0.001953125) . },
+    { :e :guaranteeWidthLe2PowNegN (9 true) . },
+    { (2.718281828458995 2.718281828459046) math:sum 5.436563656918041 . },
+    { (5.436563656918041 2) math:quotient 2.7182818284590207 . },
+    { (5.0981091545465446e-14 2) math:quotient 2.5490545772732723e-14 . }.
+
+{ :result :requestN 10 . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.718281828459043 ],
+    [ pe:var "M"; pe:value 2.7182818284590446 ],
+    [ pe:var "U"; pe:value 2.718281828459046 ],
+    [ pe:var "W"; pe:value 2.9871733327421158e-15 ],
+    [ pe:var "eps"; pe:value 0.0009765625 ],
+    [ pe:var "errBound"; pe:value 1.4935866663710579e-15 ],
+    [ pe:var "m"; pe:value 16 ],
+    [ pe:var "n"; pe:value 10 ],
+    [ pe:var "s"; pe:value 5.436563656918089 ];
+  pe:uses
+    { :e :bounds (10 16 2.718281828459043 2.718281828459046) . },
+    { :e :width (10 2.9871733327421158e-15) . },
+    { :e :epsilon (10 0.0009765625) . },
+    { :e :guaranteeWidthLe2PowNegN (10 true) . },
+    { (2.718281828459043 2.718281828459046) math:sum 5.436563656918089 . },
+    { (5.436563656918089 2) math:quotient 2.7182818284590446 . },
+    { (2.9871733327421158e-15 2) math:quotient 1.4935866663710579e-15 . }.
+
+{ (2.718281828459043 2.718281828459046) math:sum 5.436563656918089 . }
+  pe:builtin math:sum.
+
+{ (5.436563656918089 2) math:quotient 2.7182818284590446 . }
+  pe:builtin math:quotient.
+
+{ (2.9871733327421158e-15 2) math:quotient 1.4935866663710579e-15 . }
+  pe:builtin math:quotient.
+
+{ :result :chosenM 16 . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.718281828459043 ],
+    [ pe:var "M"; pe:value 2.7182818284590446 ],
+    [ pe:var "U"; pe:value 2.718281828459046 ],
+    [ pe:var "W"; pe:value 2.9871733327421158e-15 ],
+    [ pe:var "eps"; pe:value 0.0009765625 ],
+    [ pe:var "errBound"; pe:value 1.4935866663710579e-15 ],
+    [ pe:var "m"; pe:value 16 ],
+    [ pe:var "n"; pe:value 10 ],
+    [ pe:var "s"; pe:value 5.436563656918089 ];
+  pe:uses
+    { :e :bounds (10 16 2.718281828459043 2.718281828459046) . },
+    { :e :width (10 2.9871733327421158e-15) . },
+    { :e :epsilon (10 0.0009765625) . },
+    { :e :guaranteeWidthLe2PowNegN (10 true) . },
+    { (2.718281828459043 2.718281828459046) math:sum 5.436563656918089 . },
+    { (5.436563656918089 2) math:quotient 2.7182818284590446 . },
+    { (2.9871733327421158e-15 2) math:quotient 1.4935866663710579e-15 . }.
+
+{ :result :interval (10 2.718281828459043 2.718281828459046) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.718281828459043 ],
+    [ pe:var "M"; pe:value 2.7182818284590446 ],
+    [ pe:var "U"; pe:value 2.718281828459046 ],
+    [ pe:var "W"; pe:value 2.9871733327421158e-15 ],
+    [ pe:var "eps"; pe:value 0.0009765625 ],
+    [ pe:var "errBound"; pe:value 1.4935866663710579e-15 ],
+    [ pe:var "m"; pe:value 16 ],
+    [ pe:var "n"; pe:value 10 ],
+    [ pe:var "s"; pe:value 5.436563656918089 ];
+  pe:uses
+    { :e :bounds (10 16 2.718281828459043 2.718281828459046) . },
+    { :e :width (10 2.9871733327421158e-15) . },
+    { :e :epsilon (10 0.0009765625) . },
+    { :e :guaranteeWidthLe2PowNegN (10 true) . },
+    { (2.718281828459043 2.718281828459046) math:sum 5.436563656918089 . },
+    { (5.436563656918089 2) math:quotient 2.7182818284590446 . },
+    { (2.9871733327421158e-15 2) math:quotient 1.4935866663710579e-15 . }.
+
+{ :result :width (10 2.9871733327421158e-15) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.718281828459043 ],
+    [ pe:var "M"; pe:value 2.7182818284590446 ],
+    [ pe:var "U"; pe:value 2.718281828459046 ],
+    [ pe:var "W"; pe:value 2.9871733327421158e-15 ],
+    [ pe:var "eps"; pe:value 0.0009765625 ],
+    [ pe:var "errBound"; pe:value 1.4935866663710579e-15 ],
+    [ pe:var "m"; pe:value 16 ],
+    [ pe:var "n"; pe:value 10 ],
+    [ pe:var "s"; pe:value 5.436563656918089 ];
+  pe:uses
+    { :e :bounds (10 16 2.718281828459043 2.718281828459046) . },
+    { :e :width (10 2.9871733327421158e-15) . },
+    { :e :epsilon (10 0.0009765625) . },
+    { :e :guaranteeWidthLe2PowNegN (10 true) . },
+    { (2.718281828459043 2.718281828459046) math:sum 5.436563656918089 . },
+    { (5.436563656918089 2) math:quotient 2.7182818284590446 . },
+    { (2.9871733327421158e-15 2) math:quotient 1.4935866663710579e-15 . }.
+
+{ :result :eps (10 0.0009765625) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.718281828459043 ],
+    [ pe:var "M"; pe:value 2.7182818284590446 ],
+    [ pe:var "U"; pe:value 2.718281828459046 ],
+    [ pe:var "W"; pe:value 2.9871733327421158e-15 ],
+    [ pe:var "eps"; pe:value 0.0009765625 ],
+    [ pe:var "errBound"; pe:value 1.4935866663710579e-15 ],
+    [ pe:var "m"; pe:value 16 ],
+    [ pe:var "n"; pe:value 10 ],
+    [ pe:var "s"; pe:value 5.436563656918089 ];
+  pe:uses
+    { :e :bounds (10 16 2.718281828459043 2.718281828459046) . },
+    { :e :width (10 2.9871733327421158e-15) . },
+    { :e :epsilon (10 0.0009765625) . },
+    { :e :guaranteeWidthLe2PowNegN (10 true) . },
+    { (2.718281828459043 2.718281828459046) math:sum 5.436563656918089 . },
+    { (5.436563656918089 2) math:quotient 2.7182818284590446 . },
+    { (2.9871733327421158e-15 2) math:quotient 1.4935866663710579e-15 . }.
+
+{ :result :midpoint (10 2.7182818284590446 1.4935866663710579e-15) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.718281828459043 ],
+    [ pe:var "M"; pe:value 2.7182818284590446 ],
+    [ pe:var "U"; pe:value 2.718281828459046 ],
+    [ pe:var "W"; pe:value 2.9871733327421158e-15 ],
+    [ pe:var "eps"; pe:value 0.0009765625 ],
+    [ pe:var "errBound"; pe:value 1.4935866663710579e-15 ],
+    [ pe:var "m"; pe:value 16 ],
+    [ pe:var "n"; pe:value 10 ],
+    [ pe:var "s"; pe:value 5.436563656918089 ];
+  pe:uses
+    { :e :bounds (10 16 2.718281828459043 2.718281828459046) . },
+    { :e :width (10 2.9871733327421158e-15) . },
+    { :e :epsilon (10 0.0009765625) . },
+    { :e :guaranteeWidthLe2PowNegN (10 true) . },
+    { (2.718281828459043 2.718281828459046) math:sum 5.436563656918089 . },
+    { (5.436563656918089 2) math:quotient 2.7182818284590446 . },
+    { (2.9871733327421158e-15 2) math:quotient 1.4935866663710579e-15 . }.
+
+{ :result :requestN 11 . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.7182818284590455 ],
+    [ pe:var "M"; pe:value 2.7182818284590455 ],
+    [ pe:var "U"; pe:value 2.7182818284590455 ],
+    [ pe:var "W"; pe:value 1.6537983849091297e-16 ],
+    [ pe:var "eps"; pe:value 0.00048828125 ],
+    [ pe:var "errBound"; pe:value 8.268991924545649e-17 ],
+    [ pe:var "m"; pe:value 17 ],
+    [ pe:var "n"; pe:value 11 ],
+    [ pe:var "s"; pe:value 5.436563656918091 ];
+  pe:uses
+    { :e :bounds (11 17 2.7182818284590455 2.7182818284590455) . },
+    { :e :width (11 1.6537983849091297e-16) . },
+    { :e :epsilon (11 0.00048828125) . },
+    { :e :guaranteeWidthLe2PowNegN (11 true) . },
+    { (2.7182818284590455 2.7182818284590455) math:sum 5.436563656918091 . },
+    { (5.436563656918091 2) math:quotient 2.7182818284590455 . },
+    { (1.6537983849091297e-16 2) math:quotient 8.268991924545649e-17 . }.
+
+{ (2.7182818284590455 2.7182818284590455) math:sum 5.436563656918091 . }
+  pe:builtin math:sum.
+
+{ (5.436563656918091 2) math:quotient 2.7182818284590455 . }
+  pe:builtin math:quotient.
+
+{ (1.6537983849091297e-16 2) math:quotient 8.268991924545649e-17 . }
+  pe:builtin math:quotient.
+
+{ :result :chosenM 17 . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.7182818284590455 ],
+    [ pe:var "M"; pe:value 2.7182818284590455 ],
+    [ pe:var "U"; pe:value 2.7182818284590455 ],
+    [ pe:var "W"; pe:value 1.6537983849091297e-16 ],
+    [ pe:var "eps"; pe:value 0.00048828125 ],
+    [ pe:var "errBound"; pe:value 8.268991924545649e-17 ],
+    [ pe:var "m"; pe:value 17 ],
+    [ pe:var "n"; pe:value 11 ],
+    [ pe:var "s"; pe:value 5.436563656918091 ];
+  pe:uses
+    { :e :bounds (11 17 2.7182818284590455 2.7182818284590455) . },
+    { :e :width (11 1.6537983849091297e-16) . },
+    { :e :epsilon (11 0.00048828125) . },
+    { :e :guaranteeWidthLe2PowNegN (11 true) . },
+    { (2.7182818284590455 2.7182818284590455) math:sum 5.436563656918091 . },
+    { (5.436563656918091 2) math:quotient 2.7182818284590455 . },
+    { (1.6537983849091297e-16 2) math:quotient 8.268991924545649e-17 . }.
+
+{ :result :interval (11 2.7182818284590455 2.7182818284590455) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.7182818284590455 ],
+    [ pe:var "M"; pe:value 2.7182818284590455 ],
+    [ pe:var "U"; pe:value 2.7182818284590455 ],
+    [ pe:var "W"; pe:value 1.6537983849091297e-16 ],
+    [ pe:var "eps"; pe:value 0.00048828125 ],
+    [ pe:var "errBound"; pe:value 8.268991924545649e-17 ],
+    [ pe:var "m"; pe:value 17 ],
+    [ pe:var "n"; pe:value 11 ],
+    [ pe:var "s"; pe:value 5.436563656918091 ];
+  pe:uses
+    { :e :bounds (11 17 2.7182818284590455 2.7182818284590455) . },
+    { :e :width (11 1.6537983849091297e-16) . },
+    { :e :epsilon (11 0.00048828125) . },
+    { :e :guaranteeWidthLe2PowNegN (11 true) . },
+    { (2.7182818284590455 2.7182818284590455) math:sum 5.436563656918091 . },
+    { (5.436563656918091 2) math:quotient 2.7182818284590455 . },
+    { (1.6537983849091297e-16 2) math:quotient 8.268991924545649e-17 . }.
+
+{ :result :width (11 1.6537983849091297e-16) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.7182818284590455 ],
+    [ pe:var "M"; pe:value 2.7182818284590455 ],
+    [ pe:var "U"; pe:value 2.7182818284590455 ],
+    [ pe:var "W"; pe:value 1.6537983849091297e-16 ],
+    [ pe:var "eps"; pe:value 0.00048828125 ],
+    [ pe:var "errBound"; pe:value 8.268991924545649e-17 ],
+    [ pe:var "m"; pe:value 17 ],
+    [ pe:var "n"; pe:value 11 ],
+    [ pe:var "s"; pe:value 5.436563656918091 ];
+  pe:uses
+    { :e :bounds (11 17 2.7182818284590455 2.7182818284590455) . },
+    { :e :width (11 1.6537983849091297e-16) . },
+    { :e :epsilon (11 0.00048828125) . },
+    { :e :guaranteeWidthLe2PowNegN (11 true) . },
+    { (2.7182818284590455 2.7182818284590455) math:sum 5.436563656918091 . },
+    { (5.436563656918091 2) math:quotient 2.7182818284590455 . },
+    { (1.6537983849091297e-16 2) math:quotient 8.268991924545649e-17 . }.
+
+{ :result :eps (11 0.00048828125) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.7182818284590455 ],
+    [ pe:var "M"; pe:value 2.7182818284590455 ],
+    [ pe:var "U"; pe:value 2.7182818284590455 ],
+    [ pe:var "W"; pe:value 1.6537983849091297e-16 ],
+    [ pe:var "eps"; pe:value 0.00048828125 ],
+    [ pe:var "errBound"; pe:value 8.268991924545649e-17 ],
+    [ pe:var "m"; pe:value 17 ],
+    [ pe:var "n"; pe:value 11 ],
+    [ pe:var "s"; pe:value 5.436563656918091 ];
+  pe:uses
+    { :e :bounds (11 17 2.7182818284590455 2.7182818284590455) . },
+    { :e :width (11 1.6537983849091297e-16) . },
+    { :e :epsilon (11 0.00048828125) . },
+    { :e :guaranteeWidthLe2PowNegN (11 true) . },
+    { (2.7182818284590455 2.7182818284590455) math:sum 5.436563656918091 . },
+    { (5.436563656918091 2) math:quotient 2.7182818284590455 . },
+    { (1.6537983849091297e-16 2) math:quotient 8.268991924545649e-17 . }.
+
+{ :result :midpoint (11 2.7182818284590455 8.268991924545649e-17) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.7182818284590455 ],
+    [ pe:var "M"; pe:value 2.7182818284590455 ],
+    [ pe:var "U"; pe:value 2.7182818284590455 ],
+    [ pe:var "W"; pe:value 1.6537983849091297e-16 ],
+    [ pe:var "eps"; pe:value 0.00048828125 ],
+    [ pe:var "errBound"; pe:value 8.268991924545649e-17 ],
+    [ pe:var "m"; pe:value 17 ],
+    [ pe:var "n"; pe:value 11 ],
+    [ pe:var "s"; pe:value 5.436563656918091 ];
+  pe:uses
+    { :e :bounds (11 17 2.7182818284590455 2.7182818284590455) . },
+    { :e :width (11 1.6537983849091297e-16) . },
+    { :e :epsilon (11 0.00048828125) . },
+    { :e :guaranteeWidthLe2PowNegN (11 true) . },
+    { (2.7182818284590455 2.7182818284590455) math:sum 5.436563656918091 . },
+    { (5.436563656918091 2) math:quotient 2.7182818284590455 . },
+    { (1.6537983849091297e-16 2) math:quotient 8.268991924545649e-17 . }.
+
+{ :result :requestN 12 . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.7182818284590455 ],
+    [ pe:var "M"; pe:value 2.7182818284590455 ],
+    [ pe:var "U"; pe:value 2.7182818284590455 ],
+    [ pe:var "W"; pe:value 8.677337204770125e-18 ],
+    [ pe:var "eps"; pe:value 0.000244140625 ],
+    [ pe:var "errBound"; pe:value 4.338668602385063e-18 ],
+    [ pe:var "m"; pe:value 18 ],
+    [ pe:var "n"; pe:value 12 ],
+    [ pe:var "s"; pe:value 5.436563656918091 ];
+  pe:uses
+    { :e :bounds (12 18 2.7182818284590455 2.7182818284590455) . },
+    { :e :width (12 8.677337204770125e-18) . },
+    { :e :epsilon (12 0.000244140625) . },
+    { :e :guaranteeWidthLe2PowNegN (12 true) . },
+    { (2.7182818284590455 2.7182818284590455) math:sum 5.436563656918091 . },
+    { (5.436563656918091 2) math:quotient 2.7182818284590455 . },
+    { (8.677337204770125e-18 2) math:quotient 4.338668602385063e-18 . }.
+
+{ (8.677337204770125e-18 2) math:quotient 4.338668602385063e-18 . }
+  pe:builtin math:quotient.
+
+{ :result :chosenM 18 . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.7182818284590455 ],
+    [ pe:var "M"; pe:value 2.7182818284590455 ],
+    [ pe:var "U"; pe:value 2.7182818284590455 ],
+    [ pe:var "W"; pe:value 8.677337204770125e-18 ],
+    [ pe:var "eps"; pe:value 0.000244140625 ],
+    [ pe:var "errBound"; pe:value 4.338668602385063e-18 ],
+    [ pe:var "m"; pe:value 18 ],
+    [ pe:var "n"; pe:value 12 ],
+    [ pe:var "s"; pe:value 5.436563656918091 ];
+  pe:uses
+    { :e :bounds (12 18 2.7182818284590455 2.7182818284590455) . },
+    { :e :width (12 8.677337204770125e-18) . },
+    { :e :epsilon (12 0.000244140625) . },
+    { :e :guaranteeWidthLe2PowNegN (12 true) . },
+    { (2.7182818284590455 2.7182818284590455) math:sum 5.436563656918091 . },
+    { (5.436563656918091 2) math:quotient 2.7182818284590455 . },
+    { (8.677337204770125e-18 2) math:quotient 4.338668602385063e-18 . }.
+
+{ :result :interval (12 2.7182818284590455 2.7182818284590455) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.7182818284590455 ],
+    [ pe:var "M"; pe:value 2.7182818284590455 ],
+    [ pe:var "U"; pe:value 2.7182818284590455 ],
+    [ pe:var "W"; pe:value 8.677337204770125e-18 ],
+    [ pe:var "eps"; pe:value 0.000244140625 ],
+    [ pe:var "errBound"; pe:value 4.338668602385063e-18 ],
+    [ pe:var "m"; pe:value 18 ],
+    [ pe:var "n"; pe:value 12 ],
+    [ pe:var "s"; pe:value 5.436563656918091 ];
+  pe:uses
+    { :e :bounds (12 18 2.7182818284590455 2.7182818284590455) . },
+    { :e :width (12 8.677337204770125e-18) . },
+    { :e :epsilon (12 0.000244140625) . },
+    { :e :guaranteeWidthLe2PowNegN (12 true) . },
+    { (2.7182818284590455 2.7182818284590455) math:sum 5.436563656918091 . },
+    { (5.436563656918091 2) math:quotient 2.7182818284590455 . },
+    { (8.677337204770125e-18 2) math:quotient 4.338668602385063e-18 . }.
+
+{ :result :width (12 8.677337204770125e-18) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.7182818284590455 ],
+    [ pe:var "M"; pe:value 2.7182818284590455 ],
+    [ pe:var "U"; pe:value 2.7182818284590455 ],
+    [ pe:var "W"; pe:value 8.677337204770125e-18 ],
+    [ pe:var "eps"; pe:value 0.000244140625 ],
+    [ pe:var "errBound"; pe:value 4.338668602385063e-18 ],
+    [ pe:var "m"; pe:value 18 ],
+    [ pe:var "n"; pe:value 12 ],
+    [ pe:var "s"; pe:value 5.436563656918091 ];
+  pe:uses
+    { :e :bounds (12 18 2.7182818284590455 2.7182818284590455) . },
+    { :e :width (12 8.677337204770125e-18) . },
+    { :e :epsilon (12 0.000244140625) . },
+    { :e :guaranteeWidthLe2PowNegN (12 true) . },
+    { (2.7182818284590455 2.7182818284590455) math:sum 5.436563656918091 . },
+    { (5.436563656918091 2) math:quotient 2.7182818284590455 . },
+    { (8.677337204770125e-18 2) math:quotient 4.338668602385063e-18 . }.
+
+{ :result :eps (12 0.000244140625) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.7182818284590455 ],
+    [ pe:var "M"; pe:value 2.7182818284590455 ],
+    [ pe:var "U"; pe:value 2.7182818284590455 ],
+    [ pe:var "W"; pe:value 8.677337204770125e-18 ],
+    [ pe:var "eps"; pe:value 0.000244140625 ],
+    [ pe:var "errBound"; pe:value 4.338668602385063e-18 ],
+    [ pe:var "m"; pe:value 18 ],
+    [ pe:var "n"; pe:value 12 ],
+    [ pe:var "s"; pe:value 5.436563656918091 ];
+  pe:uses
+    { :e :bounds (12 18 2.7182818284590455 2.7182818284590455) . },
+    { :e :width (12 8.677337204770125e-18) . },
+    { :e :epsilon (12 0.000244140625) . },
+    { :e :guaranteeWidthLe2PowNegN (12 true) . },
+    { (2.7182818284590455 2.7182818284590455) math:sum 5.436563656918091 . },
+    { (5.436563656918091 2) math:quotient 2.7182818284590455 . },
+    { (8.677337204770125e-18 2) math:quotient 4.338668602385063e-18 . }.
+
+{ :result :midpoint (12 2.7182818284590455 4.338668602385063e-18) . }
+  pe:rule
+    {
+        {
+            :e :bounds (?n ?m ?L ?U) .
+            :e :width (?n ?W) .
+            :e :epsilon (?n ?eps) .
+            :e :guaranteeWidthLe2PowNegN (?n true) .
+            (?L ?U) math:sum ?s .
+            (?s 2) math:quotient ?M .
+            (?W 2) math:quotient ?errBound .
+        } => {
+            :result :requestN ?n .
+            :result :chosenM ?m .
+            :result :interval (?n ?L ?U) .
+            :result :width (?n ?W) .
+            :result :eps (?n ?eps) .
+            :result :midpoint (?n ?M ?errBound) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 2.7182818284590455 ],
+    [ pe:var "M"; pe:value 2.7182818284590455 ],
+    [ pe:var "U"; pe:value 2.7182818284590455 ],
+    [ pe:var "W"; pe:value 8.677337204770125e-18 ],
+    [ pe:var "eps"; pe:value 0.000244140625 ],
+    [ pe:var "errBound"; pe:value 4.338668602385063e-18 ],
+    [ pe:var "m"; pe:value 18 ],
+    [ pe:var "n"; pe:value 12 ],
+    [ pe:var "s"; pe:value 5.436563656918091 ];
+  pe:uses
+    { :e :bounds (12 18 2.7182818284590455 2.7182818284590455) . },
+    { :e :width (12 8.677337204770125e-18) . },
+    { :e :epsilon (12 0.000244140625) . },
+    { :e :guaranteeWidthLe2PowNegN (12 true) . },
+    { (2.7182818284590455 2.7182818284590455) math:sum 5.436563656918091 . },
+    { (5.436563656918091 2) math:quotient 2.7182818284590455 . },
+    { (8.677337204770125e-18 2) math:quotient 4.338668602385063e-18 . }.
+
+{ :result :nestedAt (1 true) . }
+  pe:rule
+    {
+        {
+            :e :nested (?n true) .
+        } => {
+            :result :nestedAt (?n true) .
+        } .
+    };
+  pe:binding [ pe:var "n"; pe:value 1 ];
+  pe:uses { :e :nested (1 true) . }.
+
+{ :result :nestedAt (2 true) . }
+  pe:rule
+    {
+        {
+            :e :nested (?n true) .
+        } => {
+            :result :nestedAt (?n true) .
+        } .
+    };
+  pe:binding [ pe:var "n"; pe:value 2 ];
+  pe:uses { :e :nested (2 true) . }.
+
+{ :result :nestedAt (3 true) . }
+  pe:rule
+    {
+        {
+            :e :nested (?n true) .
+        } => {
+            :result :nestedAt (?n true) .
+        } .
+    };
+  pe:binding [ pe:var "n"; pe:value 3 ];
+  pe:uses { :e :nested (3 true) . }.
+
+{ :result :nestedAt (4 true) . }
+  pe:rule
+    {
+        {
+            :e :nested (?n true) .
+        } => {
+            :result :nestedAt (?n true) .
+        } .
+    };
+  pe:binding [ pe:var "n"; pe:value 4 ];
+  pe:uses { :e :nested (4 true) . }.
+
+{ :result :nestedAt (5 true) . }
+  pe:rule
+    {
+        {
+            :e :nested (?n true) .
+        } => {
+            :result :nestedAt (?n true) .
+        } .
+    };
+  pe:binding [ pe:var "n"; pe:value 5 ];
+  pe:uses { :e :nested (5 true) . }.
+
+{ :result :nestedAt (6 true) . }
+  pe:rule
+    {
+        {
+            :e :nested (?n true) .
+        } => {
+            :result :nestedAt (?n true) .
+        } .
+    };
+  pe:binding [ pe:var "n"; pe:value 6 ];
+  pe:uses { :e :nested (6 true) . }.
+
+{ :result :nestedAt (7 true) . }
+  pe:rule
+    {
+        {
+            :e :nested (?n true) .
+        } => {
+            :result :nestedAt (?n true) .
+        } .
+    };
+  pe:binding [ pe:var "n"; pe:value 7 ];
+  pe:uses { :e :nested (7 true) . }.
+
+{ :result :nestedAt (8 true) . }
+  pe:rule
+    {
+        {
+            :e :nested (?n true) .
+        } => {
+            :result :nestedAt (?n true) .
+        } .
+    };
+  pe:binding [ pe:var "n"; pe:value 8 ];
+  pe:uses { :e :nested (8 true) . }.
+
+{ :result :nestedAt (9 true) . }
+  pe:rule
+    {
+        {
+            :e :nested (?n true) .
+        } => {
+            :result :nestedAt (?n true) .
+        } .
+    };
+  pe:binding [ pe:var "n"; pe:value 9 ];
+  pe:uses { :e :nested (9 true) . }.
+
+{ :result :nestedAt (10 true) . }
+  pe:rule
+    {
+        {
+            :e :nested (?n true) .
+        } => {
+            :result :nestedAt (?n true) .
+        } .
+    };
+  pe:binding [ pe:var "n"; pe:value 10 ];
+  pe:uses { :e :nested (10 true) . }.
+
+{ :result :nestedAt (11 true) . }
+  pe:rule
+    {
+        {
+            :e :nested (?n true) .
+        } => {
+            :result :nestedAt (?n true) .
+        } .
+    };
+  pe:binding [ pe:var "n"; pe:value 11 ];
+  pe:uses { :e :nested (11 true) . }.
+
+{ :result :nestedAt (12 true) . }
+  pe:rule
+    {
+        {
+            :e :nested (?n true) .
+        } => {
+            :result :nestedAt (?n true) .
+        } .
+    };
+  pe:binding [ pe:var "n"; pe:value 12 ];
+  pe:uses { :e :nested (12 true) . }.

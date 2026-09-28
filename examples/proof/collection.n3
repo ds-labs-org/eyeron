@@ -1,0 +1,20 @@
+@prefix : <https://eyereasoner.github.io/eyeron/examples/collection#> .
+@prefix log: <http://www.w3.org/2000/10/swap/log#> .
+@prefix pe: <https://eyereasoner.github.io/pe#> .
+
+:__md_output log:outputString "# collection\n\n## Source files\n\n- [N3 rules](../collection.n3)\n- [Input TriG](../input/collection.trig)\n\n" .
+
+{ :__md_output log:outputString "# collection\n\n## Source files\n\n- [N3 rules](../collection.n3)\n- [Input TriG](../input/collection.trig)\n\n" . }
+  pe:rule
+    {
+        {
+            :__md_output :text ?text .
+        } => {
+            :__md_output log:outputString ?text .
+        } .
+    };
+  pe:binding [ pe:var "text"; pe:value "# collection\n\n## Source files\n\n- [N3 rules](../collection.n3)\n- [Input TriG](../input/collection.trig)\n\n" ];
+  pe:uses { :__md_output :text "# collection\n\n## Source files\n\n- [N3 rules](../collection.n3)\n- [Input TriG](../input/collection.trig)\n\n" . }.
+
+{ :__md_output :text "# collection\n\n## Source files\n\n- [N3 rules](../collection.n3)\n- [Input TriG](../input/collection.trig)\n\n" . }
+  pe:fact "collection.n3".

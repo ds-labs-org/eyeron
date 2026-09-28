@@ -101,6 +101,85 @@
 :gd :fUpper (8 217.7953337809371) .
 :gd :fUpper (9 426.87885421063675) .
 :gd :fUpper (10 836.682554252848) .
+:result :k 0 .
+:result :xBounds (0 0.0 2.0) .
+:result :midpoint (0 "1"^^xsd:decimal "1"^^xsd:decimal) .
+:result :width (0 "2"^^xsd:decimal) .
+:result :gBounds (0 "-2"^^xsd:decimal "2"^^xsd:decimal) .
+:result :pBounds (0 -0.4 0.4) .
+:result :fBounds (0 0.0 "1"^^xsd:decimal) .
+:result :k 1 .
+:result :xBounds (1 -0.4 2.4) .
+:result :midpoint (1 "1"^^xsd:decimal 1.4) .
+:result :width (1 2.8) .
+:result :gBounds (1 -2.8 2.8) .
+:result :pBounds (1 -0.5599999999999999 0.5599999999999999) .
+:result :fBounds (1 0.0 1.9599999999999997) .
+:result :k 2 .
+:result :xBounds (2 -0.96 2.96) .
+:result :midpoint (2 "1"^^xsd:decimal 1.96) .
+:result :width (2 3.92) .
+:result :gBounds (2 -3.92 3.92) .
+:result :pBounds (2 -0.784 0.784) .
+:result :fBounds (2 0.0 3.8415999999999997) .
+:result :k 3 .
+:result :xBounds (3 -1.744 3.7439999999999998) .
+:result :midpoint (3 0.9999999999999999 2.7439999999999998) .
+:result :width (3 5.4879999999999995) .
+:result :gBounds (3 -5.4879999999999995 5.4879999999999995) .
+:result :pBounds (3 -1.0976 1.0976) .
+:result :fBounds (3 0.0 7.5295359999999985) .
+:result :k 4 .
+:result :xBounds (4 -2.8415999999999997 4.8416) .
+:result :midpoint (4 "1"^^xsd:decimal 3.8415999999999997) .
+:result :width (4 7.683199999999999) .
+:result :gBounds (4 -7.683199999999999 7.683199999999999) .
+:result :pBounds (4 -1.53664 1.53664) .
+:result :fBounds (4 0.0 14.757890559999998) .
+:result :k 5 .
+:result :xBounds (5 -4.37824 6.37824) .
+:result :midpoint (5 "1"^^xsd:decimal 5.37824) .
+:result :width (5 10.75648) .
+:result :gBounds (5 -10.75648 10.75648) .
+:result :pBounds (5 -2.151296 2.151296) .
+:result :fBounds (5 0.0 28.925465497599998) .
+:result :k 6 .
+:result :xBounds (6 -6.529536 8.529536) .
+:result :midpoint (6 "1"^^xsd:decimal 7.529536) .
+:result :width (6 15.059072) .
+:result :gBounds (6 -15.059072 15.059072) .
+:result :pBounds (6 -3.0118144000000004 3.0118144000000004) .
+:result :fBounds (6 0.0 56.693912375296) .
+:result :k 7 .
+:result :xBounds (7 -9.5413504 11.5413504) .
+:result :midpoint (7 "1"^^xsd:decimal 10.5413504) .
+:result :width (7 21.0827008) .
+:result :gBounds (7 -21.0827008 21.0827008) .
+:result :pBounds (7 -4.21654016 4.21654016) .
+:result :fBounds (7 0.0 111.12006825558018) .
+:result :k 8 .
+:result :xBounds (8 -13.75789056 15.75789056) .
+:result :midpoint (8 "1"^^xsd:decimal 14.75789056) .
+:result :width (8 29.51578112) .
+:result :gBounds (8 -29.51578112 29.51578112) .
+:result :pBounds (8 -5.903156224 5.903156224) .
+:result :fBounds (8 0.0 217.7953337809371) .
+:result :k 9 .
+:result :xBounds (9 -19.661046784 21.661046784) .
+:result :midpoint (9 "1"^^xsd:decimal 20.661046784) .
+:result :width (9 41.322093568) .
+:result :gBounds (9 -41.322093568 41.322093568) .
+:result :pBounds (9 -8.2644187136 8.2644187136) .
+:result :fBounds (9 0.0 426.87885421063675) .
+:result :k 10 .
+:result :xBounds (10 -27.9254654976 29.9254654976) .
+:result :midpoint (10 "1"^^xsd:decimal 28.9254654976) .
+:result :width (10 57.8509309952) .
+:result :gBounds (10 -57.8509309952 57.8509309952) .
+:result :pBounds (10 -11.570186199040002 11.570186199040002) .
+:result :fBounds (10 0.0 836.682554252848) .
+:result :eta 0.2 .
+:result :etaLeHalf true .
 
 { :gd :k 1 . }
   pe:rule 2;
@@ -2350,3 +2429,3491 @@
 
 { 836.682554252848 math:notLessThan 836.682554252848 . }
   pe:builtin math:notLessThan.
+
+{ :result :k 0 . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 0.0 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 2.0 ],
+    [ pe:var "W"; pe:value "2"^^xsd:decimal ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "gL"; pe:value "-2"^^xsd:decimal ],
+    [ pe:var "gU"; pe:value "2"^^xsd:decimal ],
+    [ pe:var "halfW"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "k"; pe:value 0 ],
+    [ pe:var "pL"; pe:value -0.4 ],
+    [ pe:var "pU"; pe:value 0.4 ];
+  pe:uses
+    { :gd :k 0 . },
+    { :gd :xBounds (0 0.0 2.0) . },
+    { :gd :width (0 "2"^^xsd:decimal) . },
+    { :gd :midpoint (0 "1"^^xsd:decimal "1"^^xsd:decimal) . },
+    { :gd :gBounds (0 "-2"^^xsd:decimal "2"^^xsd:decimal) . },
+    { :gd :pBounds (0 -0.4 0.4) . },
+    { :gd :fLower (0 0.0) . },
+    { :gd :fUpper (0 "1"^^xsd:decimal) . }.
+
+{ :result :xBounds (0 0.0 2.0) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 0.0 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 2.0 ],
+    [ pe:var "W"; pe:value "2"^^xsd:decimal ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "gL"; pe:value "-2"^^xsd:decimal ],
+    [ pe:var "gU"; pe:value "2"^^xsd:decimal ],
+    [ pe:var "halfW"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "k"; pe:value 0 ],
+    [ pe:var "pL"; pe:value -0.4 ],
+    [ pe:var "pU"; pe:value 0.4 ];
+  pe:uses
+    { :gd :k 0 . },
+    { :gd :xBounds (0 0.0 2.0) . },
+    { :gd :width (0 "2"^^xsd:decimal) . },
+    { :gd :midpoint (0 "1"^^xsd:decimal "1"^^xsd:decimal) . },
+    { :gd :gBounds (0 "-2"^^xsd:decimal "2"^^xsd:decimal) . },
+    { :gd :pBounds (0 -0.4 0.4) . },
+    { :gd :fLower (0 0.0) . },
+    { :gd :fUpper (0 "1"^^xsd:decimal) . }.
+
+{ :result :midpoint (0 "1"^^xsd:decimal "1"^^xsd:decimal) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 0.0 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 2.0 ],
+    [ pe:var "W"; pe:value "2"^^xsd:decimal ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "gL"; pe:value "-2"^^xsd:decimal ],
+    [ pe:var "gU"; pe:value "2"^^xsd:decimal ],
+    [ pe:var "halfW"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "k"; pe:value 0 ],
+    [ pe:var "pL"; pe:value -0.4 ],
+    [ pe:var "pU"; pe:value 0.4 ];
+  pe:uses
+    { :gd :k 0 . },
+    { :gd :xBounds (0 0.0 2.0) . },
+    { :gd :width (0 "2"^^xsd:decimal) . },
+    { :gd :midpoint (0 "1"^^xsd:decimal "1"^^xsd:decimal) . },
+    { :gd :gBounds (0 "-2"^^xsd:decimal "2"^^xsd:decimal) . },
+    { :gd :pBounds (0 -0.4 0.4) . },
+    { :gd :fLower (0 0.0) . },
+    { :gd :fUpper (0 "1"^^xsd:decimal) . }.
+
+{ :result :width (0 "2"^^xsd:decimal) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 0.0 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 2.0 ],
+    [ pe:var "W"; pe:value "2"^^xsd:decimal ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "gL"; pe:value "-2"^^xsd:decimal ],
+    [ pe:var "gU"; pe:value "2"^^xsd:decimal ],
+    [ pe:var "halfW"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "k"; pe:value 0 ],
+    [ pe:var "pL"; pe:value -0.4 ],
+    [ pe:var "pU"; pe:value 0.4 ];
+  pe:uses
+    { :gd :k 0 . },
+    { :gd :xBounds (0 0.0 2.0) . },
+    { :gd :width (0 "2"^^xsd:decimal) . },
+    { :gd :midpoint (0 "1"^^xsd:decimal "1"^^xsd:decimal) . },
+    { :gd :gBounds (0 "-2"^^xsd:decimal "2"^^xsd:decimal) . },
+    { :gd :pBounds (0 -0.4 0.4) . },
+    { :gd :fLower (0 0.0) . },
+    { :gd :fUpper (0 "1"^^xsd:decimal) . }.
+
+{ :result :gBounds (0 "-2"^^xsd:decimal "2"^^xsd:decimal) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 0.0 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 2.0 ],
+    [ pe:var "W"; pe:value "2"^^xsd:decimal ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "gL"; pe:value "-2"^^xsd:decimal ],
+    [ pe:var "gU"; pe:value "2"^^xsd:decimal ],
+    [ pe:var "halfW"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "k"; pe:value 0 ],
+    [ pe:var "pL"; pe:value -0.4 ],
+    [ pe:var "pU"; pe:value 0.4 ];
+  pe:uses
+    { :gd :k 0 . },
+    { :gd :xBounds (0 0.0 2.0) . },
+    { :gd :width (0 "2"^^xsd:decimal) . },
+    { :gd :midpoint (0 "1"^^xsd:decimal "1"^^xsd:decimal) . },
+    { :gd :gBounds (0 "-2"^^xsd:decimal "2"^^xsd:decimal) . },
+    { :gd :pBounds (0 -0.4 0.4) . },
+    { :gd :fLower (0 0.0) . },
+    { :gd :fUpper (0 "1"^^xsd:decimal) . }.
+
+{ :result :pBounds (0 -0.4 0.4) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 0.0 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 2.0 ],
+    [ pe:var "W"; pe:value "2"^^xsd:decimal ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "gL"; pe:value "-2"^^xsd:decimal ],
+    [ pe:var "gU"; pe:value "2"^^xsd:decimal ],
+    [ pe:var "halfW"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "k"; pe:value 0 ],
+    [ pe:var "pL"; pe:value -0.4 ],
+    [ pe:var "pU"; pe:value 0.4 ];
+  pe:uses
+    { :gd :k 0 . },
+    { :gd :xBounds (0 0.0 2.0) . },
+    { :gd :width (0 "2"^^xsd:decimal) . },
+    { :gd :midpoint (0 "1"^^xsd:decimal "1"^^xsd:decimal) . },
+    { :gd :gBounds (0 "-2"^^xsd:decimal "2"^^xsd:decimal) . },
+    { :gd :pBounds (0 -0.4 0.4) . },
+    { :gd :fLower (0 0.0) . },
+    { :gd :fUpper (0 "1"^^xsd:decimal) . }.
+
+{ :result :fBounds (0 0.0 "1"^^xsd:decimal) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value 0.0 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 2.0 ],
+    [ pe:var "W"; pe:value "2"^^xsd:decimal ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "gL"; pe:value "-2"^^xsd:decimal ],
+    [ pe:var "gU"; pe:value "2"^^xsd:decimal ],
+    [ pe:var "halfW"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "k"; pe:value 0 ],
+    [ pe:var "pL"; pe:value -0.4 ],
+    [ pe:var "pU"; pe:value 0.4 ];
+  pe:uses
+    { :gd :k 0 . },
+    { :gd :xBounds (0 0.0 2.0) . },
+    { :gd :width (0 "2"^^xsd:decimal) . },
+    { :gd :midpoint (0 "1"^^xsd:decimal "1"^^xsd:decimal) . },
+    { :gd :gBounds (0 "-2"^^xsd:decimal "2"^^xsd:decimal) . },
+    { :gd :pBounds (0 -0.4 0.4) . },
+    { :gd :fLower (0 0.0) . },
+    { :gd :fUpper (0 "1"^^xsd:decimal) . }.
+
+{ :result :k 1 . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -0.4 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 2.4 ],
+    [ pe:var "W"; pe:value 2.8 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 1.9599999999999997 ],
+    [ pe:var "gL"; pe:value -2.8 ],
+    [ pe:var "gU"; pe:value 2.8 ],
+    [ pe:var "halfW"; pe:value 1.4 ],
+    [ pe:var "k"; pe:value 1 ],
+    [ pe:var "pL"; pe:value -0.5599999999999999 ],
+    [ pe:var "pU"; pe:value 0.5599999999999999 ];
+  pe:uses
+    { :gd :k 1 . },
+    { :gd :xBounds (1 -0.4 2.4) . },
+    { :gd :width (1 2.8) . },
+    { :gd :midpoint (1 "1"^^xsd:decimal 1.4) . },
+    { :gd :gBounds (1 -2.8 2.8) . },
+    { :gd :pBounds (1 -0.5599999999999999 0.5599999999999999) . },
+    { :gd :fLower (1 0.0) . },
+    { :gd :fUpper (1 1.9599999999999997) . }.
+
+{ :result :xBounds (1 -0.4 2.4) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -0.4 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 2.4 ],
+    [ pe:var "W"; pe:value 2.8 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 1.9599999999999997 ],
+    [ pe:var "gL"; pe:value -2.8 ],
+    [ pe:var "gU"; pe:value 2.8 ],
+    [ pe:var "halfW"; pe:value 1.4 ],
+    [ pe:var "k"; pe:value 1 ],
+    [ pe:var "pL"; pe:value -0.5599999999999999 ],
+    [ pe:var "pU"; pe:value 0.5599999999999999 ];
+  pe:uses
+    { :gd :k 1 . },
+    { :gd :xBounds (1 -0.4 2.4) . },
+    { :gd :width (1 2.8) . },
+    { :gd :midpoint (1 "1"^^xsd:decimal 1.4) . },
+    { :gd :gBounds (1 -2.8 2.8) . },
+    { :gd :pBounds (1 -0.5599999999999999 0.5599999999999999) . },
+    { :gd :fLower (1 0.0) . },
+    { :gd :fUpper (1 1.9599999999999997) . }.
+
+{ :result :midpoint (1 "1"^^xsd:decimal 1.4) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -0.4 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 2.4 ],
+    [ pe:var "W"; pe:value 2.8 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 1.9599999999999997 ],
+    [ pe:var "gL"; pe:value -2.8 ],
+    [ pe:var "gU"; pe:value 2.8 ],
+    [ pe:var "halfW"; pe:value 1.4 ],
+    [ pe:var "k"; pe:value 1 ],
+    [ pe:var "pL"; pe:value -0.5599999999999999 ],
+    [ pe:var "pU"; pe:value 0.5599999999999999 ];
+  pe:uses
+    { :gd :k 1 . },
+    { :gd :xBounds (1 -0.4 2.4) . },
+    { :gd :width (1 2.8) . },
+    { :gd :midpoint (1 "1"^^xsd:decimal 1.4) . },
+    { :gd :gBounds (1 -2.8 2.8) . },
+    { :gd :pBounds (1 -0.5599999999999999 0.5599999999999999) . },
+    { :gd :fLower (1 0.0) . },
+    { :gd :fUpper (1 1.9599999999999997) . }.
+
+{ :result :width (1 2.8) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -0.4 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 2.4 ],
+    [ pe:var "W"; pe:value 2.8 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 1.9599999999999997 ],
+    [ pe:var "gL"; pe:value -2.8 ],
+    [ pe:var "gU"; pe:value 2.8 ],
+    [ pe:var "halfW"; pe:value 1.4 ],
+    [ pe:var "k"; pe:value 1 ],
+    [ pe:var "pL"; pe:value -0.5599999999999999 ],
+    [ pe:var "pU"; pe:value 0.5599999999999999 ];
+  pe:uses
+    { :gd :k 1 . },
+    { :gd :xBounds (1 -0.4 2.4) . },
+    { :gd :width (1 2.8) . },
+    { :gd :midpoint (1 "1"^^xsd:decimal 1.4) . },
+    { :gd :gBounds (1 -2.8 2.8) . },
+    { :gd :pBounds (1 -0.5599999999999999 0.5599999999999999) . },
+    { :gd :fLower (1 0.0) . },
+    { :gd :fUpper (1 1.9599999999999997) . }.
+
+{ :result :gBounds (1 -2.8 2.8) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -0.4 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 2.4 ],
+    [ pe:var "W"; pe:value 2.8 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 1.9599999999999997 ],
+    [ pe:var "gL"; pe:value -2.8 ],
+    [ pe:var "gU"; pe:value 2.8 ],
+    [ pe:var "halfW"; pe:value 1.4 ],
+    [ pe:var "k"; pe:value 1 ],
+    [ pe:var "pL"; pe:value -0.5599999999999999 ],
+    [ pe:var "pU"; pe:value 0.5599999999999999 ];
+  pe:uses
+    { :gd :k 1 . },
+    { :gd :xBounds (1 -0.4 2.4) . },
+    { :gd :width (1 2.8) . },
+    { :gd :midpoint (1 "1"^^xsd:decimal 1.4) . },
+    { :gd :gBounds (1 -2.8 2.8) . },
+    { :gd :pBounds (1 -0.5599999999999999 0.5599999999999999) . },
+    { :gd :fLower (1 0.0) . },
+    { :gd :fUpper (1 1.9599999999999997) . }.
+
+{ :result :pBounds (1 -0.5599999999999999 0.5599999999999999) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -0.4 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 2.4 ],
+    [ pe:var "W"; pe:value 2.8 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 1.9599999999999997 ],
+    [ pe:var "gL"; pe:value -2.8 ],
+    [ pe:var "gU"; pe:value 2.8 ],
+    [ pe:var "halfW"; pe:value 1.4 ],
+    [ pe:var "k"; pe:value 1 ],
+    [ pe:var "pL"; pe:value -0.5599999999999999 ],
+    [ pe:var "pU"; pe:value 0.5599999999999999 ];
+  pe:uses
+    { :gd :k 1 . },
+    { :gd :xBounds (1 -0.4 2.4) . },
+    { :gd :width (1 2.8) . },
+    { :gd :midpoint (1 "1"^^xsd:decimal 1.4) . },
+    { :gd :gBounds (1 -2.8 2.8) . },
+    { :gd :pBounds (1 -0.5599999999999999 0.5599999999999999) . },
+    { :gd :fLower (1 0.0) . },
+    { :gd :fUpper (1 1.9599999999999997) . }.
+
+{ :result :fBounds (1 0.0 1.9599999999999997) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -0.4 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 2.4 ],
+    [ pe:var "W"; pe:value 2.8 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 1.9599999999999997 ],
+    [ pe:var "gL"; pe:value -2.8 ],
+    [ pe:var "gU"; pe:value 2.8 ],
+    [ pe:var "halfW"; pe:value 1.4 ],
+    [ pe:var "k"; pe:value 1 ],
+    [ pe:var "pL"; pe:value -0.5599999999999999 ],
+    [ pe:var "pU"; pe:value 0.5599999999999999 ];
+  pe:uses
+    { :gd :k 1 . },
+    { :gd :xBounds (1 -0.4 2.4) . },
+    { :gd :width (1 2.8) . },
+    { :gd :midpoint (1 "1"^^xsd:decimal 1.4) . },
+    { :gd :gBounds (1 -2.8 2.8) . },
+    { :gd :pBounds (1 -0.5599999999999999 0.5599999999999999) . },
+    { :gd :fLower (1 0.0) . },
+    { :gd :fUpper (1 1.9599999999999997) . }.
+
+{ :result :k 2 . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -0.96 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 2.96 ],
+    [ pe:var "W"; pe:value 3.92 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 3.8415999999999997 ],
+    [ pe:var "gL"; pe:value -3.92 ],
+    [ pe:var "gU"; pe:value 3.92 ],
+    [ pe:var "halfW"; pe:value 1.96 ],
+    [ pe:var "k"; pe:value 2 ],
+    [ pe:var "pL"; pe:value -0.784 ],
+    [ pe:var "pU"; pe:value 0.784 ];
+  pe:uses
+    { :gd :k 2 . },
+    { :gd :xBounds (2 -0.96 2.96) . },
+    { :gd :width (2 3.92) . },
+    { :gd :midpoint (2 "1"^^xsd:decimal 1.96) . },
+    { :gd :gBounds (2 -3.92 3.92) . },
+    { :gd :pBounds (2 -0.784 0.784) . },
+    { :gd :fLower (2 0.0) . },
+    { :gd :fUpper (2 3.8415999999999997) . }.
+
+{ :result :xBounds (2 -0.96 2.96) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -0.96 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 2.96 ],
+    [ pe:var "W"; pe:value 3.92 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 3.8415999999999997 ],
+    [ pe:var "gL"; pe:value -3.92 ],
+    [ pe:var "gU"; pe:value 3.92 ],
+    [ pe:var "halfW"; pe:value 1.96 ],
+    [ pe:var "k"; pe:value 2 ],
+    [ pe:var "pL"; pe:value -0.784 ],
+    [ pe:var "pU"; pe:value 0.784 ];
+  pe:uses
+    { :gd :k 2 . },
+    { :gd :xBounds (2 -0.96 2.96) . },
+    { :gd :width (2 3.92) . },
+    { :gd :midpoint (2 "1"^^xsd:decimal 1.96) . },
+    { :gd :gBounds (2 -3.92 3.92) . },
+    { :gd :pBounds (2 -0.784 0.784) . },
+    { :gd :fLower (2 0.0) . },
+    { :gd :fUpper (2 3.8415999999999997) . }.
+
+{ :result :midpoint (2 "1"^^xsd:decimal 1.96) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -0.96 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 2.96 ],
+    [ pe:var "W"; pe:value 3.92 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 3.8415999999999997 ],
+    [ pe:var "gL"; pe:value -3.92 ],
+    [ pe:var "gU"; pe:value 3.92 ],
+    [ pe:var "halfW"; pe:value 1.96 ],
+    [ pe:var "k"; pe:value 2 ],
+    [ pe:var "pL"; pe:value -0.784 ],
+    [ pe:var "pU"; pe:value 0.784 ];
+  pe:uses
+    { :gd :k 2 . },
+    { :gd :xBounds (2 -0.96 2.96) . },
+    { :gd :width (2 3.92) . },
+    { :gd :midpoint (2 "1"^^xsd:decimal 1.96) . },
+    { :gd :gBounds (2 -3.92 3.92) . },
+    { :gd :pBounds (2 -0.784 0.784) . },
+    { :gd :fLower (2 0.0) . },
+    { :gd :fUpper (2 3.8415999999999997) . }.
+
+{ :result :width (2 3.92) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -0.96 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 2.96 ],
+    [ pe:var "W"; pe:value 3.92 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 3.8415999999999997 ],
+    [ pe:var "gL"; pe:value -3.92 ],
+    [ pe:var "gU"; pe:value 3.92 ],
+    [ pe:var "halfW"; pe:value 1.96 ],
+    [ pe:var "k"; pe:value 2 ],
+    [ pe:var "pL"; pe:value -0.784 ],
+    [ pe:var "pU"; pe:value 0.784 ];
+  pe:uses
+    { :gd :k 2 . },
+    { :gd :xBounds (2 -0.96 2.96) . },
+    { :gd :width (2 3.92) . },
+    { :gd :midpoint (2 "1"^^xsd:decimal 1.96) . },
+    { :gd :gBounds (2 -3.92 3.92) . },
+    { :gd :pBounds (2 -0.784 0.784) . },
+    { :gd :fLower (2 0.0) . },
+    { :gd :fUpper (2 3.8415999999999997) . }.
+
+{ :result :gBounds (2 -3.92 3.92) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -0.96 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 2.96 ],
+    [ pe:var "W"; pe:value 3.92 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 3.8415999999999997 ],
+    [ pe:var "gL"; pe:value -3.92 ],
+    [ pe:var "gU"; pe:value 3.92 ],
+    [ pe:var "halfW"; pe:value 1.96 ],
+    [ pe:var "k"; pe:value 2 ],
+    [ pe:var "pL"; pe:value -0.784 ],
+    [ pe:var "pU"; pe:value 0.784 ];
+  pe:uses
+    { :gd :k 2 . },
+    { :gd :xBounds (2 -0.96 2.96) . },
+    { :gd :width (2 3.92) . },
+    { :gd :midpoint (2 "1"^^xsd:decimal 1.96) . },
+    { :gd :gBounds (2 -3.92 3.92) . },
+    { :gd :pBounds (2 -0.784 0.784) . },
+    { :gd :fLower (2 0.0) . },
+    { :gd :fUpper (2 3.8415999999999997) . }.
+
+{ :result :pBounds (2 -0.784 0.784) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -0.96 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 2.96 ],
+    [ pe:var "W"; pe:value 3.92 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 3.8415999999999997 ],
+    [ pe:var "gL"; pe:value -3.92 ],
+    [ pe:var "gU"; pe:value 3.92 ],
+    [ pe:var "halfW"; pe:value 1.96 ],
+    [ pe:var "k"; pe:value 2 ],
+    [ pe:var "pL"; pe:value -0.784 ],
+    [ pe:var "pU"; pe:value 0.784 ];
+  pe:uses
+    { :gd :k 2 . },
+    { :gd :xBounds (2 -0.96 2.96) . },
+    { :gd :width (2 3.92) . },
+    { :gd :midpoint (2 "1"^^xsd:decimal 1.96) . },
+    { :gd :gBounds (2 -3.92 3.92) . },
+    { :gd :pBounds (2 -0.784 0.784) . },
+    { :gd :fLower (2 0.0) . },
+    { :gd :fUpper (2 3.8415999999999997) . }.
+
+{ :result :fBounds (2 0.0 3.8415999999999997) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -0.96 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 2.96 ],
+    [ pe:var "W"; pe:value 3.92 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 3.8415999999999997 ],
+    [ pe:var "gL"; pe:value -3.92 ],
+    [ pe:var "gU"; pe:value 3.92 ],
+    [ pe:var "halfW"; pe:value 1.96 ],
+    [ pe:var "k"; pe:value 2 ],
+    [ pe:var "pL"; pe:value -0.784 ],
+    [ pe:var "pU"; pe:value 0.784 ];
+  pe:uses
+    { :gd :k 2 . },
+    { :gd :xBounds (2 -0.96 2.96) . },
+    { :gd :width (2 3.92) . },
+    { :gd :midpoint (2 "1"^^xsd:decimal 1.96) . },
+    { :gd :gBounds (2 -3.92 3.92) . },
+    { :gd :pBounds (2 -0.784 0.784) . },
+    { :gd :fLower (2 0.0) . },
+    { :gd :fUpper (2 3.8415999999999997) . }.
+
+{ :result :k 3 . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -1.744 ],
+    [ pe:var "M"; pe:value 0.9999999999999999 ],
+    [ pe:var "U"; pe:value 3.7439999999999998 ],
+    [ pe:var "W"; pe:value 5.4879999999999995 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 7.5295359999999985 ],
+    [ pe:var "gL"; pe:value -5.4879999999999995 ],
+    [ pe:var "gU"; pe:value 5.4879999999999995 ],
+    [ pe:var "halfW"; pe:value 2.7439999999999998 ],
+    [ pe:var "k"; pe:value 3 ],
+    [ pe:var "pL"; pe:value -1.0976 ],
+    [ pe:var "pU"; pe:value 1.0976 ];
+  pe:uses
+    { :gd :k 3 . },
+    { :gd :xBounds (3 -1.744 3.7439999999999998) . },
+    { :gd :width (3 5.4879999999999995) . },
+    { :gd :midpoint (3 0.9999999999999999 2.7439999999999998) . },
+    { :gd :gBounds (3 -5.4879999999999995 5.4879999999999995) . },
+    { :gd :pBounds (3 -1.0976 1.0976) . },
+    { :gd :fLower (3 0.0) . },
+    { :gd :fUpper (3 7.5295359999999985) . }.
+
+{ :result :xBounds (3 -1.744 3.7439999999999998) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -1.744 ],
+    [ pe:var "M"; pe:value 0.9999999999999999 ],
+    [ pe:var "U"; pe:value 3.7439999999999998 ],
+    [ pe:var "W"; pe:value 5.4879999999999995 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 7.5295359999999985 ],
+    [ pe:var "gL"; pe:value -5.4879999999999995 ],
+    [ pe:var "gU"; pe:value 5.4879999999999995 ],
+    [ pe:var "halfW"; pe:value 2.7439999999999998 ],
+    [ pe:var "k"; pe:value 3 ],
+    [ pe:var "pL"; pe:value -1.0976 ],
+    [ pe:var "pU"; pe:value 1.0976 ];
+  pe:uses
+    { :gd :k 3 . },
+    { :gd :xBounds (3 -1.744 3.7439999999999998) . },
+    { :gd :width (3 5.4879999999999995) . },
+    { :gd :midpoint (3 0.9999999999999999 2.7439999999999998) . },
+    { :gd :gBounds (3 -5.4879999999999995 5.4879999999999995) . },
+    { :gd :pBounds (3 -1.0976 1.0976) . },
+    { :gd :fLower (3 0.0) . },
+    { :gd :fUpper (3 7.5295359999999985) . }.
+
+{ :result :midpoint (3 0.9999999999999999 2.7439999999999998) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -1.744 ],
+    [ pe:var "M"; pe:value 0.9999999999999999 ],
+    [ pe:var "U"; pe:value 3.7439999999999998 ],
+    [ pe:var "W"; pe:value 5.4879999999999995 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 7.5295359999999985 ],
+    [ pe:var "gL"; pe:value -5.4879999999999995 ],
+    [ pe:var "gU"; pe:value 5.4879999999999995 ],
+    [ pe:var "halfW"; pe:value 2.7439999999999998 ],
+    [ pe:var "k"; pe:value 3 ],
+    [ pe:var "pL"; pe:value -1.0976 ],
+    [ pe:var "pU"; pe:value 1.0976 ];
+  pe:uses
+    { :gd :k 3 . },
+    { :gd :xBounds (3 -1.744 3.7439999999999998) . },
+    { :gd :width (3 5.4879999999999995) . },
+    { :gd :midpoint (3 0.9999999999999999 2.7439999999999998) . },
+    { :gd :gBounds (3 -5.4879999999999995 5.4879999999999995) . },
+    { :gd :pBounds (3 -1.0976 1.0976) . },
+    { :gd :fLower (3 0.0) . },
+    { :gd :fUpper (3 7.5295359999999985) . }.
+
+{ :result :width (3 5.4879999999999995) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -1.744 ],
+    [ pe:var "M"; pe:value 0.9999999999999999 ],
+    [ pe:var "U"; pe:value 3.7439999999999998 ],
+    [ pe:var "W"; pe:value 5.4879999999999995 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 7.5295359999999985 ],
+    [ pe:var "gL"; pe:value -5.4879999999999995 ],
+    [ pe:var "gU"; pe:value 5.4879999999999995 ],
+    [ pe:var "halfW"; pe:value 2.7439999999999998 ],
+    [ pe:var "k"; pe:value 3 ],
+    [ pe:var "pL"; pe:value -1.0976 ],
+    [ pe:var "pU"; pe:value 1.0976 ];
+  pe:uses
+    { :gd :k 3 . },
+    { :gd :xBounds (3 -1.744 3.7439999999999998) . },
+    { :gd :width (3 5.4879999999999995) . },
+    { :gd :midpoint (3 0.9999999999999999 2.7439999999999998) . },
+    { :gd :gBounds (3 -5.4879999999999995 5.4879999999999995) . },
+    { :gd :pBounds (3 -1.0976 1.0976) . },
+    { :gd :fLower (3 0.0) . },
+    { :gd :fUpper (3 7.5295359999999985) . }.
+
+{ :result :gBounds (3 -5.4879999999999995 5.4879999999999995) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -1.744 ],
+    [ pe:var "M"; pe:value 0.9999999999999999 ],
+    [ pe:var "U"; pe:value 3.7439999999999998 ],
+    [ pe:var "W"; pe:value 5.4879999999999995 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 7.5295359999999985 ],
+    [ pe:var "gL"; pe:value -5.4879999999999995 ],
+    [ pe:var "gU"; pe:value 5.4879999999999995 ],
+    [ pe:var "halfW"; pe:value 2.7439999999999998 ],
+    [ pe:var "k"; pe:value 3 ],
+    [ pe:var "pL"; pe:value -1.0976 ],
+    [ pe:var "pU"; pe:value 1.0976 ];
+  pe:uses
+    { :gd :k 3 . },
+    { :gd :xBounds (3 -1.744 3.7439999999999998) . },
+    { :gd :width (3 5.4879999999999995) . },
+    { :gd :midpoint (3 0.9999999999999999 2.7439999999999998) . },
+    { :gd :gBounds (3 -5.4879999999999995 5.4879999999999995) . },
+    { :gd :pBounds (3 -1.0976 1.0976) . },
+    { :gd :fLower (3 0.0) . },
+    { :gd :fUpper (3 7.5295359999999985) . }.
+
+{ :result :pBounds (3 -1.0976 1.0976) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -1.744 ],
+    [ pe:var "M"; pe:value 0.9999999999999999 ],
+    [ pe:var "U"; pe:value 3.7439999999999998 ],
+    [ pe:var "W"; pe:value 5.4879999999999995 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 7.5295359999999985 ],
+    [ pe:var "gL"; pe:value -5.4879999999999995 ],
+    [ pe:var "gU"; pe:value 5.4879999999999995 ],
+    [ pe:var "halfW"; pe:value 2.7439999999999998 ],
+    [ pe:var "k"; pe:value 3 ],
+    [ pe:var "pL"; pe:value -1.0976 ],
+    [ pe:var "pU"; pe:value 1.0976 ];
+  pe:uses
+    { :gd :k 3 . },
+    { :gd :xBounds (3 -1.744 3.7439999999999998) . },
+    { :gd :width (3 5.4879999999999995) . },
+    { :gd :midpoint (3 0.9999999999999999 2.7439999999999998) . },
+    { :gd :gBounds (3 -5.4879999999999995 5.4879999999999995) . },
+    { :gd :pBounds (3 -1.0976 1.0976) . },
+    { :gd :fLower (3 0.0) . },
+    { :gd :fUpper (3 7.5295359999999985) . }.
+
+{ :result :fBounds (3 0.0 7.5295359999999985) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -1.744 ],
+    [ pe:var "M"; pe:value 0.9999999999999999 ],
+    [ pe:var "U"; pe:value 3.7439999999999998 ],
+    [ pe:var "W"; pe:value 5.4879999999999995 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 7.5295359999999985 ],
+    [ pe:var "gL"; pe:value -5.4879999999999995 ],
+    [ pe:var "gU"; pe:value 5.4879999999999995 ],
+    [ pe:var "halfW"; pe:value 2.7439999999999998 ],
+    [ pe:var "k"; pe:value 3 ],
+    [ pe:var "pL"; pe:value -1.0976 ],
+    [ pe:var "pU"; pe:value 1.0976 ];
+  pe:uses
+    { :gd :k 3 . },
+    { :gd :xBounds (3 -1.744 3.7439999999999998) . },
+    { :gd :width (3 5.4879999999999995) . },
+    { :gd :midpoint (3 0.9999999999999999 2.7439999999999998) . },
+    { :gd :gBounds (3 -5.4879999999999995 5.4879999999999995) . },
+    { :gd :pBounds (3 -1.0976 1.0976) . },
+    { :gd :fLower (3 0.0) . },
+    { :gd :fUpper (3 7.5295359999999985) . }.
+
+{ :result :k 4 . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -2.8415999999999997 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 4.8416 ],
+    [ pe:var "W"; pe:value 7.683199999999999 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 14.757890559999998 ],
+    [ pe:var "gL"; pe:value -7.683199999999999 ],
+    [ pe:var "gU"; pe:value 7.683199999999999 ],
+    [ pe:var "halfW"; pe:value 3.8415999999999997 ],
+    [ pe:var "k"; pe:value 4 ],
+    [ pe:var "pL"; pe:value -1.53664 ],
+    [ pe:var "pU"; pe:value 1.53664 ];
+  pe:uses
+    { :gd :k 4 . },
+    { :gd :xBounds (4 -2.8415999999999997 4.8416) . },
+    { :gd :width (4 7.683199999999999) . },
+    { :gd :midpoint (4 "1"^^xsd:decimal 3.8415999999999997) . },
+    { :gd :gBounds (4 -7.683199999999999 7.683199999999999) . },
+    { :gd :pBounds (4 -1.53664 1.53664) . },
+    { :gd :fLower (4 0.0) . },
+    { :gd :fUpper (4 14.757890559999998) . }.
+
+{ :result :xBounds (4 -2.8415999999999997 4.8416) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -2.8415999999999997 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 4.8416 ],
+    [ pe:var "W"; pe:value 7.683199999999999 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 14.757890559999998 ],
+    [ pe:var "gL"; pe:value -7.683199999999999 ],
+    [ pe:var "gU"; pe:value 7.683199999999999 ],
+    [ pe:var "halfW"; pe:value 3.8415999999999997 ],
+    [ pe:var "k"; pe:value 4 ],
+    [ pe:var "pL"; pe:value -1.53664 ],
+    [ pe:var "pU"; pe:value 1.53664 ];
+  pe:uses
+    { :gd :k 4 . },
+    { :gd :xBounds (4 -2.8415999999999997 4.8416) . },
+    { :gd :width (4 7.683199999999999) . },
+    { :gd :midpoint (4 "1"^^xsd:decimal 3.8415999999999997) . },
+    { :gd :gBounds (4 -7.683199999999999 7.683199999999999) . },
+    { :gd :pBounds (4 -1.53664 1.53664) . },
+    { :gd :fLower (4 0.0) . },
+    { :gd :fUpper (4 14.757890559999998) . }.
+
+{ :result :midpoint (4 "1"^^xsd:decimal 3.8415999999999997) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -2.8415999999999997 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 4.8416 ],
+    [ pe:var "W"; pe:value 7.683199999999999 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 14.757890559999998 ],
+    [ pe:var "gL"; pe:value -7.683199999999999 ],
+    [ pe:var "gU"; pe:value 7.683199999999999 ],
+    [ pe:var "halfW"; pe:value 3.8415999999999997 ],
+    [ pe:var "k"; pe:value 4 ],
+    [ pe:var "pL"; pe:value -1.53664 ],
+    [ pe:var "pU"; pe:value 1.53664 ];
+  pe:uses
+    { :gd :k 4 . },
+    { :gd :xBounds (4 -2.8415999999999997 4.8416) . },
+    { :gd :width (4 7.683199999999999) . },
+    { :gd :midpoint (4 "1"^^xsd:decimal 3.8415999999999997) . },
+    { :gd :gBounds (4 -7.683199999999999 7.683199999999999) . },
+    { :gd :pBounds (4 -1.53664 1.53664) . },
+    { :gd :fLower (4 0.0) . },
+    { :gd :fUpper (4 14.757890559999998) . }.
+
+{ :result :width (4 7.683199999999999) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -2.8415999999999997 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 4.8416 ],
+    [ pe:var "W"; pe:value 7.683199999999999 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 14.757890559999998 ],
+    [ pe:var "gL"; pe:value -7.683199999999999 ],
+    [ pe:var "gU"; pe:value 7.683199999999999 ],
+    [ pe:var "halfW"; pe:value 3.8415999999999997 ],
+    [ pe:var "k"; pe:value 4 ],
+    [ pe:var "pL"; pe:value -1.53664 ],
+    [ pe:var "pU"; pe:value 1.53664 ];
+  pe:uses
+    { :gd :k 4 . },
+    { :gd :xBounds (4 -2.8415999999999997 4.8416) . },
+    { :gd :width (4 7.683199999999999) . },
+    { :gd :midpoint (4 "1"^^xsd:decimal 3.8415999999999997) . },
+    { :gd :gBounds (4 -7.683199999999999 7.683199999999999) . },
+    { :gd :pBounds (4 -1.53664 1.53664) . },
+    { :gd :fLower (4 0.0) . },
+    { :gd :fUpper (4 14.757890559999998) . }.
+
+{ :result :gBounds (4 -7.683199999999999 7.683199999999999) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -2.8415999999999997 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 4.8416 ],
+    [ pe:var "W"; pe:value 7.683199999999999 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 14.757890559999998 ],
+    [ pe:var "gL"; pe:value -7.683199999999999 ],
+    [ pe:var "gU"; pe:value 7.683199999999999 ],
+    [ pe:var "halfW"; pe:value 3.8415999999999997 ],
+    [ pe:var "k"; pe:value 4 ],
+    [ pe:var "pL"; pe:value -1.53664 ],
+    [ pe:var "pU"; pe:value 1.53664 ];
+  pe:uses
+    { :gd :k 4 . },
+    { :gd :xBounds (4 -2.8415999999999997 4.8416) . },
+    { :gd :width (4 7.683199999999999) . },
+    { :gd :midpoint (4 "1"^^xsd:decimal 3.8415999999999997) . },
+    { :gd :gBounds (4 -7.683199999999999 7.683199999999999) . },
+    { :gd :pBounds (4 -1.53664 1.53664) . },
+    { :gd :fLower (4 0.0) . },
+    { :gd :fUpper (4 14.757890559999998) . }.
+
+{ :result :pBounds (4 -1.53664 1.53664) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -2.8415999999999997 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 4.8416 ],
+    [ pe:var "W"; pe:value 7.683199999999999 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 14.757890559999998 ],
+    [ pe:var "gL"; pe:value -7.683199999999999 ],
+    [ pe:var "gU"; pe:value 7.683199999999999 ],
+    [ pe:var "halfW"; pe:value 3.8415999999999997 ],
+    [ pe:var "k"; pe:value 4 ],
+    [ pe:var "pL"; pe:value -1.53664 ],
+    [ pe:var "pU"; pe:value 1.53664 ];
+  pe:uses
+    { :gd :k 4 . },
+    { :gd :xBounds (4 -2.8415999999999997 4.8416) . },
+    { :gd :width (4 7.683199999999999) . },
+    { :gd :midpoint (4 "1"^^xsd:decimal 3.8415999999999997) . },
+    { :gd :gBounds (4 -7.683199999999999 7.683199999999999) . },
+    { :gd :pBounds (4 -1.53664 1.53664) . },
+    { :gd :fLower (4 0.0) . },
+    { :gd :fUpper (4 14.757890559999998) . }.
+
+{ :result :fBounds (4 0.0 14.757890559999998) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -2.8415999999999997 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 4.8416 ],
+    [ pe:var "W"; pe:value 7.683199999999999 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 14.757890559999998 ],
+    [ pe:var "gL"; pe:value -7.683199999999999 ],
+    [ pe:var "gU"; pe:value 7.683199999999999 ],
+    [ pe:var "halfW"; pe:value 3.8415999999999997 ],
+    [ pe:var "k"; pe:value 4 ],
+    [ pe:var "pL"; pe:value -1.53664 ],
+    [ pe:var "pU"; pe:value 1.53664 ];
+  pe:uses
+    { :gd :k 4 . },
+    { :gd :xBounds (4 -2.8415999999999997 4.8416) . },
+    { :gd :width (4 7.683199999999999) . },
+    { :gd :midpoint (4 "1"^^xsd:decimal 3.8415999999999997) . },
+    { :gd :gBounds (4 -7.683199999999999 7.683199999999999) . },
+    { :gd :pBounds (4 -1.53664 1.53664) . },
+    { :gd :fLower (4 0.0) . },
+    { :gd :fUpper (4 14.757890559999998) . }.
+
+{ :result :k 5 . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -4.37824 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 6.37824 ],
+    [ pe:var "W"; pe:value 10.75648 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 28.925465497599998 ],
+    [ pe:var "gL"; pe:value -10.75648 ],
+    [ pe:var "gU"; pe:value 10.75648 ],
+    [ pe:var "halfW"; pe:value 5.37824 ],
+    [ pe:var "k"; pe:value 5 ],
+    [ pe:var "pL"; pe:value -2.151296 ],
+    [ pe:var "pU"; pe:value 2.151296 ];
+  pe:uses
+    { :gd :k 5 . },
+    { :gd :xBounds (5 -4.37824 6.37824) . },
+    { :gd :width (5 10.75648) . },
+    { :gd :midpoint (5 "1"^^xsd:decimal 5.37824) . },
+    { :gd :gBounds (5 -10.75648 10.75648) . },
+    { :gd :pBounds (5 -2.151296 2.151296) . },
+    { :gd :fLower (5 0.0) . },
+    { :gd :fUpper (5 28.925465497599998) . }.
+
+{ :result :xBounds (5 -4.37824 6.37824) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -4.37824 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 6.37824 ],
+    [ pe:var "W"; pe:value 10.75648 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 28.925465497599998 ],
+    [ pe:var "gL"; pe:value -10.75648 ],
+    [ pe:var "gU"; pe:value 10.75648 ],
+    [ pe:var "halfW"; pe:value 5.37824 ],
+    [ pe:var "k"; pe:value 5 ],
+    [ pe:var "pL"; pe:value -2.151296 ],
+    [ pe:var "pU"; pe:value 2.151296 ];
+  pe:uses
+    { :gd :k 5 . },
+    { :gd :xBounds (5 -4.37824 6.37824) . },
+    { :gd :width (5 10.75648) . },
+    { :gd :midpoint (5 "1"^^xsd:decimal 5.37824) . },
+    { :gd :gBounds (5 -10.75648 10.75648) . },
+    { :gd :pBounds (5 -2.151296 2.151296) . },
+    { :gd :fLower (5 0.0) . },
+    { :gd :fUpper (5 28.925465497599998) . }.
+
+{ :result :midpoint (5 "1"^^xsd:decimal 5.37824) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -4.37824 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 6.37824 ],
+    [ pe:var "W"; pe:value 10.75648 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 28.925465497599998 ],
+    [ pe:var "gL"; pe:value -10.75648 ],
+    [ pe:var "gU"; pe:value 10.75648 ],
+    [ pe:var "halfW"; pe:value 5.37824 ],
+    [ pe:var "k"; pe:value 5 ],
+    [ pe:var "pL"; pe:value -2.151296 ],
+    [ pe:var "pU"; pe:value 2.151296 ];
+  pe:uses
+    { :gd :k 5 . },
+    { :gd :xBounds (5 -4.37824 6.37824) . },
+    { :gd :width (5 10.75648) . },
+    { :gd :midpoint (5 "1"^^xsd:decimal 5.37824) . },
+    { :gd :gBounds (5 -10.75648 10.75648) . },
+    { :gd :pBounds (5 -2.151296 2.151296) . },
+    { :gd :fLower (5 0.0) . },
+    { :gd :fUpper (5 28.925465497599998) . }.
+
+{ :result :width (5 10.75648) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -4.37824 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 6.37824 ],
+    [ pe:var "W"; pe:value 10.75648 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 28.925465497599998 ],
+    [ pe:var "gL"; pe:value -10.75648 ],
+    [ pe:var "gU"; pe:value 10.75648 ],
+    [ pe:var "halfW"; pe:value 5.37824 ],
+    [ pe:var "k"; pe:value 5 ],
+    [ pe:var "pL"; pe:value -2.151296 ],
+    [ pe:var "pU"; pe:value 2.151296 ];
+  pe:uses
+    { :gd :k 5 . },
+    { :gd :xBounds (5 -4.37824 6.37824) . },
+    { :gd :width (5 10.75648) . },
+    { :gd :midpoint (5 "1"^^xsd:decimal 5.37824) . },
+    { :gd :gBounds (5 -10.75648 10.75648) . },
+    { :gd :pBounds (5 -2.151296 2.151296) . },
+    { :gd :fLower (5 0.0) . },
+    { :gd :fUpper (5 28.925465497599998) . }.
+
+{ :result :gBounds (5 -10.75648 10.75648) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -4.37824 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 6.37824 ],
+    [ pe:var "W"; pe:value 10.75648 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 28.925465497599998 ],
+    [ pe:var "gL"; pe:value -10.75648 ],
+    [ pe:var "gU"; pe:value 10.75648 ],
+    [ pe:var "halfW"; pe:value 5.37824 ],
+    [ pe:var "k"; pe:value 5 ],
+    [ pe:var "pL"; pe:value -2.151296 ],
+    [ pe:var "pU"; pe:value 2.151296 ];
+  pe:uses
+    { :gd :k 5 . },
+    { :gd :xBounds (5 -4.37824 6.37824) . },
+    { :gd :width (5 10.75648) . },
+    { :gd :midpoint (5 "1"^^xsd:decimal 5.37824) . },
+    { :gd :gBounds (5 -10.75648 10.75648) . },
+    { :gd :pBounds (5 -2.151296 2.151296) . },
+    { :gd :fLower (5 0.0) . },
+    { :gd :fUpper (5 28.925465497599998) . }.
+
+{ :result :pBounds (5 -2.151296 2.151296) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -4.37824 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 6.37824 ],
+    [ pe:var "W"; pe:value 10.75648 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 28.925465497599998 ],
+    [ pe:var "gL"; pe:value -10.75648 ],
+    [ pe:var "gU"; pe:value 10.75648 ],
+    [ pe:var "halfW"; pe:value 5.37824 ],
+    [ pe:var "k"; pe:value 5 ],
+    [ pe:var "pL"; pe:value -2.151296 ],
+    [ pe:var "pU"; pe:value 2.151296 ];
+  pe:uses
+    { :gd :k 5 . },
+    { :gd :xBounds (5 -4.37824 6.37824) . },
+    { :gd :width (5 10.75648) . },
+    { :gd :midpoint (5 "1"^^xsd:decimal 5.37824) . },
+    { :gd :gBounds (5 -10.75648 10.75648) . },
+    { :gd :pBounds (5 -2.151296 2.151296) . },
+    { :gd :fLower (5 0.0) . },
+    { :gd :fUpper (5 28.925465497599998) . }.
+
+{ :result :fBounds (5 0.0 28.925465497599998) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -4.37824 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 6.37824 ],
+    [ pe:var "W"; pe:value 10.75648 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 28.925465497599998 ],
+    [ pe:var "gL"; pe:value -10.75648 ],
+    [ pe:var "gU"; pe:value 10.75648 ],
+    [ pe:var "halfW"; pe:value 5.37824 ],
+    [ pe:var "k"; pe:value 5 ],
+    [ pe:var "pL"; pe:value -2.151296 ],
+    [ pe:var "pU"; pe:value 2.151296 ];
+  pe:uses
+    { :gd :k 5 . },
+    { :gd :xBounds (5 -4.37824 6.37824) . },
+    { :gd :width (5 10.75648) . },
+    { :gd :midpoint (5 "1"^^xsd:decimal 5.37824) . },
+    { :gd :gBounds (5 -10.75648 10.75648) . },
+    { :gd :pBounds (5 -2.151296 2.151296) . },
+    { :gd :fLower (5 0.0) . },
+    { :gd :fUpper (5 28.925465497599998) . }.
+
+{ :result :k 6 . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -6.529536 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 8.529536 ],
+    [ pe:var "W"; pe:value 15.059072 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 56.693912375296 ],
+    [ pe:var "gL"; pe:value -15.059072 ],
+    [ pe:var "gU"; pe:value 15.059072 ],
+    [ pe:var "halfW"; pe:value 7.529536 ],
+    [ pe:var "k"; pe:value 6 ],
+    [ pe:var "pL"; pe:value -3.0118144000000004 ],
+    [ pe:var "pU"; pe:value 3.0118144000000004 ];
+  pe:uses
+    { :gd :k 6 . },
+    { :gd :xBounds (6 -6.529536 8.529536) . },
+    { :gd :width (6 15.059072) . },
+    { :gd :midpoint (6 "1"^^xsd:decimal 7.529536) . },
+    { :gd :gBounds (6 -15.059072 15.059072) . },
+    { :gd :pBounds (6 -3.0118144000000004 3.0118144000000004) . },
+    { :gd :fLower (6 0.0) . },
+    { :gd :fUpper (6 56.693912375296) . }.
+
+{ :result :xBounds (6 -6.529536 8.529536) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -6.529536 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 8.529536 ],
+    [ pe:var "W"; pe:value 15.059072 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 56.693912375296 ],
+    [ pe:var "gL"; pe:value -15.059072 ],
+    [ pe:var "gU"; pe:value 15.059072 ],
+    [ pe:var "halfW"; pe:value 7.529536 ],
+    [ pe:var "k"; pe:value 6 ],
+    [ pe:var "pL"; pe:value -3.0118144000000004 ],
+    [ pe:var "pU"; pe:value 3.0118144000000004 ];
+  pe:uses
+    { :gd :k 6 . },
+    { :gd :xBounds (6 -6.529536 8.529536) . },
+    { :gd :width (6 15.059072) . },
+    { :gd :midpoint (6 "1"^^xsd:decimal 7.529536) . },
+    { :gd :gBounds (6 -15.059072 15.059072) . },
+    { :gd :pBounds (6 -3.0118144000000004 3.0118144000000004) . },
+    { :gd :fLower (6 0.0) . },
+    { :gd :fUpper (6 56.693912375296) . }.
+
+{ :result :midpoint (6 "1"^^xsd:decimal 7.529536) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -6.529536 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 8.529536 ],
+    [ pe:var "W"; pe:value 15.059072 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 56.693912375296 ],
+    [ pe:var "gL"; pe:value -15.059072 ],
+    [ pe:var "gU"; pe:value 15.059072 ],
+    [ pe:var "halfW"; pe:value 7.529536 ],
+    [ pe:var "k"; pe:value 6 ],
+    [ pe:var "pL"; pe:value -3.0118144000000004 ],
+    [ pe:var "pU"; pe:value 3.0118144000000004 ];
+  pe:uses
+    { :gd :k 6 . },
+    { :gd :xBounds (6 -6.529536 8.529536) . },
+    { :gd :width (6 15.059072) . },
+    { :gd :midpoint (6 "1"^^xsd:decimal 7.529536) . },
+    { :gd :gBounds (6 -15.059072 15.059072) . },
+    { :gd :pBounds (6 -3.0118144000000004 3.0118144000000004) . },
+    { :gd :fLower (6 0.0) . },
+    { :gd :fUpper (6 56.693912375296) . }.
+
+{ :result :width (6 15.059072) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -6.529536 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 8.529536 ],
+    [ pe:var "W"; pe:value 15.059072 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 56.693912375296 ],
+    [ pe:var "gL"; pe:value -15.059072 ],
+    [ pe:var "gU"; pe:value 15.059072 ],
+    [ pe:var "halfW"; pe:value 7.529536 ],
+    [ pe:var "k"; pe:value 6 ],
+    [ pe:var "pL"; pe:value -3.0118144000000004 ],
+    [ pe:var "pU"; pe:value 3.0118144000000004 ];
+  pe:uses
+    { :gd :k 6 . },
+    { :gd :xBounds (6 -6.529536 8.529536) . },
+    { :gd :width (6 15.059072) . },
+    { :gd :midpoint (6 "1"^^xsd:decimal 7.529536) . },
+    { :gd :gBounds (6 -15.059072 15.059072) . },
+    { :gd :pBounds (6 -3.0118144000000004 3.0118144000000004) . },
+    { :gd :fLower (6 0.0) . },
+    { :gd :fUpper (6 56.693912375296) . }.
+
+{ :result :gBounds (6 -15.059072 15.059072) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -6.529536 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 8.529536 ],
+    [ pe:var "W"; pe:value 15.059072 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 56.693912375296 ],
+    [ pe:var "gL"; pe:value -15.059072 ],
+    [ pe:var "gU"; pe:value 15.059072 ],
+    [ pe:var "halfW"; pe:value 7.529536 ],
+    [ pe:var "k"; pe:value 6 ],
+    [ pe:var "pL"; pe:value -3.0118144000000004 ],
+    [ pe:var "pU"; pe:value 3.0118144000000004 ];
+  pe:uses
+    { :gd :k 6 . },
+    { :gd :xBounds (6 -6.529536 8.529536) . },
+    { :gd :width (6 15.059072) . },
+    { :gd :midpoint (6 "1"^^xsd:decimal 7.529536) . },
+    { :gd :gBounds (6 -15.059072 15.059072) . },
+    { :gd :pBounds (6 -3.0118144000000004 3.0118144000000004) . },
+    { :gd :fLower (6 0.0) . },
+    { :gd :fUpper (6 56.693912375296) . }.
+
+{ :result :pBounds (6 -3.0118144000000004 3.0118144000000004) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -6.529536 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 8.529536 ],
+    [ pe:var "W"; pe:value 15.059072 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 56.693912375296 ],
+    [ pe:var "gL"; pe:value -15.059072 ],
+    [ pe:var "gU"; pe:value 15.059072 ],
+    [ pe:var "halfW"; pe:value 7.529536 ],
+    [ pe:var "k"; pe:value 6 ],
+    [ pe:var "pL"; pe:value -3.0118144000000004 ],
+    [ pe:var "pU"; pe:value 3.0118144000000004 ];
+  pe:uses
+    { :gd :k 6 . },
+    { :gd :xBounds (6 -6.529536 8.529536) . },
+    { :gd :width (6 15.059072) . },
+    { :gd :midpoint (6 "1"^^xsd:decimal 7.529536) . },
+    { :gd :gBounds (6 -15.059072 15.059072) . },
+    { :gd :pBounds (6 -3.0118144000000004 3.0118144000000004) . },
+    { :gd :fLower (6 0.0) . },
+    { :gd :fUpper (6 56.693912375296) . }.
+
+{ :result :fBounds (6 0.0 56.693912375296) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -6.529536 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 8.529536 ],
+    [ pe:var "W"; pe:value 15.059072 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 56.693912375296 ],
+    [ pe:var "gL"; pe:value -15.059072 ],
+    [ pe:var "gU"; pe:value 15.059072 ],
+    [ pe:var "halfW"; pe:value 7.529536 ],
+    [ pe:var "k"; pe:value 6 ],
+    [ pe:var "pL"; pe:value -3.0118144000000004 ],
+    [ pe:var "pU"; pe:value 3.0118144000000004 ];
+  pe:uses
+    { :gd :k 6 . },
+    { :gd :xBounds (6 -6.529536 8.529536) . },
+    { :gd :width (6 15.059072) . },
+    { :gd :midpoint (6 "1"^^xsd:decimal 7.529536) . },
+    { :gd :gBounds (6 -15.059072 15.059072) . },
+    { :gd :pBounds (6 -3.0118144000000004 3.0118144000000004) . },
+    { :gd :fLower (6 0.0) . },
+    { :gd :fUpper (6 56.693912375296) . }.
+
+{ :result :k 7 . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -9.5413504 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 11.5413504 ],
+    [ pe:var "W"; pe:value 21.0827008 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 111.12006825558018 ],
+    [ pe:var "gL"; pe:value -21.0827008 ],
+    [ pe:var "gU"; pe:value 21.0827008 ],
+    [ pe:var "halfW"; pe:value 10.5413504 ],
+    [ pe:var "k"; pe:value 7 ],
+    [ pe:var "pL"; pe:value -4.21654016 ],
+    [ pe:var "pU"; pe:value 4.21654016 ];
+  pe:uses
+    { :gd :k 7 . },
+    { :gd :xBounds (7 -9.5413504 11.5413504) . },
+    { :gd :width (7 21.0827008) . },
+    { :gd :midpoint (7 "1"^^xsd:decimal 10.5413504) . },
+    { :gd :gBounds (7 -21.0827008 21.0827008) . },
+    { :gd :pBounds (7 -4.21654016 4.21654016) . },
+    { :gd :fLower (7 0.0) . },
+    { :gd :fUpper (7 111.12006825558018) . }.
+
+{ :result :xBounds (7 -9.5413504 11.5413504) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -9.5413504 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 11.5413504 ],
+    [ pe:var "W"; pe:value 21.0827008 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 111.12006825558018 ],
+    [ pe:var "gL"; pe:value -21.0827008 ],
+    [ pe:var "gU"; pe:value 21.0827008 ],
+    [ pe:var "halfW"; pe:value 10.5413504 ],
+    [ pe:var "k"; pe:value 7 ],
+    [ pe:var "pL"; pe:value -4.21654016 ],
+    [ pe:var "pU"; pe:value 4.21654016 ];
+  pe:uses
+    { :gd :k 7 . },
+    { :gd :xBounds (7 -9.5413504 11.5413504) . },
+    { :gd :width (7 21.0827008) . },
+    { :gd :midpoint (7 "1"^^xsd:decimal 10.5413504) . },
+    { :gd :gBounds (7 -21.0827008 21.0827008) . },
+    { :gd :pBounds (7 -4.21654016 4.21654016) . },
+    { :gd :fLower (7 0.0) . },
+    { :gd :fUpper (7 111.12006825558018) . }.
+
+{ :result :midpoint (7 "1"^^xsd:decimal 10.5413504) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -9.5413504 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 11.5413504 ],
+    [ pe:var "W"; pe:value 21.0827008 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 111.12006825558018 ],
+    [ pe:var "gL"; pe:value -21.0827008 ],
+    [ pe:var "gU"; pe:value 21.0827008 ],
+    [ pe:var "halfW"; pe:value 10.5413504 ],
+    [ pe:var "k"; pe:value 7 ],
+    [ pe:var "pL"; pe:value -4.21654016 ],
+    [ pe:var "pU"; pe:value 4.21654016 ];
+  pe:uses
+    { :gd :k 7 . },
+    { :gd :xBounds (7 -9.5413504 11.5413504) . },
+    { :gd :width (7 21.0827008) . },
+    { :gd :midpoint (7 "1"^^xsd:decimal 10.5413504) . },
+    { :gd :gBounds (7 -21.0827008 21.0827008) . },
+    { :gd :pBounds (7 -4.21654016 4.21654016) . },
+    { :gd :fLower (7 0.0) . },
+    { :gd :fUpper (7 111.12006825558018) . }.
+
+{ :result :width (7 21.0827008) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -9.5413504 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 11.5413504 ],
+    [ pe:var "W"; pe:value 21.0827008 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 111.12006825558018 ],
+    [ pe:var "gL"; pe:value -21.0827008 ],
+    [ pe:var "gU"; pe:value 21.0827008 ],
+    [ pe:var "halfW"; pe:value 10.5413504 ],
+    [ pe:var "k"; pe:value 7 ],
+    [ pe:var "pL"; pe:value -4.21654016 ],
+    [ pe:var "pU"; pe:value 4.21654016 ];
+  pe:uses
+    { :gd :k 7 . },
+    { :gd :xBounds (7 -9.5413504 11.5413504) . },
+    { :gd :width (7 21.0827008) . },
+    { :gd :midpoint (7 "1"^^xsd:decimal 10.5413504) . },
+    { :gd :gBounds (7 -21.0827008 21.0827008) . },
+    { :gd :pBounds (7 -4.21654016 4.21654016) . },
+    { :gd :fLower (7 0.0) . },
+    { :gd :fUpper (7 111.12006825558018) . }.
+
+{ :result :gBounds (7 -21.0827008 21.0827008) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -9.5413504 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 11.5413504 ],
+    [ pe:var "W"; pe:value 21.0827008 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 111.12006825558018 ],
+    [ pe:var "gL"; pe:value -21.0827008 ],
+    [ pe:var "gU"; pe:value 21.0827008 ],
+    [ pe:var "halfW"; pe:value 10.5413504 ],
+    [ pe:var "k"; pe:value 7 ],
+    [ pe:var "pL"; pe:value -4.21654016 ],
+    [ pe:var "pU"; pe:value 4.21654016 ];
+  pe:uses
+    { :gd :k 7 . },
+    { :gd :xBounds (7 -9.5413504 11.5413504) . },
+    { :gd :width (7 21.0827008) . },
+    { :gd :midpoint (7 "1"^^xsd:decimal 10.5413504) . },
+    { :gd :gBounds (7 -21.0827008 21.0827008) . },
+    { :gd :pBounds (7 -4.21654016 4.21654016) . },
+    { :gd :fLower (7 0.0) . },
+    { :gd :fUpper (7 111.12006825558018) . }.
+
+{ :result :pBounds (7 -4.21654016 4.21654016) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -9.5413504 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 11.5413504 ],
+    [ pe:var "W"; pe:value 21.0827008 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 111.12006825558018 ],
+    [ pe:var "gL"; pe:value -21.0827008 ],
+    [ pe:var "gU"; pe:value 21.0827008 ],
+    [ pe:var "halfW"; pe:value 10.5413504 ],
+    [ pe:var "k"; pe:value 7 ],
+    [ pe:var "pL"; pe:value -4.21654016 ],
+    [ pe:var "pU"; pe:value 4.21654016 ];
+  pe:uses
+    { :gd :k 7 . },
+    { :gd :xBounds (7 -9.5413504 11.5413504) . },
+    { :gd :width (7 21.0827008) . },
+    { :gd :midpoint (7 "1"^^xsd:decimal 10.5413504) . },
+    { :gd :gBounds (7 -21.0827008 21.0827008) . },
+    { :gd :pBounds (7 -4.21654016 4.21654016) . },
+    { :gd :fLower (7 0.0) . },
+    { :gd :fUpper (7 111.12006825558018) . }.
+
+{ :result :fBounds (7 0.0 111.12006825558018) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -9.5413504 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 11.5413504 ],
+    [ pe:var "W"; pe:value 21.0827008 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 111.12006825558018 ],
+    [ pe:var "gL"; pe:value -21.0827008 ],
+    [ pe:var "gU"; pe:value 21.0827008 ],
+    [ pe:var "halfW"; pe:value 10.5413504 ],
+    [ pe:var "k"; pe:value 7 ],
+    [ pe:var "pL"; pe:value -4.21654016 ],
+    [ pe:var "pU"; pe:value 4.21654016 ];
+  pe:uses
+    { :gd :k 7 . },
+    { :gd :xBounds (7 -9.5413504 11.5413504) . },
+    { :gd :width (7 21.0827008) . },
+    { :gd :midpoint (7 "1"^^xsd:decimal 10.5413504) . },
+    { :gd :gBounds (7 -21.0827008 21.0827008) . },
+    { :gd :pBounds (7 -4.21654016 4.21654016) . },
+    { :gd :fLower (7 0.0) . },
+    { :gd :fUpper (7 111.12006825558018) . }.
+
+{ :result :k 8 . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -13.75789056 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 15.75789056 ],
+    [ pe:var "W"; pe:value 29.51578112 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 217.7953337809371 ],
+    [ pe:var "gL"; pe:value -29.51578112 ],
+    [ pe:var "gU"; pe:value 29.51578112 ],
+    [ pe:var "halfW"; pe:value 14.75789056 ],
+    [ pe:var "k"; pe:value 8 ],
+    [ pe:var "pL"; pe:value -5.903156224 ],
+    [ pe:var "pU"; pe:value 5.903156224 ];
+  pe:uses
+    { :gd :k 8 . },
+    { :gd :xBounds (8 -13.75789056 15.75789056) . },
+    { :gd :width (8 29.51578112) . },
+    { :gd :midpoint (8 "1"^^xsd:decimal 14.75789056) . },
+    { :gd :gBounds (8 -29.51578112 29.51578112) . },
+    { :gd :pBounds (8 -5.903156224 5.903156224) . },
+    { :gd :fLower (8 0.0) . },
+    { :gd :fUpper (8 217.7953337809371) . }.
+
+{ :result :xBounds (8 -13.75789056 15.75789056) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -13.75789056 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 15.75789056 ],
+    [ pe:var "W"; pe:value 29.51578112 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 217.7953337809371 ],
+    [ pe:var "gL"; pe:value -29.51578112 ],
+    [ pe:var "gU"; pe:value 29.51578112 ],
+    [ pe:var "halfW"; pe:value 14.75789056 ],
+    [ pe:var "k"; pe:value 8 ],
+    [ pe:var "pL"; pe:value -5.903156224 ],
+    [ pe:var "pU"; pe:value 5.903156224 ];
+  pe:uses
+    { :gd :k 8 . },
+    { :gd :xBounds (8 -13.75789056 15.75789056) . },
+    { :gd :width (8 29.51578112) . },
+    { :gd :midpoint (8 "1"^^xsd:decimal 14.75789056) . },
+    { :gd :gBounds (8 -29.51578112 29.51578112) . },
+    { :gd :pBounds (8 -5.903156224 5.903156224) . },
+    { :gd :fLower (8 0.0) . },
+    { :gd :fUpper (8 217.7953337809371) . }.
+
+{ :result :midpoint (8 "1"^^xsd:decimal 14.75789056) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -13.75789056 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 15.75789056 ],
+    [ pe:var "W"; pe:value 29.51578112 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 217.7953337809371 ],
+    [ pe:var "gL"; pe:value -29.51578112 ],
+    [ pe:var "gU"; pe:value 29.51578112 ],
+    [ pe:var "halfW"; pe:value 14.75789056 ],
+    [ pe:var "k"; pe:value 8 ],
+    [ pe:var "pL"; pe:value -5.903156224 ],
+    [ pe:var "pU"; pe:value 5.903156224 ];
+  pe:uses
+    { :gd :k 8 . },
+    { :gd :xBounds (8 -13.75789056 15.75789056) . },
+    { :gd :width (8 29.51578112) . },
+    { :gd :midpoint (8 "1"^^xsd:decimal 14.75789056) . },
+    { :gd :gBounds (8 -29.51578112 29.51578112) . },
+    { :gd :pBounds (8 -5.903156224 5.903156224) . },
+    { :gd :fLower (8 0.0) . },
+    { :gd :fUpper (8 217.7953337809371) . }.
+
+{ :result :width (8 29.51578112) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -13.75789056 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 15.75789056 ],
+    [ pe:var "W"; pe:value 29.51578112 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 217.7953337809371 ],
+    [ pe:var "gL"; pe:value -29.51578112 ],
+    [ pe:var "gU"; pe:value 29.51578112 ],
+    [ pe:var "halfW"; pe:value 14.75789056 ],
+    [ pe:var "k"; pe:value 8 ],
+    [ pe:var "pL"; pe:value -5.903156224 ],
+    [ pe:var "pU"; pe:value 5.903156224 ];
+  pe:uses
+    { :gd :k 8 . },
+    { :gd :xBounds (8 -13.75789056 15.75789056) . },
+    { :gd :width (8 29.51578112) . },
+    { :gd :midpoint (8 "1"^^xsd:decimal 14.75789056) . },
+    { :gd :gBounds (8 -29.51578112 29.51578112) . },
+    { :gd :pBounds (8 -5.903156224 5.903156224) . },
+    { :gd :fLower (8 0.0) . },
+    { :gd :fUpper (8 217.7953337809371) . }.
+
+{ :result :gBounds (8 -29.51578112 29.51578112) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -13.75789056 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 15.75789056 ],
+    [ pe:var "W"; pe:value 29.51578112 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 217.7953337809371 ],
+    [ pe:var "gL"; pe:value -29.51578112 ],
+    [ pe:var "gU"; pe:value 29.51578112 ],
+    [ pe:var "halfW"; pe:value 14.75789056 ],
+    [ pe:var "k"; pe:value 8 ],
+    [ pe:var "pL"; pe:value -5.903156224 ],
+    [ pe:var "pU"; pe:value 5.903156224 ];
+  pe:uses
+    { :gd :k 8 . },
+    { :gd :xBounds (8 -13.75789056 15.75789056) . },
+    { :gd :width (8 29.51578112) . },
+    { :gd :midpoint (8 "1"^^xsd:decimal 14.75789056) . },
+    { :gd :gBounds (8 -29.51578112 29.51578112) . },
+    { :gd :pBounds (8 -5.903156224 5.903156224) . },
+    { :gd :fLower (8 0.0) . },
+    { :gd :fUpper (8 217.7953337809371) . }.
+
+{ :result :pBounds (8 -5.903156224 5.903156224) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -13.75789056 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 15.75789056 ],
+    [ pe:var "W"; pe:value 29.51578112 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 217.7953337809371 ],
+    [ pe:var "gL"; pe:value -29.51578112 ],
+    [ pe:var "gU"; pe:value 29.51578112 ],
+    [ pe:var "halfW"; pe:value 14.75789056 ],
+    [ pe:var "k"; pe:value 8 ],
+    [ pe:var "pL"; pe:value -5.903156224 ],
+    [ pe:var "pU"; pe:value 5.903156224 ];
+  pe:uses
+    { :gd :k 8 . },
+    { :gd :xBounds (8 -13.75789056 15.75789056) . },
+    { :gd :width (8 29.51578112) . },
+    { :gd :midpoint (8 "1"^^xsd:decimal 14.75789056) . },
+    { :gd :gBounds (8 -29.51578112 29.51578112) . },
+    { :gd :pBounds (8 -5.903156224 5.903156224) . },
+    { :gd :fLower (8 0.0) . },
+    { :gd :fUpper (8 217.7953337809371) . }.
+
+{ :result :fBounds (8 0.0 217.7953337809371) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -13.75789056 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 15.75789056 ],
+    [ pe:var "W"; pe:value 29.51578112 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 217.7953337809371 ],
+    [ pe:var "gL"; pe:value -29.51578112 ],
+    [ pe:var "gU"; pe:value 29.51578112 ],
+    [ pe:var "halfW"; pe:value 14.75789056 ],
+    [ pe:var "k"; pe:value 8 ],
+    [ pe:var "pL"; pe:value -5.903156224 ],
+    [ pe:var "pU"; pe:value 5.903156224 ];
+  pe:uses
+    { :gd :k 8 . },
+    { :gd :xBounds (8 -13.75789056 15.75789056) . },
+    { :gd :width (8 29.51578112) . },
+    { :gd :midpoint (8 "1"^^xsd:decimal 14.75789056) . },
+    { :gd :gBounds (8 -29.51578112 29.51578112) . },
+    { :gd :pBounds (8 -5.903156224 5.903156224) . },
+    { :gd :fLower (8 0.0) . },
+    { :gd :fUpper (8 217.7953337809371) . }.
+
+{ :result :k 9 . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -19.661046784 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 21.661046784 ],
+    [ pe:var "W"; pe:value 41.322093568 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 426.87885421063675 ],
+    [ pe:var "gL"; pe:value -41.322093568 ],
+    [ pe:var "gU"; pe:value 41.322093568 ],
+    [ pe:var "halfW"; pe:value 20.661046784 ],
+    [ pe:var "k"; pe:value 9 ],
+    [ pe:var "pL"; pe:value -8.2644187136 ],
+    [ pe:var "pU"; pe:value 8.2644187136 ];
+  pe:uses
+    { :gd :k 9 . },
+    { :gd :xBounds (9 -19.661046784 21.661046784) . },
+    { :gd :width (9 41.322093568) . },
+    { :gd :midpoint (9 "1"^^xsd:decimal 20.661046784) . },
+    { :gd :gBounds (9 -41.322093568 41.322093568) . },
+    { :gd :pBounds (9 -8.2644187136 8.2644187136) . },
+    { :gd :fLower (9 0.0) . },
+    { :gd :fUpper (9 426.87885421063675) . }.
+
+{ :result :xBounds (9 -19.661046784 21.661046784) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -19.661046784 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 21.661046784 ],
+    [ pe:var "W"; pe:value 41.322093568 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 426.87885421063675 ],
+    [ pe:var "gL"; pe:value -41.322093568 ],
+    [ pe:var "gU"; pe:value 41.322093568 ],
+    [ pe:var "halfW"; pe:value 20.661046784 ],
+    [ pe:var "k"; pe:value 9 ],
+    [ pe:var "pL"; pe:value -8.2644187136 ],
+    [ pe:var "pU"; pe:value 8.2644187136 ];
+  pe:uses
+    { :gd :k 9 . },
+    { :gd :xBounds (9 -19.661046784 21.661046784) . },
+    { :gd :width (9 41.322093568) . },
+    { :gd :midpoint (9 "1"^^xsd:decimal 20.661046784) . },
+    { :gd :gBounds (9 -41.322093568 41.322093568) . },
+    { :gd :pBounds (9 -8.2644187136 8.2644187136) . },
+    { :gd :fLower (9 0.0) . },
+    { :gd :fUpper (9 426.87885421063675) . }.
+
+{ :result :midpoint (9 "1"^^xsd:decimal 20.661046784) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -19.661046784 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 21.661046784 ],
+    [ pe:var "W"; pe:value 41.322093568 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 426.87885421063675 ],
+    [ pe:var "gL"; pe:value -41.322093568 ],
+    [ pe:var "gU"; pe:value 41.322093568 ],
+    [ pe:var "halfW"; pe:value 20.661046784 ],
+    [ pe:var "k"; pe:value 9 ],
+    [ pe:var "pL"; pe:value -8.2644187136 ],
+    [ pe:var "pU"; pe:value 8.2644187136 ];
+  pe:uses
+    { :gd :k 9 . },
+    { :gd :xBounds (9 -19.661046784 21.661046784) . },
+    { :gd :width (9 41.322093568) . },
+    { :gd :midpoint (9 "1"^^xsd:decimal 20.661046784) . },
+    { :gd :gBounds (9 -41.322093568 41.322093568) . },
+    { :gd :pBounds (9 -8.2644187136 8.2644187136) . },
+    { :gd :fLower (9 0.0) . },
+    { :gd :fUpper (9 426.87885421063675) . }.
+
+{ :result :width (9 41.322093568) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -19.661046784 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 21.661046784 ],
+    [ pe:var "W"; pe:value 41.322093568 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 426.87885421063675 ],
+    [ pe:var "gL"; pe:value -41.322093568 ],
+    [ pe:var "gU"; pe:value 41.322093568 ],
+    [ pe:var "halfW"; pe:value 20.661046784 ],
+    [ pe:var "k"; pe:value 9 ],
+    [ pe:var "pL"; pe:value -8.2644187136 ],
+    [ pe:var "pU"; pe:value 8.2644187136 ];
+  pe:uses
+    { :gd :k 9 . },
+    { :gd :xBounds (9 -19.661046784 21.661046784) . },
+    { :gd :width (9 41.322093568) . },
+    { :gd :midpoint (9 "1"^^xsd:decimal 20.661046784) . },
+    { :gd :gBounds (9 -41.322093568 41.322093568) . },
+    { :gd :pBounds (9 -8.2644187136 8.2644187136) . },
+    { :gd :fLower (9 0.0) . },
+    { :gd :fUpper (9 426.87885421063675) . }.
+
+{ :result :gBounds (9 -41.322093568 41.322093568) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -19.661046784 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 21.661046784 ],
+    [ pe:var "W"; pe:value 41.322093568 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 426.87885421063675 ],
+    [ pe:var "gL"; pe:value -41.322093568 ],
+    [ pe:var "gU"; pe:value 41.322093568 ],
+    [ pe:var "halfW"; pe:value 20.661046784 ],
+    [ pe:var "k"; pe:value 9 ],
+    [ pe:var "pL"; pe:value -8.2644187136 ],
+    [ pe:var "pU"; pe:value 8.2644187136 ];
+  pe:uses
+    { :gd :k 9 . },
+    { :gd :xBounds (9 -19.661046784 21.661046784) . },
+    { :gd :width (9 41.322093568) . },
+    { :gd :midpoint (9 "1"^^xsd:decimal 20.661046784) . },
+    { :gd :gBounds (9 -41.322093568 41.322093568) . },
+    { :gd :pBounds (9 -8.2644187136 8.2644187136) . },
+    { :gd :fLower (9 0.0) . },
+    { :gd :fUpper (9 426.87885421063675) . }.
+
+{ :result :pBounds (9 -8.2644187136 8.2644187136) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -19.661046784 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 21.661046784 ],
+    [ pe:var "W"; pe:value 41.322093568 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 426.87885421063675 ],
+    [ pe:var "gL"; pe:value -41.322093568 ],
+    [ pe:var "gU"; pe:value 41.322093568 ],
+    [ pe:var "halfW"; pe:value 20.661046784 ],
+    [ pe:var "k"; pe:value 9 ],
+    [ pe:var "pL"; pe:value -8.2644187136 ],
+    [ pe:var "pU"; pe:value 8.2644187136 ];
+  pe:uses
+    { :gd :k 9 . },
+    { :gd :xBounds (9 -19.661046784 21.661046784) . },
+    { :gd :width (9 41.322093568) . },
+    { :gd :midpoint (9 "1"^^xsd:decimal 20.661046784) . },
+    { :gd :gBounds (9 -41.322093568 41.322093568) . },
+    { :gd :pBounds (9 -8.2644187136 8.2644187136) . },
+    { :gd :fLower (9 0.0) . },
+    { :gd :fUpper (9 426.87885421063675) . }.
+
+{ :result :fBounds (9 0.0 426.87885421063675) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -19.661046784 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 21.661046784 ],
+    [ pe:var "W"; pe:value 41.322093568 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 426.87885421063675 ],
+    [ pe:var "gL"; pe:value -41.322093568 ],
+    [ pe:var "gU"; pe:value 41.322093568 ],
+    [ pe:var "halfW"; pe:value 20.661046784 ],
+    [ pe:var "k"; pe:value 9 ],
+    [ pe:var "pL"; pe:value -8.2644187136 ],
+    [ pe:var "pU"; pe:value 8.2644187136 ];
+  pe:uses
+    { :gd :k 9 . },
+    { :gd :xBounds (9 -19.661046784 21.661046784) . },
+    { :gd :width (9 41.322093568) . },
+    { :gd :midpoint (9 "1"^^xsd:decimal 20.661046784) . },
+    { :gd :gBounds (9 -41.322093568 41.322093568) . },
+    { :gd :pBounds (9 -8.2644187136 8.2644187136) . },
+    { :gd :fLower (9 0.0) . },
+    { :gd :fUpper (9 426.87885421063675) . }.
+
+{ :result :k 10 . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -27.9254654976 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 29.9254654976 ],
+    [ pe:var "W"; pe:value 57.8509309952 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 836.682554252848 ],
+    [ pe:var "gL"; pe:value -57.8509309952 ],
+    [ pe:var "gU"; pe:value 57.8509309952 ],
+    [ pe:var "halfW"; pe:value 28.9254654976 ],
+    [ pe:var "k"; pe:value 10 ],
+    [ pe:var "pL"; pe:value -11.570186199040002 ],
+    [ pe:var "pU"; pe:value 11.570186199040002 ];
+  pe:uses
+    { :gd :k 10 . },
+    { :gd :xBounds (10 -27.9254654976 29.9254654976) . },
+    { :gd :width (10 57.8509309952) . },
+    { :gd :midpoint (10 "1"^^xsd:decimal 28.9254654976) . },
+    { :gd :gBounds (10 -57.8509309952 57.8509309952) . },
+    { :gd :pBounds (10 -11.570186199040002 11.570186199040002) . },
+    { :gd :fLower (10 0.0) . },
+    { :gd :fUpper (10 836.682554252848) . }.
+
+{ :result :xBounds (10 -27.9254654976 29.9254654976) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -27.9254654976 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 29.9254654976 ],
+    [ pe:var "W"; pe:value 57.8509309952 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 836.682554252848 ],
+    [ pe:var "gL"; pe:value -57.8509309952 ],
+    [ pe:var "gU"; pe:value 57.8509309952 ],
+    [ pe:var "halfW"; pe:value 28.9254654976 ],
+    [ pe:var "k"; pe:value 10 ],
+    [ pe:var "pL"; pe:value -11.570186199040002 ],
+    [ pe:var "pU"; pe:value 11.570186199040002 ];
+  pe:uses
+    { :gd :k 10 . },
+    { :gd :xBounds (10 -27.9254654976 29.9254654976) . },
+    { :gd :width (10 57.8509309952) . },
+    { :gd :midpoint (10 "1"^^xsd:decimal 28.9254654976) . },
+    { :gd :gBounds (10 -57.8509309952 57.8509309952) . },
+    { :gd :pBounds (10 -11.570186199040002 11.570186199040002) . },
+    { :gd :fLower (10 0.0) . },
+    { :gd :fUpper (10 836.682554252848) . }.
+
+{ :result :midpoint (10 "1"^^xsd:decimal 28.9254654976) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -27.9254654976 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 29.9254654976 ],
+    [ pe:var "W"; pe:value 57.8509309952 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 836.682554252848 ],
+    [ pe:var "gL"; pe:value -57.8509309952 ],
+    [ pe:var "gU"; pe:value 57.8509309952 ],
+    [ pe:var "halfW"; pe:value 28.9254654976 ],
+    [ pe:var "k"; pe:value 10 ],
+    [ pe:var "pL"; pe:value -11.570186199040002 ],
+    [ pe:var "pU"; pe:value 11.570186199040002 ];
+  pe:uses
+    { :gd :k 10 . },
+    { :gd :xBounds (10 -27.9254654976 29.9254654976) . },
+    { :gd :width (10 57.8509309952) . },
+    { :gd :midpoint (10 "1"^^xsd:decimal 28.9254654976) . },
+    { :gd :gBounds (10 -57.8509309952 57.8509309952) . },
+    { :gd :pBounds (10 -11.570186199040002 11.570186199040002) . },
+    { :gd :fLower (10 0.0) . },
+    { :gd :fUpper (10 836.682554252848) . }.
+
+{ :result :width (10 57.8509309952) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -27.9254654976 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 29.9254654976 ],
+    [ pe:var "W"; pe:value 57.8509309952 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 836.682554252848 ],
+    [ pe:var "gL"; pe:value -57.8509309952 ],
+    [ pe:var "gU"; pe:value 57.8509309952 ],
+    [ pe:var "halfW"; pe:value 28.9254654976 ],
+    [ pe:var "k"; pe:value 10 ],
+    [ pe:var "pL"; pe:value -11.570186199040002 ],
+    [ pe:var "pU"; pe:value 11.570186199040002 ];
+  pe:uses
+    { :gd :k 10 . },
+    { :gd :xBounds (10 -27.9254654976 29.9254654976) . },
+    { :gd :width (10 57.8509309952) . },
+    { :gd :midpoint (10 "1"^^xsd:decimal 28.9254654976) . },
+    { :gd :gBounds (10 -57.8509309952 57.8509309952) . },
+    { :gd :pBounds (10 -11.570186199040002 11.570186199040002) . },
+    { :gd :fLower (10 0.0) . },
+    { :gd :fUpper (10 836.682554252848) . }.
+
+{ :result :gBounds (10 -57.8509309952 57.8509309952) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -27.9254654976 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 29.9254654976 ],
+    [ pe:var "W"; pe:value 57.8509309952 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 836.682554252848 ],
+    [ pe:var "gL"; pe:value -57.8509309952 ],
+    [ pe:var "gU"; pe:value 57.8509309952 ],
+    [ pe:var "halfW"; pe:value 28.9254654976 ],
+    [ pe:var "k"; pe:value 10 ],
+    [ pe:var "pL"; pe:value -11.570186199040002 ],
+    [ pe:var "pU"; pe:value 11.570186199040002 ];
+  pe:uses
+    { :gd :k 10 . },
+    { :gd :xBounds (10 -27.9254654976 29.9254654976) . },
+    { :gd :width (10 57.8509309952) . },
+    { :gd :midpoint (10 "1"^^xsd:decimal 28.9254654976) . },
+    { :gd :gBounds (10 -57.8509309952 57.8509309952) . },
+    { :gd :pBounds (10 -11.570186199040002 11.570186199040002) . },
+    { :gd :fLower (10 0.0) . },
+    { :gd :fUpper (10 836.682554252848) . }.
+
+{ :result :pBounds (10 -11.570186199040002 11.570186199040002) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -27.9254654976 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 29.9254654976 ],
+    [ pe:var "W"; pe:value 57.8509309952 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 836.682554252848 ],
+    [ pe:var "gL"; pe:value -57.8509309952 ],
+    [ pe:var "gU"; pe:value 57.8509309952 ],
+    [ pe:var "halfW"; pe:value 28.9254654976 ],
+    [ pe:var "k"; pe:value 10 ],
+    [ pe:var "pL"; pe:value -11.570186199040002 ],
+    [ pe:var "pU"; pe:value 11.570186199040002 ];
+  pe:uses
+    { :gd :k 10 . },
+    { :gd :xBounds (10 -27.9254654976 29.9254654976) . },
+    { :gd :width (10 57.8509309952) . },
+    { :gd :midpoint (10 "1"^^xsd:decimal 28.9254654976) . },
+    { :gd :gBounds (10 -57.8509309952 57.8509309952) . },
+    { :gd :pBounds (10 -11.570186199040002 11.570186199040002) . },
+    { :gd :fLower (10 0.0) . },
+    { :gd :fUpper (10 836.682554252848) . }.
+
+{ :result :fBounds (10 0.0 836.682554252848) . }
+  pe:rule
+    {
+        {
+            :gd :k ?k .
+            :gd :xBounds (?k ?L ?U) .
+            :gd :width (?k ?W) .
+            :gd :midpoint (?k ?M ?halfW) .
+            :gd :gBounds (?k ?gL ?gU) .
+            :gd :pBounds (?k ?pL ?pU) .
+            :gd :fLower (?k ?fL) .
+            :gd :fUpper (?k ?fU) .
+        } => {
+            :result :k ?k .
+            :result :xBounds (?k ?L ?U) .
+            :result :midpoint (?k ?M ?halfW) .
+            :result :width (?k ?W) .
+            :result :gBounds (?k ?gL ?gU) .
+            :result :pBounds (?k ?pL ?pU) .
+            :result :fBounds (?k ?fL ?fU) .
+        } .
+    };
+  pe:binding
+    [ pe:var "L"; pe:value -27.9254654976 ],
+    [ pe:var "M"; pe:value "1"^^xsd:decimal ],
+    [ pe:var "U"; pe:value 29.9254654976 ],
+    [ pe:var "W"; pe:value 57.8509309952 ],
+    [ pe:var "fL"; pe:value 0.0 ],
+    [ pe:var "fU"; pe:value 836.682554252848 ],
+    [ pe:var "gL"; pe:value -57.8509309952 ],
+    [ pe:var "gU"; pe:value 57.8509309952 ],
+    [ pe:var "halfW"; pe:value 28.9254654976 ],
+    [ pe:var "k"; pe:value 10 ],
+    [ pe:var "pL"; pe:value -11.570186199040002 ],
+    [ pe:var "pU"; pe:value 11.570186199040002 ];
+  pe:uses
+    { :gd :k 10 . },
+    { :gd :xBounds (10 -27.9254654976 29.9254654976) . },
+    { :gd :width (10 57.8509309952) . },
+    { :gd :midpoint (10 "1"^^xsd:decimal 28.9254654976) . },
+    { :gd :gBounds (10 -57.8509309952 57.8509309952) . },
+    { :gd :pBounds (10 -11.570186199040002 11.570186199040002) . },
+    { :gd :fLower (10 0.0) . },
+    { :gd :fUpper (10 836.682554252848) . }.
+
+{ :result :eta 0.2 . }
+  pe:rule
+    {
+        {
+            :gd :eta ?eta .
+        } => {
+            :result :eta ?eta .
+        } .
+    };
+  pe:binding [ pe:var "eta"; pe:value 0.2 ];
+  pe:uses { :gd :eta 0.2 . }.
+
+{ :result :etaLeHalf true . }
+  pe:rule
+    {
+        {
+            :gd :etaLeHalf true .
+        } => {
+            :result :etaLeHalf true .
+        } .
+    };
+  pe:uses { :gd :etaLeHalf true . }.

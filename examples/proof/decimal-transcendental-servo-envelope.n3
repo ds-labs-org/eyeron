@@ -34,6 +34,32 @@
 :servo :firstSettledStep 10 .
 :servo :settledCandidate 12 .
 :servo :firstSettledTime 0.2 .
+:result :summary ("exact-pole" "exp(-1/3)" "decimal-lower" 0.7165313105 "decimal-upper" 0.7165313106 "tolerance" 0.5 "first-settled-step" 10 "first-settled-time-s" 0.2) .
+:result :envelope (0 12.5 12.5) .
+:result :envelope (1 8.95664138125 8.956641382499999) .
+:result :envelope (2 6.417713986585592 6.41771398837692) .
+:result :envelope (3 4.598493013222353 4.5984930151476675) .
+:result :envelope (4 3.2949642250893065 3.2949642269287036) .
+:result :envelope (5 2.3609450342538576 2.3609450359013398) .
+:result :envelope (6 1.6916910394123839 1.691691040828951) .
+:result :envelope (7 1.2121495974312624 1.2121495986154462) .
+:result :envelope (8 0.8685431395694698 0.8685431405391896) .
+:result :envelope (9 0.6223383540214966 0.6223383548031854) .
+:result :envelope (10 0.4459249163814359 0.44592491700377423) .
+:result :envelope (11 0.3195191647193932 0.3195191652099106) .
+:result :envelope (12 0.22894548582625215 0.22894548620967514) .
+:result :contractionAt 0 .
+:result :contractionAt 1 .
+:result :contractionAt 2 .
+:result :contractionAt 3 .
+:result :contractionAt 4 .
+:result :contractionAt 5 .
+:result :contractionAt 6 .
+:result :contractionAt 7 .
+:result :contractionAt 8 .
+:result :contractionAt 9 .
+:result :contractionAt 10 .
+:result :contractionAt 11 .
 
 { :servo :poleCertificate :CertifiedDecimalInterval . }
   pe:rule 1;
@@ -798,3 +824,374 @@
 
 { (10 0.020) math:product 0.2 . }
   pe:builtin math:product.
+
+{ :result :summary ("exact-pole" "exp(-1/3)" "decimal-lower" 0.7165313105 "decimal-upper" 0.7165313106 "tolerance" 0.5 "first-settled-step" 10 "first-settled-time-s" 0.2) . }
+  pe:rule
+    {
+        {
+            :servo :firstSettledStep ?k .
+            :servo :firstSettledTime ?t .
+            :servo :tolerance ?tol .
+            :servo :exactPoleSymbol ?sym .
+            :servo :poleLower ?aLo .
+            :servo :poleUpper ?aHi .
+        } => {
+            :result :summary ("exact-pole" ?sym "decimal-lower" ?aLo "decimal-upper" ?aHi "tolerance" ?tol "first-settled-step" ?k "first-settled-time-s" ?t) .
+        } .
+    };
+  pe:binding
+    [ pe:var "aHi"; pe:value 0.7165313106 ],
+    [ pe:var "aLo"; pe:value 0.7165313105 ],
+    [ pe:var "k"; pe:value 10 ],
+    [ pe:var "sym"; pe:value "exp(-1/3)" ],
+    [ pe:var "t"; pe:value 0.2 ],
+    [ pe:var "tol"; pe:value 0.5 ];
+  pe:uses
+    { :servo :firstSettledStep 10 . },
+    { :servo :firstSettledTime 0.2 . },
+    { :servo :tolerance 0.5 . },
+    { :servo :exactPoleSymbol "exp(-1/3)" . },
+    { :servo :poleLower 0.7165313105 . },
+    { :servo :poleUpper 0.7165313106 . }.
+
+{ :servo :exactPoleSymbol "exp(-1/3)" . }
+  pe:fact "decimal-transcendental-servo-envelope.n3".
+
+{ :result :envelope (0 12.5 12.5) . }
+  pe:rule
+    {
+        {
+            :servo :errorEnvelopeAt (?k ?lo ?hi) .
+        } => {
+            :result :envelope (?k ?lo ?hi) .
+        } .
+    };
+  pe:binding
+    [ pe:var "hi"; pe:value 12.5 ],
+    [ pe:var "k"; pe:value 0 ],
+    [ pe:var "lo"; pe:value 12.5 ];
+  pe:uses { :servo :errorEnvelopeAt (0 12.5 12.5) . }.
+
+{ :result :envelope (1 8.95664138125 8.956641382499999) . }
+  pe:rule
+    {
+        {
+            :servo :errorEnvelopeAt (?k ?lo ?hi) .
+        } => {
+            :result :envelope (?k ?lo ?hi) .
+        } .
+    };
+  pe:binding
+    [ pe:var "hi"; pe:value 8.956641382499999 ],
+    [ pe:var "k"; pe:value 1 ],
+    [ pe:var "lo"; pe:value 8.95664138125 ];
+  pe:uses { :servo :errorEnvelopeAt (1 8.95664138125 8.956641382499999) . }.
+
+{ :result :envelope (2 6.417713986585592 6.41771398837692) . }
+  pe:rule
+    {
+        {
+            :servo :errorEnvelopeAt (?k ?lo ?hi) .
+        } => {
+            :result :envelope (?k ?lo ?hi) .
+        } .
+    };
+  pe:binding
+    [ pe:var "hi"; pe:value 6.41771398837692 ],
+    [ pe:var "k"; pe:value 2 ],
+    [ pe:var "lo"; pe:value 6.417713986585592 ];
+  pe:uses { :servo :errorEnvelopeAt (2 6.417713986585592 6.41771398837692) . }.
+
+{ :result :envelope (3 4.598493013222353 4.5984930151476675) . }
+  pe:rule
+    {
+        {
+            :servo :errorEnvelopeAt (?k ?lo ?hi) .
+        } => {
+            :result :envelope (?k ?lo ?hi) .
+        } .
+    };
+  pe:binding
+    [ pe:var "hi"; pe:value 4.5984930151476675 ],
+    [ pe:var "k"; pe:value 3 ],
+    [ pe:var "lo"; pe:value 4.598493013222353 ];
+  pe:uses { :servo :errorEnvelopeAt (3 4.598493013222353 4.5984930151476675) . }.
+
+{ :result :envelope (4 3.2949642250893065 3.2949642269287036) . }
+  pe:rule
+    {
+        {
+            :servo :errorEnvelopeAt (?k ?lo ?hi) .
+        } => {
+            :result :envelope (?k ?lo ?hi) .
+        } .
+    };
+  pe:binding
+    [ pe:var "hi"; pe:value 3.2949642269287036 ],
+    [ pe:var "k"; pe:value 4 ],
+    [ pe:var "lo"; pe:value 3.2949642250893065 ];
+  pe:uses { :servo :errorEnvelopeAt (4 3.2949642250893065 3.2949642269287036) . }.
+
+{ :result :envelope (5 2.3609450342538576 2.3609450359013398) . }
+  pe:rule
+    {
+        {
+            :servo :errorEnvelopeAt (?k ?lo ?hi) .
+        } => {
+            :result :envelope (?k ?lo ?hi) .
+        } .
+    };
+  pe:binding
+    [ pe:var "hi"; pe:value 2.3609450359013398 ],
+    [ pe:var "k"; pe:value 5 ],
+    [ pe:var "lo"; pe:value 2.3609450342538576 ];
+  pe:uses { :servo :errorEnvelopeAt (5 2.3609450342538576 2.3609450359013398) . }.
+
+{ :result :envelope (6 1.6916910394123839 1.691691040828951) . }
+  pe:rule
+    {
+        {
+            :servo :errorEnvelopeAt (?k ?lo ?hi) .
+        } => {
+            :result :envelope (?k ?lo ?hi) .
+        } .
+    };
+  pe:binding
+    [ pe:var "hi"; pe:value 1.691691040828951 ],
+    [ pe:var "k"; pe:value 6 ],
+    [ pe:var "lo"; pe:value 1.6916910394123839 ];
+  pe:uses { :servo :errorEnvelopeAt (6 1.6916910394123839 1.691691040828951) . }.
+
+{ :result :envelope (7 1.2121495974312624 1.2121495986154462) . }
+  pe:rule
+    {
+        {
+            :servo :errorEnvelopeAt (?k ?lo ?hi) .
+        } => {
+            :result :envelope (?k ?lo ?hi) .
+        } .
+    };
+  pe:binding
+    [ pe:var "hi"; pe:value 1.2121495986154462 ],
+    [ pe:var "k"; pe:value 7 ],
+    [ pe:var "lo"; pe:value 1.2121495974312624 ];
+  pe:uses { :servo :errorEnvelopeAt (7 1.2121495974312624 1.2121495986154462) . }.
+
+{ :result :envelope (8 0.8685431395694698 0.8685431405391896) . }
+  pe:rule
+    {
+        {
+            :servo :errorEnvelopeAt (?k ?lo ?hi) .
+        } => {
+            :result :envelope (?k ?lo ?hi) .
+        } .
+    };
+  pe:binding
+    [ pe:var "hi"; pe:value 0.8685431405391896 ],
+    [ pe:var "k"; pe:value 8 ],
+    [ pe:var "lo"; pe:value 0.8685431395694698 ];
+  pe:uses { :servo :errorEnvelopeAt (8 0.8685431395694698 0.8685431405391896) . }.
+
+{ :result :envelope (9 0.6223383540214966 0.6223383548031854) . }
+  pe:rule
+    {
+        {
+            :servo :errorEnvelopeAt (?k ?lo ?hi) .
+        } => {
+            :result :envelope (?k ?lo ?hi) .
+        } .
+    };
+  pe:binding
+    [ pe:var "hi"; pe:value 0.6223383548031854 ],
+    [ pe:var "k"; pe:value 9 ],
+    [ pe:var "lo"; pe:value 0.6223383540214966 ];
+  pe:uses { :servo :errorEnvelopeAt (9 0.6223383540214966 0.6223383548031854) . }.
+
+{ :result :envelope (10 0.4459249163814359 0.44592491700377423) . }
+  pe:rule
+    {
+        {
+            :servo :errorEnvelopeAt (?k ?lo ?hi) .
+        } => {
+            :result :envelope (?k ?lo ?hi) .
+        } .
+    };
+  pe:binding
+    [ pe:var "hi"; pe:value 0.44592491700377423 ],
+    [ pe:var "k"; pe:value 10 ],
+    [ pe:var "lo"; pe:value 0.4459249163814359 ];
+  pe:uses { :servo :errorEnvelopeAt (10 0.4459249163814359 0.44592491700377423) . }.
+
+{ :result :envelope (11 0.3195191647193932 0.3195191652099106) . }
+  pe:rule
+    {
+        {
+            :servo :errorEnvelopeAt (?k ?lo ?hi) .
+        } => {
+            :result :envelope (?k ?lo ?hi) .
+        } .
+    };
+  pe:binding
+    [ pe:var "hi"; pe:value 0.3195191652099106 ],
+    [ pe:var "k"; pe:value 11 ],
+    [ pe:var "lo"; pe:value 0.3195191647193932 ];
+  pe:uses { :servo :errorEnvelopeAt (11 0.3195191647193932 0.3195191652099106) . }.
+
+{ :result :envelope (12 0.22894548582625215 0.22894548620967514) . }
+  pe:rule
+    {
+        {
+            :servo :errorEnvelopeAt (?k ?lo ?hi) .
+        } => {
+            :result :envelope (?k ?lo ?hi) .
+        } .
+    };
+  pe:binding
+    [ pe:var "hi"; pe:value 0.22894548620967514 ],
+    [ pe:var "k"; pe:value 12 ],
+    [ pe:var "lo"; pe:value 0.22894548582625215 ];
+  pe:uses { :servo :errorEnvelopeAt (12 0.22894548582625215 0.22894548620967514) . }.
+
+{ :result :contractionAt 0 . }
+  pe:rule
+    {
+        {
+            :servo :strictContractionAt ?k .
+        } => {
+            :result :contractionAt ?k .
+        } .
+    };
+  pe:binding [ pe:var "k"; pe:value 0 ];
+  pe:uses { :servo :strictContractionAt 0 . }.
+
+{ :result :contractionAt 1 . }
+  pe:rule
+    {
+        {
+            :servo :strictContractionAt ?k .
+        } => {
+            :result :contractionAt ?k .
+        } .
+    };
+  pe:binding [ pe:var "k"; pe:value 1 ];
+  pe:uses { :servo :strictContractionAt 1 . }.
+
+{ :result :contractionAt 2 . }
+  pe:rule
+    {
+        {
+            :servo :strictContractionAt ?k .
+        } => {
+            :result :contractionAt ?k .
+        } .
+    };
+  pe:binding [ pe:var "k"; pe:value 2 ];
+  pe:uses { :servo :strictContractionAt 2 . }.
+
+{ :result :contractionAt 3 . }
+  pe:rule
+    {
+        {
+            :servo :strictContractionAt ?k .
+        } => {
+            :result :contractionAt ?k .
+        } .
+    };
+  pe:binding [ pe:var "k"; pe:value 3 ];
+  pe:uses { :servo :strictContractionAt 3 . }.
+
+{ :result :contractionAt 4 . }
+  pe:rule
+    {
+        {
+            :servo :strictContractionAt ?k .
+        } => {
+            :result :contractionAt ?k .
+        } .
+    };
+  pe:binding [ pe:var "k"; pe:value 4 ];
+  pe:uses { :servo :strictContractionAt 4 . }.
+
+{ :result :contractionAt 5 . }
+  pe:rule
+    {
+        {
+            :servo :strictContractionAt ?k .
+        } => {
+            :result :contractionAt ?k .
+        } .
+    };
+  pe:binding [ pe:var "k"; pe:value 5 ];
+  pe:uses { :servo :strictContractionAt 5 . }.
+
+{ :result :contractionAt 6 . }
+  pe:rule
+    {
+        {
+            :servo :strictContractionAt ?k .
+        } => {
+            :result :contractionAt ?k .
+        } .
+    };
+  pe:binding [ pe:var "k"; pe:value 6 ];
+  pe:uses { :servo :strictContractionAt 6 . }.
+
+{ :result :contractionAt 7 . }
+  pe:rule
+    {
+        {
+            :servo :strictContractionAt ?k .
+        } => {
+            :result :contractionAt ?k .
+        } .
+    };
+  pe:binding [ pe:var "k"; pe:value 7 ];
+  pe:uses { :servo :strictContractionAt 7 . }.
+
+{ :result :contractionAt 8 . }
+  pe:rule
+    {
+        {
+            :servo :strictContractionAt ?k .
+        } => {
+            :result :contractionAt ?k .
+        } .
+    };
+  pe:binding [ pe:var "k"; pe:value 8 ];
+  pe:uses { :servo :strictContractionAt 8 . }.
+
+{ :result :contractionAt 9 . }
+  pe:rule
+    {
+        {
+            :servo :strictContractionAt ?k .
+        } => {
+            :result :contractionAt ?k .
+        } .
+    };
+  pe:binding [ pe:var "k"; pe:value 9 ];
+  pe:uses { :servo :strictContractionAt 9 . }.
+
+{ :result :contractionAt 10 . }
+  pe:rule
+    {
+        {
+            :servo :strictContractionAt ?k .
+        } => {
+            :result :contractionAt ?k .
+        } .
+    };
+  pe:binding [ pe:var "k"; pe:value 10 ];
+  pe:uses { :servo :strictContractionAt 10 . }.
+
+{ :result :contractionAt 11 . }
+  pe:rule
+    {
+        {
+            :servo :strictContractionAt ?k .
+        } => {
+            :result :contractionAt ?k .
+        } .
+    };
+  pe:binding [ pe:var "k"; pe:value 11 ];
+  pe:uses { :servo :strictContractionAt 11 . }.

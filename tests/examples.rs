@@ -35,26 +35,17 @@ const PARSE_ONLY_EXAMPLES: &[&str] = &["alma-rdf-messages", "collection"];
 
 /// Top-level `.n3` examples that get neither an `examples/proof/` golden
 /// nor a documented reason from `PARSE_ONLY_EXAMPLES`, and why not.
-/// A proof is linear in the size of the derivation it explains — one walk
-/// across every claim, each step written once — so every example that
-/// derives anything now has a proof golden, `deep-taxonomy-100000`
-/// included. Only these three are left out, and none of them for size.
+///
+/// Every example that derives anything has a proof golden, including
+/// `deep-taxonomy-100000` and the ones whose whole printed result comes
+/// from a `log:query` goal. A proof is linear in the size of the derivation
+/// it explains — one walk across every claim, each step written once — so
+/// none of them is left out for size. These three derive nothing at all,
+/// which leaves a proof nothing to record.
 const NO_PROOF_EXAMPLES: &[(&str, &str)] = &[
-    ("annotation", "its printed result comes from a log:query goal, not a forward-derived fact --proof tracks"),
-    ("builtin-coverage", "its printed result comes from a log:query goal, not a forward-derived fact --proof tracks"),
     ("check-unsafe", "deliberately derives nothing: its head variable is unsafe/unbound by design"),
-    ("fft32-numeric", "its printed result comes from a log:query goal, not a forward-derived fact --proof tracks"),
     ("fuse", "it trips an inference fuse, so the run stops with nothing derived and nothing to prove"),
-    ("fft8-numeric", "its printed result comes from a log:query goal, not a forward-derived fact --proof tracks"),
-    ("fft8-symbolic", "its printed result comes from a log:query goal, not a forward-derived fact --proof tracks"),
-    ("kaprekar-6174", "its printed result comes from a log:query goal, not a forward-derived fact --proof tracks"),
     ("liar", "it trips an inference fuse, so the run stops with nothing derived and nothing to prove"),
-    ("monoid-identity-uniqueness", "its printed result comes from a log:query goal, not a forward-derived fact --proof tracks"),
-    ("relational-cube-lookup", "its printed result comes from a log:query goal, not a forward-derived fact --proof tracks"),
-    (
-        "proof-audit",
-        "its companion input (examples/input/proof-audit.trig) is itself an N3 proof document with quoted formulas, which the CLI's second positional file argument parses in RDF-only mode and rejects",
-    ),
 ];
 
 /// One example and the goldens describing it.
